@@ -1,22 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Nav() {
   const pathname = usePathname();
+  const params = useParams();
+  const locale = params.locale as string;
+  const t = useTranslations("nav");
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/sign-in";
+    window.location.href = `/${locale}/sign-in`;
   };
 
   const navItems = [
-    { href: "/app", label: "Dashboard" },
-    { href: "/people", label: "People" },
-    { href: "/relations", label: "Relations" },
+    { href: `/${locale}/app`, label: t("dashboard") },
+    { href: `/${locale}/people`, label: t("people") },
+    { href: `/${locale}/relations`, label: t("relations") },
   ];
 
   return (
@@ -34,11 +39,13 @@ export function Nav() {
             </Link>
           ))}
         </div>
-        <Button variant="outline" size="sm" onClick={handleSignOut}>
-          Sign Out
-        </Button>
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
+          <Button variant="outline" size="sm" onClick={handleSignOut}>
+            {t("signOut")}
+          </Button>
+        </div>
       </div>
     </nav>
   );
 }
-

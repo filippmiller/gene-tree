@@ -1,14 +1,17 @@
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function AppPage() {
+export default function RelationsPage() {
+  const t = useTranslations("relations");
+
   return (
     <div className="container mx-auto p-6">
       <Card>
         <CardHeader>
-          <CardTitle>Hello, Tree</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Welcome to your genealogy tree dashboard.</p>
+          <p>{t("listPlaceholder")}</p>
         </CardContent>
       </Card>
     </div>

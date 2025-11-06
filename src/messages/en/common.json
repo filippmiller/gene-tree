@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "people": "People",
+    "relations": "Relations",
+    "signOut": "Sign Out"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendMagicLink": "Send Magic Link",
+    "sending": "Sending...",
+    "checkEmail": "Check your email for the login link!",
+    "signInTitle": "Sign In",
+    "signInDescription": "Enter your email to receive a magic link",
+    "signUpTitle": "Sign Up",
+    "signUpDescription": "Enter your email to create an account"
+  },
+  "app": {
+    "welcome": "Welcome",
+    "treeDashboard": "Tree Dashboard",
+    "helloTree": "Hello, Tree"
+  },
+  "people": {
+    "title": "People",
+    "listPlaceholder": "People list will be here"
+  },
+  "relations": {
+    "title": "Relations",
+    "listPlaceholder": "Relations list will be here"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create"
+  }
+}
+

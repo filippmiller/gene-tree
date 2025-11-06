@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "dashboard": "Дашборд",
+    "people": "Люди",
+    "relations": "Связи",
+    "signOut": "Выйти"
+  },
+  "auth": {
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendMagicLink": "Отправить ссылку",
+    "sending": "Отправка...",
+    "checkEmail": "Проверьте почту для получения ссылки!",
+    "signInTitle": "Вход",
+    "signInDescription": "Введите email для получения ссылки",
+    "signUpTitle": "Регистрация",
+    "signUpDescription": "Введите email для создания аккаунта"
+  },
+  "app": {
+    "welcome": "Добро пожаловать",
+    "treeDashboard": "Дашборд дерева",
+    "helloTree": "Привет, Дерево"
+  },
+  "people": {
+    "title": "Люди",
+    "listPlaceholder": "Список людей будет здесь"
+  },
+  "relations": {
+    "title": "Связи",
+    "listPlaceholder": "Список связей будет здесь"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "create": "Создать"
+  }
+}
+

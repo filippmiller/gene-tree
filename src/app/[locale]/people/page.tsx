@@ -1,14 +1,17 @@
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function RelationsPage() {
+export default function PeoplePage() {
+  const t = useTranslations("people");
+
   return (
     <div className="container mx-auto p-6">
       <Card>
         <CardHeader>
-          <CardTitle>Relations</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Relations list will be here.</p>
+          <p>{t("listPlaceholder")}</p>
         </CardContent>
       </Card>
     </div>
