@@ -1,38 +1,27 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import {useEffect} from 'react';
+import {useRouter, useParams} from 'next/navigation';
+import {createClient} from '@/lib/supabase/client';
 
-export default function AuthCallbackPage() {
+export default function AuthCallback() {
   const router = useRouter();
-  const params = useParams();
-  const locale = params.locale as string;
+  const {locale} = useParams<{locale: string}>();
 
   useEffect(() => {
-    const handleAuthCallback = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error("Auth error:", error);
-        router.push(`/${locale}/sign-in`);
-        return;
-      }
+    const run = async () => {
+      const supabase = createClient();
 
-      if (data.session) {
-        router.push(`/${locale}/app`);
-      } else {
-        router.push(`/${locale}/sign-in`);
-      }
+      // На случай OAuth PKCE:
+      await supabase.auth.exchangeCodeForSession().catch(() => {});
+
+      const { data: { session } } = await supabase.auth.getSession();
+
+      router.replace(`/${locale}/app`);
     };
 
-    handleAuthCallback();
+    run();
   }, [router, locale]);
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <p>Processing authentication...</p>
-    </div>
-  );
+  return <p>Signing you in…</p>;
 }
-
