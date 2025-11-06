@@ -1,20 +1,28 @@
 'use client';
 
 import {useLocale} from 'next-intl';
-import {usePathname} from 'next/navigation';
-import Link from 'next-intl/link';
+import {usePathname, useRouter} from 'next/navigation';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
 
   const other = locale === 'ru' ? 'en' : 'ru';
 
+  const switchLocale = () => {
+    const segments = pathname.split('/');
+    segments[1] = other;
+    const newPath = segments.join('/');
+    document.cookie = `NEXT_LOCALE=${other}; path=/; max-age=31536000`;
+    router.push(newPath);
+  };
+
   return (
     <div className="mb-4">
-      <Link href={pathname} locale={other} className="underline">
+      <button onClick={switchLocale} className="underline">
         {other.toUpperCase()}
-      </Link>
+      </button>
     </div>
   );
 }
