@@ -4,16 +4,17 @@ import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabaseClient";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { createClient } from "@/lib/supabase/client";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-export function Nav() {
+export default function Nav() {
   const pathname = usePathname();
   const params = useParams();
   const locale = params.locale as string;
   const t = useTranslations("nav");
 
   const handleSignOut = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = `/${locale}/sign-in`;
   };
