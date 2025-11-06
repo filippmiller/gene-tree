@@ -1,71 +1,32 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { supabase } from "@/lib/supabaseClient";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {useState} from 'react';
+import {useRouter, useParams} from 'next/navigation';
+import {createClient} from '@/lib/supabase/client';
 
-export default function SignUpPage({ params }: { params: { locale: string } }) {
-  const t = useTranslations("auth");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+export default function SignUp() {
+  const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
+  const router = useRouter();
+  const {locale} = useParams<{locale: string}>();
+  const supabase = createClient();
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
-
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: {
-        emailRedirectTo: `${appUrl}/${params.locale}/auth/callback`,
-      },
+      options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/callback` }
     });
-
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage(t("checkEmail"));
-    }
-
-    setLoading(false);
+    if (!error) setSent(true);
   };
 
+  if (sent) return <p>Check your email for a magic link.</p>;
+
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{t("signUpTitle")}</CardTitle>
-          <CardDescription>{t("signUpDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignUp} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">{t("email")}</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder={t("emailPlaceholder")}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            {message && (
-              <p className="text-sm text-muted-foreground">{message}</p>
-            )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? t("sending") : t("sendMagicLink")}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form onSubmit={onSubmit} className="max-w-sm space-y-3">
+      <input className="border p-2 w-full" type="email" value={email}
+             onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com" />
+      <button className="border p-2 w-full" type="submit">Sign up</button>
+    </form>
   );
 }
-
