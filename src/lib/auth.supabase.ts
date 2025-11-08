@@ -25,3 +25,9 @@ export async function resetPassword(email: string, redirectTo?: string) {
   });
   if (error) throw new Error(error.message);
 }
+
+export async function signOut() {
+  const supabase = createClient();
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
+}

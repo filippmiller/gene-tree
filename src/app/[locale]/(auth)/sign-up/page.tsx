@@ -15,6 +15,7 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const {locale} = useParams<{locale: string}>();
@@ -38,9 +39,12 @@ export default function SignUpPage() {
 
     try {
       await signUp(email, password, name || undefined);
-      router.push(`/${locale}/app`);
+      setSuccess('Account created! Please check your email to confirm your account.');
+      setError('');
+      // Don't auto-redirect, let user know to check email
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
+      setSuccess('');
     } finally {
       setLoading(false);
     }
@@ -120,6 +124,12 @@ export default function SignUpPage() {
             {error && (
               <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="rounded-md bg-green-50 p-3 text-sm text-green-800">
+                {success}
               </div>
             )}
 
