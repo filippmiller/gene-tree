@@ -5,9 +5,14 @@ import Link from 'next/link';
 export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
   const {locale: resolvedLocale} = await params;
   const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (!user) redirect(`/${resolvedLocale}/sign-in`);
+  console.log('[DASHBOARD] Auth check:', { hasUser: !!user, authError: authError?.message });
+
+  if (!user) {
+    console.log('[DASHBOARD] No user, redirecting to sign-in');
+    redirect(`/${resolvedLocale}/sign-in`);
+  }
 
   // Check if user has a profile, if not redirect to complete profile
   const { data: profile } = await supabase
