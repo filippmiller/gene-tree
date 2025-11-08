@@ -1,9 +1,16 @@
 import { createClient } from '@/lib/supabase/client';
 
 export async function signIn(email: string, password: string) {
+  console.log('[AUTH] Creating Supabase client...');
   const supabase = createClient();
+  console.log('[AUTH] Attempting signInWithPassword...');
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(error.message);
+  console.log('[AUTH] Response received:', { hasData: !!data, hasError: !!error });
+  if (error) {
+    console.error('[AUTH] Supabase error:', error);
+    throw new Error(error.message);
+  }
+  console.log('[AUTH] User signed in:', data.user?.email);
   return data.user;
 }
 

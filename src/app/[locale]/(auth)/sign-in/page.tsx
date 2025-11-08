@@ -21,11 +21,21 @@ export default function SignIn() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    console.log('[SIGN-IN] Attempting sign in for:', email);
     try {
-      await signIn(email, password);
+      console.log('[SIGN-IN] Calling signIn...');
+      const user = await signIn(email, password);
+      console.log('[SIGN-IN] Sign in successful! User:', user?.email);
+      console.log('[SIGN-IN] Waiting for session to be established...');
+      // Wait a moment for the session cookie to be set
+      await new Promise(resolve => setTimeout(resolve, 500));
+      console.log('[SIGN-IN] Redirecting to app...');
       // Use window.location to ensure cookies are sent with next request
       window.location.href = `/${locale}/app`;
     } catch (err: any) {
+      console.error('[SIGN-IN] Sign in failed:', err);
+      console.error('[SIGN-IN] Error message:', err.message);
+      console.error('[SIGN-IN] Error details:', JSON.stringify(err, null, 2));
       setError(err.message || 'Failed to sign in');
       setLoading(false);
     }
