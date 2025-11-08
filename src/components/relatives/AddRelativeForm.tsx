@@ -131,8 +131,12 @@ export default function AddRelativeForm() {
     }
   };
 
+  const isEmailValid = !formData.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  const isPhoneValid = !formData.phone || /^[\d\s()+-]{10,}$/.test(formData.phone);
+  const hasValidContact = (formData.email && isEmailValid) || (formData.phone && isPhoneValid);
+  
   const canSubmit = formData.firstName && formData.lastName && 
-                    (formData.email || formData.phone) && 
+                    hasValidContact &&
                     formData.specificRelationship &&
                     (formData.isDirect || (formData.relatedToUserId && formData.relatedToRelationship));
 
@@ -324,9 +328,14 @@ export default function AddRelativeForm() {
           type="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full px-3 py-2 border rounded-md"
+          className={`w-full px-3 py-2 border rounded-md ${
+            formData.email && !isEmailValid ? 'border-red-500 bg-red-50' : ''
+          }`}
           placeholder="email@example.com"
         />
+        {formData.email && !isEmailValid && (
+          <p className="text-xs text-red-600 mt-1">Неправильный формат email</p>
+        )}
       </div>
 
       <div>
@@ -337,9 +346,14 @@ export default function AddRelativeForm() {
           type="tel"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className="w-full px-3 py-2 border rounded-md"
+          className={`w-full px-3 py-2 border rounded-md ${
+            formData.phone && !isPhoneValid ? 'border-red-500 bg-red-50' : ''
+          }`}
           placeholder="+7 (999) 123-45-67"
         />
+        {formData.phone && !isPhoneValid && (
+          <p className="text-xs text-red-600 mt-1">Неправильный формат телефона</p>
+        )}
       </div>
 
       <div className="border-t pt-4">
