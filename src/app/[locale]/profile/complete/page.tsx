@@ -1,38 +1,25 @@
 'use client';
 
 import {useState} from 'react';
-import {useRouter} from 'next/navigation';
+import {useFormState, useFormStatus} from 'react-dom';
+import {createProfile} from './actions';
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {pending ? 'Creating Profile...' : 'Continue to Dashboard'}
+    </button>
+  );
+}
 
 export default function ProfileCompletePage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    const formData = new FormData(e.currentTarget);
-    
-    try {
-      const response = await fetch('/api/profile/complete', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to create profile');
-      }
-
-      // Redirect to dashboard
-      window.location.href = '/en/app';
-    } catch (err: any) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
+  const [state, formAction] = useFormState(createProfile, { error: null });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
@@ -42,13 +29,13 @@ export default function ProfileCompletePage() {
           Let's get to know you better! This information will help build your family tree.
         </p>
 
-        {error && (
+        {state?.error && (
           <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded">
-            <p className="text-sm text-red-800">{error}</p>
+            <p className="text-sm text-red-800">{state.error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form action={formAction} className="space-y-6">
           {/* Basic Information */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Basic Information</h2>
@@ -59,13 +46,12 @@ export default function ProfileCompletePage() {
                   First Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  name="first_name"
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="John"
-                />
+                type="text"
+                name="first_name"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="John"
+              />
               </div>
 
               <div>
@@ -73,12 +59,11 @@ export default function ProfileCompletePage() {
                   Middle Name
                 </label>
                 <input
-                  type="text"
-                  name="middle_name"
-                  disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Michael"
-                />
+                type="text"
+                name="middle_name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Michael"
+              />
               </div>
 
               <div>
@@ -86,13 +71,12 @@ export default function ProfileCompletePage() {
                   Last Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  name="last_name"
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Doe"
-                />
+                type="text"
+                name="last_name"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Doe"
+              />
               </div>
 
               <div>
@@ -220,13 +204,7 @@ export default function ProfileCompletePage() {
           </div>
 
           <div className="pt-4 border-t">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Creating Profile...' : 'Continue to Dashboard'}
-            </button>
+            <SubmitButton />
             <p className="text-xs text-gray-500 text-center mt-4">
               You can update these details later from your profile settings
             </p>
