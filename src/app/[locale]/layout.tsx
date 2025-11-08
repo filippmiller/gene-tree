@@ -6,7 +6,7 @@ import {ReactNode} from 'react';
 const locales = ['ru','en'] as const;
 
 export default async function LocaleLayout({
-  children, params: {locale}
+  children, params
 }:{children: ReactNode; params: Promise<{locale: string}>}) {
   const { locale: resolvedLocale } = await params;
   if (!locales.includes(resolvedLocale as any)) notFound();

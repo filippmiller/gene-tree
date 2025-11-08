@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import {useRouter, useParams} from 'next/navigation';
-import {signIn} from '@/lib/auth';
+import {signIn, resetPassword} from '@/lib/auth.supabase';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -58,9 +58,16 @@ export default function SignIn() {
         </button>
       </form>
 
-      <p className="text-sm text-gray-600 mt-4">
-        MVP: Any email/password will work for testing
-      </p>
+      <div className="text-sm text-gray-600 mt-4 space-y-2">
+        <button
+          type="button"
+          className="text-blue-600 hover:underline"
+          onClick={async ()=>{ try{ await resetPassword(email); alert('Password reset email sent if account exists.'); } catch(e:any){ alert(e.message||'Failed to send reset'); } }}
+          disabled={!email}
+        >
+          Forgot password?
+        </button>
+      </div>
     </div>
   );
 }
