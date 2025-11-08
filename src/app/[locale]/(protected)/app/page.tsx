@@ -9,7 +9,18 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
 
   if (!user) redirect(`/${resolvedLocale}/sign-in`);
 
-  const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+  // Check if user has a profile, if not redirect to complete profile
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (!profile) {
+    redirect(`/${resolvedLocale}/profile/complete`);
+  }
+
+  const userName = profile.first_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
