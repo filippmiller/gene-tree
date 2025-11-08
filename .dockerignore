@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.next
+.git
+.gitignore
+README.md
+.env*.local
+.vscode
+*.png
+*.jpg
+*.jpeg
+Dockerfile
+docker-compose.yml
+.dockerignore
+playwright-report
+test-results

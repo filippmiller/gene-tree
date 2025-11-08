@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
   await page.goto('https://gene-tree-production.up.railway.app/en/sign-in');
   
   const buildText = await page.textContent('.font-mono').catch(() => null);
-  const currentHash = '02bcbc8'; // First 7 chars of our commit
+  const currentHash = 'b79b622'; // First 7 chars of our commit
   
   console.log('Build shown on page:', buildText);
   console.log('Expected commit:', currentHash);
