@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
+  console.log('[PROFILE-COMPLETE-API] Request received');
   try {
     const cookieStore = await cookies();
     const supabase = createServerClient(
