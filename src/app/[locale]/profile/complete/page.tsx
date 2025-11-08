@@ -1,74 +1,237 @@
-import {redirect} from 'next/navigation';
-import {createServerSupabase} from '@/lib/supabase/server';
+'use client';
 
-export default async function ProfileCompletePage({params}: {params: Promise<{locale: string}>}) {
-  const {locale} = await params;
-  const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+import {useState} from 'react';
+import {useRouter} from 'next/navigation';
 
-  if (!user) redirect(`/${locale}/sign-in`);
+export default function ProfileCompletePage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const response = await fetch('/api/profile/complete', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to create profile');
+      }
+
+      // Redirect to dashboard
+      window.location.href = '/en/app';
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-white rounded-lg shadow-xl p-8">
+      <div className="max-w-3xl w-full bg-white rounded-lg shadow-xl p-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Complete Your Profile</h1>
         <p className="text-gray-600 mb-8">
           Let's get to know you better! This information will help build your family tree.
         </p>
 
-        <div className="space-y-4">
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-800">
-              <strong>Email:</strong> {user.email}
-            </p>
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded">
+            <p className="text-sm text-red-800">{error}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Information */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Basic Information</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  First Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="first_name"
+                  required
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="John"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Middle Name
+                </label>
+                <input
+                  type="text"
+                  name="middle_name"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Michael"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Last Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="last_name"
+                  required
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Doe"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Maiden Name (if applicable)
+                </label>
+                <input
+                  type="text"
+                  name="maiden_name"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Smith"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nickname
+                </label>
+                <input
+                  type="text"
+                  name="nickname"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Johnny"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Gender <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="gender"
+                  required
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                  <option value="unknown">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className="p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-            <p className="font-medium text-yellow-900 mb-2">Profile Setup Coming Soon</p>
-            <p className="text-sm text-yellow-800">
-              The profile completion form is being built. For now, let's create a basic profile for you.
-            </p>
+          {/* Birth Information */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Birth Information</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date of Birth
+                </label>
+                <input
+                  type="date"
+                  name="birth_date"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Place of Birth
+                </label>
+                <input
+                  type="text"
+                  name="birth_place"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="City, Country"
+                />
+              </div>
+            </div>
           </div>
 
-          <form action={`/api/profile/quick-setup`} method="POST" className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                First Name *
-              </label>
-              <input
-                type="text"
-                name="first_name"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="John"
-              />
+          {/* Contact & Additional */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Contact & Additional Info</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="+1 234 567 8900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Occupation
+                </label>
+                <input
+                  type="text"
+                  name="occupation"
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Software Engineer"
+                />
+              </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name *
+                Bio / About Me
               </label>
-              <input
-                type="text"
-                name="last_name"
-                required
+              <textarea
+                name="bio"
+                disabled={loading}
+                rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Doe"
+                placeholder="Tell us a bit about yourself..."
               />
             </div>
+          </div>
 
+          <div className="pt-4 border-t">
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Continue to Dashboard
+              {loading ? 'Creating Profile...' : 'Continue to Dashboard'}
             </button>
-          </form>
-
-          <p className="text-xs text-gray-500 text-center mt-4">
-            You can add more details later from your profile settings
-          </p>
-        </div>
+            <p className="text-xs text-gray-500 text-center mt-4">
+              You can update these details later from your profile settings
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
