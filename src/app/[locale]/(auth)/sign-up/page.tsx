@@ -51,11 +51,26 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-          <CardDescription>Sign up to start building your family tree</CardDescription>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <Card className="w-full max-w-md shadow-2xl border-0 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
+        <CardHeader className="space-y-1 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
+            <svg
+              className="h-6 w-6 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+              />
+            </svg>
+          </div>
+          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+          <CardDescription>Start building your family tree today</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,7 +148,7 @@ export default function SignUpPage() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" variant="gradient" className="w-full" disabled={loading}>
               {loading ? 'Creating account...' : 'Sign Up'}
             </Button>
 
