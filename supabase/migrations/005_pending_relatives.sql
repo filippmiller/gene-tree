@@ -19,12 +19,19 @@ CREATE TABLE IF NOT EXISTS public.pending_relatives (
   instagram_url TEXT,
   
   -- Relationship information
-  relationship_type TEXT NOT NULL, -- parent, child, sibling, spouse, aunt, uncle, cousin, etc.
+  relationship_type TEXT NOT NULL, -- parent, child, sibling, aunt_uncle, niece_nephew, cousin, grandparent, grandchild
   
   -- For indirect relationships: "related_to" points to the intermediate person
-  -- Example: "sister of my mother" → related_to_user_id = mother's user_id, relationship_type = aunt
+  -- Example: "sister of my mother" → related_to_user_id = mother's user_id, relationship_type = aunt_uncle
   related_to_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   related_to_relationship TEXT, -- What relationship the intermediate person has (e.g., "mother", "father")
+  
+  -- Qualifiers (JSON or separate columns)
+  halfness TEXT CHECK (halfness IS NULL OR halfness IN ('full', 'half', 'adoptive', 'foster')),
+  lineage TEXT CHECK (lineage IS NULL OR lineage IN ('maternal', 'paternal', 'both', 'unknown')),
+  cousin_degree INT CHECK (cousin_degree IS NULL OR (cousin_degree >= 1 AND cousin_degree <= 10)),
+  cousin_removed INT CHECK (cousin_removed IS NULL OR (cousin_removed >= 0 AND cousin_removed <= 5)),
+  level INT CHECK (level IS NULL OR (level >= 0 AND level <= 5)), -- For aunt_uncle/niece_nephew depth
   
   -- Invitation system
   invitation_token UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),

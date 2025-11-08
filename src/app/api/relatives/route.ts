@@ -28,6 +28,7 @@ export async function POST(request: Request) {
       gender,
       facebookUrl,
       instagramUrl,
+      qualifiers, // halfness, lineage, cousin_degree, cousin_removed, level
     } = body;
     
     // Validation
@@ -68,6 +69,12 @@ export async function POST(request: Request) {
         facebook_url: facebookUrl || null,
         instagram_url: instagramUrl || null,
         status: 'pending',
+        // Qualifiers
+        halfness: qualifiers?.halfness || null,
+        lineage: qualifiers?.lineage || null,
+        cousin_degree: qualifiers?.cousin_degree || null,
+        cousin_removed: qualifiers?.cousin_removed || null,
+        level: qualifiers?.level || null,
       })
       .select()
       .single();

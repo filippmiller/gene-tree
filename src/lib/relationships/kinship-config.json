@@ -1,0 +1,108 @@
+{
+  "version": "kinship-blood-v1",
+  "domain": "consanguine",
+  "conventions": {
+    "gender_values": ["male", "female", "nonbinary", "unknown"],
+    "halfness_values": ["full", "half", "adoptive", "foster"],
+    "lineage_values": ["maternal", "paternal", "both", "unknown"]
+  },
+  "maps": {
+    "ru": {
+      "sibling_m": "брат",
+      "sibling_f": "сестра",
+      "child_m": "сын",
+      "child_f": "дочь",
+      "grandchild_m": "внук",
+      "grandchild_f": "внучка",
+      "parent_m": "отец",
+      "parent_f": "мать",
+      "grandparent_m": "дед",
+      "grandparent_f": "бабушка",
+      "half_prefix_paternal_m": "единокровный",
+      "half_prefix_paternal_f": "единокровная",
+      "half_prefix_maternal_m": "единоутробный",
+      "half_prefix_maternal_f": "единоутробная",
+      "cousin_degree_adj_m": ["двоюродный", "троюродный", "четвероюродный", "пятюродный"],
+      "cousin_degree_adj_f": ["двоюродная", "троюродная", "четвероюродная", "пятюродная"],
+      "uncle_prefix_m": ["", "двоюродный", "троюродный", "четвероюродный"],
+      "uncle_prefix_f": ["", "двоюродная", "троюродная", "четвероюродная"],
+      "uncle_m": "дядя",
+      "uncle_f": "тётя",
+      "nephew_prefix_m": ["", "двоюродный", "внучатый двоюродный", "правнучатый двоюродный"],
+      "nephew_prefix_f": ["", "двоюродная", "внучатая двоюродная", "правнучатая двоюродная"],
+      "nephew_m": "племянник",
+      "nephew_f": "племянница",
+      "removed_suffix": ["", " (один раз в стороне)", " (два раза в стороне)", " (три раза в стороне)"]
+    },
+    "en": {
+      "sibling_m": "brother",
+      "sibling_f": "sister",
+      "child_m": "son",
+      "child_f": "daughter",
+      "grandchild_m": "grandson",
+      "grandchild_f": "granddaughter",
+      "parent_m": "father",
+      "parent_f": "mother",
+      "grandparent_m": "grandfather",
+      "grandparent_f": "grandmother",
+      "cousin_degree_adj": ["first cousin", "second cousin", "third cousin", "fourth cousin"],
+      "uncle_title_m": "uncle",
+      "uncle_title_f": "aunt",
+      "nephew_title_m": "nephew",
+      "nephew_title_f": "niece",
+      "removed_suffix": ["", " once removed", " twice removed", " thrice removed"]
+    }
+  },
+  "types": [
+    {
+      "code": "parent",
+      "category": "consanguine",
+      "is_directed": true,
+      "inverse_code": "child"
+    },
+    {
+      "code": "child",
+      "category": "consanguine",
+      "is_directed": true,
+      "inverse_code": "parent"
+    },
+    {
+      "code": "grandparent",
+      "category": "consanguine",
+      "is_directed": true,
+      "inverse_code": "grandchild"
+    },
+    {
+      "code": "grandchild",
+      "category": "consanguine",
+      "is_directed": true,
+      "inverse_code": "grandparent"
+    },
+    {
+      "code": "sibling",
+      "category": "consanguine",
+      "is_directed": false,
+      "requires_qualifiers": ["halfness"]
+    },
+    {
+      "code": "aunt_uncle",
+      "category": "consanguine",
+      "is_directed": true,
+      "inverse_code": "niece_nephew",
+      "requires_qualifiers": ["level"]
+    },
+    {
+      "code": "niece_nephew",
+      "category": "consanguine",
+      "is_directed": true,
+      "inverse_code": "aunt_uncle",
+      "requires_qualifiers": ["level"]
+    },
+    {
+      "code": "cousin",
+      "category": "consanguine",
+      "is_directed": false,
+      "requires_qualifiers": ["cousin_degree", "cousin_removed"]
+    }
+  ]
+}
