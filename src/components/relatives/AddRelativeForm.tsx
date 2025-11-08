@@ -65,11 +65,37 @@ export default function AddRelativeForm() {
     }
   }, [formData.isDirect]);
 
+  const validateForm = () => {
+    // Email validation
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setError('Неправильный формат email');
+      return false;
+    }
+    
+    // Phone validation (basic)
+    if (formData.phone && !/^[\d\s()+-]{10,}$/.test(formData.phone)) {
+      setError('Неправильный формат телефона');
+      return false;
+    }
+    
+    // At least one contact required
+    if (!formData.email && !formData.phone) {
+      setError('Укажите хотя бы один контакт (email или телефон)');
+      return false;
+    }
+    
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError(null);
     
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
     const selectedOption = specificOptions.find(opt => opt.value === formData.specificRelationship);
     
     try {
@@ -84,8 +110,15 @@ export default function AddRelativeForm() {
         }),
       });
       
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Ошибка сервера. Попробуйте позже.');
+      }
+      
+      const data = await response.json();
+      
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || 'Failed to add relative');
       }
       
@@ -169,11 +202,15 @@ export default function AddRelativeForm() {
               required={!formData.isDirect}
             >
               <option value="">Выберите...</option>
-              {existingRelatives.map((rel) => (
-                <option key={rel.id} value={rel.id}>
-                  {rel.first_name} {rel.last_name} ({rel.relationship_type})
-                </option>
-              ))}
+              {existingRelatives.length === 0 ? (
+                <option disabled>Сначала добавьте прямых родственников</option>
+              ) : (
+                existingRelatives.map((rel) => (
+                  <option key={rel.id} value={rel.id}>
+                    {rel.first_name} {rel.last_name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
           
