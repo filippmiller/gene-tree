@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase/server';
+import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
 
 export async function POST(request: Request) {
+  const requestMeta = extractRequestMeta(request);
+  const body = await request.json();
+  
   try {
     const supabase = await createServerSupabase();
     
@@ -9,13 +13,20 @@ export async function POST(request: Request) {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     
     if (userError || !user) {
+      await logAudit({
+        action: 'create_relative_failed',
+        method: 'POST',
+        path: '/api/relatives',
+        requestBody: body,
+        responseStatus: 401,
+        errorMessage: 'Unauthorized',
+        ...requestMeta,
+      });
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
-    
-    const body = await request.json();
     const {
       isDirect,
       relatedToUserId,
@@ -81,11 +92,35 @@ export async function POST(request: Request) {
     
     if (error) {
       console.error('Error creating pending relative:', error);
+      await logAudit({
+        action: 'create_relative_failed',
+        entityType: 'pending_relatives',
+        method: 'POST',
+        path: '/api/relatives',
+        requestBody: body,
+        responseStatus: 500,
+        errorMessage: error.message,
+        errorStack: JSON.stringify(error),
+        ...requestMeta,
+      });
       return NextResponse.json(
         { error: 'Failed to create invitation' },
         { status: 500 }
       );
     }
+    
+    // Log successful creation
+    await logAudit({
+      action: 'create_relative_success',
+      entityType: 'pending_relatives',
+      entityId: data.id,
+      method: 'POST',
+      path: '/api/relatives',
+      requestBody: body,
+      responseStatus: 200,
+      responseBody: { id: data.id, firstName: data.first_name, lastName: data.last_name },
+      ...requestMeta,
+    });
     
     // TODO: In future, send invitation email/SMS here
     // sendInvitation(data.invitation_token, email, phone);
@@ -93,6 +128,16 @@ export async function POST(request: Request) {
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error in POST /api/relatives:', error);
+    await logAudit({
+      action: 'create_relative_exception',
+      method: 'POST',
+      path: '/api/relatives',
+      requestBody: body,
+      responseStatus: 500,
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      errorStack: error instanceof Error ? error.stack : undefined,
+      ...requestMeta,
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
