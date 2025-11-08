@@ -19,7 +19,7 @@ function SubmitButton() {
 }
 
 export default function ProfileCompletePage() {
-  const [state, formAction] = useFormState<{error?: string} | null, FormData>(createProfile, null);
+  const [state, formAction] = useFormState(createProfile, null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">

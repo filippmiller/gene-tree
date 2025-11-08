@@ -4,7 +4,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-export async function createProfile(formData: FormData) {
+export async function createProfile(prevState: {error?: string} | null, formData: FormData): Promise<{error?: string} | null> {
   console.log('[PROFILE-ACTION] Starting profile creation...');
   
   try {
@@ -97,4 +97,5 @@ export async function createProfile(formData: FormData) {
 
   // Redirect to dashboard on success
   redirect('/en/app');
+  return null; // This won't be reached due to redirect, but TypeScript needs it
 }
