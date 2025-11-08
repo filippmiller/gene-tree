@@ -50,7 +50,9 @@ export default function AddRelativeForm() {
   useEffect(() => {
     const fetchRelatives = async () => {
       try {
-        const response = await fetch('/api/relatives');
+        const response = await fetch('/api/relatives', {
+          headers: { 'Content-Type': 'application/json' },
+        });
         if (response.ok) {
           const data = await response.json();
           setExistingRelatives(data);
