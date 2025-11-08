@@ -18,3 +18,6 @@
 - env: .env.example сокращён до PUBLIC-переменных (NEXT_PUBLIC_SUPABASE_URL/ANON_KEY, NEXT_PUBLIC_API_BASE_URL)
 - dev: добавлен скрипт dev:rw (Railway env injection) и test:e2e
 - api: добавлен маршрут /api/health (проверка Supabase auth health публичными ключами)
+- deploy: Railway используется для полного приложения (frontend + backend)
+- deploy: успешный деплой на https://gene-tree-production.up.railway.app
+- decision: Cloudflare Pages не используется (Next.js 16 пока не поддерживается @cloudflare/next-on-pages)

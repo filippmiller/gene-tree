@@ -10,10 +10,23 @@
 - Последствия: (технические/организационные)
 - Ссылки: (PR, спеки, тикеты)
 
-Пример
+## ADR-001: Платформа хостинга (2025-11-08)
+
 - Дата: 2025-11-08
-- Контекст: Хостинг фронтенда
-- Варианты: Cloudflare Pages, Vercel, Railway Static
-- Решение: Cloudflare Pages (присутствует wrangler.toml; требование edge runtime)
-- Последствия: нужeн wrangler, настройка ENV через CF, Pages Functions для edge‑маршрутов
-- Ссылки: docs/arch/overview.md, docs/ops/runbook.md
+- Контекст: Выбор платформы для деплоя full-stack Next.js приложения (frontend + backend + auth)
+- Варианты: 
+  1. Cloudflare Pages - edge runtime, быстро, но @cloudflare/next-on-pages не поддерживает Next.js 16
+  2. Vercel - нативная поддержка Next.js, но дороже
+  3. Railway - универсальная платформа, поддержка любых Docker/Node приложений
+- Решение: Railway для полного приложения (frontend + backend)
+- Обоснование:
+  - Next.js 16 работает без проблем
+  - Серверные компоненты и API routes работают нативно
+  - Supabase интеграция уже настроена
+  - Простое управление переменными окружения
+  - Один сервис для всего стека
+- Последствия: 
+  - Деплой через `railway up` или Git push
+  - ENV переменные через Railway CLI/Dashboard
+  - Автоматические деплои при push в main
+- Ссылки: docs/arch/overview.md, docs/ops/runbook.md, https://gene-tree-production.up.railway.app
