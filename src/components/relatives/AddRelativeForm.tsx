@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getSpecificRelationshipOptions } from '@/lib/relationships/computeRelationship';
+import { getBloodRelationshipOptions, getGenderSpecificOptions, type Gender, type RelationshipQualifiers } from '@/lib/relationships/generateLabel';
 
 type Step = 'type' | 'details' | 'social';
 
@@ -11,14 +11,16 @@ interface FormData {
   isDirect: boolean;
   relatedToUserId?: string;
   relatedToRelationship?: string;
+  relationshipCode: string; // parent, child, sibling, aunt_uncle, etc.
   
   // Step 2: Details
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  relationshipType: string;
-  gender?: 'male' | 'female';
+  specificRelationship: string; // mother, father, brother, sister, etc.
+  gender?: Gender;
+  qualifiers?: RelationshipQualifiers; // halfness, lineage, cousin_degree, etc.
   
   // Step 3: Social (optional)
   facebookUrl?: string;
@@ -33,31 +35,18 @@ export default function AddRelativeForm() {
   
   const [formData, setFormData] = useState<FormData>({
     isDirect: true,
+    relationshipCode: '',
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
-    relationshipType: '',
+    specificRelationship: '',
   });
   
-  const relationshipOptions = getSpecificRelationshipOptions('ru');
-  
-  // Group relationship options by category
-  const groupedOptions = relationshipOptions.reduce((acc, opt) => {
-    const category = opt.category || 'other';
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(opt);
-    return acc;
-  }, {} as Record<string, typeof relationshipOptions>);
-  
-  const categoryLabels: Record<string, string> = {
-    blood: 'Кровные родственники',
-    spouse: 'Супруги',
-    'in-law': 'Родственники через брак',
-    step: 'Сводные',
-    spiritual: 'Духовные',
-    other: 'Другое',
-  };
+  const relationshipOptions = getBloodRelationshipOptions('ru');
+  const specificOptions = formData.relationshipCode 
+    ? getGenderSpecificOptions(formData.relationshipCode, 'ru')
+    : [];
   
   const handleNext = () => {
     if (currentStep === 'type') setCurrentStep('details');
@@ -73,11 +62,19 @@ export default function AddRelativeForm() {
     setIsSubmitting(true);
     setError(null);
     
+    // Find selected specific option to get gender and qualifiers
+    const selectedOption = specificOptions.find(opt => opt.value === formData.specificRelationship);
+    
     try {
       const response = await fetch('/api/relatives', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          relationshipType: formData.relationshipCode,
+          gender: selectedOption?.gender || formData.gender,
+          qualifiers: selectedOption?.qualifiers,
+        }),
       });
       
       if (!response.ok) {
@@ -94,7 +91,7 @@ export default function AddRelativeForm() {
   };
   
   const canProceedFromType = formData.isDirect || (formData.relatedToUserId && formData.relatedToRelationship);
-  const canProceedFromDetails = formData.firstName && formData.lastName && (formData.email || formData.phone) && formData.relationshipType;
+  const canProceedFromDetails = formData.firstName && formData.lastName && (formData.email || formData.phone) && formData.specificRelationship;
   
   return (
     <div className="bg-white rounded-lg shadow-xl border-0 p-8">
@@ -275,56 +272,41 @@ export default function AddRelativeForm() {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Кем приходится вам? *
+              Тип родства *
             </label>
             <select
-              value={formData.relationshipType}
-              onChange={(e) => setFormData({ ...formData, relationshipType: e.target.value })}
+              value={formData.relationshipCode}
+              onChange={(e) => setFormData({ ...formData, relationshipCode: e.target.value, specificRelationship: '' })}
               className="w-full px-3 py-2 border rounded-md"
             >
-              <option value="">Выберите связь...</option>
-              {Object.entries(groupedOptions).map(([category, options]) => (
-                <optgroup key={category} label={categoryLabels[category] || category}>
-                  {options.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </optgroup>
+              <option value="">Выберите тип...</option>
+              {relationshipOptions.map((opt) => (
+                <option key={opt.code} value={opt.code}>
+                  {opt.label}
+                </option>
               ))}
             </select>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Пол (опционально)
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="male"
-                  checked={formData.gender === 'male'}
-                  onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'male' })}
-                  className="mr-2"
-                />
-                Мужской
+          {formData.relationshipCode && specificOptions.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Конкретная связь *
               </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="female"
-                  checked={formData.gender === 'female'}
-                  onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'female' })}
-                  className="mr-2"
-                />
-                Женский
-              </label>
+              <select
+                value={formData.specificRelationship}
+                onChange={(e) => setFormData({ ...formData, specificRelationship: e.target.value })}
+                className="w-full px-3 py-2 border rounded-md"
+              >
+                <option value="">Выберите...</option>
+                {specificOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
-          
+          )}
           <div className="text-sm text-gray-600">
             * Необходимо указать имя, фамилию, тип связи и хотя бы один контакт (email или телефон)
           </div>
