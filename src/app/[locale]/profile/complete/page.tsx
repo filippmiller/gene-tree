@@ -86,7 +86,6 @@ export default function ProfileCompletePage() {
                 <input
                   type="text"
                   name="maiden_name"
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Smith"
                 />
@@ -99,7 +98,6 @@ export default function ProfileCompletePage() {
                 <input
                   type="text"
                   name="nickname"
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Johnny"
                 />
@@ -112,7 +110,6 @@ export default function ProfileCompletePage() {
                 <select
                   name="gender"
                   required
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select gender</option>
@@ -137,7 +134,6 @@ export default function ProfileCompletePage() {
                 <input
                   type="date"
                   name="birth_date"
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -149,7 +145,6 @@ export default function ProfileCompletePage() {
                 <input
                   type="text"
                   name="birth_place"
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="City, Country"
                 />
@@ -169,7 +164,6 @@ export default function ProfileCompletePage() {
                 <input
                   type="tel"
                   name="phone"
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="+1 234 567 8900"
                 />
@@ -182,7 +176,6 @@ export default function ProfileCompletePage() {
                 <input
                   type="text"
                   name="occupation"
-                  disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Software Engineer"
                 />
@@ -195,7 +188,6 @@ export default function ProfileCompletePage() {
               </label>
               <textarea
                 name="bio"
-                disabled={loading}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Tell us a bit about yourself..."
