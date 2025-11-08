@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RelationshipType, RelationshipLabels } from '@/types/database';
+import AddRelationshipModal from './AddRelationshipModal';
 
 interface User {
   id: string;
@@ -30,9 +31,15 @@ export default function RelationshipsList({ currentUserId }: { currentUserId: st
   const [relationships, setRelationships] = useState<Relationship[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     fetchRelationships();
+    // Expose function to open modal from parent
+    (window as any).openAddRelationship = () => setShowAddModal(true);
+    return () => {
+      delete (window as any).openAddRelationship;
+    };
   }, []);
 
   const fetchRelationships = async () => {
@@ -182,7 +189,18 @@ export default function RelationshipsList({ currentUserId }: { currentUserId: st
   const grouped = groupRelationshipsByType();
 
   return (
-    <div className="space-y-6">
+    <>
+      {showAddModal && (
+        <AddRelationshipModal
+          currentUserId={currentUserId}
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => {
+            fetchRelationships();
+            setShowAddModal(false);
+          }}
+        />
+      )}
+      <div className="space-y-6">
       {Object.entries(grouped).map(([type, rels]) => {
         const label = RelationshipLabels[type as RelationshipType]?.plural || type;
         
@@ -237,6 +255,7 @@ export default function RelationshipsList({ currentUserId }: { currentUserId: st
           </Card>
         );
       })}
-    </div>
+      </div>
+    </>
   );
 }

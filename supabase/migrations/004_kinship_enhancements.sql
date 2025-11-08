@@ -224,40 +224,40 @@ WHERE r.relationship_type = rt.code
 CREATE OR REPLACE FUNCTION public.fn_get_ancestors(p_person UUID, p_max_depth INT DEFAULT 10)
 RETURNS TABLE(ancestor_id UUID, depth INT, path UUID[])
 LANGUAGE SQL AS $$
-WITH RECURSIVE asc AS (
+WITH RECURSIVE ancestors AS (
   SELECT r.user1_id AS ancestor_id, 1 AS depth, ARRAY[p_person, r.user1_id] AS path
   FROM public.relationships r
   WHERE r.user2_id = p_person 
     AND r.relationship_type = 'parent'
   UNION ALL
   SELECT r.user1_id, a.depth+1, a.path || r.user1_id
-  FROM asc a
+  FROM ancestors a
   JOIN public.relationships r ON r.user2_id = a.ancestor_id
   WHERE r.relationship_type = 'parent' 
     AND a.depth < p_max_depth
     AND NOT r.user1_id = ANY(a.path) -- prevent cycles
 )
-SELECT ancestor_id, depth, path FROM asc;
+SELECT ancestor_id, depth, path FROM ancestors;
 $$;
 
 -- Get descendants (going down the tree via parent relationships)
 CREATE OR REPLACE FUNCTION public.fn_get_descendants(p_person UUID, p_max_depth INT DEFAULT 10)
 RETURNS TABLE(descendant_id UUID, depth INT, path UUID[])
 LANGUAGE SQL AS $$
-WITH RECURSIVE dsc AS (
+WITH RECURSIVE descendants AS (
   SELECT r.user2_id AS descendant_id, 1 AS depth, ARRAY[p_person, r.user2_id] AS path
   FROM public.relationships r
   WHERE r.user1_id = p_person 
     AND r.relationship_type = 'parent'
   UNION ALL
   SELECT r.user2_id, d.depth+1, d.path || r.user2_id
-  FROM dsc d
+  FROM descendants d
   JOIN public.relationships r ON r.user1_id = d.descendant_id
   WHERE r.relationship_type = 'parent' 
     AND d.depth < p_max_depth
     AND NOT r.user2_id = ANY(d.path) -- prevent cycles
 )
-SELECT descendant_id, depth, path FROM dsc;
+SELECT descendant_id, depth, path FROM descendants;
 $$;
 
 -- Compute layers for tree rendering (root=0, ancestors<0, descendants>0)
@@ -266,11 +266,11 @@ RETURNS TABLE(person_id UUID, layer INT)
 LANGUAGE SQL AS $$
 WITH
 anc AS (SELECT ancestor_id AS id, -depth AS layer FROM public.fn_get_ancestors(p_root, p_up)),
-dsc AS (SELECT descendant_id AS id, depth AS layer FROM public.fn_get_descendants(p_root, p_down)),
+descs AS (SELECT descendant_id AS id, depth AS layer FROM public.fn_get_descendants(p_root, p_down)),
 root AS (SELECT p_root::UUID AS id, 0 AS layer)
 SELECT * FROM root
 UNION SELECT id, layer FROM anc
-UNION SELECT id, layer FROM dsc;
+UNION SELECT id, layer FROM descs;
 $$;
 
 -- =======================
@@ -362,4 +362,5 @@ END $$;
 -- =======================
 -- DONE
 -- =======================
-COMMENT ON MIGRATION IS 'Kinship enhancements: adds relationship_types table, qualifiers, tree traversal functions, and localized labels';
+-- Migration 004: Kinship enhancements
+-- Adds relationship_types table, qualifiers, tree traversal functions, and localized labels
