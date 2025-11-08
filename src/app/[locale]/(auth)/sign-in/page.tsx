@@ -23,10 +23,10 @@ export default function SignIn() {
     setError('');
     try {
       await signIn(email, password);
-      router.push(`/${locale}/app`);
+      // Use window.location to ensure cookies are sent with next request
+      window.location.href = `/${locale}/app`;
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
-    } finally {
       setLoading(false);
     }
   };
