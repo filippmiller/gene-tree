@@ -44,7 +44,7 @@ export default function SignIn() {
   return (
     <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="absolute top-4 right-4 text-xs text-gray-500 font-mono">
-        Build: {process.env.NEXT_PUBLIC_BUILD_ID || 'dev-v2'}
+        Build: {process.env.NEXT_PUBLIC_BUILD_ID || process.env.BUILD_VERSION || 'dev'}
       </div>
       <Card className="w-full max-w-md shadow-2xl border-0 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
         <CardHeader className="space-y-1 text-center">
