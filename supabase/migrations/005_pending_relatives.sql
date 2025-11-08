@@ -101,7 +101,6 @@ SELECT
   pr.*,
   up_inviter.first_name AS inviter_first_name,
   up_inviter.last_name AS inviter_last_name,
-  up_inviter.email AS inviter_email,
   up_related.first_name AS related_person_first_name,
   up_related.last_name AS related_person_last_name,
   CASE
