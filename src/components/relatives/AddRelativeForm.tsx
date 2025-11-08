@@ -117,10 +117,13 @@ export default function AddRelativeForm() {
               type="radio"
               checked={formData.isDirect}
               onChange={() => setFormData({ 
-                ...formData, 
-                isDirect: true, 
-                relatedToUserId: undefined, 
-                relatedToRelationship: undefined 
+                isDirect: true,
+                relationshipCode: '',
+                specificRelationship: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
               })}
               className="mt-1 mr-3"
             />
@@ -134,7 +137,15 @@ export default function AddRelativeForm() {
             <input
               type="radio"
               checked={!formData.isDirect}
-              onChange={() => setFormData({ ...formData, isDirect: false })}
+              onChange={() => setFormData({ 
+                isDirect: false,
+                relationshipCode: '',
+                specificRelationship: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+              })}
               className="mt-1 mr-3"
             />
             <div>
