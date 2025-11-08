@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/browser';
 
 export async function signIn(email: string, password: string) {
   console.log('[AUTH] Creating Supabase client...');
