@@ -59,6 +59,19 @@ const { chromium } = require('playwright');
   const errorMsg = await page.textContent('.bg-red-50').catch(() => null);
   if (errorMsg) {
     console.log('ERROR MESSAGE:', errorMsg);
+  } else {
+    console.log('No error message found on page');
+  }
+  
+  // Check if still on sign-in page
+  if (page.url().includes('/sign-in')) {
+    console.log('⚠️  Still on sign-in page - login failed');
+    
+    // Check password field value
+    const passwordValue = await page.inputValue('input[type="password"]');
+    console.log('Password field value:', passwordValue ? '[has value]' : '[empty]');
+  } else {
+    console.log('✓ Successfully navigated away from sign-in page');
   }
   
   // Take screenshot
