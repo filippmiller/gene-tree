@@ -2,8 +2,7 @@ import {redirect} from 'next/navigation';
 import {createServerSupabase} from '@/lib/supabase/server';
 import Link from 'next/link';
 import RelationshipsList from '@/components/relationships/RelationshipsList';
-// TreeVisualization temporarily disabled
-// import TreeVisualization from '@/components/tree/TreeVisualization';
+import TreeVisualization from '@/components/tree/TreeVisualization';
 
 export default async function RelationsPage({params}:{params:Promise<{locale:string}>}) {
   const {locale} = await params;
@@ -86,14 +85,14 @@ export default async function RelationsPage({params}:{params:Promise<{locale:str
         {/* List of confirmed relationships */}
         <RelationshipsList currentUserId={user.id} />
 
-        {/* Family Tree Visualization - Temporarily disabled */}
-        {/* <div className="mt-12">
+        {/* Family Tree Visualization */}
+        <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Family Tree</h2>
           <p className="text-gray-600 mb-6">
             Визуализация вашего генеалогического дерева. Подтвердите связи, чтобы они появились на дереве.
           </p>
           <TreeVisualization />
-        </div> */}
+        </div>
       </main>
     </div>
   );
