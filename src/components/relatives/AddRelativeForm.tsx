@@ -182,6 +182,9 @@ export default function AddRelativeForm() {
               })}
               className="mt-1 mr-3"
             />
+              })}
+              className="mt-1 mr-3"
+            />
             <div>
               <div className="font-medium">Прямого родственника</div>
               <div className="text-sm text-gray-600">Мама, папа, брат, сестра, супруг(а) и т.д.</div>
@@ -203,6 +206,9 @@ export default function AddRelativeForm() {
                 isDeceased: false,
                 knowsBirthDate: false,
                 dateOfBirth: undefined,
+              })}
+              className="mt-1 mr-3"
+            />
               })}
               className="mt-1 mr-3"
             />

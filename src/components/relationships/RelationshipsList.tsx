@@ -207,54 +207,50 @@ export default function RelationshipsList({ currentUserId }: { currentUserId: st
         const label = RelationshipLabels[type as RelationshipType]?.plural || type;
         
         return (
-          <Card key={type}>
-            <CardHeader>
-              <CardTitle className="text-lg">{label}</CardTitle>
-              <CardDescription>{rels.length} {rels.length === 1 ? 'person' : 'people'}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {rels.map(rel => {
-                  const { person } = getRelationshipDirection(rel);
-                  const displayName = getDisplayName(person);
-                  
-                  return (
-                    <div
-                      key={rel.id}
-                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
-                          {displayName.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{displayName}</p>
-                          {rel.marriage_date && (
-                            <p className="text-sm text-gray-600">
-                              Married: {new Date(rel.marriage_date).toLocaleDateString()}
-                            </p>
-                          )}
-                          {rel.divorce_date && (
-                            <p className="text-sm text-gray-600">
-                              Divorced: {new Date(rel.divorce_date).toLocaleDateString()}
-                            </p>
-                          )}
-                        </div>
+          <div key={type} className="bg-white rounded-lg shadow-md p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">{label}</h3>
+              <p className="text-sm text-gray-600">{rels.length} {rels.length === 1 ? 'person' : 'people'}</p>
+            </div>
+            <div className="space-y-3">
+              {rels.map(rel => {
+                const { person } = getRelationshipDirection(rel);
+                const displayName = getDisplayName(person);
+                
+                return (
+                  <div
+                    key={rel.id}
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
+                        {displayName.charAt(0).toUpperCase()}
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => deleteRelationship(rel.id)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        Remove
-                      </Button>
+                      <div>
+                        <p className="font-medium text-gray-900">{displayName}</p>
+                        {rel.marriage_date && (
+                          <p className="text-sm text-gray-600">
+                            Married: {new Date(rel.marriage_date).toLocaleDateString()}
+                          </p>
+                        )}
+                        {rel.divorce_date && (
+                          <p className="text-sm text-gray-600">
+                            Divorced: {new Date(rel.divorce_date).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+                    <button
+                      onClick={() => deleteRelationship(rel.id)}
+                      className="px-3 py-1 text-sm border border-red-300 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         );
       })}
       </div>
