@@ -14,7 +14,7 @@ export default function KinSearchForm({ userId }: Props) {
 
   // Debounced live search
   const searchKinship = useCallback(async (searchPhrase: string) => {
-    if (!searchPhrase || searchPhrase.length < 3) {
+    if (!searchPhrase || searchPhrase.length < 5) {
       setResult(null);
       setError(null);
       return;
@@ -72,7 +72,7 @@ export default function KinSearchForm({ userId }: Props) {
           placeholder='Например: "сестра мамы", "дочка брата", "бабушка папы"'
         />
         <p className="text-xs text-gray-500 mt-1">
-          💡 Начните вводить - результаты появятся автоматически
+          💡 Введите минимум 5 символов - результаты появятся автоматически
         </p>
       </div>
 
