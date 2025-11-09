@@ -1,7 +1,8 @@
 import {redirect} from 'next/navigation';
 import {createServerSupabase} from '@/lib/supabase/server';
 import Link from 'next/link';
-// import RelationshipsList from '@/components/relationships/RelationshipsList';
+import RelationshipsList from '@/components/relationships/RelationshipsList';
+// TreeVisualization temporarily disabled
 // import TreeVisualization from '@/components/tree/TreeVisualization';
 
 export default async function RelationsPage({params}:{params:Promise<{locale:string}>}) {
@@ -82,13 +83,8 @@ export default async function RelationsPage({params}:{params:Promise<{locale:str
           </form>
         </div>
 
-        {/* <RelationshipsList currentUserId={user.id} /> */}
-        
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-yellow-900 mb-2">🚧 В разработке</h2>
-          <p className="text-yellow-800">Список связей и дерево временно отключены для отладки.</p>
-          <p className="text-sm text-yellow-700 mt-2">Пока тестируйте форму добавления родственников на странице /people</p>
-        </div>
+        {/* List of confirmed relationships */}
+        <RelationshipsList currentUserId={user.id} />
 
         {/* Family Tree Visualization - Temporarily disabled */}
         {/* <div className="mt-12">
