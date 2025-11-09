@@ -24,6 +24,10 @@ interface Relationship {
   marriage_place: string | null;
   divorce_date: string | null;
   created_at: string;
+  verification_status?: string;
+  status?: string;
+  is_deceased?: boolean;
+  date_of_birth?: string;
   user1?: User;
   user2?: User;
 }
@@ -227,15 +231,23 @@ export default function RelationshipsList({ currentUserId }: { currentUserId: st
                         {displayName.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{displayName}</p>
-                        {rel.marriage_date && (
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-900">{displayName}</p>
+                          {rel.verification_status !== 'verified' && (
+                            <span className="text-xs text-gray-500 italic">(не точно)</span>
+                          )}
+                          {rel.is_deceased && (
+                            <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">† В память</span>
+                          )}
+                        </div>
+                        {rel.date_of_birth && (
                           <p className="text-sm text-gray-600">
-                            Married: {new Date(rel.marriage_date).toLocaleDateString()}
+                            ДР: {new Date(rel.date_of_birth).toLocaleDateString('ru-RU')}
                           </p>
                         )}
-                        {rel.divorce_date && (
-                          <p className="text-sm text-gray-600">
-                            Divorced: {new Date(rel.divorce_date).toLocaleDateString()}
+                        {rel.status === 'pending' && (
+                          <p className="text-xs text-orange-600">
+                            ⚠️ Ожидает принятия приглашения
                           </p>
                         )}
                       </div>

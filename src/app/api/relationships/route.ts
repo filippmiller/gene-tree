@@ -31,41 +31,45 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('[RELATIONSHIPS-API] Fetching relationships for user:', user.id);
+    console.log('[RELATIONSHIPS-API] Fetching pending relatives for user:', user.id);
 
-    // Get relationships where user is either user1 or user2
-    const { data: relationships, error } = await supabase
-      .from('relationships')
-      .select('*')
-      .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`);
-
-    // Manually fetch user profiles for user1 and user2 from pending_relatives
-    if (relationships && relationships.length > 0) {
-      const userIds = new Set<string>();
-      relationships.forEach(rel => {
-        if (rel.user1_id) userIds.add(rel.user1_id);
-        if (rel.user2_id) userIds.add(rel.user2_id);
-      });
-
-      const { data: profiles } = await supabase
-        .from('pending_relatives')
-        .select('id, first_name, last_name, email')
-        .in('id', Array.from(userIds));
-
-      // Attach profile data to relationships
-      const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
-      relationships.forEach((rel: any) => {
-        rel.user1 = profileMap.get(rel.user1_id) || null;
-        rel.user2 = profileMap.get(rel.user2_id) || null;
-      });
-    }
+    // Get pending relatives added by this user (these are the "relationships")
+    const { data: pendingRelatives, error } = await supabase
+      .from('pending_relatives')
+      .select('id, first_name, last_name, email, relationship_type, verification_status, is_deceased, date_of_birth, invited_by, status')
+      .eq('invited_by', user.id);
 
     if (error) {
-      console.error('[RELATIONSHIPS-API] Error fetching relationships:', error);
+      console.error('[RELATIONSHIPS-API] Error fetching pending relatives:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log('[RELATIONSHIPS-API] Found relationships:', relationships?.length || 0);
+    // Transform to relationships format
+    const relationships = (pendingRelatives || []).map(rel => ({
+      id: rel.id,
+      user1_id: user.id, // current user
+      user2_id: rel.id, // the relative
+      relationship_type: rel.relationship_type || 'unknown',
+      verification_status: rel.verification_status || 'pending',
+      status: rel.status,
+      is_deceased: rel.is_deceased,
+      date_of_birth: rel.date_of_birth,
+      created_at: new Date().toISOString(),
+      marriage_date: null,
+      marriage_place: null,
+      divorce_date: null,
+      // Attach person data directly
+      user1: null, // current user (not needed)
+      user2: {
+        id: rel.id,
+        first_name: rel.first_name,
+        last_name: rel.last_name,
+        email: rel.email,
+        avatar_url: null
+      }
+    }));
+
+    console.log('[RELATIONSHIPS-API] Found pending relatives as relationships:', relationships?.length || 0);
 
     return NextResponse.json({ relationships: relationships || [] });
   } catch (error: any) {
