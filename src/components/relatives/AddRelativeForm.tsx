@@ -176,6 +176,9 @@ export default function AddRelativeForm() {
                 lastName: '',
                 email: '',
                 phone: '',
+                isDeceased: false,
+                knowsBirthDate: false,
+                dateOfBirth: undefined,
               })}
               className="mt-1 mr-3"
             />
@@ -197,6 +200,9 @@ export default function AddRelativeForm() {
                 lastName: '',
                 email: '',
                 phone: '',
+                isDeceased: false,
+                knowsBirthDate: false,
+                dateOfBirth: undefined,
               })}
               className="mt-1 mr-3"
             />
