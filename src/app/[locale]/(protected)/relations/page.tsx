@@ -66,21 +66,11 @@ export default async function RelationsPage({params}:{params:Promise<{locale:str
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex items-start justify-between">
+        <div className="mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Family Relationships</h1>
             <p className="text-gray-600">View and manage your family connections</p>
           </div>
-          <form action="#" onSubmit={(e)=>e.preventDefault()}>
-            <button
-              formAction="#"
-              type="button"
-              className="px-4 py-2 rounded-md bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow hover:opacity-90"
-              onClick={() => (window as any).openAddRelationship?.()}
-            >
-              + Add Relative
-            </button>
-          </form>
         </div>
 
         {/* List of confirmed relationships */}
