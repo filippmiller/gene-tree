@@ -150,7 +150,7 @@ create or replace function public.kin_find_by_path(start_id uuid, path_expr text
 returns table(person_id uuid)
 language sql
 as $$
-with steps as (
+with recursive steps as (
   select row_number() over () as idx,
          split_part(s, '(', 1) as rel,
          nullif(replace(split_part(s, '(', 2), ')',''),'') as g
