@@ -27,19 +27,28 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
 
   const userName = profile.first_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
 
-  // Fetch stats
+  // Fetch stats from pending_relatives
   const { data: pendingRelatives } = await supabase
     .from('pending_relatives')
-    .select('id', { count: 'exact' })
+    .select('id, relationship_type')
     .eq('invited_by', user.id);
   
-  const { data: relationships } = await supabase
-    .from('relationships')
-    .select('id', { count: 'exact' })
-    .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`);
-  
   const totalPeople = (pendingRelatives?.length || 0);
-  const totalRelationships = (relationships?.length || 0);
+  const totalRelationships = totalPeople; // Same as people count
+  
+  // Calculate generations from relationship types
+  const generationLevels = new Set<number>();
+  generationLevels.add(0); // User is generation 0
+  
+  (pendingRelatives || []).forEach(rel => {
+    const type = rel.relationship_type;
+    if (type === 'parent') generationLevels.add(-1);
+    else if (type === 'grandparent') generationLevels.add(-2);
+    else if (type === 'child') generationLevels.add(1);
+    else if (type === 'grandchild') generationLevels.add(2);
+  });
+  
+  const totalGenerations = generationLevels.size;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -114,7 +123,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Generations</p>
-                <p className="text-3xl font-bold text-gray-900">0</p>
+                <p className="text-3xl font-bold text-gray-900">{totalGenerations}</p>
               </div>
               <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
                 <svg className="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
