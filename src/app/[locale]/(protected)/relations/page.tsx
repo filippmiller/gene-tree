@@ -1,8 +1,8 @@
 import {redirect} from 'next/navigation';
 import {createServerSupabase} from '@/lib/supabase/server';
 import Link from 'next/link';
-import RelationshipsList from '@/components/relationships/RelationshipsList';
-import TreeVisualization from '@/components/tree/TreeVisualization';
+// import RelationshipsList from '@/components/relationships/RelationshipsList';
+// import TreeVisualization from '@/components/tree/TreeVisualization';
 
 export default async function RelationsPage({params}:{params:Promise<{locale:string}>}) {
   const {locale} = await params;
@@ -82,16 +82,22 @@ export default async function RelationsPage({params}:{params:Promise<{locale:str
           </form>
         </div>
 
-        <RelationshipsList currentUserId={user.id} />
+        {/* <RelationshipsList currentUserId={user.id} /> */}
+        
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-yellow-900 mb-2">🚧 В разработке</h2>
+          <p className="text-yellow-800">Список связей и дерево временно отключены для отладки.</p>
+          <p className="text-sm text-yellow-700 mt-2">Пока тестируйте форму добавления родственников на странице /people</p>
+        </div>
 
-        {/* Family Tree Visualization */}
-        <div className="mt-12">
+        {/* Family Tree Visualization - Temporarily disabled */}
+        {/* <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Family Tree</h2>
           <p className="text-gray-600 mb-6">
             Визуализация вашего генеалогического дерева. Подтвердите связи, чтобы они появились на дереве.
           </p>
           <TreeVisualization />
-        </div>
+        </div> */}
       </main>
     </div>
   );
