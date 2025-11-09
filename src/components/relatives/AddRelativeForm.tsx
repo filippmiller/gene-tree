@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getBloodRelationshipOptions, getGenderSpecificOptions, type Gender, type RelationshipQualifiers } from '@/lib/relationships/generateLabel';
-import KinshipSearchField from '@/components/relatives/KinshipSearchField';
 
 interface ExistingRelative {
   id: string;
@@ -268,16 +267,6 @@ export default function AddRelativeForm() {
           </div>
         </div>
       )}
-
-      <div className="mb-6">
-        <KinshipSearchField
-          onRelationshipFound={(pathExpr, canonicalLabel) => {
-            // Parse pathExpr to extract relationship code
-            // For now, we'll let user manually select after getting hint
-            console.log('Found kinship:', { pathExpr, canonicalLabel });
-          }}
-        />
-      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>

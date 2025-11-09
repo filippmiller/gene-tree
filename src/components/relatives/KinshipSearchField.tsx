@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 
 interface Props {
-  userId: string;
-  onResultSelect: (relationshipCode: string, label: string) => void;
+  userId?: string;
+  onRelationshipFound?: (pathExpr: string, canonicalLabel: string) => void;
 }
 
 interface SearchResult {
@@ -18,7 +18,7 @@ interface SearchResult {
  * Searches by Russian phrases like "сестра мамы", "дочка брата"
  * Debounced for performance
  */
-export default function KinshipSearchField({ userId, onResultSelect }: Props) {
+export default function KinshipSearchField({ userId, onRelationshipFound }: Props) {
   const [phrase, setPhrase] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -64,7 +64,9 @@ export default function KinshipSearchField({ userId, onResultSelect }: Props) {
           label: first.name_ru,
         });
         // Auto-select this relationship type
-        onResultSelect(first.path_expr, first.name_ru);
+        if (onRelationshipFound) {
+          onRelationshipFound(first.path_expr, first.name_ru);
+        }
       } else {
         setPathInfo(null);
         setError('Не найдено. Попробуйте: "сестра мамы", "дочка брата"');
@@ -75,7 +77,7 @@ export default function KinshipSearchField({ userId, onResultSelect }: Props) {
     } finally {
       setLoading(false);
     }
-  }, [userId, onResultSelect]);
+  }, [userId, onRelationshipFound]);
 
   // Debounce logic: wait 500ms after user stops typing
   useEffect(() => {
