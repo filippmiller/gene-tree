@@ -36,12 +36,29 @@ export async function GET(request: NextRequest) {
     // Get relationships where user is either user1 or user2
     const { data: relationships, error } = await supabase
       .from('relationships')
-      .select(`
-        *,
-        user1:user1_id(id, first_name, last_name, avatar_url, email),
-        user2:user2_id(id, first_name, last_name, avatar_url, email)
-      `)
+      .select('*')
       .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`);
+
+    // Manually fetch user profiles for user1 and user2 from pending_relatives
+    if (relationships && relationships.length > 0) {
+      const userIds = new Set<string>();
+      relationships.forEach(rel => {
+        if (rel.user1_id) userIds.add(rel.user1_id);
+        if (rel.user2_id) userIds.add(rel.user2_id);
+      });
+
+      const { data: profiles } = await supabase
+        .from('pending_relatives')
+        .select('id, first_name, last_name, email')
+        .in('id', Array.from(userIds));
+
+      // Attach profile data to relationships
+      const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+      relationships.forEach((rel: any) => {
+        rel.user1 = profileMap.get(rel.user1_id) || null;
+        rel.user2 = profileMap.get(rel.user2_id) || null;
+      });
+    }
 
     if (error) {
       console.error('[RELATIONSHIPS-API] Error fetching relationships:', error);
