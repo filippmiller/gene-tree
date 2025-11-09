@@ -54,18 +54,40 @@ export default async function PeoplePage({params}:{params:Promise<{locale:string
               {pendingRelatives.map((rel: any) => (
                 <div key={rel.id} className="p-4 border rounded-lg hover:bg-gray-50">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">{rel.first_name} {rel.last_name}</div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className="font-medium">{rel.first_name} {rel.last_name}</div>
+                        {rel.is_deceased && (
+                          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
+                            † В память
+                          </span>
+                        )}
+                      </div>
                       <div className="text-sm text-gray-600">{rel.relationship_type}</div>
                       <div className="text-xs text-gray-500 mt-1">
                         {rel.email && <span>{rel.email}</span>}
                         {rel.email && rel.phone && <span className="mx-2">•</span>}
                         {rel.phone && <span>{rel.phone}</span>}
+                        {rel.date_of_birth && (
+                          <>
+                            {(rel.email || rel.phone) && <span className="mx-2">•</span>}
+                            <span>ДР: {new Date(rel.date_of_birth).toLocaleDateString('ru-RU')}</span>
+                          </>
+                        )}
                       </div>
                     </div>
-                    <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-                      Pending
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/${locale}/people/new?relatedTo=${rel.id}`}
+                        className="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
+                        title="Добавить родственников этого человека"
+                      >
+                        + Его/Её родственники
+                      </Link>
+                      <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                        Pending
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}

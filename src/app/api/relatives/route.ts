@@ -40,6 +40,8 @@ export async function POST(request: Request) {
       facebookUrl,
       instagramUrl,
       qualifiers, // halfness, lineage, cousin_degree, cousin_removed, level
+      isDeceased,
+      dateOfBirth,
     } = body;
     
     // Validation
@@ -50,7 +52,8 @@ export async function POST(request: Request) {
       );
     }
     
-    if (!email && !phone) {
+    // Contact required only if not deceased
+    if (!isDeceased && !email && !phone) {
       return NextResponse.json(
         { error: 'At least one contact method (email or phone) is required' },
         { status: 400 }
@@ -86,6 +89,9 @@ export async function POST(request: Request) {
         cousin_degree: qualifiers?.cousin_degree || null,
         cousin_removed: qualifiers?.cousin_removed || null,
         level: qualifiers?.level || null,
+        // Deceased & date of birth
+        is_deceased: isDeceased || false,
+        date_of_birth: dateOfBirth || null,
       })
       .select()
       .single();
