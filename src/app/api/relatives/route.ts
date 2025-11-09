@@ -67,6 +67,49 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // DUPLICATE DETECTION: Check if this person already exists
+    // Search by email (if provided) or by name + connection to current user's network
+    let duplicateCheck = null;
+    
+    if (email) {
+      // Check if email already exists in pending_relatives or user_profiles
+      const { data: existingByEmail } = await supabase
+        .from('pending_relatives')
+        .select('id, first_name, last_name, email, invited_by')
+        .eq('email', email)
+        .eq('status', 'pending')
+        .limit(1)
+        .single();
+      
+      if (existingByEmail) {
+        duplicateCheck = existingByEmail;
+      }
+    }
+
+    // If duplicate found, return info instead of creating new invitation
+    if (duplicateCheck) {
+      await logAudit({
+        action: 'create_relative_duplicate_found',
+        entityType: 'pending_relatives',
+        entityId: duplicateCheck.id,
+        method: 'POST',
+        path: '/api/relatives',
+        requestBody: body,
+        responseStatus: 409,
+        responseBody: { duplicate: duplicateCheck },
+        ...requestMeta,
+      });
+      
+      return NextResponse.json(
+        { 
+          error: 'Duplicate found',
+          duplicate: duplicateCheck,
+          message: `${duplicateCheck.first_name} ${duplicateCheck.last_name} уже приглашён. Хотите подтвердить связь?`
+        },
+        { status: 409 }
+      );
+    }
     
     // Insert into pending_relatives table
     const { data, error } = await supabase
