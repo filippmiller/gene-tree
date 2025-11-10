@@ -243,11 +243,186 @@ npm install @xyflow/react elkjs zustand
 
 ---
 
+#### 10:37 - Созданы функции раскладки (layout.ts)
+
+**Файл:** `src/components/tree/layout.ts` (259 строк)
+
+**Функции:**
+
+1. **`applyLayout`** (строки 74-145)
+   - **Миссия:** Применение ELK Sugiyama layout к графу
+   - **Алгоритм:**
+     1. Конвертирует React Flow nodes → ELK формат
+     2. Вызывает elk.layout() асинхронно (100-500ms)
+     3. Конвертирует обратно: ELK → React Flow с координатами
+   - **Параметры раскладки:**
+     - Algorithm: 'layered' (Sugiyama для иерархий)
+     - Direction: DOWN (сверху вниз)
+     - Node spacing: 30px (расстояние между узлами)
+     - Layer spacing: 80px (расстояние между поколениями)
+     - Edge routing: ORTHOGONAL (прямые углы)
+   - **Используется в:** TreeCanvas при первом рендере и изменении data
+
+2. **`applyLayoutWithAnimation`** (строки 163-182)
+   - **Миссия:** Плавная анимация при изменении графа
+   - Сохраняет старые позиции узлов
+   - React Flow автоматически анимирует переход
+   - **Используется в:** Будущая оптимизация для динамического обновления
+
+3. **`calculateGraphBounds`** (строки 197-218)
+   - **Миссия:** Вычисление границ графа (bounding box)
+   - Находит min/max координаты всех узлов
+   - **Используется в:** Экспорт SVG/PNG, определение области печати
+
+4. **`centerGraph`** (строки 232-259)
+   - **Миссия:** Центрирование графа вокруг (0, 0)
+   - Смещает все узлы так, чтобы центр графа был в начале координат
+   - **Используется в:** fitView для правильного позиционирования
+
+**Зависимости:**
+- `elkjs` - основной движок раскладки
+- `@xyflow/react` - типы Node, Edge
+- Используется в TreeCanvas
+
+**Конфигурация ELK:**
+```typescript
+layered.nodePlacement.strategy = 'NETWORK_SIMPLEX'
+layered.crossingMinimization.strategy = 'LAYER_SWEEP'
+edgeRouting = 'ORTHOGONAL'
+```
+
+---
+
+#### 10:45 - Создан главный компонент TreeCanvas
+
+**Файл:** `src/components/tree/TreeCanvas.tsx` (246 строк)
+
+**Компонент:** TreeCanvas - главный canvas визуализации дерева
+
+**Миссия:** Интеграция всех компонентов в единый интерактивный canvas
+
+**Интегрирует:**
+- React Flow (canvas, панорамирование, зум)
+- PersonCard и UnionNode (кастомные типы узлов)
+- buildGraph (преобразование TreeData → граф)
+- applyLayout (ELK раскладка)
+
+**Возможности:**
+- Панорамирование: drag canvas мышкой
+- Зум: колесо мыши или кнопки Controls
+- MiniMap: миникарта навигации (слева внизу)
+- Controls: кнопки zoom/fit (справа внизу)
+- Background: сетка точек
+- Loading overlay: спиннер во время раскладки
+
+**Props:**
+- `data: TreeData` - данные из API
+- `onNodeClick?: (nodeId) => void` - callback при клике
+- `className?: string` - доп. CSS классы
+
+**Жизненный цикл:**
+1. Получает data через props
+2. Преобразует в граф (buildGraph)
+3. Применяет раскладку асинхронно (applyLayout)
+4. Обновляет state узлов/рёбер
+5. React Flow отрисовывает с автоматической анимацией
+
+**State:**
+- `nodes, edges` - React Flow hooks (useNodesState, useEdgesState)
+- `isLayouting` - флаг загрузки во время раскладки
+
+**Настройки React Flow:**
+- `fitView` - автоматически подгоняет под размер экрана
+- `minZoom: 0.1, maxZoom: 2` - ограничения зума
+- `nodesDraggable: false` - узлы не перетаскиваются (раскладка фиксирована)
+- `nodesConnectable: false` - нельзя создавать новые связи
+- `defaultEdgeOptions: { type: 'smoothstep', stroke: '#94a3b8' }`
+
+**MiniMap цвета:**
+- Зелёный: узлы union (браки)
+- Голубой: male person
+- Розовый: female person
+- Серый: other/unknown
+
+**Используется в:** Страница `/tree/[id]`
+
+---
+
+#### 10:50 - Создана страница /tree/[id]
+
+**Файл:** `src/app/tree/[id]/page.tsx` (324 строки)
+
+**Компонент:** TreePage - полноценная страница визуализации дерева
+
+**Миссия:** UI для работы с семейным деревом конкретного человека
+
+**Функциональность:**
+
+1. **Загрузка данных через API** (строки 64-87)
+   - Запрос: `GET /api/tree?proband_id={id}&mode={mode}&depth={depth}`
+   - Обработка loading/error состояний
+   - Автоматическая перезагрузка при изменении mode/depth
+
+2. **Боковая панель с контролами** (строки 142-284)
+   - **Mode Selector:** 3 кнопки для режимов
+     - Предки: родители, бабушки, прабабушки...
+     - Потомки: дети, внуки, правнуки...
+     - Песочные часы: и предки, и потомки
+   - **Depth Slider:** диапазон 1-10 поколений
+   - **Поиск:** input для поиска людей (TODO: реализовать)
+   - **Статистика:** кол-во людей, браков, связей
+   - **Экспорт:** кнопки SVG/PNG/Print (TODO: реализовать)
+
+3. **Canvas область** (строки 286-321)
+   - TreeCanvas с полными данными
+   - Loading состояние: спиннер
+   - Error состояние: сообщение + кнопка retry
+
+**Layout:**
+- Full screen (h-screen)
+- Flex row
+- Sidebar: фиксированная ширина 320px (w-80)
+- Canvas: flex-1 (всё оставшееся пространство)
+
+**Callbacks:**
+- `handleNodeClick` - переход на /profile/{id} при клике на человека
+- `handleExportSVG/PNG/Print` - TODO (пока alert)
+
+**TODO в будущем:**
+- Реализовать экспорт SVG через React Flow API
+- Реализовать экспорт PNG через html2canvas
+- Создать print CSS для A4 формата
+- Реализовать поиск людей в дереве (фильтрация/подсветка)
+
+**Связи:**
+- Использует TreeCanvas
+- Вызывает API /api/tree
+- Навигирует на /profile/{id}
+
+---
+
+#### 10:55 - Commit и push на GitHub
+
+**Commit:** `tree: add layout functions, TreeCanvas component and /tree/[id] page`
+
+**Файлы в коммите:**
+- `src/components/tree/layout.ts` - NEW
+- `src/components/tree/TreeCanvas.tsx` - NEW
+- `src/app/tree/[id]/page.tsx` - NEW
+- Другие файлы (settings page, health endpoint, kinship mapping) - из предыдущих изменений
+
+**Push:** успешно отправлено на `git@github.com:filippmiller/gene-tree.git`
+
+---
+
 ### Текущая сессия:
 - [x] Создать API endpoint `/api/tree` с рекурсивными запросами
 - [x] Создать компоненты визуализации (build-graph, PersonCard, UnionNode)
-- [ ] Создать функцию раскладки с ELK
-- [ ] Создать страницу `/tree/[id]`
+- [x] Создать функцию раскладки с ELK
+- [x] Создать главный компонент TreeCanvas
+- [x] Создать страницу `/tree/[id]` с UI контролами
+- [ ] **СЛЕДУЮЩЕЕ: Применить SQL миграцию 0011_tree_views.sql** (пользователь применит вручную)
+- [ ] Протестировать систему end-to-end
 
 ### Глобальные задачи (из TODO list):
 - [ ] Разделение на админов и обычных пользователей
