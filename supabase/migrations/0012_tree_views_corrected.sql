@@ -113,8 +113,8 @@ WITH child_union AS (
     pc.child_id,
     CASE
       WHEN COUNT(*) = 2 
-        THEN 'U:' || MIN(pc.parent_id)::text || ':' || MAX(pc.parent_id)::text
-      ELSE 'U:' || MIN(pc.parent_id)::text
+        THEN 'U:' || MIN(pc.parent_id::text) || ':' || MAX(pc.parent_id::text)
+      ELSE 'U:' || MIN(pc.parent_id::text)
     END AS union_id
   FROM public.gt_v_parent_child pc
   GROUP BY pc.child_id
