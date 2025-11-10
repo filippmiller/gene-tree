@@ -3,12 +3,21 @@
 -- Description: Creates VIEW adapters for family tree visualization with correct parent-child relationships
 
 -- =======================
+-- DROP EXISTING VIEWS (if any)
+-- =======================
+DROP VIEW IF EXISTS public.gt_v_tree_stats CASCADE;
+DROP VIEW IF EXISTS public.gt_v_union_child CASCADE;
+DROP VIEW IF EXISTS public.gt_v_union CASCADE;
+DROP VIEW IF EXISTS public.gt_v_parent_child CASCADE;
+DROP VIEW IF EXISTS public.gt_v_person CASCADE;
+
+-- =======================
 -- 1. NORMALIZED PERSON VIEW
 -- =======================
 -- Миссия: Единое представление людей из user_profiles
 -- Используется: во всех запросах дерева и relationships
 
-CREATE OR REPLACE VIEW public.gt_v_person AS
+CREATE VIEW public.gt_v_person AS
 SELECT
   p.id,
   COALESCE(
