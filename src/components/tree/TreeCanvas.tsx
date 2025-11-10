@@ -73,8 +73,8 @@ interface TreeCanvasProps {
  */
 export function TreeCanvas({ data, onNodeClick, className }: TreeCanvasProps) {
   // State для узлов и рёбер (React Flow hooks)
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   
   // State для loading индикатора во время раскладки
   const [isLayouting, setIsLayouting] = useState(false);
