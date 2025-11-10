@@ -19,7 +19,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase/server';
-import { logAudit } from '@/lib/audit';
+import { logAudit } from '@/lib/audit/logger';
 
 /**
  * Person - структура человека из gt_v_person
@@ -182,15 +182,21 @@ export async function GET(request: NextRequest) {
     };
 
     // Логирование успешного запроса
-    await logAudit(supabase, user.id, 'relationships_depth_api_success', {
-      proband_id: probandId,
-      counts: {
-        parents: response.parents.length,
-        grandparents: response.grandparents.length,
-        children: response.children.length,
-        grandchildren: response.grandchildren.length,
-        siblings: response.siblings.length,
-        spouses: response.spouses.length,
+    await logAudit({
+      action: 'relationships_depth_api_success',
+      method: 'GET',
+      path: '/api/relationships-depth',
+      responseStatus: 200,
+      responseBody: {
+        proband_id: probandId,
+        counts: {
+          parents: response.parents.length,
+          grandparents: response.grandparents.length,
+          children: response.children.length,
+          grandchildren: response.grandchildren.length,
+          siblings: response.siblings.length,
+          spouses: response.spouses.length,
+        },
       },
     });
 
@@ -202,9 +208,13 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('[RELATIONSHIPS-DEPTH] API error:', error);
 
-    await logAudit(supabase, user.id, 'relationships_depth_api_error', {
-      proband_id: probandId,
-      error: error instanceof Error ? error.message : 'Unknown error',
+    await logAudit({
+      action: 'relationships_depth_api_error',
+      method: 'GET',
+      path: '/api/relationships-depth',
+      responseStatus: 500,
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      responseBody: { proband_id: probandId },
     });
 
     return NextResponse.json(
