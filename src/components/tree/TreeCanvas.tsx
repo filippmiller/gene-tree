@@ -211,7 +211,6 @@ export function TreeCanvas({ data, onNodeClick, className }: TreeCanvasProps) {
           color="#e2e8f0"
           gap={20}
           size={1}
-          variant="dots" // 'dots' | 'lines' | 'cross'
         />
 
         {/* Controls - кнопки управления */}
