@@ -27,5 +27,5 @@ export default async function TreePage({ params }: { params: Promise<{ locale: s
   if (!profile) redirect(`/${locale}/profile/complete`);
 
   // Redirect to tree page with user's ID
-  redirect(`/tree/${user.id}`);
+  redirect(`/${locale}/tree/${user.id}`);
 }
