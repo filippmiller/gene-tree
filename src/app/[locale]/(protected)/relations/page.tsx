@@ -1,9 +1,7 @@
 import {redirect} from 'next/navigation';
 import {createServerSupabase} from '@/lib/supabase/server';
 import Link from 'next/link';
-import RelationshipsList from '@/components/relationships/RelationshipsList';
-// TreeVisualization temporarily disabled
-// import TreeVisualization from '@/components/tree/TreeVisualization';
+import RelationshipsListByDepth from '@/components/relationships/RelationshipsListByDepth';
 
 export default async function RelationsPage({params}:{params:Promise<{locale:string}>}) {
   const {locale} = await params;
@@ -73,8 +71,8 @@ export default async function RelationsPage({params}:{params:Promise<{locale:str
           </div>
         </div>
 
-        {/* List of confirmed relationships */}
-        <RelationshipsList currentUserId={user.id} />
+        {/* List of relationships with correct depth classification */}
+        <RelationshipsListByDepth currentUserId={user.id} />
 
         {/* Family Tree Visualization - Temporarily disabled */}
         {/* <div className="mt-12">
