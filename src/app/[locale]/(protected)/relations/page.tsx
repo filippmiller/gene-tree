@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation';
 import {createServerSupabase} from '@/lib/supabase/server';
 import Link from 'next/link';
+import BuildInfo from '@/components/BuildInfo';
 import RelationshipsListByDepth from '@/components/relationships/RelationshipsListByDepth';
 
 export default async function RelationsPage({params}:{params:Promise<{locale:string}>}) {
@@ -48,10 +49,14 @@ export default async function RelationsPage({params}:{params:Promise<{locale:str
                 <Link href={`/${locale}/relations`} className="px-3 py-2 rounded-md text-sm font-medium bg-blue-50 text-blue-700">
                   Relationships
                 </Link>
+                <Link href={`/${locale}/tree`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
+                  Tree View
+                </Link>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">{user.email}</span>
+              <BuildInfo />
               <form action="/api/auth/signout" method="POST">
                 <button type="submit" className="text-sm text-gray-600 hover:text-gray-900">
                   Sign Out
