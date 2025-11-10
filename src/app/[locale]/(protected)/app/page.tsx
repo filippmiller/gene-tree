@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation';
 import {createServerSupabase} from '@/lib/supabase/server';
 import Link from 'next/link';
+import BuildInfo from '@/components/BuildInfo';
 
 export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
   const {locale: resolvedLocale} = await params;
@@ -74,13 +75,17 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
                 <Link href={`/${resolvedLocale}/people`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
                   People
                 </Link>
-                <Link href={`/${resolvedLocale}/relations`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
+                <Link href={`/${resolvedLocale}/tree`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
                   Tree View
+                </Link>
+                <Link href={`/${resolvedLocale}/profile/settings`} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
+                  Settings
                 </Link>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">{user.email}</span>
+              <BuildInfo />
               <form action="/api/auth/signout" method="POST">
                 <button type="submit" className="text-sm text-gray-600 hover:text-gray-900">
                   Sign Out
@@ -168,7 +173,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
             </Link>
 
             <Link
-              href={`/${resolvedLocale}/relations`}
+              href={`/${resolvedLocale}/tree`}
               className="flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors group"
             >
               <div className="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center mr-4 group-hover:bg-purple-200">

@@ -24,6 +24,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
   const [results, setResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [pathInfo, setPathInfo] = useState<{ path: string; label: string } | null>(null);
+  const [applied, setApplied] = useState(false);
 
   /**
    * Debounced search function
@@ -33,6 +34,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
     if (!searchPhrase || searchPhrase.length < 3) {
       setResults([]);
       setPathInfo(null);
+      setApplied(false);
       return;
     }
 
@@ -50,23 +52,31 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
       });
 
       if (!response.ok) {
-        throw new Error('Не удалось найти тип связи');
+        // Graceful fallback: try to read JSON; if not available, show friendly message
+        let friendly = 'Не удалось найти связи';
+        try {
+          const t = await response.text();
+          const j = t ? JSON.parse(t) : null;
+          if (j?.results) {
+            setResults(j.results);
+            setError(null);
+            return;
+          }
+        } catch {}
+        setResults([]);
+        setPathInfo(null);
+        setError(friendly);
+        return;
       }
 
       const data = await response.json();
       
       if (data.results && data.results.length > 0) {
         setResults(data.results);
-        // Extract path and label from first result
+        // Preview first result but do NOT auto-apply
         const first = data.results[0];
-        setPathInfo({
-          path: first.path_expr,
-          label: first.name_ru,
-        });
-        // Auto-select this relationship type
-        if (onRelationshipFound) {
-          onRelationshipFound(first.path_expr, first.name_ru);
-        }
+        setPathInfo({ path: first.path_expr, label: first.name_ru });
+        setApplied(false);
       } else {
         setPathInfo(null);
         setError('Не найдено. Попробуйте: "сестра мамы", "дочка брата"');
@@ -100,6 +110,14 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
         type="text"
         value={phrase}
         onChange={(e) => setPhrase(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && results.length > 0) {
+            const r = results[0];
+            onRelationshipFound?.(r.path_expr, r.name_ru);
+            setPathInfo({ path: r.path_expr, label: r.name_ru });
+            setApplied(true);
+          }
+        }}
         placeholder='Например: "сестра мамы", "дочка брата", "бабушка папы"'
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
       />
@@ -119,14 +137,41 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
         </div>
       )}
 
-      {/* Success result */}
-      {pathInfo && !loading && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-          <div className="text-sm font-medium text-green-900">
-            ✓ Найдено: <span className="font-bold">{pathInfo.label}</span>
-          </div>
-          <div className="text-xs text-green-700 mt-1">
-            Путь: {pathInfo.path}
+      {/* Results list */}
+      {!loading && results.length > 0 && (
+        <div className="space-y-2">
+          {results.slice(0, 3).map((r, idx) => (
+            <div key={idx} className={`p-3 border rounded-md ${idx === 0 ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+              <div className="flex items-center justify-between text-sm">
+                <div>
+                  <span className="font-medium">{r.name_ru}</span>
+                  <span className="ml-2 text-xs text-gray-500">{r.path_expr}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onRelationshipFound?.(r.path_expr, r.name_ru);
+                    setPathInfo({ path: r.path_expr, label: r.name_ru });
+                    setApplied(true);
+                  }}
+                  className="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  Применить
+                </button>
+              </div>
+            </div>
+          ))}
+          {applied && (
+            <div className="text-xs text-green-700">Связь применена. Можно изменить вручную ниже или выбрать другой вариант.</div>
+          )}
+          <div>
+            <button
+              type="button"
+              onClick={() => { setResults([]); setPathInfo(null); setPhrase(''); setApplied(false); }}
+              className="text-xs text-gray-600 hover:text-gray-900"
+            >
+              Сбросить поиск
+            </button>
           </div>
         </div>
       )}

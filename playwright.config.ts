@@ -6,11 +6,17 @@ export default defineConfig({
   retries: 1,
   workers: 1,
   use: {
-    baseURL: process.env.BASE_URL || 'https://gene-tree-production.up.railway.app',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    headless: true,
+    headless: false,
+  },
+  webServer: {
+    command: 'npm run dev',
+    url: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    reuseExistingServer: true,
+    timeout: 120_000,
   },
   reporter: [['html'], ['list']],
 });

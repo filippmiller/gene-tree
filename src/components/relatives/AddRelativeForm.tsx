@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getBloodRelationshipOptions, getGenderSpecificOptions, type Gender, type RelationshipQualifiers } from '@/lib/relationships/generateLabel';
+import KinshipSearchField from './KinshipSearchField';
+import { mapRuLabelToRelationship } from '@/lib/relationships/kinshipMapping';
 
 interface ExistingRelative {
   id: string;
@@ -267,6 +269,23 @@ export default function AddRelativeForm() {
           </div>
         </div>
       )}
+
+      {/* Kinship search by Russian phrase */}
+      <KinshipSearchField
+        userId={formData.relatedToUserId}
+        onRelationshipFound={(pathExpr, canonicalLabel) => {
+          const mapped = mapRuLabelToRelationship(canonicalLabel || '');
+          if (mapped) {
+            setFormData(prev => ({
+              ...prev,
+              relationshipCode: mapped.relationshipCode,
+              specificRelationship: mapped.specificValue,
+            }));
+          } else {
+            console.warn('Kinship mapping not recognized for label:', canonicalLabel, 'path:', pathExpr);
+          }
+        }}
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <div>
