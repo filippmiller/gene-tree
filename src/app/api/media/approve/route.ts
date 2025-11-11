@@ -107,23 +107,26 @@ export async function POST(request: NextRequest) {
     // Создаём job для перемещения файла из incoming → approved
     if (photo.bucket === 'media' && photo.path.includes('/incoming/')) {
       const adminSupabase = getAdminClient();
-      const approvedPath = photo.path.replace('/incoming/', '/approved/');
       
-      const { error: jobError } = await adminSupabase
-        .from('media_jobs')
-        .insert({
-          kind: 'move_to_approved',
-          payload: {
-            photo_id: photoId,
-            bucket: photo.bucket,
-            from_path: photo.path,
-            to_path: approvedPath,
-          },
-          status: 'queued',
-        });
+      if (adminSupabase) {
+        const approvedPath = photo.path.replace('/incoming/', '/approved/');
+        
+        const { error: jobError } = await adminSupabase
+          .from('media_jobs')
+          .insert({
+            kind: 'move_to_approved',
+            payload: {
+              photo_id: photoId,
+              bucket: photo.bucket,
+              from_path: photo.path,
+              to_path: approvedPath,
+            },
+            status: 'queued',
+          });
 
-      if (jobError) {
-        console.error('[APPROVE] Failed to create move job:', jobError);
+        if (jobError) {
+          console.error('[APPROVE] Failed to create move job:', jobError);
+        }
       }
     }
 
