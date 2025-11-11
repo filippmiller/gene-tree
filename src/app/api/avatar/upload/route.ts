@@ -1,5 +1,7 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { NextResponse } from 'next/server';
+import type { Database, TablesUpdate } from '@/lib/types/supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * POST /api/avatar/upload
@@ -12,7 +14,7 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] === UPLOAD STARTED ===');
     
     // Get authenticated user via SSR client
-    const supabase = await getSupabaseSSR();
+    const supabase = (await getSupabaseSSR()) as unknown as SupabaseClient<Database>;
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
@@ -73,11 +75,13 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] Public URL generated:', publicUrl);
 
     // Update user_profiles with avatar URL (RLS enforced)
+    const updatePayload: TablesUpdate<'user_profiles'> = { 
+      avatar_url: publicUrl 
+    };
+    
     const { data: updateData, error: updateError } = await supabase
       .from('user_profiles')
-      .update({ 
-        avatar_url: publicUrl
-      })
+      .update(updatePayload)
       .eq('id', user.id)
       .select('id, avatar_url')
       .single();
