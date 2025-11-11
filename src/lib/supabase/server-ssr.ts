@@ -8,6 +8,7 @@ import type { Database } from '@/lib/types/supabase';
  * Respects RLS policies based on authenticated user
  * 
  * This is a factory function to avoid initialization at module load time.
+ * Note: cookies() is async in Next.js 15, so this must be async.
  */
 export async function getSupabaseSSR() {
   const cookieStore = await cookies();

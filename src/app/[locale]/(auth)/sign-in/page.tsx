@@ -1,6 +1,9 @@
 'use client';
 
 import {useState} from 'react';
+
+// Force dynamic rendering to prevent cached guest state
+export const dynamic = 'force-dynamic';
 import {useRouter, useParams} from 'next/navigation';
 import {signIn, resetPassword} from '@/lib/auth.supabase';
 import {Button} from '@/components/ui/button';

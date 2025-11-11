@@ -6,16 +6,9 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
   const {locale: resolvedLocale} = await params;
   const supabase = await getSupabaseSSR();
   
-  // Use getSession() to read from cookies - more reliable in SSR
-  const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const user = session?.user;
-
-  console.log('[DASHBOARD] Auth check:', { hasUser: !!user, hasSession: !!session, authError: authError?.message });
-
-  if (!user) {
-    console.log('[DASHBOARD] No user, redirecting to sign-in');
-    redirect(`/${resolvedLocale}/sign-in`);
-  }
+  // Auth is already checked in layout - just get the session
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session!.user; // Non-null assertion safe because layout already checked
 
   // Load user profile
   const { data: profile } = await supabase
