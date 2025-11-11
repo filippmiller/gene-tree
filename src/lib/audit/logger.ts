@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseSSR } from '@/lib/supabase/server-ssr';
 
 export interface AuditLogData {
   action: string;
@@ -20,7 +20,7 @@ export interface AuditLogData {
  */
 export async function logAudit(data: AuditLogData): Promise<void> {
   try {
-    const supabase = await createServerSupabase();
+    const supabase = await supabaseSSR();
     
     // Get current user
     const { data: { user } } = await supabase.auth.getUser();
@@ -43,7 +43,7 @@ export async function logAudit(data: AuditLogData): Promise<void> {
         error_stack: data.errorStack || null,
         ip_address: data.ipAddress || null,
         user_agent: data.userAgent || null,
-      });
+      } as any);
     
     if (error) {
       // Don't throw - logging should never break the app

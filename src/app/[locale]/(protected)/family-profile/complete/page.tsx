@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseSSR } from '@/lib/supabase/server-ssr';
 import { redirect } from 'next/navigation';
 import ProfileCompleteForm from './ProfileCompleteForm';
 
@@ -8,7 +8,7 @@ interface Props {
 
 export default async function ProfileCompletePage({ params }: Props) {
   const { locale } = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
 
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -21,7 +21,7 @@ export default async function ProfileCompletePage({ params }: Props) {
     .from('user_profiles')
     .select('*')
     .eq('id', user.id)
-    .single();
+    .single() as any;
 
   // If profile already exists with name, redirect to dashboard
   if (profile && profile.first_name && profile.last_name) {

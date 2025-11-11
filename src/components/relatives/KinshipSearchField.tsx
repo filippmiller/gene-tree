@@ -53,7 +53,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
 
       if (!response.ok) {
         // Graceful fallback: try to read JSON; if not available, show friendly message
-        let friendly = 'Не удалось найти связи';
+        const friendly = 'Не удалось найти связи';
         try {
           const t = await response.text();
           const j = t ? JSON.parse(t) : null;

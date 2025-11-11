@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseSSR } from '@/lib/supabase/server-ssr';
 import TreeCanvasWrapper from '@/components/tree/TreeCanvasWrapper';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 export default async function TreePage({ params }: Props) {
   const { locale, id } = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
 
   const {
     data: { user },

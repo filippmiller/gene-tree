@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   console.log('[RELATIONSHIPS-API] GET request received');
   try {
     const cookieStore = await cookies();
-    const supabase = createServerClient(
+    const supabaseAdmin = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseAdmin.auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     console.log('[RELATIONSHIPS-API] Fetching pending relatives for user:', user.id);
 
     // Get pending relatives added by this user (these are the "relationships")
-    const { data: pendingRelatives, error } = await supabase
+    const { data: pendingRelatives, error } = await supabaseAdmin
       .from('pending_relatives')
       .select('id, first_name, last_name, email, relationship_type, verification_status, is_deceased, date_of_birth, invited_by, status')
       .eq('invited_by', user.id);
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
   console.log('[RELATIONSHIPS-API] POST request received');
   try {
     const cookieStore = await cookies();
-    const supabase = createServerClient(
+    const supabaseAdmin = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseAdmin.auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
     if (marriage_place) relationshipData.marriage_place = marriage_place;
     if (divorce_date) relationshipData.divorce_date = divorce_date;
 
-    const { data: relationship, error } = await supabase
+    const { data: relationship, error } = await supabaseAdmin
       .from('relationships')
       .insert(relationshipData)
       .select()
@@ -152,3 +152,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

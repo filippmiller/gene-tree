@@ -1,10 +1,10 @@
 import {redirect} from 'next/navigation';
-import {createServerSupabase} from '@/lib/supabase/server';
+import {supabaseSSR} from '@/lib/supabase/server-ssr';
 import Link from 'next/link';
 
 export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
   const {locale: resolvedLocale} = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   console.log('[DASHBOARD] Auth check:', { hasUser: !!user, authError: authError?.message });
@@ -19,7 +19,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
     .from('user_profiles')
     .select('*')
     .eq('id', user.id)
-    .single();
+    .single() as any;
 
   // Note: We don't force redirect to complete profile anymore
   // User can access dashboard even without complete profile
@@ -30,7 +30,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
   const { data: pendingRelatives } = await supabase
     .from('pending_relatives')
     .select('id, relationship_type')
-    .eq('invited_by', user.id);
+    .eq('invited_by', user.id) as any;
   
   const totalPeople = (pendingRelatives?.length || 0);
   const totalRelationships = totalPeople; // Same as people count
@@ -39,7 +39,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
   const generationLevels = new Set<number>();
   generationLevels.add(0); // User is generation 0
   
-  (pendingRelatives || []).forEach(rel => {
+  (pendingRelatives || []).forEach((rel: any) => {
     const type = rel.relationship_type;
     if (type === 'parent') generationLevels.add(-1);
     else if (type === 'grandparent') generationLevels.add(-2);

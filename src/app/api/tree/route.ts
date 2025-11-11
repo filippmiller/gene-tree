@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const cookieStore = await cookies();
-    const supabase = createServerClient(
+    const supabaseAdmin = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseAdmin.auth.getUser();
     if (!user) {
       await logAudit({
         action: 'tree_fetch_unauthorized',
@@ -85,13 +85,13 @@ export async function GET(req: NextRequest) {
     // Получаем ID людей в зависимости от режима
     let personIds: string[];
     if (mode === 'ancestors') {
-      personIds = await getAncestors(supabase, proband_id, depth);
+      personIds = await getAncestors(supabaseAdmin, proband_id, depth);
     } else if (mode === 'descendants') {
-      personIds = await getDescendants(supabase, proband_id, depth);
+      personIds = await getDescendants(supabaseAdmin, proband_id, depth);
     } else {
       // hourglass - и предки, и потомки
-      const ancestorIds = await getAncestors(supabase, proband_id, depth);
-      const descendantIds = await getDescendants(supabase, proband_id, depth);
+      const ancestorIds = await getAncestors(supabaseAdmin, proband_id, depth);
+      const descendantIds = await getDescendants(supabaseAdmin, proband_id, depth);
       personIds = Array.from(new Set([...ancestorIds, ...descendantIds]));
     }
 
@@ -101,7 +101,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Получаем полные данные
-    const treeData = await fetchTreeData(supabase, personIds);
+    const treeData = await fetchTreeData(supabaseAdmin, personIds);
 
     await logAudit({
       action: 'tree_fetch_success',
@@ -141,17 +141,17 @@ export async function GET(req: NextRequest) {
  * Использует VIEW gt_v_parent_child для обхода связей parent→child в обратном направлении
  * Итеративно проходит по уровням, от детей к родителям
  * 
- * @param supabase - Supabase клиент
+ * @param supabaseAdmin - supabaseAdmin клиент
  * @param probandId - UUID стартового человека
  * @param maxDepth - максимальная глубина (количество поколений)
  * @returns массив UUID всех найденных предков
  */
-async function getAncestors(supabase: any, probandId: string, maxDepth: number): Promise<string[]> {
+async function getAncestors(supabaseAdmin: any, probandId: string, maxDepth: number): Promise<string[]> {
   const ancestors = new Set<string>();
   let currentLevel = [probandId];
 
   for (let depth = 0; depth < maxDepth && currentLevel.length > 0; depth++) {
-    const { data: parents } = await supabase
+    const { data: parents } = await supabaseAdmin
       .from('gt_v_parent_child')
       .select('parent_id')
       .in('child_id', currentLevel);
@@ -172,17 +172,17 @@ async function getAncestors(supabase: any, probandId: string, maxDepth: number):
  * Использует VIEW gt_v_parent_child для обхода связей parent→child
  * Итеративно проходит по уровням, от родителей к детям
  * 
- * @param supabase - Supabase клиент
+ * @param supabaseAdmin - supabaseAdmin клиент
  * @param probandId - UUID стартового человека
  * @param maxDepth - максимальная глубина
  * @returns массив UUID всех найденных потомков
  */
-async function getDescendants(supabase: any, probandId: string, maxDepth: number): Promise<string[]> {
+async function getDescendants(supabaseAdmin: any, probandId: string, maxDepth: number): Promise<string[]> {
   const descendants = new Set<string>();
   let currentLevel = [probandId];
 
   for (let depth = 0; depth < maxDepth && currentLevel.length > 0; depth++) {
-    const { data: children } = await supabase
+    const { data: children } = await supabaseAdmin
       .from('gt_v_parent_child')
       .select('child_id')
       .in('parent_id', currentLevel);
@@ -206,30 +206,30 @@ async function getDescendants(supabase: any, probandId: string, maxDepth: number
  * 3. gt_v_union - виртуальные узлы браков/партнёрств
  * 4. gt_v_union_child - связи союз→ребёнок
  * 
- * @param supabase - Supabase клиент
+ * @param supabaseAdmin - supabaseAdmin клиент
  * @param personIds - массив UUID людей для включения в дерево
  * @returns объект TreeData с полными данными для визуализации
  */
-async function fetchTreeData(supabase: any, personIds: string[]): Promise<TreeData> {
+async function fetchTreeData(supabaseAdmin: any, personIds: string[]): Promise<TreeData> {
   const [personsResult, parentChildResult, unionsResult, unionChildrenResult] =
     await Promise.all([
       // 1. Получаем данные о людях из VIEW
-      supabase.from('gt_v_person').select('*').in('id', personIds),
+      supabaseAdmin.from('gt_v_person').select('*').in('id', personIds),
       
       // 2. Получаем связи родитель→ребёнок между этими людьми
-      supabase
+      supabaseAdmin
         .from('gt_v_parent_child')
         .select('*')
         .or(`parent_id.in.(${personIds.join(',')}),child_id.in.(${personIds.join(',')})`),
       
       // 3. Получаем союзы (браки) между этими людьми
-      supabase
+      supabaseAdmin
         .from('gt_v_union')
         .select('*')
         .or(`p1.in.(${personIds.join(',')}),p2.in.(${personIds.join(',')})`),
       
       // 4. Получаем связи союз→ребёнок
-      supabase.from('gt_v_union_child').select('*').in('child_id', personIds),
+      supabaseAdmin.from('gt_v_union_child').select('*').in('child_id', personIds),
     ]);
 
   if (personsResult.error) throw personsResult.error;
@@ -244,3 +244,4 @@ async function fetchTreeData(supabase: any, personIds: string[]): Promise<TreeDa
     unionChildren: unionChildrenResult.data || [],
   };
 }
+

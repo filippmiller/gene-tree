@@ -1,0 +1,64 @@
+СТОП АВТОДЕПЛОЯ И ПРЯМЫХ ПУШЕЙ В main.
+Работаем ТОЛЬКО в ветке: fix/stabilize-YYYYMMDD и через PR.
+
+ЦЕЛЬ: зелёный build и проходящий CI без костылей по any/@ts-ignore и без утечки секретов.
+
+ПРОТОКОЛ:
+1) Branch & CI
+   - git checkout -b fix/stabilize-YYYYMMDD
+   - Убедись, что перед КАЖДЫМ пушем локально выполняется:
+     npm ci && npm run typecheck && npm run lint && npm run test && npm run build
+
+2) Починка билда (Next.js):
+   2.1) Отключи Turbopack (используем Webpack):
+       // next.config.ts
+       export default {
+         experimental: { turbo: false },
+       };
+       Выполни: npm run build
+       Если build прошёл — переходи к шагу 3.
+
+   2.2) Если всё ещё падает — даунгрейд:
+       npm i -E next@15.0.3
+       npm run build
+       Если build прошёл — шаг 3.
+
+   2.3) Если всё ещё падает — увеличь память:
+       В package.json "build": 
+         - для PowerShell/Windows: "set NODE_OPTIONS=--max-old-space-size=4096 && next build"
+       npm run build
+
+   2.4) Очистка кэша на всякий случай:
+       удалить .next и node_modules/.cache; повторить npm run build
+
+3) Разблокировать CI (временно, без ухудшения безопасности):
+   - В eslint.config.mjs добавь глобальные игноры САМОЙ ВЕРХНЕЙ секцией:
+       ".next/**", "**/.next/**", "node_modules/**", "**/node_modules/**",
+       "out/**", "build/**", "dist/**", "gene-tree_frommssqlda/**"
+   - В package.json ослабь порог предупреждений для CI:
+       "lint": "eslint . --max-warnings=100"
+   - НИКАКИХ секретов в логах и коде. Переменные — только в Railway/Supabase.
+
+4) Прогоны:
+   - npm run typecheck  → должен пройти без ошибок
+   - npm run lint       → допускаем <=100 warnings
+   - npm run test       → должен пройти
+   - npm run build      → ОБЯЗАТЕЛЬНО зелёный
+
+5) PR:
+   - Создай один PR fix/stabilize-YYYYMMDD с описанием:
+     — Проблема: краш билда из-за Turbopack (Next 16, Windows)
+     — Решение: turbo:false или downgrade до 15; временный лимит warnings
+     — Что НЕ трогали: схемы БД, секреты, безопасность, архитектурные границы
+     — Как воспроизвести локально: команды npm ci / npm run ci
+   - Никаких временных any/@ts-ignore вокруг Supabase-запросов.
+
+6) После успешного деплоя (отдельным PR):
+   - Удалить каталог-дубль gene-tree_frommssqlda/**
+   - Постепенно возвращать строгие правила ESLint (max-warnings=0) и вычищать предупреждения.
+
+КРИТЕРИИ ПРИЁМКИ:
+- next build проходит локально и на CI без падений.
+- npm run ci зелёный (typecheck/lint/test/build), при lint ≤100 warnings.
+- Нет новых any/@ts-ignore; запросы к Supabase типизированы.
+- PR содержит чёткое описание и не меняет секреты/архитектуру.

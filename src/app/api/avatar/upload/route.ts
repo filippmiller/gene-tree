@@ -1,5 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -7,8 +6,8 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] === UPLOAD STARTED ===');
     
     // Verify auth
-    const supabase = await createServerSupabase();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Using supabaseAdmin
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
 
     if (authError || !user) {
       console.error('[AVATAR-API] Auth failed:', authError);
@@ -45,17 +44,6 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] Generated filename:', fileName);
 
     // Upload using service role (bypass RLS)
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      }
-    );
-
     const { error: uploadError } = await supabaseAdmin.storage
       .from('avatars')
       .upload(fileName, file, { 
@@ -138,3 +126,4 @@ export async function POST(request: Request) {
     }, { status: 500 });
   }
 }
+

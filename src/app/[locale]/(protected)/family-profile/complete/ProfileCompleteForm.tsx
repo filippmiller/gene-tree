@@ -20,16 +20,16 @@ function SubmitButton() {
 
 interface ProfileData {
   first_name?: string;
-  middle_name?: string;
+  middle_name?: string | null;
   last_name?: string;
-  maiden_name?: string;
-  nickname?: string;
+  maiden_name?: string | null;
+  nickname?: string | null;
   gender?: string;
-  birth_date?: string;
-  birth_place?: string;
-  phone?: string;
-  occupation?: string;
-  bio?: string;
+  birth_date?: string | null;
+  birth_place?: string | null;
+  phone?: string | null;
+  occupation?: string | null;
+  bio?: string | null;
 }
 
 interface Props {

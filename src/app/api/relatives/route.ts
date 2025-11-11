@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
 import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
 
 export async function POST(request: Request) {
@@ -7,10 +7,10 @@ export async function POST(request: Request) {
   const body = await request.json();
   
   try {
-    const supabase = await createServerSupabase();
+    // Using supabaseAdmin
     
     // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser();
     
     if (userError || !user) {
       await logAudit({
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     
     if (email) {
       // Check if email already exists in pending_relatives or user_profiles
-      const { data: existingByEmail } = await supabase
+      const { data: existingByEmail } = await supabaseAdmin
         .from('pending_relatives')
         .select('id, first_name, last_name, email, invited_by')
         .eq('email', email)
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     }
     
     // Insert into pending_relatives table
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('pending_relatives')
       .insert({
         invited_by: user.id,
@@ -196,10 +196,10 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabase();
+    // Using supabaseAdmin
     
     // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser();
     
     if (userError || !user) {
       return NextResponse.json(
@@ -209,7 +209,7 @@ export async function GET(request: Request) {
     }
     
     // Fetch pending relatives invited by current user
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('pending_relatives')
       .select('*')
       .eq('invited_by', user.id)
@@ -232,3 +232,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

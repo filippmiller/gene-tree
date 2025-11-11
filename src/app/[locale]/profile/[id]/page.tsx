@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseSSR } from '@/lib/supabase/server-ssr';
 import { notFound } from 'next/navigation';
 
 interface Props {
@@ -7,14 +7,14 @@ interface Props {
 
 export default async function PublicProfilePage({ params }: Props) {
   const { locale, id } = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
 
   // Fetch public profile data
   const { data: profile, error } = await supabase
     .from('user_profiles')
     .select('id, first_name, middle_name, last_name, birth_date, birth_place, bio')
     .eq('id', id)
-    .single();
+    .single() as any;
 
   if (error || !profile) {
     notFound();

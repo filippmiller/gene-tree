@@ -4,14 +4,14 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createServerSupabase();
+    // Using supabaseAdmin
     
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -32,13 +32,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Проверяем права на профиль
-    const { data: isOwner } = await supabase
+    const { data: isOwner } = await supabaseAdmin
       .rpc('is_profile_owner', {
         profile_id: profileId,
         user_id: user.id,
       });
 
-    const { data: isAdmin } = await supabase
+    const { data: isAdmin } = await supabaseAdmin
       .rpc('current_user_is_admin');
 
     if (!isOwner && !isAdmin) {
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Получаем pending фото для профиля
-    const { data: pendingPhotos, error: photosError } = await supabase
+    const { data: pendingPhotos, error: photosError } = await supabaseAdmin
       .from('photos')
       .select(`
         *,
@@ -77,13 +77,13 @@ export async function GET(request: NextRequest) {
 
         if (photo.bucket === 'avatars') {
           // Avatars - публичные
-          const { data: urlData } = supabase.storage
+          const { data: urlData } = supabaseAdmin.storage
             .from('avatars')
             .getPublicUrl(photo.path);
           url = urlData.publicUrl;
         } else if (photo.bucket === 'media') {
           // Media - через signed URL
-          const { data: signedData } = await supabase.storage
+          const { data: signedData } = await supabaseAdmin.storage
             .from('media')
             .createSignedUrl(photo.path, 3600); // 1 час
           url = signedData?.signedUrl || null;
@@ -109,4 +109,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
 
