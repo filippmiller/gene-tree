@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!exifJobError && exifJob) {
-      jobs.push(exifJob.id);
+      jobs.push((exifJob as any).id);
     }
 
     // Job 2: Generate hash (если не предоставлен)
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (!hashJobError && hashJob) {
-        jobs.push(hashJob.id);
+        jobs.push((hashJob as any).id);
       }
     }
 
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!thumbJobError && thumbJob) {
-      jobs.push(thumbJob.id);
+      jobs.push((thumbJob as any).id);
     }
 
     // Получаем обновлённое фото
