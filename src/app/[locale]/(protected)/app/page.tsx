@@ -5,9 +5,12 @@ import Link from 'next/link';
 export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
   const {locale: resolvedLocale} = await params;
   const supabase = await getSupabaseSSR();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  // Use getSession() to read from cookies - more reliable in SSR
+  const { data: { session }, error: authError } = await supabase.auth.getSession();
+  const user = session?.user;
 
-  console.log('[DASHBOARD] Auth check:', { hasUser: !!user, authError: authError?.message });
+  console.log('[DASHBOARD] Auth check:', { hasUser: !!user, hasSession: !!session, authError: authError?.message });
 
   if (!user) {
     console.log('[DASHBOARD] No user, redirecting to sign-in');
