@@ -1,11 +1,11 @@
 import {redirect} from 'next/navigation';
-import {createServerSupabase} from '@/lib/supabase/server';
+import {supabaseSSR} from '@/lib/supabase/server-ssr';
 import SettingsForm from './Form';
 import type { UserProfile } from './types';
 
 export default async function ProfileSettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/sign-in`);
 
@@ -13,7 +13,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
     .from('user_profiles')
     .select('*')
     .eq('id', user.id)
-    .single();
+    .single() as any;
 
   // Allow access even without profile
   return (
@@ -25,7 +25,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
         </div>
       </nav>
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <SettingsForm initial={profile as UserProfile} />
+        <SettingsForm initial={profile as any} />
       </main>
     </div>
   );

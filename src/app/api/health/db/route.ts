@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 export async function GET(req: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const supabase = createServerClient(
+    const supabaseAdmin = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     );
 
     // Try a lightweight count query under RLS
-    const { count, error } = await supabase
+    const { count, error } = await supabaseAdmin
       .from('user_profiles')
       .select('id', { count: 'exact', head: true });
 
@@ -31,3 +31,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: e?.message || 'error' }, { status: 500 });
   }
 }
+

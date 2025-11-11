@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
 
 interface PendingRelative {
   id: string;
@@ -20,12 +20,12 @@ interface PendingRelative {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = await createServerSupabase();
+  // Using supabaseAdmin
 
   const {
     data: { user },
     error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabaseAdmin.auth.getUser();
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Get user profile for root person
-    const { data: rootProfile, error: rootError } = await supabase
+    const { data: rootProfile, error: rootError } = await supabaseAdmin
       .from('user_profiles')
       .select('*')
       .eq('id', rootId)
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     if (rootError) throw rootError;
 
     // Get ALL relatives from pending_relatives (both pending and verified)
-    const { data: relatives, error: relError } = await supabase
+    const { data: relatives, error: relError } = await supabaseAdmin
       .from('pending_relatives')
       .select('*')
       .eq('invited_by', rootId);
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build unions (marriages) - simplified
-    const unions = [];
+    const unions: any[] = [];
 
     const treeData = {
       persons,
@@ -127,3 +127,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

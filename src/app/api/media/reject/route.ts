@@ -4,16 +4,16 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
-import { getAdminClient } from '@/lib/supabase-admin';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
+
 import type { RejectPhotoRequest, RejectPhotoResponse } from '@/types/media';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabase();
+    // Using supabaseAdmin
     
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем запись photo
-    const { data: photo, error: photoError } = await supabase
+    const { data: photo, error: photoError } = await supabaseAdmin
       .from('photos')
       .select('*')
       .eq('id', photoId)
@@ -49,13 +49,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем права: владелец профиля или модератор
-    const { data: isOwner } = await supabase
+    const { data: isOwner } = await supabaseAdmin
       .rpc('is_profile_owner', {
-        profile_id: photo.target_profile_id,
+        profile_id: photo.target_profile_id ?? '',
         user_id: user.id,
       });
 
-    const { data: isAdmin } = await supabase
+    const { data: isAdmin } = await supabaseAdmin
       .rpc('current_user_is_admin');
 
     if (!isOwner && !isAdmin) {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Обновляем статус фото
-    const { data: updatedPhoto, error: updateError } = await supabase
+    const { data: updatedPhoto, error: updateError } = await supabaseAdmin
       .from('photos')
       .update({
         status: 'rejected',
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Создаём запись в photo_reviews
-    const { error: reviewError } = await supabase
+    const { error: reviewError } = await supabaseAdmin
       .from('photo_reviews')
       .insert({
         photo_id: photoId,
@@ -101,9 +101,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Создаём job для удаления файла (опционально, через некоторое время)
-    const adminSupabase = getAdminClient();
-    if (adminSupabase) {
-      const { error: jobError } = await adminSupabase
+    // Using supabaseAdmin for admin operations
+    if (true) {
+      const { error: jobError } = await supabaseAdmin
         .from('media_jobs')
         .insert({
           kind: 'delete',
@@ -121,13 +121,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (jobError) {
-      console.error('[REJECT] Failed to create delete job:', jobError);
-    }
-
     const response: RejectPhotoResponse = {
       success: true,
-      photo: updatedPhoto,
+      photo: updatedPhoto as any,
     };
 
     return NextResponse.json(response);
@@ -140,4 +136,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 

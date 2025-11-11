@@ -4,16 +4,13 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
-import { getAdminClient } from '@/lib/supabase-admin';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
 import type { ApprovePhotoRequest, ApprovePhotoResponse } from '@/types/media';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabase();
-    
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -34,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем запись photo
-    const { data: photo, error: photoError } = await supabase
+    const { data: photo, error: photoError } = await supabaseAdmin
       .from('photos')
       .select('*')
       .eq('id', photoId)
@@ -49,13 +46,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем права: владелец профиля или модератор
-    const { data: isOwner } = await supabase
+    const { data: isOwner } = await supabaseAdmin
       .rpc('is_profile_owner', {
-        profile_id: photo.target_profile_id,
+        profile_id: photo.target_profile_id ?? '',
         user_id: user.id,
       });
 
-    const { data: isAdmin } = await supabase
+    const { data: isAdmin } = await supabaseAdmin
       .rpc('current_user_is_admin');
 
     if (!isOwner && !isAdmin) {
@@ -76,7 +73,7 @@ export async function POST(request: NextRequest) {
       updateData.visibility = visibility;
     }
 
-    const { data: updatedPhoto, error: updateError } = await supabase
+    const { data: updatedPhoto, error: updateError } = await supabaseAdmin
       .from('photos')
       .update(updateData)
       .eq('id', photoId)
@@ -92,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Создаём запись в photo_reviews
-    const { error: reviewError } = await supabase
+    const { error: reviewError } = await supabaseAdmin
       .from('photo_reviews')
       .insert({
         photo_id: photoId,
@@ -106,33 +103,29 @@ export async function POST(request: NextRequest) {
 
     // Создаём job для перемещения файла из incoming → approved
     if (photo.bucket === 'media' && photo.path.includes('/incoming/')) {
-      const adminSupabase = getAdminClient();
+      const approvedPath = photo.path.replace('/incoming/', '/approved/');
       
-      if (adminSupabase) {
-        const approvedPath = photo.path.replace('/incoming/', '/approved/');
-        
-        const { error: jobError } = await adminSupabase
-          .from('media_jobs')
-          .insert({
-            kind: 'move_to_approved',
-            payload: {
-              photo_id: photoId,
-              bucket: photo.bucket,
-              from_path: photo.path,
-              to_path: approvedPath,
-            } as any,
-            status: 'queued',
-          } as any);
+      const { error: jobError } = await supabaseAdmin
+        .from('media_jobs')
+        .insert({
+          kind: 'move_to_approved',
+          payload: {
+            photo_id: photoId,
+            bucket: photo.bucket,
+            from_path: photo.path,
+            to_path: approvedPath,
+          },
+          status: 'queued',
+        });
 
-        if (jobError) {
-          console.error('[APPROVE] Failed to create move job:', jobError);
-        }
+      if (jobError) {
+        console.error('[APPROVE] Failed to create move job:', jobError);
       }
     }
 
     const response: ApprovePhotoResponse = {
       success: true,
-      photo: updatedPhoto,
+      photo: updatedPhoto as any,
     };
 
     return NextResponse.json(response);
@@ -145,4 +138,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
 

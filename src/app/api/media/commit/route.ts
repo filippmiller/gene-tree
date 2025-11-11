@@ -4,16 +4,16 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
-import { getAdminClient } from '@/lib/supabase-admin';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
+
 import type { CommitUploadRequest, CommitUploadResponse } from '@/types/media';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabase();
+    // Using supabaseAdmin
     
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем запись photo
-    const { data: photo, error: photoError } = await supabase
+    const { data: photo, error: photoError } = await supabaseAdmin
       .from('photos')
       .select('*')
       .eq('id', photoId)
@@ -57,12 +57,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем что файл действительно загружен в storage
-    const adminSupabase = getAdminClient();
-    if (!adminSupabase) {
+    // Using supabaseAdmin for admin operations
+    if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
     }
     
-    const { data: fileExists, error: storageError } = await adminSupabase
+    const { data: fileExists, error: storageError } = await supabaseAdmin
       .storage
       .from(photo.bucket)
       .list(photo.path.split('/').slice(0, -1).join('/'), {
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     if (sha256) updateData.sha256 = sha256;
 
     if (Object.keys(updateData).length > 0) {
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseAdmin
         .from('photos')
         .update(updateData)
         .eq('id', photoId);
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     const jobs: string[] = [];
 
     // Job 1: Strip EXIF (очистка метаданных)
-    const { data: exifJob, error: exifJobError } = await adminSupabase
+    const { data: exifJob, error: exifJobError } = await supabaseAdmin
       .from('media_jobs')
       .insert({
         kind: 'strip_exif',
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
 
     // Job 2: Generate hash (если не предоставлен)
     if (!sha256) {
-      const { data: hashJob, error: hashJobError } = await adminSupabase
+      const { data: hashJob, error: hashJobError } = await supabaseAdmin
         .from('media_jobs')
         .insert({
           kind: 'hash',
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Job 3: Generate thumbnails
-    const { data: thumbJob, error: thumbJobError } = await adminSupabase
+    const { data: thumbJob, error: thumbJobError } = await supabaseAdmin
       .from('media_jobs')
       .insert({
         kind: 'thumbnail',
@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем обновлённое фото
-    const { data: updatedPhoto, error: fetchError } = await supabase
+    const { data: updatedPhoto, error: fetchError } = await supabaseAdmin
       .from('photos')
       .select('*')
       .eq('id', photoId)
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
 
     const response: CommitUploadResponse = {
       success: true,
-      photo: updatedPhoto,
+      photo: updatedPhoto as any,
       jobs,
     };
 
@@ -188,4 +188,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 

@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   console.log('[USERS-API] GET request received');
   try {
     const cookieStore = await cookies();
-    const supabase = createServerClient(
+    const supabaseAdmin = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseAdmin.auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     console.log('[USERS-API] Fetching user profiles');
 
     // Get all user profiles
-    const { data: users, error } = await supabase
+    const { data: users, error } = await supabaseAdmin
       .from('user_profiles')
       .select('id, first_name, last_name, email, avatar_url, gender, birth_date')
       .order('first_name', { ascending: true });
@@ -52,3 +52,4 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

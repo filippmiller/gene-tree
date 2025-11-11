@@ -1,10 +1,10 @@
 import {redirect} from 'next/navigation';
-import {createServerSupabase} from '@/lib/supabase/server';
+import {supabaseSSR} from '@/lib/supabase/server-ssr';
 import Link from 'next/link';
 
 export default async function PeoplePage({params}:{params:Promise<{locale:string}>}) {
   const {locale} = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect(`/${locale}/sign-in`);

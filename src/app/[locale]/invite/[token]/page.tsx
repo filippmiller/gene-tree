@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseSSR } from '@/lib/supabase/server-ssr';
 import InvitationAcceptForm from '@/components/invite/InvitationAcceptForm';
 
 interface PageProps {
@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function InvitePage({ params }: PageProps) {
   const { locale, token } = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
 
   // Fetch invitation details by token
   const { data: invitation, error } = await supabase
@@ -27,7 +27,7 @@ export default async function InvitePage({ params }: PageProps) {
     `)
     .eq('invitation_token', token)
     .eq('status', 'pending')
-    .single();
+    .single() as any;
 
   // Handle invalid/expired invitation
   if (error || !invitation) {
@@ -53,9 +53,11 @@ export default async function InvitePage({ params }: PageProps) {
   }
 
   // Get inviter name
-  const inviterName = invitation.inviter_profile?.[0]
-    ? `${invitation.inviter_profile[0].first_name} ${invitation.inviter_profile[0].last_name}`
-    : invitation.inviter?.[0]?.email || 'Неизвестный пользователь';
+  const inviterProfile = invitation.inviter_profile as any;
+  const inviter = invitation.inviter as any;
+  const inviterName = inviterProfile?.[0]
+    ? `${inviterProfile[0].first_name} ${inviterProfile[0].last_name}`
+    : inviter?.[0]?.email || 'Неизвестный пользователь';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">

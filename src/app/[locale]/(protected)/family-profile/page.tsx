@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { supabaseSSR } from '@/lib/supabase/server-ssr';
 import ProfileForm from '@/components/profile/ProfileForm';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 export default async function ProfilePage({ params }: Props) {
   const { locale } = await params;
-  const supabase = await createServerSupabase();
+  const supabase = await supabaseSSR();
 
   const {
     data: { user },
@@ -23,7 +23,7 @@ export default async function ProfilePage({ params }: Props) {
     .from('user_profiles')
     .select('*')
     .eq('id', user.id)
-    .single();
+    .single() as any;
 
   // Allow viewing profile even if not complete
 

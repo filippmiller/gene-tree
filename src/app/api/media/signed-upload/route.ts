@@ -4,16 +4,16 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
-import { getAdminClient } from '@/lib/supabase-admin';
+import { supabaseAdmin } from '@/lib/supabase/server-admin';
+
 import type { SignedUploadRequest, SignedUploadResponse } from '@/types/media';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabase();
+    // Using supabaseAdmin
     
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем права на загрузку в профиль
-    const { data: canUpload, error: permError } = await supabase
+    const { data: canUpload, error: permError } = await supabaseAdmin
       .rpc('can_upload_to_profile', {
         profile_id: target_profile_id,
         user_id: user.id,
@@ -79,12 +79,12 @@ export async function POST(request: NextRequest) {
     const path = `profiles/${target_profile_id}/incoming/${fileName}`;
 
     // Используем admin client для создания signed URL
-    const adminSupabase = getAdminClient();
-    if (!adminSupabase) {
+    // Using supabaseAdmin for admin operations
+    if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
     }
     
-    const { data: signedData, error: signedError } = await adminSupabase
+    const { data: signedData, error: signedError } = await supabaseAdmin
       .storage
       .from('media')
       .createSignedUploadUrl(path, {
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Создаём запись в photos таблице (status=pending)
-    const { data: photo, error: photoError } = await supabase
+    const { data: photo, error: photoError } = await supabaseAdmin
       .from('photos')
       .insert({
         bucket: 'media',
@@ -141,4 +141,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 
