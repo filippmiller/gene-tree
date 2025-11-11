@@ -23,6 +23,7 @@ export default function Nav() {
     { href: `/${locale}/app`, label: t("dashboard") },
     { href: `/${locale}/people`, label: t("people") },
     { href: `/${locale}/relations`, label: t("relations") },
+    { href: `/${locale}/family-profile`, label: t("familyProfile") },
   ];
 
   return (

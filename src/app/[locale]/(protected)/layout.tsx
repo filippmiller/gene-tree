@@ -1,5 +1,4 @@
 import Nav from '@/components/Nav';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function ProtectedLayout({
   children,
@@ -9,10 +8,7 @@ export default function ProtectedLayout({
   return (
     <>
       <Nav />
-      <div className="p-4">
-        <LanguageSwitcher />
-        {children}
-      </div>
+      {children}
     </>
   );
 }

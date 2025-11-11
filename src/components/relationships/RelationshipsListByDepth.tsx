@@ -59,9 +59,9 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
   }, [currentUserId]);
 
   /**
-   * fetchRelationships - загрузка данных через новый API
+   * fetchRelationships - загрузка данных через ВРЕМЕННЫЙ API
    * 
-   * API: /api/relationships-depth?proband_id={userId}
+   * API: /api/relationships-temp (читает напрямую из pending_relatives)
    * Возвращает: {parents, grandparents, children, grandchildren, siblings, spouses}
    */
   const fetchRelationships = async () => {
@@ -69,7 +69,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/relationships-depth?proband_id=${currentUserId}`);
+      const response = await fetch(`/api/relationships-temp?proband_id=${currentUserId}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch relationships');

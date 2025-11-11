@@ -15,9 +15,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
     .eq('id', user.id)
     .single();
 
-  if (!profile) redirect(`/${locale}/profile/complete`);
-
-  return (
+  // Allow access even without profile
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <nav className="bg-white border-b shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

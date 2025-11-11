@@ -1,7 +1,7 @@
 'use client';
 
-import {useState} from 'react';
-import {useFormState, useFormStatus} from 'react-dom';
+import {useState, useActionState} from 'react';
+import {useFormStatus} from 'react-dom';
 import {createProfile} from './actions';
 
 function SubmitButton() {
@@ -19,7 +19,7 @@ function SubmitButton() {
 }
 
 export default function ProfileCompletePage() {
-  const [state, formAction] = useFormState(createProfile, null);
+  const [state, formAction] = useActionState(createProfile, null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">

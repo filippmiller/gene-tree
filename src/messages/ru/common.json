@@ -3,6 +3,7 @@
     "dashboard": "Дашборд",
     "people": "Люди",
     "relations": "Связи",
+    "familyProfile": "Семейный профиль",
     "signOut": "Выйти"
   },
   "auth": {
