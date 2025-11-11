@@ -1,13 +1,19 @@
-import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { NextResponse } from 'next/server';
 
+/**
+ * POST /api/avatar/upload
+ * Uploads avatar for authenticated user
+ * Uses SSR client (anon key) so RLS policies are enforced
+ * Path structure: avatars/{user.id}/avatar.jpg
+ */
 export async function POST(request: Request) {
   try {
     console.log('[AVATAR-API] === UPLOAD STARTED ===');
     
-    // Verify auth
-    // Using getSupabaseAdmin()
-    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
+    // Get authenticated user via SSR client
+    const supabase = await getSupabaseSSR();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       console.error('[AVATAR-API] Auth failed:', authError);
@@ -19,9 +25,8 @@ export async function POST(request: Request) {
     // Get file from form data
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const profileId = formData.get('profileId') as string;
     
-    console.log('[AVATAR-API] Form data:', { fileName: file?.name, fileSize: file?.size, profileId });
+    console.log('[AVATAR-API] Form data:', { fileName: file?.name, fileSize: file?.size });
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -36,87 +41,60 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'File too large (max 25MB)' }, { status: 400 });
     }
 
-    // Create unique filename
-    const fileExt = file.name.split('.').pop();
-    const fileId = crypto.randomUUID();
-    const fileName = `${user.id}/${fileId}.${fileExt}`;
+    // Path structure: {user.id}/avatar.jpg (upsert = true to replace)
+    const fileExt = file.name.split('.').pop() || 'jpg';
+    const path = `${user.id}/avatar.${fileExt}`;
     
-    console.log('[AVATAR-API] Generated filename:', fileName);
+    console.log('[AVATAR-API] Upload path:', path);
 
-    // Upload using service role (bypass RLS)
-    const { error: uploadError } = await getSupabaseAdmin().storage
+    // Upload using SSR client - RLS policies will be enforced
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from('avatars')
-      .upload(fileName, file, { 
-        upsert: false,
-        contentType: file.type 
+      .upload(path, file, { 
+        upsert: true, // Replace existing avatar
+        contentType: file.type || 'image/jpeg'
       });
 
     if (uploadError) {
       console.error('[AVATAR-API] ❌ Storage upload failed:', uploadError);
-      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+      return NextResponse.json({ 
+        error: uploadError.message || 'Upload failed' 
+      }, { status: 403 });
     }
     
-    console.log('[AVATAR-API] ✅ File uploaded to storage');
+    console.log('[AVATAR-API] ✅ File uploaded to storage:', uploadData.path);
 
     // Get public URL
-    const { data: urlData } = getSupabaseAdmin().storage
+    const { data: urlData } = supabase.storage
       .from('avatars')
-      .getPublicUrl(fileName);
+      .getPublicUrl(path);
     
-    console.log('[AVATAR-API] Public URL generated:', urlData.publicUrl);
+    const publicUrl = urlData.publicUrl;
+    console.log('[AVATAR-API] Public URL generated:', publicUrl);
 
-    // Create photo record
-    const { data: photo, error: photoError } = await getSupabaseAdmin()
-      .from('photos')
-      .insert({
-        bucket: 'avatars',
-        path: fileName,
-        uploaded_by: user.id,
-        target_profile_id: profileId || user.id,
-        type: 'avatar',
-        status: 'approved',
-        approved_by: user.id,
-        approved_at: new Date().toISOString(),
-        visibility: 'public',
-      })
-      .select('id')
-      .single();
-
-    if (photoError) {
-      console.error('[AVATAR-API] ❌ Photo record creation failed:', photoError);
-      return NextResponse.json({ error: photoError.message }, { status: 500 });
-    }
-    
-    console.log('[AVATAR-API] ✅ Photo record created:', photo.id);
-
-    // Update profile with new avatar
-    const targetProfileId = profileId || user.id;
-    console.log('[AVATAR-API] Attempting to update user_profiles...', { 
-      targetProfileId, 
-      photoId: photo.id, 
-      avatarUrl: urlData.publicUrl 
-    });
-    
-    const { data: updateData, error: updateError } = await getSupabaseAdmin()
+    // Update user_profiles with avatar URL (RLS enforced)
+    const { data: updateData, error: updateError } = await supabase
       .from('user_profiles')
       .update({ 
-        current_avatar_id: photo.id,
-        avatar_url: urlData.publicUrl 
+        avatar_url: publicUrl
       })
-      .eq('id', targetProfileId)
-      .select();
+      .eq('id', user.id)
+      .select('id, avatar_url')
+      .single();
 
     if (updateError) {
       console.error('[AVATAR-API] ❌ Profile update FAILED:', updateError);
-      return NextResponse.json({ error: 'Failed to update profile: ' + updateError.message }, { status: 500 });
+      return NextResponse.json({ 
+        error: 'Failed to update profile: ' + updateError.message 
+      }, { status: 500 });
     }
 
-    console.log('[AVATAR-API] ✅ Profile updated successfully! Data:', updateData);
+    console.log('[AVATAR-API] ✅ Profile updated successfully!');
 
     return NextResponse.json({
       success: true,
-      photoId: photo.id,
-      url: urlData.publicUrl
+      url: publicUrl,
+      profile: updateData
     });
 
   } catch (error: any) {
