@@ -37,6 +37,9 @@ export async function POST(request: NextRequest) {
     }
 
     const adminSupabase = getAdminClient();
+    if (!adminSupabase) {
+      return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
+    }
     
     // Получаем queued jobs (максимум 10 за раз)
     const { data: jobs, error: jobsError } = await adminSupabase

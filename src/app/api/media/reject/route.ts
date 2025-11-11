@@ -102,18 +102,24 @@ export async function POST(request: NextRequest) {
 
     // Создаём job для удаления файла (опционально, через некоторое время)
     const adminSupabase = getAdminClient();
-    const { error: jobError } = await adminSupabase
-      .from('media_jobs')
-      .insert({
-        kind: 'delete',
-        payload: {
-          photo_id: photoId,
-          bucket: photo.bucket,
-          path: photo.path,
-          delay_hours: 24,  // удалить через 24 часа
-        },
-        status: 'queued',
-      });
+    if (adminSupabase) {
+      const { error: jobError } = await adminSupabase
+        .from('media_jobs')
+        .insert({
+          kind: 'delete',
+          payload: {
+            photo_id: photoId,
+            bucket: photo.bucket,
+            path: photo.path,
+            delay_hours: 24,
+          } as any,
+          status: 'queued',
+        } as any);
+
+      if (jobError) {
+        console.error('[REJECT] Failed to create delete job:', jobError);
+      }
+    }
 
     if (jobError) {
       console.error('[REJECT] Failed to create delete job:', jobError);

@@ -80,6 +80,9 @@ export async function POST(request: NextRequest) {
 
     // Используем admin client для создания signed URL
     const adminSupabase = getAdminClient();
+    if (!adminSupabase) {
+      return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
+    }
     
     const { data: signedData, error: signedError } = await adminSupabase
       .storage

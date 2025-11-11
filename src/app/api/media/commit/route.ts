@@ -58,6 +58,10 @@ export async function POST(request: NextRequest) {
 
     // Проверяем что файл действительно загружен в storage
     const adminSupabase = getAdminClient();
+    if (!adminSupabase) {
+      return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
+    }
+    
     const { data: fileExists, error: storageError } = await adminSupabase
       .storage
       .from(photo.bucket)
@@ -102,9 +106,9 @@ export async function POST(request: NextRequest) {
           photo_id: photoId,
           bucket: photo.bucket,
           path: photo.path,
-        },
+        } as any,
         status: 'queued',
-      })
+      } as any)
       .select('id')
       .single();
 
@@ -122,9 +126,9 @@ export async function POST(request: NextRequest) {
             photo_id: photoId,
             bucket: photo.bucket,
             path: photo.path,
-          },
+          } as any,
           status: 'queued',
-        })
+        } as any)
         .select('id')
         .single();
 
@@ -143,9 +147,9 @@ export async function POST(request: NextRequest) {
           bucket: photo.bucket,
           path: photo.path,
           sizes: [1024, 512, 256],
-        },
+        } as any,
         status: 'queued',
-      })
+      } as any)
       .select('id')
       .single();
 
