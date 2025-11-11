@@ -120,9 +120,9 @@ export async function POST(request: NextRequest) {
               bucket: photo.bucket,
               from_path: photo.path,
               to_path: approvedPath,
-            },
+            } as any,
             status: 'queued',
-          });
+          } as any);
 
         if (jobError) {
           console.error('[APPROVE] Failed to create move job:', jobError);
