@@ -3,7 +3,7 @@ export async function GET() {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!url || !anon) {
-      return new Response(JSON.stringify({ ok: false, error: 'Missing supabaseAdmin public env' }), { status: 500 });
+      return new Response(JSON.stringify({ ok: false, error: 'Missing getSupabaseAdmin() public env' }), { status: 500 });
     }
     const res = await fetch(url.replace(/\/$/, '') + '/auth/v1/health', {
       headers: { apikey: anon, authorization: `Bearer ${anon}` },

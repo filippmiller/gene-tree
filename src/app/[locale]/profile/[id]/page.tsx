@@ -1,4 +1,4 @@
-import { supabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { notFound } from 'next/navigation';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 
 export default async function PublicProfilePage({ params }: Props) {
   const { locale, id } = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
 
   // Fetch public profile data
   const { data: profile, error } = await supabase

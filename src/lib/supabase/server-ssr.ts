@@ -1,24 +1,27 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
-import { envClient } from '@/lib/env.client';
 import type { Database } from '@/lib/types/supabase';
 
 /**
- * SSR Supabase client for Server Components and Pages
+ * Get SSR Supabase client for Server Components and Pages
  * Respects RLS policies based on authenticated user
+ * 
+ * This is a factory function to avoid initialization at module load time.
  */
-export async function supabaseSSR() {
+export async function getSupabaseSSR() {
   const cookieStore = await cookies();
-  const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } = envClient;
   
-  if (!NEXT_PUBLIC_SUPABASE_URL || !NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    throw new Error('Missing Supabase environment variables');
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY');
   }
   
   return createServerClient<Database>(
-    NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get(name: string) {

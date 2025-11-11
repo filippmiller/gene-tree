@@ -1,6 +1,6 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from './routing';
-import { supabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // Priority:
@@ -13,7 +13,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   // If no locale in URL, try to get from user profile
   if (!locale || !routing.locales.includes(locale as any)) {
     try {
-      const supabase = await supabaseSSR();
+      const supabase = await getSupabaseSSR();
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {

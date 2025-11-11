@@ -18,7 +18,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { logAudit } from '@/lib/audit/logger';
 
 /**
@@ -76,13 +76,13 @@ interface RelationshipsDepthResponse {
  * 6. Вызывает get_spouses(person_id)
  */
 export async function GET(request: NextRequest) {
-  // Using supabaseAdmin
+  // Using getSupabaseAdmin()
 
   // Проверка авторизации
   const {
     data: { user },
     error: authError,
-  } = await supabaseAdmin.auth.getUser();
+  } = await getSupabaseAdmin().auth.getUser();
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     // =======================
     // 1. ПРЕДКИ (ANCESTORS) с глубиной
     // =======================
-    const { data: ancestors, error: ancestorsError } = await supabaseAdmin.rpc(
+    const { data: ancestors, error: ancestorsError } = await getSupabaseAdmin().rpc(
       'get_ancestors_with_depth',
       {
         person_id: probandId,
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
     // =======================
     // 2. ПОТОМКИ (DESCENDANTS) с глубиной
     // =======================
-    const { data: descendants, error: descendantsError } = await supabaseAdmin.rpc(
+    const { data: descendants, error: descendantsError } = await getSupabaseAdmin().rpc(
       'get_descendants_with_depth',
       {
         person_id: probandId,
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
     // =======================
     // 3. SIBLINGS (братья/сёстры)
     // =======================
-    const { data: siblings, error: siblingsError } = await supabaseAdmin.rpc(
+    const { data: siblings, error: siblingsError } = await getSupabaseAdmin().rpc(
       'get_siblings',
       {
         person_id: probandId,
@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
     // =======================
     // 4. SPOUSES (супруги)
     // =======================
-    const { data: spouses, error: spousesError } = await supabaseAdmin.rpc(
+    const { data: spouses, error: spousesError } = await getSupabaseAdmin().rpc(
       'get_spouses',
       {
         person_id: probandId,

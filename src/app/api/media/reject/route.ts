@@ -4,16 +4,16 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 import type { RejectPhotoRequest, RejectPhotoResponse } from '@/types/media';
 
 export async function POST(request: NextRequest) {
   try {
-    // Using supabaseAdmin
+    // Using getSupabaseAdmin()
     
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
+    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем запись photo
-    const { data: photo, error: photoError } = await supabaseAdmin
+    const { data: photo, error: photoError } = await getSupabaseAdmin()
       .from('photos')
       .select('*')
       .eq('id', photoId)
@@ -49,13 +49,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем права: владелец профиля или модератор
-    const { data: isOwner } = await supabaseAdmin
+    const { data: isOwner } = await getSupabaseAdmin()
       .rpc('is_profile_owner', {
         profile_id: photo.target_profile_id ?? '',
         user_id: user.id,
       });
 
-    const { data: isAdmin } = await supabaseAdmin
+    const { data: isAdmin } = await getSupabaseAdmin()
       .rpc('current_user_is_admin');
 
     if (!isOwner && !isAdmin) {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Обновляем статус фото
-    const { data: updatedPhoto, error: updateError } = await supabaseAdmin
+    const { data: updatedPhoto, error: updateError } = await getSupabaseAdmin()
       .from('photos')
       .update({
         status: 'rejected',
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Создаём запись в photo_reviews
-    const { error: reviewError } = await supabaseAdmin
+    const { error: reviewError } = await getSupabaseAdmin()
       .from('photo_reviews')
       .insert({
         photo_id: photoId,
@@ -101,9 +101,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Создаём job для удаления файла (опционально, через некоторое время)
-    // Using supabaseAdmin for admin operations
+    // Using getSupabaseAdmin() for admin operations
     if (true) {
-      const { error: jobError } = await supabaseAdmin
+      const { error: jobError } = await getSupabaseAdmin()
         .from('media_jobs')
         .insert({
           kind: 'delete',

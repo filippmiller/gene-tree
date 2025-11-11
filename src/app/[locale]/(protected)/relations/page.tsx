@@ -1,12 +1,12 @@
 import {redirect} from 'next/navigation';
-import {supabaseSSR} from '@/lib/supabase/server-ssr';
+import {getSupabaseSSR} from '@/lib/supabase/server-ssr';
 import Link from 'next/link';
 import BuildInfo from '@/components/BuildInfo';
 import RelationshipsListByDepth from '@/components/relationships/RelationshipsListByDepth';
 
 export default async function RelationsPage({params}:{params:Promise<{locale:string}>}) {
   const {locale} = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect(`/${locale}/sign-in`);

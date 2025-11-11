@@ -1,4 +1,4 @@
-import { supabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 
 export interface AuditLogData {
   action: string;
@@ -20,7 +20,7 @@ export interface AuditLogData {
  */
 export async function logAudit(data: AuditLogData): Promise<void> {
   try {
-    const supabase = await supabaseSSR();
+    const supabase = await getSupabaseSSR();
     
     // Get current user
     const { data: { user } } = await supabase.auth.getUser();

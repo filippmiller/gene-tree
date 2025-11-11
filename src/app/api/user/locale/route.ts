@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { NextResponse } from 'next/server';
 
 /**
@@ -7,14 +7,14 @@ import { NextResponse } from 'next/server';
  */
 export async function GET() {
   try {
-    // Using supabaseAdmin
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
+    // Using getSupabaseAdmin()
+    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: profile, error } = await supabaseAdmin
+    const { data: profile, error } = await getSupabaseAdmin()
       .from('user_profiles')
       .select('preferred_locale')
       .eq('id', user.id)
@@ -38,8 +38,8 @@ export async function GET() {
  */
 export async function POST(request: Request) {
   try {
-    // Using supabaseAdmin
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
+    // Using getSupabaseAdmin()
+    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     }
 
     // Update user profile
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await getSupabaseAdmin()
       .from('user_profiles')
       .update({ preferred_locale: locale })
       .eq('id', user.id);

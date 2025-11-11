@@ -1,3 +1,4 @@
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
     }
 
     const cookieStore = await cookies();
-    const supabaseAdmin = createServerClient(
+    const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -67,7 +68,7 @@ export async function POST(req: NextRequest) {
       }
     );
     // Кто делает запрос — читаем сессию (для RLS)
-    const { data: { user } } = await supabaseAdmin.auth.getUser();
+    const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     if (!user) {
       // Allow unauthenticated fallback for simple phrase resolution
       const fallback = naiveResolveRu(String(phrase));
@@ -84,7 +85,7 @@ export async function POST(req: NextRequest) {
     }
 
     const startId = egoId || user.id;
-    const { data, error } = await supabaseAdmin.rpc('kin_resolve_ru', { p_start: startId, p_phrase: String(phrase).trim() });
+    const { data, error } = await getSupabaseAdmin().rpc('kin_resolve_ru', { p_start: startId, p_phrase: String(phrase).trim() });
     
     let results = data as any[] | null;
 

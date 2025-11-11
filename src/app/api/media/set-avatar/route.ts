@@ -4,15 +4,15 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import type { SetAvatarRequest, SetAvatarResponse } from '@/types/media';
 
 export async function POST(request: NextRequest) {
   try {
-    // Using supabaseAdmin
+    // Using getSupabaseAdmin()
     
     // Проверяем аутентификацию
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
+    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
     
     if (authError || !user) {
       return NextResponse.json(
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем права на профиль
-    const { data: isOwner } = await supabaseAdmin
+    const { data: isOwner } = await getSupabaseAdmin()
       .rpc('is_profile_owner', {
         profile_id: profileId,
         user_id: user.id,
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем что фото существует и это аватарка
-    const { data: photo, error: photoError } = await supabaseAdmin
+    const { data: photo, error: photoError } = await getSupabaseAdmin()
       .from('photos')
       .select('*')
       .eq('id', photoId)
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 
     // Если это новая аватарка из avatars bucket - авто-approve
     if (photo.bucket === 'avatars' && photo.status === 'pending') {
-      const { error: approveError } = await supabaseAdmin
+      const { error: approveError } = await getSupabaseAdmin()
         .from('photos')
         .update({
           status: 'approved',
@@ -79,14 +79,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Архивируем старую аватарку (если есть)
-    const { data: currentProfile } = await supabaseAdmin
+    const { data: currentProfile } = await getSupabaseAdmin()
       .from('user_profiles')
       .select('current_avatar_id')
       .eq('id', profileId)
       .single();
 
     if (currentProfile?.current_avatar_id) {
-      const { error: archiveError } = await supabaseAdmin
+      const { error: archiveError } = await getSupabaseAdmin()
         .from('photos')
         .update({
           status: 'archived',
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Обновляем профиль с новой аватаркой
-    const { data: updatedProfile, error: profileError } = await supabaseAdmin
+    const { data: updatedProfile, error: profileError } = await getSupabaseAdmin()
       .from('user_profiles')
       .update({
         current_avatar_id: photoId,

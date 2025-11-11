@@ -1,3 +1,4 @@
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -7,7 +8,7 @@ export async function GET(request: NextRequest) {
   console.log('[USERS-API] GET request received');
   try {
     const cookieStore = await cookies();
-    const supabaseAdmin = createServerClient(
+    const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    const { data: { user } } = await supabaseAdmin.auth.getUser();
+    const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
     console.log('[USERS-API] Fetching user profiles');
 
     // Get all user profiles
-    const { data: users, error } = await supabaseAdmin
+    const { data: users, error } = await getSupabaseAdmin()
       .from('user_profiles')
       .select('id, first_name, last_name, email, avatar_url, gender, birth_date')
       .order('first_name', { ascending: true });

@@ -1,3 +1,4 @@
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,7 +12,7 @@ export async function PATCH(
   console.log('[RELATIONSHIPS-API] PATCH request received for ID:', id);
   try {
     const cookieStore = await cookies();
-    const supabaseAdmin = createServerClient(
+    const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -29,7 +30,7 @@ export async function PATCH(
       }
     );
 
-    const { data: { user } } = await supabaseAdmin.auth.getUser();
+    const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -46,7 +47,7 @@ export async function PATCH(
 
     console.log('[RELATIONSHIPS-API] Updating relationship:', id);
 
-    const { data: relationship, error } = await supabaseAdmin
+    const { data: relationship, error } = await getSupabaseAdmin()
       .from('relationships')
       .update(updateData)
       .eq('id', id)
@@ -81,7 +82,7 @@ export async function DELETE(
   console.log('[RELATIONSHIPS-API] DELETE request received for ID:', id);
   try {
     const cookieStore = await cookies();
-    const supabaseAdmin = createServerClient(
+    const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -99,7 +100,7 @@ export async function DELETE(
       }
     );
 
-    const { data: { user } } = await supabaseAdmin.auth.getUser();
+    const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -107,7 +108,7 @@ export async function DELETE(
 
     console.log('[RELATIONSHIPS-API] Deleting relationship:', id);
 
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('relationships')
       .delete()
       .eq('id', id)

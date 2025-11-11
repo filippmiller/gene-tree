@@ -1,3 +1,4 @@
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -6,7 +7,7 @@ export async function POST(request: NextRequest) {
   console.log('[PROFILE-COMPLETE-API] Request received');
   try {
     const cookieStore = await cookies();
-    const supabaseAdmin = createServerClient(
+    const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const { data: { user } } = await supabaseAdmin.auth.getUser();
+    const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Insert profile
-    const { error: insertError } = await supabaseAdmin
+    const { error: insertError } = await getSupabaseAdmin()
       .from('user_profiles')
       .insert(profileData);
 

@@ -4,15 +4,15 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 
 export async function POST(request: NextRequest) {
   try {
-    // Using supabaseAdmin
+    // Using getSupabaseAdmin()
     
     // Проверяем что это admin (или можно добавить secret token для cron)
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
+    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
     
     if (authError || !user) {
       // Проверяем secret token для cron
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Если есть user - проверяем что admin
-      const { data: isAdmin } = await supabaseAdmin.rpc('current_user_is_admin');
+      const { data: isAdmin } = await getSupabaseAdmin().rpc('current_user_is_admin');
       if (!isAdmin) {
         return NextResponse.json(
           { error: 'Admin access required' },
@@ -36,13 +36,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Using supabaseAdmin for admin operations
-    if (!supabaseAdmin) {
+    // Using getSupabaseAdmin() for admin operations
+    if (!getSupabaseAdmin()) {
       return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
     }
     
     // Получаем queued jobs (максимум 10 за раз)
-    const { data: jobs, error: jobsError } = await supabaseAdmin
+    const { data: jobs, error: jobsError } = await getSupabaseAdmin()
       .from('media_jobs')
       .select('*')
       .eq('status', 'queued')
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     for (const job of jobs) {
       const jobAny = job as any;
       // Помечаем как processing
-      await (supabaseAdmin as any)
+      await (getSupabaseAdmin() as any)
         .from('media_jobs')
         .update({
           status: 'processing',
@@ -81,11 +81,11 @@ export async function POST(request: NextRequest) {
         // Обрабатываем в зависимости от типа
         switch (jobAny.kind) {
           case 'move_to_approved':
-            await processMoveToApproved(supabaseAdmin, jobAny);
+            await processMoveToApproved(getSupabaseAdmin(), jobAny);
             break;
           
           case 'delete':
-            await processDelete(supabaseAdmin, jobAny);
+            await processDelete(getSupabaseAdmin(), jobAny);
             break;
           
           case 'thumbnail':
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Помечаем как completed
-        await (supabaseAdmin as any)
+        await (getSupabaseAdmin() as any)
           .from('media_jobs')
           .update({
             status: 'completed',
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
         console.error(`[PROCESS_JOBS] Job ${jobAny.id} failed:`, error);
         
         // Помечаем как failed
-        await (supabaseAdmin as any)
+        await (getSupabaseAdmin() as any)
           .from('media_jobs')
           .update({
             status: 'failed',
@@ -159,7 +159,7 @@ async function processMoveToApproved(supabaseAdmin: any, job: any) {
   console.log(`[MOVE_TO_APPROVED] Moving ${from_path} → ${to_path}`);
 
   // Копируем файл
-  const { data: fileData, error: downloadError } = await supabaseAdmin.storage
+  const { data: fileData, error: downloadError } = await getSupabaseAdmin().storage
     .from(bucket)
     .download(from_path);
 
@@ -168,7 +168,7 @@ async function processMoveToApproved(supabaseAdmin: any, job: any) {
   }
 
   // Загружаем в новое место
-  const { error: uploadError } = await supabaseAdmin.storage
+  const { error: uploadError } = await getSupabaseAdmin().storage
     .from(bucket)
     .upload(to_path, fileData, { upsert: false });
 
@@ -177,7 +177,7 @@ async function processMoveToApproved(supabaseAdmin: any, job: any) {
   }
 
   // Обновляем путь в photos
-  const { error: updateError } = await supabaseAdmin
+  const { error: updateError } = await getSupabaseAdmin()
     .from('photos')
     .update({ path: to_path })
     .eq('id', photo_id);
@@ -187,7 +187,7 @@ async function processMoveToApproved(supabaseAdmin: any, job: any) {
   }
 
   // Удаляем старый файл
-  const { error: deleteError } = await supabaseAdmin.storage
+  const { error: deleteError } = await getSupabaseAdmin().storage
     .from(bucket)
     .remove([from_path]);
 
@@ -203,13 +203,13 @@ async function processDelete(supabaseAdmin: any, job: any) {
   const { photo_id, bucket, path, delay_hours } = job.payload;
 
   // Проверяем delay
-  const { data: photo } = await supabaseAdmin
+  const { data: photo } = await getSupabaseAdmin()
     .from('photos')
     .select('rejected_at')
     .eq('id', photo_id)
     .single();
 
-  if (photo && delay_hours) {
+  if (photo && delay_hours && photo.rejected_at) {
     const rejectedAt = new Date(photo.rejected_at);
     const now = new Date();
     const hoursPassed = (now.getTime() - rejectedAt.getTime()) / (1000 * 60 * 60);
@@ -217,7 +217,7 @@ async function processDelete(supabaseAdmin: any, job: any) {
     if (hoursPassed < delay_hours) {
       console.log(`[DELETE] Too early to delete, waiting ${delay_hours - hoursPassed} more hours`);
       // Возвращаем job в очередь
-      await supabaseAdmin
+      await getSupabaseAdmin()
         .from('media_jobs')
         .update({ status: 'queued', started_at: null })
         .eq('id', job.id);
@@ -228,7 +228,7 @@ async function processDelete(supabaseAdmin: any, job: any) {
   console.log(`[DELETE] Deleting file ${path} from ${bucket}`);
 
   // Удаляем файл из storage
-  const { error: storageError } = await supabaseAdmin.storage
+  const { error: storageError } = await getSupabaseAdmin().storage
     .from(bucket)
     .remove([path]);
 
@@ -237,7 +237,7 @@ async function processDelete(supabaseAdmin: any, job: any) {
   }
 
   // Удаляем запись из photos
-  const { error: dbError } = await supabaseAdmin
+  const { error: dbError } = await getSupabaseAdmin()
     .from('photos')
     .delete()
     .eq('id', photo_id);

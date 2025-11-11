@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { supabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import ProfileForm from '@/components/profile/ProfileForm';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 export default async function ProfilePage({ params }: Props) {
   const { locale } = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
 
   const {
     data: { user },

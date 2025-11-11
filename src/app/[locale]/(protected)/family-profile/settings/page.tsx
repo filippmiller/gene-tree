@@ -1,11 +1,11 @@
 import {redirect} from 'next/navigation';
-import {supabaseSSR} from '@/lib/supabase/server-ssr';
+import {getSupabaseSSR} from '@/lib/supabase/server-ssr';
 import SettingsForm from './Form';
 import type { UserProfile } from './types';
 
 export default async function ProfileSettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/sign-in`);
 

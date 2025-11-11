@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
 
 /**
@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Token required' }, { status: 400 });
     }
 
-    // Using supabaseAdmin
+    // Using getSupabaseAdmin()
 
     // Find invitation by token
-    const { data: invitation, error: findError } = await supabaseAdmin
+    const { data: invitation, error: findError } = await getSupabaseAdmin()
       .from('pending_relatives')
       .select('*')
       .eq('invitation_token', token)
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update invitation with corrected data
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await getSupabaseAdmin()
       .from('pending_relatives')
       .update({
         first_name: firstName,

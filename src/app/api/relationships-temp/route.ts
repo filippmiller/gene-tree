@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 interface PendingRelative {
   id: string;
@@ -20,12 +20,12 @@ interface PendingRelative {
 }
 
 export async function GET(request: NextRequest) {
-  // Using supabaseAdmin
+  // Using getSupabaseAdmin()
 
   const {
     data: { user },
     error: authError,
-  } = await supabaseAdmin.auth.getUser();
+  } = await getSupabaseAdmin().auth.getUser();
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Fetch all pending_relatives for this user
-    const { data: relatives, error } = await supabaseAdmin
+    const { data: relatives, error } = await getSupabaseAdmin()
       .from('pending_relatives')
       .select('*')
       .eq('invited_by', probandId);

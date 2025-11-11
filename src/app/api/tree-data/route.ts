@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 interface PendingRelative {
   id: string;
@@ -20,12 +20,12 @@ interface PendingRelative {
 }
 
 export async function GET(request: NextRequest) {
-  // Using supabaseAdmin
+  // Using getSupabaseAdmin()
 
   const {
     data: { user },
     error: authError,
-  } = await supabaseAdmin.auth.getUser();
+  } = await getSupabaseAdmin().auth.getUser();
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Get user profile for root person
-    const { data: rootProfile, error: rootError } = await supabaseAdmin
+    const { data: rootProfile, error: rootError } = await getSupabaseAdmin()
       .from('user_profiles')
       .select('*')
       .eq('id', rootId)
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     if (rootError) throw rootError;
 
     // Get ALL relatives from pending_relatives (both pending and verified)
-    const { data: relatives, error: relError } = await supabaseAdmin
+    const { data: relatives, error: relError } = await getSupabaseAdmin()
       .from('pending_relatives')
       .select('*')
       .eq('invited_by', rootId);

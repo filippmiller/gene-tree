@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -6,8 +6,8 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] === UPLOAD STARTED ===');
     
     // Verify auth
-    // Using supabaseAdmin
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser();
+    // Using getSupabaseAdmin()
+    const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser();
 
     if (authError || !user) {
       console.error('[AVATAR-API] Auth failed:', authError);
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] Generated filename:', fileName);
 
     // Upload using service role (bypass RLS)
-    const { error: uploadError } = await supabaseAdmin.storage
+    const { error: uploadError } = await getSupabaseAdmin().storage
       .from('avatars')
       .upload(fileName, file, { 
         upsert: false,
@@ -59,14 +59,14 @@ export async function POST(request: Request) {
     console.log('[AVATAR-API] ✅ File uploaded to storage');
 
     // Get public URL
-    const { data: urlData } = supabaseAdmin.storage
+    const { data: urlData } = getSupabaseAdmin().storage
       .from('avatars')
       .getPublicUrl(fileName);
     
     console.log('[AVATAR-API] Public URL generated:', urlData.publicUrl);
 
     // Create photo record
-    const { data: photo, error: photoError } = await supabaseAdmin
+    const { data: photo, error: photoError } = await getSupabaseAdmin()
       .from('photos')
       .insert({
         bucket: 'avatars',
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
       avatarUrl: urlData.publicUrl 
     });
     
-    const { data: updateData, error: updateError } = await supabaseAdmin
+    const { data: updateData, error: updateError } = await getSupabaseAdmin()
       .from('user_profiles')
       .update({ 
         current_avatar_id: photo.id,

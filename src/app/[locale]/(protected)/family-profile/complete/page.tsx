@@ -1,4 +1,4 @@
-import { supabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { redirect } from 'next/navigation';
 import ProfileCompleteForm from './ProfileCompleteForm';
 
@@ -8,7 +8,7 @@ interface Props {
 
 export default async function ProfileCompletePage({ params }: Props) {
   const { locale } = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
 
   const { data: { user } } = await supabase.auth.getUser();
   

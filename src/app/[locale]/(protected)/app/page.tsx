@@ -1,10 +1,10 @@
 import {redirect} from 'next/navigation';
-import {supabaseSSR} from '@/lib/supabase/server-ssr';
+import {getSupabaseSSR} from '@/lib/supabase/server-ssr';
 import Link from 'next/link';
 
 export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
   const {locale: resolvedLocale} = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   console.log('[DASHBOARD] Auth check:', { hasUser: !!user, authError: authError?.message });

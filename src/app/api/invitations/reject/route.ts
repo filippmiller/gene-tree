@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
 
 /**
@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Token required' }, { status: 400 });
     }
 
-    // Using supabaseAdmin
+    // Using getSupabaseAdmin()
 
     // Update invitation status to rejected
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await getSupabaseAdmin()
       .from('pending_relatives')
       .update({
         status: 'rejected',

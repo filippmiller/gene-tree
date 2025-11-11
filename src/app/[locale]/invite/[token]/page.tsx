@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { supabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import InvitationAcceptForm from '@/components/invite/InvitationAcceptForm';
 
 interface PageProps {
@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function InvitePage({ params }: PageProps) {
   const { locale, token } = await params;
-  const supabase = await supabaseSSR();
+  const supabase = await getSupabaseSSR();
 
   // Fetch invitation details by token
   const { data: invitation, error } = await supabase
