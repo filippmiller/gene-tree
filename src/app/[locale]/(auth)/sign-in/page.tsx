@@ -1,11 +1,12 @@
 'use client';
 
 import {useState} from 'react';
-
+import {useRouter, useParams} from 'next/navigation';
+import {supabase} from '@/lib/supabase/browser';
+import {resetPassword} from '@/lib/auth.supabase';
 // Force dynamic rendering to prevent cached guest state
 export const dynamic = 'force-dynamic';
-import {useRouter, useParams} from 'next/navigation';
-import {signIn, resetPassword} from '@/lib/auth.supabase';
+
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
@@ -27,8 +28,39 @@ export default function SignIn() {
     console.log('[SIGN-IN] Attempting sign in for:', email);
     try {
       console.log('[SIGN-IN] Calling signIn...');
-      const user = await signIn(email, password);
-      console.log('[SIGN-IN] Sign in successful! User:', user?.email);
+      
+      // Sign in with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password 
+      });
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      console.log('[SIGN-IN] Sign in successful! User:', data.user?.email);
+      
+      // CRITICAL: Sync session with server
+      if (data.session) {
+        console.log('[SIGN-IN] Syncing session with server...');
+        const syncResponse = await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          }),
+        });
+        
+        if (!syncResponse.ok) {
+          console.error('[SIGN-IN] Failed to sync session with server');
+          throw new Error('Failed to sync session');
+        }
+        
+        console.log('[SIGN-IN] Session synced successfully');
+      }
+      
       console.log('[SIGN-IN] Redirecting to app...');
       // Use router to trigger server component refresh
       router.push(`/${locale}/app`);
