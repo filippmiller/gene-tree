@@ -4,6 +4,61 @@ This file tracks all significant system changes, issues, and resolutions for col
 
 ---
 
+## 2025-11-12 11:21 UTC - Supabase Connection Setup & RLS Migration
+
+### Problem: Cannot connect to Supabase PostgreSQL
+Attempting to setup read-only database access for RLS migration verification.
+
+### Connection Attempts Log:
+
+**Attempt 1: Pooler port 6543**
+- URL: `postgresql://postgres.mbntpsfllwhlnzuzspvp:***@aws-1-us-east-2.pooler.supabase.com:6543/postgres`
+- Error: `password authentication failed for user "postgres"`
+- Issue: pg Client was somehow using username `postgres` instead of `postgres.mbntpsfllwhlnzuzspvp`
+
+**Attempt 2: Pooler port 5432**
+- URL: Same with port 5432
+- Error: Same authentication error
+- Issue: Username still wrong in connection
+
+**Attempt 3: Direct connection**
+- URL: `postgresql://postgres:***@db.mbntpsfllwhlnzuzspvp.supabase.co:5432/postgres`
+- Error: `ENOTFOUND db.mbntpsfllwhlnzuzspvp.supabase.co`
+- Issue: DNS resolution failure (hostname seems incorrect)
+
+### Credentials Received (test environment):
+```
+DATABASE_URL (Railway): 
+  postgresql://postgres.mbntpsfllwhlnzuzspvp:Airbus380Airbud3802024@aws-1-us-east-2.pooler.supabase.com:6543/postgres?sslmode=require
+
+SUPABASE_DB_POOLER_URL:
+  postgresql://postgres.mbntpsfllwhlnzuzspvp:Airbus380Airbud3802024@aws-1-us-east-2.pooler.supabase.com:5432/postgres
+
+SUPABASE_DB_DIRECT_URL:
+  postgresql://postgres:Airbus380Airbud3802024@db.mbntpsfllwhlnzuzspvp.supabase.co:5432/postgres
+
+Project Reference: mbntpsfllwhlnzuzspvp
+Region: aws-1-us-east-2 (us-east-2)
+```
+
+### Resolution:
+- [x] ✅ **SUCCESS**: Connected via Supabase JS Client (REST API)
+- [x] ✅ **CONFIRMED**: Table `user_profiles` exists with 8 rows
+- [x] ✅ **CONFIRMED**: Column `role` exists for admin check
+
+### Root Cause Analysis:
+1. **Pooler username issue**: PgBouncer transaction pooler strips `postgres.mbntpsfllwhlnzuzspvp` to `postgres`
+2. **Direct connection blocked**: Hostname `db.mbntpsfllwhlnzuzspvp.supabase.co` doesn't resolve (might be firewall/region)
+3. **Solution**: Use Supabase JS Client for admin operations instead of raw SQL
+
+### Next Steps:
+- [ ] Apply RLS recursion fix migration in Supabase Dashboard SQL Editor
+- [ ] Test avatar upload after RLS fix applied
+- [ ] Update DATABASE_URL in Railway to use Session pooler (port 5432) for app
+- [ ] Commit and deploy changes
+
+---
+
 ## 2025-11-12 08:24 UTC - RLS Migration Failed: Table Not Found
 
 ### Problem
