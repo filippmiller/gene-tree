@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 export default function LanguageSwitcher() {
-  const locale = useLocale();
+  const locale = useLocale() as 'ru' | 'en';
   const pathname = usePathname();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const other = locale === 'ru' ? 'en' : 'ru';
-  const langMap = { ru: 'Русский', en: 'English' };
+  const other: 'ru' | 'en' = locale === 'ru' ? 'en' : 'ru';
+  const langMap: Record<'ru' | 'en', string> = { ru: 'Русский', en: 'English' };
 
   const switchLocale = async () => {
     setIsLoading(true);
