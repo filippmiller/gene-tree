@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import {useRouter, useParams} from 'next/navigation';
-import {supabase} from '@/lib/supabase/browser';
+import {getSupabaseBrowser} from '@/lib/supabase/browser';
 import {resetPassword} from '@/lib/auth.supabase';
 // Force dynamic rendering to prevent cached guest state
 export const dynamic = 'force-dynamic';
@@ -30,7 +30,8 @@ export default function SignIn() {
       console.log('[SIGN-IN] Calling signIn...');
       
       // Sign in with Supabase
-      const { data, error } = await supabase.auth.signInWithPassword({ 
+      const supabase = getSupabaseBrowser();
+      const { data, error } = await supabase.auth.signInWithPassword({
         email, 
         password 
       });

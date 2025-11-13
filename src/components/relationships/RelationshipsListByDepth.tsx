@@ -19,6 +19,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface Person {
@@ -50,6 +51,8 @@ interface Props {
 }
 
 export default function RelationshipsListByDepth({ currentUserId }: Props) {
+  const params = useParams();
+  const locale = params.locale as string || 'en';
   const [data, setData] = useState<RelationshipsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -119,7 +122,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
    */
   const PersonCard = ({ person }: { person: Person }) => (
     <Link
-      href={`/tree/${person.id}`}
+      href={`/${locale}/tree/${person.id}`}
       className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all"
     >
       <div className="flex items-center gap-3">
@@ -153,7 +156,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
    */
   const SpouseCard = ({ spouse }: { spouse: Spouse }) => (
     <Link
-      href={`/tree/${spouse.id}`}
+      href={`/${locale}/tree/${spouse.id}`}
       className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all"
     >
       <div className="flex items-center gap-3">

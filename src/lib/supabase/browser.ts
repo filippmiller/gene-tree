@@ -29,5 +29,6 @@ export function getSupabaseBrowser(): SupabaseClient<Database> {
   return supabaseInstance;
 }
 
-// Export singleton for backwards compatibility
+// DEPRECATED: Use getSupabaseBrowser() instead to avoid multiple instances
+// Only for backwards compatibility - will be removed
 export const supabase = getSupabaseBrowser();
