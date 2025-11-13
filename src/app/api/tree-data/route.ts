@@ -12,7 +12,7 @@ interface PendingRelative {
   invited_by: string;
   first_name: string;
   last_name: string;
-  email: string;
+  email: string | null;
   relationship_type: string;
   related_to_user_id: string | null;
   related_to_relationship: string | null;
@@ -45,28 +45,73 @@ export async function GET(request: NextRequest) {
       .eq('id', rootId)
       .single();
 
-    if (rootError) throw rootError;
+    // If rootProfile not found, rootId might be a pending_relative
+    let actualRootProfile: any = rootProfile;
+    
+    if (rootError) {
+      const { data: pendingRoot } = await getSupabaseAdmin()
+        .from('pending_relatives')
+        .select('*')
+        .eq('id', rootId)
+        .single();
+      
+      if (!pendingRoot) {
+        throw new Error('Root person not found in user_profiles or pending_relatives');
+      }
+      
+      // Map pending_relative to user_profile-like structure
+      actualRootProfile = {
+        id: pendingRoot.id,
+        first_name: pendingRoot.first_name,
+        last_name: pendingRoot.last_name,
+        gender: null,
+        birth_date: pendingRoot.date_of_birth,
+        death_date: null,
+        avatar_url: null,
+      };
+    }
 
-    // Get ALL relatives from pending_relatives (both pending and verified)
-    const { data: relatives, error: relError } = await getSupabaseAdmin()
+    // Get ALL relatives from entire family tree (not just from rootId)
+    // Strategy: find the "invited_by" user and get all their relatives
+    const { data: allPendingRels, error: allRelError } = await getSupabaseAdmin()
       .from('pending_relatives')
-      .select('*')
-      .eq('invited_by', rootId);
+      .select('*');
 
-    if (relError) throw relError;
+    if (allRelError) throw allRelError;
 
-    const allRelatives = (relatives || []) as PendingRelative[];
+    // Find all relatives connected to rootId (either as invited_by or as relative)
+    const connectedUserIds = new Set<string>([rootId]);
+    const allRelatives: PendingRelative[] = [];
+    
+    // Find who created rootId's relatives
+    for (const rel of (allPendingRels || [])) {
+      if (rel.id === rootId) {
+        connectedUserIds.add(rel.invited_by);
+      }
+      if (rel.invited_by === rootId) {
+        allRelatives.push(rel);
+        connectedUserIds.add(rel.id);
+      }
+    }
+    
+    // Get all relatives from connected users
+    for (const rel of (allPendingRels || [])) {
+      if (connectedUserIds.has(rel.invited_by) && !allRelatives.find(r => r.id === rel.id)) {
+        allRelatives.push(rel);
+        connectedUserIds.add(rel.id);
+      }
+    }
 
     // Build persons array
     const persons = [
       {
-        id: rootProfile.id,
-        name: `${rootProfile.first_name || ''} ${rootProfile.last_name || ''}`.trim() || 'Unknown',
-        gender: rootProfile.gender || null,
-        birth_date: rootProfile.birth_date || null,
-        death_date: rootProfile.death_date || null,
-        photo_url: rootProfile.avatar_url || null,
-        is_alive: !rootProfile.death_date,
+        id: actualRootProfile.id,
+        name: `${actualRootProfile.first_name || ''} ${actualRootProfile.last_name || ''}`.trim() || 'Unknown',
+        gender: actualRootProfile.gender || null,
+        birth_date: actualRootProfile.birth_date || null,
+        death_date: actualRootProfile.death_date || null,
+        photo_url: actualRootProfile.avatar_url || null,
+        is_alive: !actualRootProfile.death_date,
       },
     ];
 
