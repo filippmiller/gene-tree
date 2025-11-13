@@ -24,6 +24,7 @@ export default function Nav() {
     { href: `/${locale}/people`, label: t("people") },
     { href: `/${locale}/relations`, label: t("relations") },
     { href: `/${locale}/family-profile`, label: t("familyProfile") },
+    { href: `/${locale}/my-profile`, label: t("myProfile") },
   ];
 
   return (

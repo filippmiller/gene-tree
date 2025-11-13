@@ -4,6 +4,7 @@
     "people": "People",
     "relations": "Relations",
     "familyProfile": "Family Profile",
+    "myProfile": "My Profile",
     "signOut": "Sign Out"
   },
   "auth": {

@@ -69,7 +69,7 @@ export default function ProfileForm({ initialData, userId, profileId }: Props) {
       title: 'Образование',
       icon: GraduationCap,
       description: 'Школы, университеты',
-      component: <EducationSection education={initialData?.education || []} userId={userId} />,
+      component: <EducationSection userId={userId} />,
     },
     {
       id: 'employment' as SectionId,

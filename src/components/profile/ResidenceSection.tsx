@@ -1,18 +1,16 @@
 /**
- * EducationSection Component
+ * ResidenceSection Component
  * 
- * Displays user's education history with ability to add/edit/delete entries.
- * - Shows list of education records
- * - "Add Education" button opens form modal
- * - Each entry can be edited or deleted
+ * Displays user's residence history with ability to add/edit/delete entries.
+ * Similar to EducationSection but for places of residence.
  */
 
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import EducationForm from './EducationForm';
-import EducationList from './EducationList';
+import ResidenceForm from './ResidenceForm';
+import ResidenceList from './ResidenceList';
 import { getSupabaseBrowser } from '@/lib/supabase/browser';
 import { logger } from '@/lib/logger';
 
@@ -20,28 +18,28 @@ interface Props {
   userId: string;
 }
 
-export default function EducationSection({ userId }: Props) {
+export default function ResidenceSection({ userId }: Props) {
   const [showForm, setShowForm] = useState(false);
-  const [education, setEducation] = useState<any[]>([]);
+  const [residences, setResidences] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchEducation();
+    fetchResidences();
   }, [userId]);
 
-  const fetchEducation = async () => {
+  const fetchResidences = async () => {
     try {
       const supabase = getSupabaseBrowser();
       const { data, error } = await supabase
-        .from('person_education')
+        .from('person_residence')
         .select('*')
         .eq('person_id', userId)
         .order('start_date', { ascending: false });
 
       if (error) throw error;
-      setEducation(data || []);
+      setResidences(data || []);
     } catch (err) {
-      logger.error('[EDUCATION-SECTION] Error fetching:', err);
+      logger.error('[RESIDENCE-SECTION] Error fetching:', err);
     } finally {
       setLoading(false);
     }
@@ -49,33 +47,33 @@ export default function EducationSection({ userId }: Props) {
 
   const handleSuccess = () => {
     setShowForm(false);
-    fetchEducation(); // Refresh list
+    fetchResidences(); // Refresh list
   };
 
   return (
     <section className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">🎓 Education</h2>
+          <h2 className="text-2xl font-bold text-gray-900">🏠 Places of Residence</h2>
           <p className="text-sm text-gray-600 mt-1">
-            Schools, colleges, and universities you attended
+            Where you've lived throughout your life
           </p>
         </div>
         <Button onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : '+ Add Education'}
+          {showForm ? 'Cancel' : '+ Add Residence'}
         </Button>
       </div>
 
       {showForm && (
         <div className="mb-6">
-          <EducationForm onSuccess={handleSuccess} />
+          <ResidenceForm onSuccess={handleSuccess} />
         </div>
       )}
 
-      <EducationList
-        education={education}
+      <ResidenceList
+        residences={residences}
         loading={loading}
-        onRefresh={fetchEducation}
+        onRefresh={fetchResidences}
       />
     </section>
   );
