@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, User, MapPin, GraduationCap, Briefcase, Heart, Camera, Image } from 'lucide-react';
 import BasicInfoSection from './BasicInfoSection';
-import LocationsSection from './LocationsSection';
+import ResidenceSection from './ResidenceSection';
 import EducationSection from './EducationSection';
 import EmploymentSection from './EmploymentSection';
 import BioSection from './BioSection';
@@ -61,8 +61,8 @@ export default function ProfileForm({ initialData, userId, profileId }: Props) {
       id: 'locations' as SectionId,
       title: 'Места проживания',
       icon: MapPin,
-      description: 'Место рождения, текущий адрес',
-      component: <LocationsSection initialData={initialData} userId={userId} />,
+      description: 'Где вы жили на протяжении жизни',
+      component: <ResidenceSection userId={userId} />,
     },
     {
       id: 'education' as SectionId,
