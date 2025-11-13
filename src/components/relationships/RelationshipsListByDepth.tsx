@@ -21,6 +21,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { logger } from '@/lib/logger';
 
 interface Person {
   id: string;
@@ -82,7 +83,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
       setData(result);
     } catch (err: any) {
       setError(err.message);
-      console.error('[RELATIONSHIPS] Error:', err);
+      logger.error('[RELATIONSHIPS] Error:', err);
     } finally {
       setLoading(false);
     }

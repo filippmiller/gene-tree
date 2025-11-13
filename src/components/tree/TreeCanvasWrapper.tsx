@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { TreeCanvas } from './TreeCanvas';
 import type { TreeData } from './types';
+import { logger } from '@/lib/logger';
 
 interface Props {
   rootPersonId: string;
@@ -33,7 +34,7 @@ export default function TreeCanvasWrapper({ rootPersonId }: Props) {
       setData(result);
     } catch (err: any) {
       setError(err.message);
-      console.error('[TREE-CANVAS] Error:', err);
+      logger.error('[TREE-CANVAS] Error:', err);
     } finally {
       setLoading(false);
     }

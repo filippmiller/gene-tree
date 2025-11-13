@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabase/browser';
+import { logger } from '@/lib/logger';
 
 /**
  * AuthSessionGuard - Client-side session expiration handler
@@ -21,7 +22,7 @@ export function AuthSessionGuard() {
     } = supabase.auth.onAuthStateChange((event, session) => {
       // Only log critical events, not every state change
       if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-        console.log('[AuthSessionGuard]', event);
+        logger.info('[AuthSessionGuard]', event);
       }
 
       // Redirect to login on sign out or expired session
