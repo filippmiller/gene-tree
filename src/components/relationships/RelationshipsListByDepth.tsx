@@ -122,7 +122,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
    */
   const PersonCard = ({ person }: { person: Person }) => (
     <Link
-      href={`/${locale}/tree/${person.id}`}
+      href={`/${locale}/profile/${person.id}`}
       className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all"
     >
       <div className="flex items-center gap-3">
@@ -156,7 +156,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
    */
   const SpouseCard = ({ spouse }: { spouse: Spouse }) => (
     <Link
-      href={`/${locale}/tree/${spouse.id}`}
+      href={`/${locale}/profile/${spouse.id}`}
       className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all"
     >
       <div className="flex items-center gap-3">
