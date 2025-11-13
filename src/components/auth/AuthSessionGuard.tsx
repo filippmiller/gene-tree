@@ -15,42 +15,25 @@ export function AuthSessionGuard() {
   const supabase = getSupabaseBrowser();
 
   useEffect(() => {
-    // Listen for auth state changes
+    // Listen for auth state changes (ONLY important events)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('[AuthSessionGuard] Auth event:', event, 'Session:', !!session);
+      // Only log critical events, not every state change
+      if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+        console.log('[AuthSessionGuard]', event);
+      }
 
       // Redirect to login on sign out or expired session
       if (event === 'SIGNED_OUT') {
-        console.log('[AuthSessionGuard] Session expired, redirecting to login');
-        
-        // Show a brief message (optional - you can add toast library later)
-        if (typeof window !== 'undefined') {
-          // Simple alert for now - replace with proper toast/notification later
-          alert('Your session has expired. Please login again.');
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/sign-in')) {
+          router.push('/en/sign-in');
         }
-        
-        router.push('/en/sign-in');
-      }
-
-      // Handle token refresh failures
-      if (event === 'TOKEN_REFRESHED') {
-        console.log('[AuthSessionGuard] Token refreshed successfully');
       }
 
       // If user signs in from another tab, refresh the page
       if (event === 'SIGNED_IN' && !window.location.pathname.includes('/sign-in')) {
-        console.log('[AuthSessionGuard] User signed in, refreshing page');
         router.refresh();
-      }
-    });
-
-    // Initial session check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session && !window.location.pathname.includes('/sign-in')) {
-        console.log('[AuthSessionGuard] No session on mount, redirecting');
-        router.push('/en/sign-in');
       }
     });
 

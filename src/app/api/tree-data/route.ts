@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 interface PendingRelative {
@@ -20,14 +21,16 @@ interface PendingRelative {
 }
 
 export async function GET(request: NextRequest) {
-  // Using getSupabaseAdmin()
-
+  // Get auth from SSR (cookies)
+  const supabaseSSR = await getSupabaseSSR();
+  
   const {
     data: { user },
     error: authError,
-  } = await getSupabaseAdmin().auth.getUser();
+  } = await supabaseSSR.auth.getUser();
 
   if (authError || !user) {
+    console.error('[TREE-DATA] Auth error:', authError);
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
