@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { BUILD_LABEL, GIT_COMMIT_HASH, GIT_COMMIT_TIMESTAMP } from "@/lib/build-info";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -43,6 +44,12 @@ export default function Nav() {
           ))}
         </div>
         <div className="flex items-center gap-4">
+          <div className="hidden md:flex flex-col items-end text-xs text-gray-500 mr-2">
+            <span>{BUILD_LABEL} · {GIT_COMMIT_HASH}</span>
+            {GIT_COMMIT_TIMESTAMP && (
+              <span>{GIT_COMMIT_TIMESTAMP}</span>
+            )}
+          </div>
           <LanguageSwitcher />
           <Button variant="outline" size="sm" onClick={handleSignOut}>
             {t("signOut")}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { getBloodRelationshipOptions, getGenderSpecificOptions, type Gender, type RelationshipQualifiers } from '@/lib/relationships/generateLabel';
 import KinshipSearchField from './KinshipSearchField';
 import { mapRuLabelToRelationship } from '@/lib/relationships/kinshipMapping';
@@ -33,6 +33,8 @@ interface FormData {
 export default function AddRelativeForm() {
   const searchParams = useSearchParams();
   const relatedToParam = searchParams.get('relatedTo');
+  const params = useParams();
+  const locale = (params.locale as string) || 'ru';
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -139,7 +141,7 @@ export default function AddRelativeForm() {
         throw new Error(data.error || 'Failed to add relative');
       }
       
-      router.push('/people');
+      router.push(`/${locale}/people`);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

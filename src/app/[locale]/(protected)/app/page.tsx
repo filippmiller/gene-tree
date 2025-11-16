@@ -1,9 +1,11 @@
-import {redirect} from 'next/navigation';
 import {getSupabaseSSR} from '@/lib/supabase/server-ssr';
+import {getTranslations} from 'next-intl/server';
 import Link from 'next/link';
+import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 
 export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
   const {locale: resolvedLocale} = await params;
+  const t = await getTranslations({ locale: resolvedLocale, namespace: 'dashboard' });
   const supabase = await getSupabaseSSR();
   
   // Auth is already checked in layout - just get the session
@@ -48,9 +50,12 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Main Content */}
-      <main className="w-full px-4 sm:px-6 lg:px-12 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8 flex items-center gap-6">
+      <main className="w-full px-4 sm:px-6 lg:px-12 py-8 space-y-6">
+        {/* Top row: welcome + notifications */}
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+          <div className="flex-1">
+            {/* Welcome Section */}
+            <div className="mb-2 flex items-center gap-6">
           {profile?.avatar_url ? (
             <img
               src={profile.avatar_url}
@@ -64,11 +69,15 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
           )}
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome back, {userName}! 👋
+              {t('welcomeBack', {name: userName})}
             </h1>
             <p className="text-gray-600">
-              Manage your family tree and discover your heritage
+              {t('subtitle')}
             </p>
+          </div>
+        </div>
+          <div className="w-full lg:w-80">
+            <NotificationsPanel />
           </div>
         </div>
 
@@ -77,7 +86,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Total People</p>
+                <p className="text-sm text-gray-600 mb-1">{t('totalPeople')}</p>
                 <p className="text-3xl font-bold text-gray-900">{totalPeople}</p>
               </div>
               <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -91,7 +100,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Generations</p>
+                <p className="text-sm text-gray-600 mb-1">{t('generations')}</p>
                 <p className="text-3xl font-bold text-gray-900">{totalGenerations}</p>
               </div>
               <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -105,7 +114,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Relationships</p>
+                <p className="text-sm text-gray-600 mb-1">{t('relationships')}</p>
                 <p className="text-3xl font-bold text-gray-900">{totalRelationships}</p>
               </div>
               <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -119,7 +128,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t('quickActions')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link
               href={`/${resolvedLocale}/people/new`}
@@ -131,8 +140,8 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
                 </svg>
               </div>
               <div>
-                <p className="font-medium text-gray-900">Add Family Member</p>
-                <p className="text-sm text-gray-600">Add someone to your family tree</p>
+                <p className="font-medium text-gray-900">{t('addFamilyMember')}</p>
+                <p className="text-sm text-gray-600">{t('addFamilyMemberDescription')}</p>
               </div>
             </Link>
 
@@ -146,8 +155,8 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
                 </svg>
               </div>
               <div>
-                <p className="font-medium text-gray-900">View Family Tree</p>
-                <p className="text-sm text-gray-600">Explore your family connections</p>
+                <p className="font-medium text-gray-900">{t('viewFamilyTree')}</p>
+                <p className="text-sm text-gray-600">{t('viewFamilyTreeDescription')}</p>
               </div>
             </Link>
           </div>
@@ -155,12 +164,12 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
 
         {/* Recent Activity (placeholder) */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t('recentActivity')}</h2>
           <div className="text-center py-8 text-gray-500">
             <svg className="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            <p>No activity yet. Start by adding family members!</p>
+            <p>{t('recentActivityEmpty')}</p>
           </div>
         </div>
       </main>

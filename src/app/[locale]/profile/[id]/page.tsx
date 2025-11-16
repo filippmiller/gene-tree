@@ -1,6 +1,7 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { notFound } from 'next/navigation';
+import VoiceStoryRecorder from '@/components/profile/VoiceStoryRecorder';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -106,7 +107,12 @@ export default async function PublicProfilePage({ params }: Props) {
           </div>
         )}
 
-        {/* Action: Request to connect */}
+        {/* Voice stories recorder for relatives */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <VoiceStoryRecorder targetProfileId={actualProfile.id} />
+        </div>
+
+        {/* Action: Request to connect (placeholder) */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-3">
             Are you related to {actualProfile.first_name}?

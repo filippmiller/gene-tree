@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
+import { createNotification } from '@/lib/notifications';
 
 export async function POST(request: Request) {
   const requestMeta = extractRequestMeta(request);
   const body = await request.json();
   
   try {
-    // Using getSupabaseAdmin()
-    
-    // Get current user
-    const { data: { user }, error: userError } = await getSupabaseAdmin().auth.getUser();
+    // Use SSR client for auth (reads session from cookies)
+    const supabase = await getSupabaseSSR();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
     
     if (userError || !user) {
       await logAudit({
@@ -171,6 +172,19 @@ export async function POST(request: Request) {
       ...requestMeta,
     });
     
+    // Create notification for family circle
+    await createNotification({
+      eventType: 'relative_added',
+      actorUserId: user.id,
+      primaryProfileId: user.id,
+      relatedProfileId: null,
+      payload: {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        relationship_type: relationshipType,
+      },
+    });
+    
     // TODO: In future, send invitation email/SMS here
     // sendInvitation(data.invitation_token, email, phone);
     
@@ -196,10 +210,9 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    // Using getSupabaseAdmin()
-    
-    // Get current user
-    const { data: { user }, error: userError } = await getSupabaseAdmin().auth.getUser();
+    // Use SSR client for auth (reads session from cookies)
+    const supabase = await getSupabaseSSR();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
     
     if (userError || !user) {
       return NextResponse.json(

@@ -25,6 +25,20 @@
     "treeDashboard": "Tree Dashboard",
     "helloTree": "Hello, Tree"
   },
+  "dashboard": {
+    "welcomeBack": "Welcome back, {name}! 👋",
+    "subtitle": "Manage your family tree and discover your heritage",
+    "totalPeople": "Total People",
+    "generations": "Generations",
+    "relationships": "Relationships",
+    "quickActions": "Quick Actions",
+    "addFamilyMember": "Add Family Member",
+    "addFamilyMemberDescription": "Add someone to your family tree",
+    "viewFamilyTree": "View Family Tree",
+    "viewFamilyTreeDescription": "Explore your family connections",
+    "recentActivity": "Recent Activity",
+    "recentActivityEmpty": "No activity yet. Start by adding family members!"
+  },
   "people": {
     "title": "People",
     "listPlaceholder": "People list will be here"

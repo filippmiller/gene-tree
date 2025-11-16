@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 import type { CommitUploadRequest, CommitUploadResponse } from '@/types/media';
+import { createNotification } from '@/lib/notifications';
 
 export async function POST(request: NextRequest) {
   try {
@@ -177,6 +178,19 @@ export async function POST(request: NextRequest) {
       photo: updatedPhoto as any,
       jobs,
     };
+
+    // Notification: media added (photo or video)
+    await createNotification({
+      eventType: 'media_added',
+      actorUserId: user.id,
+      primaryProfileId: updatedPhoto.target_profile_id || user.id,
+      relatedProfileId: null,
+      payload: {
+        photo_id: updatedPhoto.id,
+        media_type: updatedPhoto.type,
+        bucket: updatedPhoto.bucket,
+      },
+    });
 
     return NextResponse.json(response);
 

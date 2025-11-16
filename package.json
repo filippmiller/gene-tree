@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:rw": "railway run npm run dev",
-    "prebuild": "node scripts/increment-build.js",
+    "prebuild": "node scripts/increment-build.js && node scripts/generate-build-info.js",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",

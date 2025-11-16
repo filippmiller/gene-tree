@@ -12,6 +12,7 @@ export type MediaType =
   | 'event' 
   | 'headstone' 
   | 'certificate' 
+  | 'video'
   | 'other';
 
 export interface Photo {

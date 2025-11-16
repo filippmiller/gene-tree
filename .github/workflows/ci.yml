@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+        continue-on-error: true
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E tests (Playwright)
+        run: |
+          npm run test:e2e
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+  # Optional: Supabase DB checks (disabled by default)
+  # Enable and configure secrets in GitHub → Settings → Secrets and variables → Actions
+  # supabase-db-check:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   if: false  # set to `true` or remove this line once configured
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Use Node.js 20
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: npm
+  #
+  #     - name: Install supabase CLI
+  #       run: npm install -g supabase
+  #
+  #     - name: Validate Supabase migrations
+  #       env:
+  #         SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+  #       run: |
+  #         supabase db lint --db-url "$SUPABASE_DB_URL"
+
+  # Optional: Railway deploy via GitHub Actions (you can also use Railway's native GitHub integration instead)
+  # railway-deploy:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main' && false
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Install Railway CLI
+  #       run: npm install -g @railway/cli
+  #
+  #     - name: Deploy to Railway
+  #       env:
+  #         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  #       run: |
+  #         railway login --token "$RAILWAY_TOKEN"
+  #         railway up
