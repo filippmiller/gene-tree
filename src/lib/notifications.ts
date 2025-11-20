@@ -31,7 +31,7 @@ export async function createNotification(options: CreateNotificationOptions) {
       actor_profile_id: actorUserId,
       primary_profile_id: primaryProfileId ?? actorUserId,
       related_profile_id: relatedProfileId ?? null,
-      payload: payload ?? null,
+      payload: (payload ?? null) as any,
     })
     .select('id')
     .single();

@@ -39,7 +39,7 @@ export default function AddRelativeForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingRelatives, setExistingRelatives] = useState<ExistingRelative[]>([]);
-  
+
   const [formData, setFormData] = useState<FormData>({
     isDirect: relatedToParam ? false : true,
     relatedToUserId: relatedToParam || undefined,
@@ -53,9 +53,9 @@ export default function AddRelativeForm() {
     knowsBirthDate: false,
     dateOfBirth: undefined,
   });
-  
+
   const relationshipOptions = getBloodRelationshipOptions('ru');
-  const specificOptions = formData.relationshipCode 
+  const specificOptions = formData.relationshipCode
     ? getGenderSpecificOptions(formData.relationshipCode, 'ru')
     : [];
 
@@ -74,7 +74,7 @@ export default function AddRelativeForm() {
         console.error('Failed to fetch existing relatives:', err);
       }
     };
-    
+
     if (!formData.isDirect) {
       fetchRelatives();
     }
@@ -90,33 +90,33 @@ export default function AddRelativeForm() {
       setError('Неправильный формат email');
       return false;
     }
-    
+
     // Phone validation (basic)
     if (formData.phone && !/^[\d\s()+-]{10,}$/.test(formData.phone)) {
       setError('Неправильный формат телефона');
       return false;
     }
-    
+
     // Contact required only if not deceased
     if (!formData.isDeceased && !formData.email && !formData.phone) {
       setError('Укажите хотя бы один контакт (email или телефон)');
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     const selectedOption = specificOptions.find(opt => opt.value === formData.specificRelationship);
-    
+
     try {
       const response = await fetch('/api/relatives', {
         method: 'POST',
@@ -128,19 +128,19 @@ export default function AddRelativeForm() {
           qualifiers: selectedOption?.qualifiers,
         }),
       });
-      
+
       // Check if response is JSON
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         throw new Error('Ошибка сервера. Попробуйте позже.');
       }
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to add relative');
       }
-      
+
       router.push(`/${locale}/people`);
       router.refresh();
     } catch (err) {
@@ -153,11 +153,11 @@ export default function AddRelativeForm() {
   const isEmailValid = !formData.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPhoneValid = !formData.phone || /^[\d\s()+-]{10,}$/.test(formData.phone);
   const hasValidContact = formData.isDeceased || (formData.email && isEmailValid) || (formData.phone && isPhoneValid);
-  
-  const canSubmit = formData.firstName && formData.lastName && 
-                    hasValidContact &&
-                    formData.specificRelationship &&
-                    (formData.isDirect || (formData.relatedToUserId && formData.relatedToRelationship));
+
+  const canSubmit = formData.firstName && formData.lastName &&
+    hasValidContact &&
+    formData.specificRelationship &&
+    (formData.isDirect || (formData.relatedToUserId && formData.relatedToRelationship));
 
   const selectedOption = specificOptions.find(opt => opt.value === formData.specificRelationship);
   const relationshipLabel = selectedOption?.label || '';
@@ -166,13 +166,13 @@ export default function AddRelativeForm() {
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl border-0 p-8 space-y-6">
       <div>
         <h2 className="text-xl font-semibold mb-4">Кого вы добавляете?</h2>
-        
+
         <div className="space-y-3">
           <label className="flex items-start p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
             <input
               type="radio"
               checked={formData.isDirect}
-              onChange={() => setFormData({ 
+              onChange={() => setFormData({
                 isDirect: true,
                 relationshipCode: '',
                 specificRelationship: '',
@@ -191,12 +191,12 @@ export default function AddRelativeForm() {
               <div className="text-sm text-gray-600">Мама, папа, брат, сестра, супруг(а) и т.д.</div>
             </div>
           </label>
-          
+
           <label className="flex items-start p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
             <input
               type="radio"
               checked={!formData.isDirect}
-              onChange={() => setFormData({ 
+              onChange={() => setFormData({
                 isDirect: false,
                 relationshipCode: '',
                 specificRelationship: '',
@@ -250,7 +250,7 @@ export default function AddRelativeForm() {
                 )}
               </select>
             </div>
-          
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Кем приходится? *
@@ -296,10 +296,10 @@ export default function AddRelativeForm() {
           </label>
           <select
             value={formData.relationshipCode}
-            onChange={(e) => setFormData({ 
-              ...formData, 
-              relationshipCode: e.target.value, 
-              specificRelationship: '' 
+            onChange={(e) => setFormData({
+              ...formData,
+              relationshipCode: e.target.value,
+              specificRelationship: ''
             })}
             className="w-full px-3 py-2 border rounded-md"
             required
@@ -355,7 +355,7 @@ export default function AddRelativeForm() {
             required
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Фамилия *
@@ -379,13 +379,20 @@ export default function AddRelativeForm() {
           type="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className={`w-full px-3 py-2 border rounded-md ${
-            formData.email && !isEmailValid ? 'border-red-500 bg-red-50' : ''
-          }`}
+          className={`w-full px-3 py-2 border rounded-md ${formData.email && !isEmailValid ? 'border-red-500 bg-red-50' : ''
+            }`}
           placeholder="email@example.com"
         />
         {formData.email && !isEmailValid && (
           <p className="text-xs text-red-600 mt-1">Неправильный формат email</p>
+        )}
+        {formData.email && isEmailValid && !formData.isDeceased && (
+          <div className="mt-2 p-2 bg-blue-50 text-blue-700 text-xs rounded flex items-center">
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            На этот адрес будет отправлено приглашение присоединиться к дереву
+          </div>
         )}
       </div>
 
@@ -397,9 +404,8 @@ export default function AddRelativeForm() {
           type="tel"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className={`w-full px-3 py-2 border rounded-md ${
-            formData.phone && !isPhoneValid ? 'border-red-500 bg-red-50' : ''
-          }`}
+          className={`w-full px-3 py-2 border rounded-md ${formData.phone && !isPhoneValid ? 'border-red-500 bg-red-50' : ''
+            }`}
           placeholder="+7 (999) 123-45-67"
         />
         {formData.phone && !isPhoneValid && (
@@ -451,7 +457,7 @@ export default function AddRelativeForm() {
 
       <div className="border-t pt-4">
         <h3 className="text-sm font-medium text-gray-700 mb-3">Социальные сети (опционально)</h3>
-        
+
         <div className="space-y-3">
           <div>
             <label className="block text-sm text-gray-600 mb-1">
@@ -465,7 +471,7 @@ export default function AddRelativeForm() {
               placeholder="https://facebook.com/..."
             />
           </div>
-          
+
           <div>
             <label className="block text-sm text-gray-600 mb-1">
               Instagram профиль

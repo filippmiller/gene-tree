@@ -23,6 +23,8 @@ export type Union = {
   union_id: string;
   p1: string;
   p2?: string;
+  role_p1?: string;  // 'husband', 'wife', 'partner'
+  role_p2?: string;  // 'husband', 'wife', 'partner'
   marriage_date?: string;
   divorce_date?: string;
 };

@@ -18,6 +18,10 @@ interface PendingRelative {
   related_to_relationship: string | null;
   date_of_birth: string | null;
   is_deceased: boolean;
+  role_for_a?: string | null;  // Optional - added in migration 0029
+  role_for_b?: string | null;  // Optional - added in migration 0029
+  marriage_date?: string | null;  // Optional - added in migration 0029
+  divorce_date?: string | null;  // Optional - added in migration 0029
 }
 
 export async function GET(request: NextRequest) {
@@ -156,14 +160,43 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Build unions (marriages) - simplified
+    // Build unions (marriages) from spouse relationships
     const unions: any[] = [];
+    const unionChildren: any[] = [];
+    
+    for (const rel of allRelatives) {
+      if (rel.relationship_type === 'spouse') {
+        const unionId = crypto.randomUUID();
+        unions.push({
+          union_id: unionId,
+          p1: rel.invited_by,
+          p2: rel.id,
+          role_p1: rel.role_for_a || 'partner',  // Default to 'partner' if not set
+          role_p2: rel.role_for_b || 'partner',
+          marriage_date: rel.marriage_date || null,
+          divorce_date: rel.divorce_date || null,
+        });
+        
+        // Find children of this union
+        for (const childRel of allRelatives) {
+          if (childRel.relationship_type === 'child') {
+            // Check if this child belongs to either parent in the union
+            if (childRel.invited_by === rel.invited_by || childRel.invited_by === rel.id) {
+              unionChildren.push({
+                union_id: unionId,
+                child_id: childRel.id,
+              });
+            }
+          }
+        }
+      }
+    }
 
     const treeData = {
       persons,
       parentChild: parent_child_links,  // camelCase for TypeScript
       unions,
-      unionChildren: [],  // camelCase for TypeScript
+      unionChildren,  // camelCase for TypeScript
     };
 
     return NextResponse.json(treeData);

@@ -15,7 +15,7 @@ export default async function ProfilePage({ params }: Props) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login`);
+    redirect(`/${locale}/sign-in`);
   }
 
   // Fetch user profile

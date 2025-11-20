@@ -126,7 +126,8 @@ export async function POST(request: Request) {
         related_to_relationship: isDirect ? null : relatedToRelationship,
         facebook_url: facebookUrl || null,
         instagram_url: instagramUrl || null,
-        status: 'pending',
+        status: email ? 'pending' : 'verified', // If email provided, it's an invitation
+        invitation_token: email ? crypto.randomUUID() : undefined, // Generate token for invitations
         // Qualifiers
         halfness: qualifiers?.halfness || null,
         lineage: qualifiers?.lineage || null,

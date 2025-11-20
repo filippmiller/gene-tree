@@ -1,13 +1,13 @@
-import {getSupabaseSSR} from '@/lib/supabase/server-ssr';
-import {getTranslations} from 'next-intl/server';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 
-export default async function AppPage({params}:{params: Promise<{locale:string}>}) {
-  const {locale: resolvedLocale} = await params;
+export default async function AppPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: resolvedLocale } = await params;
   const t = await getTranslations({ locale: resolvedLocale, namespace: 'dashboard' });
   const supabase = await getSupabaseSSR();
-  
+
   // Auth is already checked in layout - just get the session
   const { data: { session } } = await supabase.auth.getSession();
   const user = session!.user; // Non-null assertion safe because layout already checked
@@ -29,14 +29,14 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
     .from('pending_relatives')
     .select('id, relationship_type')
     .eq('invited_by', user.id) as any;
-  
+
   const totalPeople = (pendingRelatives?.length || 0);
   const totalRelationships = totalPeople; // Same as people count
-  
+
   // Calculate generations from relationship types
   const generationLevels = new Set<number>();
   generationLevels.add(0); // User is generation 0
-  
+
   (pendingRelatives || []).forEach((rel: any) => {
     const type = rel.relationship_type;
     if (type === 'parent') generationLevels.add(-1);
@@ -44,7 +44,7 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
     else if (type === 'child') generationLevels.add(1);
     else if (type === 'grandchild') generationLevels.add(2);
   });
-  
+
   const totalGenerations = generationLevels.size;
 
   return (
@@ -56,26 +56,27 @@ export default async function AppPage({params}:{params: Promise<{locale:string}>
           <div className="flex-1">
             {/* Welcome Section */}
             <div className="mb-2 flex items-center gap-6">
-          {profile?.avatar_url ? (
-            <img
-              src={profile.avatar_url}
-              alt={userName}
-              className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
-            />
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-              {userName.charAt(0).toUpperCase()}
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={userName}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  {t('welcomeBack', { name: userName })}
+                </h1>
+                <p className="text-gray-600">
+                  {t('subtitle')}
+                </p>
+              </div>
             </div>
-          )}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {t('welcomeBack', {name: userName})}
-            </h1>
-            <p className="text-gray-600">
-              {t('subtitle')}
-            </p>
           </div>
-        </div>
           <div className="w-full lg:w-80">
             <NotificationsPanel />
           </div>

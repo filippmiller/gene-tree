@@ -42,6 +42,20 @@ function formatText(row: NotificationRow): string {
       }
       return 'Добавлена новая фотография';
     }
+    case 'STORY_SUBMITTED': {
+      const mediaType = payload?.media_type as string | undefined;
+      const preview = payload?.preview as string | undefined;
+      return `Новая история (${mediaType || 'unknown'}): ${preview || 'добавлена к вашему профилю'}`;
+    }
+    case 'STORY_APPROVED': {
+      const title = payload?.title as string | undefined;
+      return `Ваша история "${title || 'без названия'}" была одобрена`;
+    }
+    case 'STORY_REJECTED': {
+      const title = payload?.title as string | undefined;
+      const reason = payload?.reason as string | undefined;
+      return `Ваша история "${title || 'без названия'}" была отклонена${reason ? ': ' + reason : ''}`;
+    }
     default:
       return 'Новое событие';
   }
@@ -123,7 +137,12 @@ export default function NotificationsPanel() {
           <Loader2 className="w-4 h-4 animate-spin mr-2" /> Загрузка...
         </div>
       ) : error ? (
-        <p className="text-xs text-red-600">{error}</p>
+        <div className="flex items-center justify-between p-2 bg-red-50 rounded text-xs text-red-600">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="ml-2 text-red-400 hover:text-red-600">
+            ✕
+          </button>
+        </div>
       ) : data.length === 0 ? (
         <p className="text-xs text-gray-500">Пока нет уведомлений.</p>
       ) : (
@@ -131,9 +150,8 @@ export default function NotificationsPanel() {
           {data.slice(0, 8).map((row) => (
             <li
               key={row.notification_id}
-              className={`flex items-start justify-between gap-3 rounded-md px-2 py-1 cursor-pointer hover:bg-gray-50 ${
-                row.is_read ? 'text-gray-500' : 'bg-blue-50 text-gray-900'
-              }`}
+              className={`flex items-start justify-between gap-3 rounded-md px-2 py-1 cursor-pointer hover:bg-gray-50 ${row.is_read ? 'text-gray-500' : 'bg-blue-50 text-gray-900'
+                }`}
               onClick={() => markAsRead(row.notification_id)}
             >
               <div className="flex-1">

@@ -18,11 +18,11 @@ export default async function TreePage({ params }: Props) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login`);
+    redirect(`/${locale}/sign-in`);
   }
 
   return (
-    <div className="h-screen w-full flex flex-col">
+    <div className="h-[calc(100vh-4rem)] w-full flex flex-col">
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <h1 className="text-2xl font-bold text-gray-900">
           Family Tree Visualization

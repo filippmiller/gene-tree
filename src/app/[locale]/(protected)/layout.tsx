@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import Nav from '@/components/Nav';
 
+import InvitationChecker from '@/components/invitations/InvitationChecker';
+
 /**
  * Protected Layout - Auth Guard
  * 
@@ -19,21 +21,24 @@ export default async function ProtectedLayout({
 }) {
   const { locale } = await params;
   const supabase = await getSupabaseSSR();
-  
+
   // Use getSession() - reads from cookies directly, no API call
   const { data: { session } } = await supabase.auth.getSession();
-  
+
   if (!session) {
     console.log('[PROTECTED-LAYOUT] No session, redirecting to sign-in');
     redirect(`/${locale}/sign-in`);
   }
-  
+
   console.log('[PROTECTED-LAYOUT] Session valid, user:', session.user.email);
-  
+
   return (
     <>
+      <InvitationChecker />
       <Nav />
-      {children}
+      <div className="max-w-7xl mx-auto w-full">
+        {children}
+      </div>
     </>
   );
 }

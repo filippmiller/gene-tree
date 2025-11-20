@@ -48,7 +48,7 @@ export default async function MyProfilePage({ params }: Props) {
     console.error('Failed to load profile for MyProfilePage:', profileError);
   }
 
-  const currentAvatar = profile?.avatar_url ?? null;
+  const currentAvatar = (profile as { avatar_url: string | null } | null)?.avatar_url ?? null;
 
   return (
     <ProfileLayout>

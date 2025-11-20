@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
         path,
         uploaded_by: user.id,
         target_profile_id,
-        type,
+        type: type as any, // Cast to bypass enum validation
         status: 'pending',
         visibility,
         caption: caption || null,

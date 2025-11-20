@@ -155,6 +155,7 @@ export function getBloodRelationshipOptions(locale: 'en' | 'ru' = 'ru') {
   return [
     { code: 'parent', label: locale === 'ru' ? 'Родитель' : 'Parent', category: 'direct' },
     { code: 'child', label: locale === 'ru' ? 'Ребёнок' : 'Child', category: 'direct' },
+    { code: 'spouse', label: locale === 'ru' ? 'Супруг(а)' : 'Spouse', category: 'direct' },
     { code: 'sibling', label: locale === 'ru' ? 'Брат/Сестра' : 'Sibling', category: 'direct' },
     { code: 'grandparent', label: locale === 'ru' ? 'Дед/Бабушка' : 'Grandparent', category: 'direct' },
     { code: 'grandchild', label: locale === 'ru' ? 'Внук/Внучка' : 'Grandchild', category: 'direct' },
@@ -181,6 +182,13 @@ export function getGenderSpecificOptions(code: string, locale: 'en' | 'ru' = 'ru
       return [
         { value: 'son', label: 'Сын', gender: 'male' as Gender, qualifiers: {} },
         { value: 'daughter', label: 'Дочь', gender: 'female' as Gender, qualifiers: {} },
+      ];
+
+    case 'spouse':
+      return [
+        { value: 'husband', label: 'Муж', gender: 'male' as Gender, qualifiers: {} },
+        { value: 'wife', label: 'Жена', gender: 'female' as Gender, qualifiers: {} },
+        { value: 'partner', label: 'Партнёр', gender: 'unknown' as Gender, qualifiers: {} },
       ];
     
     case 'sibling':

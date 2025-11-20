@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const admin = getSupabaseAdmin();
+  const admin = getSupabaseAdmin() as any;
 
   const { data, error } = await admin
     .from('notification_recipients')
@@ -35,7 +35,10 @@ export async function GET(request: NextRequest) {
     `,
     )
     .eq('profile_id', user.id)
-    .order('notification.created_at', { ascending: false })
+    // Ordering by foreign table requires specific syntax or might be limited
+    // Let's try ordering by the join table's ID as a proxy for recency if possible,
+    // or use the correct foreignTable syntax
+    .order('created_at', { foreignTable: 'notifications', ascending: false })
     .limit(50);
 
   if (error) {

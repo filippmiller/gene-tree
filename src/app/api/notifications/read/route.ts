@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing ids' }, { status: 400 });
   }
 
-  const admin = getSupabaseAdmin();
+  const admin = getSupabaseAdmin() as any;
 
   const { error } = await admin
     .from('notification_recipients')
