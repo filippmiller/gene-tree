@@ -1,0 +1,515 @@
+﻿
+C:\dev\gene-tree\apply-rls-fix.mjs
+  2:10  warning  'readFileSync' is defined but never used       @typescript-eslint/no-unused-vars
+  9:7   warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\check-table-exists.mjs
+  14:11  warning  'data' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  31:19  warning  'sample' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\diagnose-schema.mjs
+  20:17  warning  'profiles' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  45:17  warning  'storageCheck' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\eslint.config.mjs
+  7:7  warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\rollback-relationships.mjs
+  10:9  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\scripts\apply-merge-migration.mjs
+  2:8  warning  'fs' is defined but never used                  @typescript-eslint/no-unused-vars
+  6:7  warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\scripts\fix-views.mjs
+   2:8  warning  'fs' is defined but never used             @typescript-eslint/no-unused-vars
+  60:9  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\scripts\run-migration-0015.mjs
+   2:8   warning  'fs' is defined but never used             @typescript-eslint/no-unused-vars
+  14:11  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  24:10  warning  'e' is defined but never used              @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\[locale]\(auth)\sign-in\page.tsx
+   70:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  165:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(auth)\sign-up\page.tsx
+  20:9   warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  45:19  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\app\page.tsx
+  20:18  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  31:35  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  40:42  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  60:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\family-profile\complete\actions.ts
+  20:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  93:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\family-profile\complete\page.tsx
+  24:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\family-profile\page.tsx
+  26:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\family-profile\settings\actions.ts
+  15:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\family-profile\settings\page.tsx
+   4:15  warning  'UserProfile' is defined but never used   @typescript-eslint/no-unused-vars
+  16:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\onboarding\invites\page.tsx
+  138:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\people\page.tsx
+  54:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\relations\page.tsx
+   3:8   warning  'Link' is defined but never used              @typescript-eslint/no-unused-vars
+   4:8   warning  'BuildInfo' is defined but never used         @typescript-eslint/no-unused-vars
+  15:17  warning  'profile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\[locale]\(protected)\tree\page.tsx
+  21:17  warning  'profile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\[locale]\invite\[token]\page.tsx
+   1:10  warning  'redirect' is defined but never used      @typescript-eslint/no-unused-vars
+  30:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  56:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\layout.tsx
+  13:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\profile\[id]\page.tsx
+  11:11  warning  'locale' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  19:18  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\profile\complete\actions.ts
+  20:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  93:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\[locale]\profile\complete\page.tsx
+  3:9  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\[locale]\profile\page.tsx
+  1:8   warning  'Link' is defined but never used             @typescript-eslint/no-unused-vars
+  9:11  warning  'locale' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\api\auth\session\route.ts
+  38:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\avatar\upload\route.ts
+  104:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\health\db\route.ts
+   4:27  warning  'req' is defined but never used           @typescript-eslint/no-unused-vars
+  18:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\health\route.ts
+  13:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\invitations\accept\route.ts
+  85:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\invitations\reject\route.ts
+  62:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\invites\my-pending\route.ts
+  5:27  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\api\kin\resolve\route.ts
+   59:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   65:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   66:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   90:27  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  111:17  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\approve\route.ts
+   66:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\commit\route.ts
+   82:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  132:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  151:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  158:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  178:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\process-jobs\route.ts
+   70:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   72:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  121:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  202:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  202:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\reject\route.ts
+  115:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  126:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\set-avatar\route.ts
+  122:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\signed-upload\route.ts
+  110:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\media\stories\[...path]\route.ts
+  38:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\notifications\read\route.ts
+  31:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\notifications\route.ts
+   7:27  warning  'request' is defined but never used       @typescript-eslint/no-unused-vars
+  17:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\profile\complete\route.ts
+  10:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  18:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  21:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  59:24  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  95:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\profile\quick-setup\route.ts
+   9:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  17:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  20:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  58:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\relationships-temp\route.ts
+  51:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  56:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\relationships\[id]\route.ts
+   15:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   23:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   26:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   42:23  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   70:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   85:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   93:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   96:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  125:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\relationships\route.ts
+    7:27  warning  'request' is defined but never used            @typescript-eslint/no-unused-vars
+   11:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   19:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   22:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   76:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   87:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   95:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   98:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  127:29  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  151:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\relatives\route.ts
+   40:7   warning  'gender' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  212:27  warning  'request' is defined but never used          @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\app\api\stories\[id]\approve\route.ts
+  37:32  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  45:27  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  55:46  warning  'notifyError' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  66:14  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  71:50  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  78:16  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  86:45  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  91:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\stories\[id]\reject\route.ts
+  37:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  59:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  75:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  77:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  90:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  95:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\stories\pending\route.ts
+   9:27  warning  'req' is defined but never used           @typescript-eslint/no-unused-vars
+  39:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\stories\profile\[id]\route.ts
+  40:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\stories\route.ts
+   47:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   72:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   79:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   87:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  104:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\tree-data\route.ts
+   53:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  165:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\tree\route.ts
+   61:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   67:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   68:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  125:17  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  150:44  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  162:39  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  181:46  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  193:39  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  214:45  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  242:44  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  243:52  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  244:42  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  245:56  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\user\locale\route.ts
+  30:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  74:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\users\route.ts
+   7:27  warning  'request' is defined but never used            @typescript-eslint/no-unused-vars
+  11:11  warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  19:53  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  22:41  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  51:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\api\voice-stories\commit\route.ts
+  62:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\auth\callback\route.ts
+  20:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\app\global-error.tsx
+  4:3  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\LanguageSwitcher.tsx
+  11:21  warning  'setIsLoading' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\auth\AuthSessionGuard.tsx
+  22:49  warning  'session' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\dashboard\NotificationsPanel.tsx
+  16:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  94:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\invitations\InvitationChecker.tsx
+  9:12  warning  'hasChecked' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\invite\InvitationAcceptForm.tsx
+   7:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:60  warning  'inviterName' is defined but never used   @typescript-eslint/no-unused-vars
+  53:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  87:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\kin\KinSearchForm.tsx
+  11:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:14  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  98:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\AvatarUpload.tsx
+  62:21  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  80:21  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  91:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\profile\BasicInfoSection.tsx
+   8:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\BioSection.tsx
+  3:38  warning  'initialData' is defined but never used   @typescript-eslint/no-unused-vars
+  3:51  warning  'userId' is defined but never used        @typescript-eslint/no-unused-vars
+  3:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\EducationForm.tsx
+  86:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\EducationList.tsx
+  40:61  warning  'onRefresh' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\profile\EducationSection.tsx
+  25:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\EmploymentSection.tsx
+  3:45  warning  'employment' is defined but never used    @typescript-eslint/no-unused-vars
+  3:57  warning  'userId' is defined but never used        @typescript-eslint/no-unused-vars
+  3:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\LocationsSection.tsx
+  3:44  warning  'initialData' is defined but never used   @typescript-eslint/no-unused-vars
+  3:57  warning  'userId' is defined but never used        @typescript-eslint/no-unused-vars
+  3:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\PhotoModerationSection.tsx
+  128:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\profile\ProfileForm.tsx
+  14:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\ProfileInterestsSection.tsx
+   44:55  warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   56:41  warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   72:5   error    Definition for rule 'react-hooks/exhaustive-deps' was not found  react-hooks/exhaustive-deps
+   97:21  warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  135:21  warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\ProfilePhotosSection.tsx
+   74:5   error    Definition for rule 'react-hooks/exhaustive-deps' was not found                                                                                                                                                                                                 react-hooks/exhaustive-deps
+  149:23  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  215:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\profile\ResidenceForm.tsx
+  82:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\ResidenceSection.tsx
+  23:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\profile\VoiceStoryRecorder.tsx
+   69:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  142:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\relationships\AddRelationshipModal.tsx
+   70:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   89:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\relationships\RelationshipsList.tsx
+  44:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  83:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\relationships\RelationshipsListByDepth.tsx
+   84:19  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  133:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  167:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\relatives\AddRelativeForm.tsx
+  5:70  warning  'Gender' is defined but never used                  @typescript-eslint/no-unused-vars
+  5:83  warning  'RelationshipQualifiers' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\relatives\KinshipSearchField.tsx
+  26:10  warning  'pathInfo' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  84:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\stories\AddStoryDialog.tsx
+  17:8  warning  'VoiceStoryRecorder' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\stories\MediaUploader.tsx
+    6:10  warning  'Upload' is defined but never used                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   33:44  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   69:23  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  117:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\stories\PendingStoriesList.tsx
+   33:11  warning  'supabase' is assigned a value but never used                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  163:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\stories\StoryCard.tsx
+  78:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\stories\StoryFeed.tsx
+  13:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\tree\FamilyTreeD3.tsx
+   53:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   97:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  121:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  124:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  126:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  136:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\tree\PersonCard.tsx
+  117:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\dev\gene-tree\src\components\tree\PersonProfileDialog.tsx
+  33:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\tree\TreeCanvas.tsx
+  230:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\tree\TreeCanvasWrapper.tsx
+  55:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\components\tree\build-graph.ts
+  214:17  warning  '_' is defined but never used  @typescript-eslint/no-unused-vars
+  215:18  warning  '_' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\components\tree\layout.ts
+   21:24  warning  'ElkExtendedEdge' is defined but never used    @typescript-eslint/no-unused-vars
+  174:3   warning  'duration' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\i18n\request.ts
+  14:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\lib\audit\logger.ts
+   9:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\lib\logger.ts
+   9:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  22:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\lib\notifications.ts
+  34:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\dev\gene-tree\src\lib\relationships\generateLabel.ts
+   69:9  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+   99:9  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  118:9  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  137:9  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  172:9  warning  'maps' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\lib\supabase\server-ssr.ts
+   2:15  warning  'SupabaseClient' is defined but never used  @typescript-eslint/no-unused-vars
+  34:20  warning  'error' is defined but never used           @typescript-eslint/no-unused-vars
+  41:20  warning  'error' is defined but never used           @typescript-eslint/no-unused-vars
+
+C:\dev\gene-tree\src\types\media.ts
+  38:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 300 problems (2 errors, 298 warnings)
+

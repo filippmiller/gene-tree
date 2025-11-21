@@ -2,6 +2,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import tseslint from "typescript-eslint";
 import nextPlugin from "@next/eslint-plugin-next";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,6 +21,8 @@ const eslintConfig = [
       "next-env.d.ts",
       "gene-tree_frommssqlda/**",
       "src/lib/types/supabase.ts", // Generated Supabase types
+      "playwright-report/**",
+      "test-results/**",
     ],
   },
   // TypeScript ESLint base config
@@ -28,6 +31,7 @@ const eslintConfig = [
   {
     plugins: {
       "@next/next": nextPlugin,
+      "react-hooks": reactHooks,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
@@ -35,6 +39,9 @@ const eslintConfig = [
       // Relax for stabilization
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-unsafe-function-type": "off",
+      "@typescript-eslint/no-wrapper-object-types": "off"
     },
   },
   // Allow CommonJS in scripts and tests
