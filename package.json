@@ -13,7 +13,8 @@
     "test": "echo \"Tests not configured yet\"",
     "check": "npm run typecheck && npm run lint",
     "ci": "npm run check && npm run build",
-    "test:e2e": "playwright test --reporter=html"
+    "test:e2e": "playwright test --reporter=html",
+    "library:bootstrap": "npx tsx scripts/library_bootstrap.ts"
   },
   "dependencies": {
     "@next/eslint-plugin-next": "15.0.3",

@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-01-13T00:00:00Z",
+  "last_updated": "2026-01-13T00:00:00Z",
+  "topics": {
+    "authentication": {
+      "keywords": ["auth", "login", "sign-in", "sign-up", "session", "supabase auth", "cookies"],
+      "files": ["docs/AUTH_FLOW.md", "src/lib/auth.supabase.ts", "src/lib/supabase/"],
+      "anchors": ["KB.md#authentication"]
+    },
+    "database": {
+      "keywords": ["supabase", "postgres", "schema", "tables", "migrations", "rls", "row level security"],
+      "files": ["supabase/migrations/", "src/types/supabase.ts", "docs/ops/supabase-setup.md"],
+      "anchors": ["SCHEMA.md#tables", "KB.md#database"]
+    },
+    "api-endpoints": {
+      "keywords": ["api", "routes", "endpoints", "rest", "http", "fetch"],
+      "files": ["src/app/api/", "API.md"],
+      "anchors": ["API.md#endpoints"]
+    },
+    "family-tree": {
+      "keywords": ["tree", "relationships", "kinship", "relatives", "genealogy", "family", "parent", "child", "spouse"],
+      "files": ["docs/TREE.md", "docs/KINSHIP.md", "src/lib/relationships/"],
+      "anchors": ["KB.md#family-tree", "FLOWS.md#tree-visualization"]
+    },
+    "media": {
+      "keywords": ["photos", "images", "avatar", "upload", "storage", "media", "voice", "stories"],
+      "files": ["docs/MEDIA_SYSTEM.md", "src/app/api/media/", "src/app/api/voice-stories/"],
+      "anchors": ["KB.md#media-system", "API.md#media-endpoints"]
+    },
+    "deployment": {
+      "keywords": ["railway", "deploy", "docker", "production", "ci", "cd", "github actions"],
+      "files": ["Dockerfile", "railway.json", ".github/workflows/", "docs/ops/railway-quickstart.md"],
+      "anchors": ["SOURCES.md#deployment"]
+    },
+    "internationalization": {
+      "keywords": ["i18n", "locale", "translation", "language", "next-intl", "ru", "en"],
+      "files": ["docs/LOCALIZATION.md", "src/messages/", "src/i18n/"],
+      "anchors": ["KB.md#internationalization"]
+    },
+    "components": {
+      "keywords": ["react", "ui", "shadcn", "radix", "tailwind", "components"],
+      "files": ["src/components/", "src/components/ui/"],
+      "anchors": ["KB.md#components"]
+    }
+  },
+  "ingest_count": 0,
+  "total_entries": 8
+}
