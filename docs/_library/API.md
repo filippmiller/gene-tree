@@ -266,6 +266,42 @@ Ingest new knowledge into the library.
 
 ---
 
+### [2026-01-13] INGEST-001
+
+#### GET /api/library/query
+Search knowledge base by keywords (PULL operation for agents)
+
+**Input**: keywords (comma-separated), top_k (optional, default 8)
+
+**Output**: { matches: [{topic, score, excerpt, file, anchor}], suggested_keywords }
+
+#### POST /api/library/ingest
+Add new knowledge to library (PUSH operation for agents)
+
+**Input**: IngestPayload JSON with source, keywords, artifacts, knowledge, tags
+
+**Output**: { ok, ingested_id, topics_added, files_updated }
+
+#### GET /api/library/index
+List all knowledge domain files with metadata
+
+
+**Output**: { domains: [{name, filename, type, size, sizeKB, lastModified, description}] }
+
+#### GET /api/library/domain/[name]
+Get content of a specific knowledge domain file
+
+
+**Output**: { name, filename, type, content, size, lastModified }
+
+#### GET /api/library/sessions
+List agent activity sessions from ingest log
+
+
+**Output**: { sessions: [{id, timestamp, agent, commit, branch, keywords, summary, filesChanged, topicsUpdated}] }
+
+---
+
 ## API Additions Log
 
 ### [2026-01-13] Library Endpoints Added

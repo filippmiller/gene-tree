@@ -204,6 +204,22 @@ PUSH (Agent completes work):
 
 ---
 
+### [2026-01-13] INGEST-001
+
+#### Agent PULL Flow
+- **Trigger**: Agent session start (after first user prompt)
+- **Notes**: Agent extracts 3-15 keywords from prompt, calls GET /api/library/query, reads returned matches and referenced files before working
+
+#### Agent PUSH Flow
+- **Trigger**: After git commit+push
+- **Notes**: Agent prepares ingest payload with files_changed, endpoints_added, db_changes, knowledge summary, calls POST /api/library/ingest
+
+#### Library Bootstrap Flow
+- **Trigger**: Manual via npm run library:bootstrap
+- **Notes**: Scans repository for API routes, migrations, components, configs, env files. Appends results to SOURCES.md
+
+---
+
 ## Flow Updates Log
 
 ### [2026-01-13] Library Flow Added
