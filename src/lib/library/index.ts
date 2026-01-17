@@ -191,7 +191,7 @@ function getExcerpt(topic: string): string {
   // Look for section headers
   const lines = kb.split('\n');
   let capturing = false;
-  let excerpt: string[] = [];
+  const excerpt: string[] = [];
 
   for (const line of lines) {
     if (line.startsWith('###') && line.toLowerCase().includes(topicLower)) {
