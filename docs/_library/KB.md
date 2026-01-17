@@ -5,6 +5,105 @@
 
 ---
 
+## [2026-01-17] Session: Deploy Verification & Codebase Analysis
+
+**Ingest ID**: INGEST-002
+**Commit**: `ffd4b26`
+**Tags**: `bugfix`, `deploy`, `analysis`, `documentation`
+
+### Issue Fixed
+
+**Problem**: Build failed with `prefer-const` linter error
+- **File**: `src/lib/library/index.ts:194`
+- **Error**: `'excerpt' is never reassigned. Use 'const' instead.`
+- **Fix**: Changed `let excerpt: string[] = []` to `const excerpt: string[] = []`
+
+The array was being mutated via `.push()` but never reassigned, so `const` is correct.
+
+### Codebase Architecture Summary
+
+#### Tech Stack
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15.0.3 (App Router) |
+| UI | Radix UI + Tailwind CSS |
+| Auth | Supabase Auth (@supabase/ssr) |
+| Database | PostgreSQL via Supabase |
+| Storage | Supabase Storage (avatars, stories buckets) |
+| i18n | next-intl (ru, en) |
+| Visualization | D3.js + elkjs |
+| State | React hooks (minimal) |
+
+#### Directory Structure
+```
+src/
+├── app/
+│   ├── api/              # 43 API route handlers
+│   └── [locale]/         # i18n pages
+│       ├── (auth)/       # Sign-in, sign-up
+│       └── (protected)/  # Auth-gated routes
+├── components/
+│   ├── ui/               # Radix wrappers
+│   ├── tree/             # D3 visualization
+│   ├── profile/          # Profile forms
+│   ├── stories/          # Media management
+│   └── relationships/    # Family connections
+├── lib/
+│   ├── supabase/         # 3 client types (browser, SSR, admin)
+│   ├── relationships/    # Kinship computation
+│   ├── library/          # Knowledge base system
+│   └── notifications.ts  # Family circle fan-out
+├── messages/             # i18n JSON (en, ru)
+└── types/                # TypeScript interfaces
+```
+
+#### Core Data Flows
+1. **Auth**: Email/password → Supabase Auth → JWT cookies
+2. **Profile**: user_profiles table with privacy settings per field
+3. **Relationships**: invitations → relationships (bidirectional)
+4. **Media**: signed-upload → commit → moderation (pending → approved)
+5. **Tree**: user_profiles + pending_relatives → D3 nodes/edges
+6. **Kinship**: BFS graph traversal with Russian terminology support
+
+#### Database Tables (34 migrations)
+- `user_profiles` - Core user data
+- `relationships` - Family connections
+- `pending_relatives` - Unregistered family members
+- `invitations` - Email invites with tokens
+- `photos`, `stories`, `voice_stories` - Media with moderation
+- `notifications` + `notification_recipients` - Event fan-out
+
+#### Environment Variables
+```
+# Client (public)
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+# Server (secret)
+SUPABASE_SERVICE_ROLE_KEY
+DATABASE_URL
+```
+
+#### Deployment
+- **Platform**: Railway
+- **Container**: Docker (node:20-alpine, multi-stage)
+- **Port**: 3000
+- **CI**: Build with 350 warning threshold
+
+### ESLint Status
+
+~350 warnings (within threshold), mostly:
+- `@typescript-eslint/no-explicit-any` - Untyped legacy code
+- `@typescript-eslint/no-unused-vars` - Dead code
+- `@next/next/no-img-element` - Native img tags
+
+No blocking errors after fix.
+
+### Files Changed
+- `src/lib/library/index.ts` (1 line fix)
+
+---
+
 ## [2026-01-13] Implemented complete Librarian knowledge base system with API endpoints, admin UI dashboard, and agent integration rules
 
 **Ingest ID**: INGEST-001
