@@ -43,70 +43,18 @@ export async function GET(req: Request) {
     if (error) {
       console.error('Error fetching this day events:', error);
 
-      // If function doesn't exist yet, fall back to direct query
-      if (error.code === '42883') {
-        const now = new Date();
-        const currentMonth = month ?? (now.getMonth() + 1);
-        const currentDay = day ?? now.getDate();
+      // On any error, return empty response - feature is non-critical
+      const now = new Date();
+      const currentMonth = month ?? (now.getMonth() + 1);
+      const currentDay = day ?? now.getDate();
 
-        const { data: fallbackEvents, error: fallbackError } = await (supabase as any)
-          .from('daily_events_cache')
-          .select(`
-            id,
-            profile_id,
-            event_type,
-            event_month,
-            event_day,
-            display_title,
-            related_profile_id,
-            years_ago,
-            profile:user_profiles!profile_id (
-              first_name,
-              last_name,
-              avatar_url
-            )
-          `)
-          .eq('event_month', currentMonth)
-          .eq('event_day', currentDay)
-          .order('event_type');
-
-        if (fallbackError) {
-          // Table may not exist yet
-          const emptyResponse: GetThisDayResponse = {
-            date: new Date().toISOString().split('T')[0],
-            events: [],
-            groups: [],
-            total: 0,
-          };
-          return NextResponse.json(emptyResponse);
-        }
-
-        // Transform fallback data to expected format
-        const transformedEvents: ThisDayEvent[] = (fallbackEvents || []).map((e: any) => ({
-          id: e.id,
-          profile_id: e.profile_id,
-          event_type: e.event_type,
-          event_month: e.event_month,
-          event_day: e.event_day,
-          display_title: e.display_title,
-          related_profile_id: e.related_profile_id,
-          years_ago: e.years_ago,
-          profile_first_name: e.profile?.first_name || '',
-          profile_last_name: e.profile?.last_name || '',
-          profile_avatar_url: e.profile?.avatar_url || null,
-        }));
-
-        const response: GetThisDayResponse = {
-          date: `${now.getFullYear()}-${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`,
-          events: transformedEvents,
-          groups: groupEventsByType(transformedEvents),
-          total: transformedEvents.length,
-        };
-
-        return NextResponse.json(response);
-      }
-
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const emptyResponse: GetThisDayResponse = {
+        date: `${now.getFullYear()}-${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`,
+        events: [],
+        groups: [],
+        total: 0,
+      };
+      return NextResponse.json(emptyResponse);
     }
 
     const typedEvents: ThisDayEvent[] = events || [];
@@ -125,7 +73,13 @@ export async function GET(req: Request) {
 
   } catch (error: unknown) {
     console.error('Error in GET /api/this-day:', error);
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ error: message }, { status: 500 });
+    // Return empty response on any error - feature is non-critical
+    const emptyResponse: GetThisDayResponse = {
+      date: new Date().toISOString().split('T')[0],
+      events: [],
+      groups: [],
+      total: 0,
+    };
+    return NextResponse.json(emptyResponse);
   }
 }
