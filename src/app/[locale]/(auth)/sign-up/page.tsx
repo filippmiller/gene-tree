@@ -1,12 +1,15 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter, useParams} from 'next/navigation';
-import {signUp} from '@/lib/auth.supabase';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { signUp } from '@/lib/auth.supabase';
+import { Button } from '@/components/ui/button';
+import { FloatingInput } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Progress } from '@/components/ui/progress';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -17,8 +20,25 @@ export default function SignUpPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const {locale} = useParams<{locale: string}>();
+  const { locale } = useParams<{ locale: string }>();
+
+  // Password strength calculator
+  const getPasswordStrength = (pwd: string): { score: number; label: string; color: string } => {
+    let score = 0;
+    if (pwd.length >= 6) score += 25;
+    if (pwd.length >= 8) score += 25;
+    if (/[A-Z]/.test(pwd)) score += 15;
+    if (/[a-z]/.test(pwd)) score += 10;
+    if (/[0-9]/.test(pwd)) score += 15;
+    if (/[^A-Za-z0-9]/.test(pwd)) score += 10;
+
+    if (score < 30) return { score, label: 'Weak', color: 'error' };
+    if (score < 60) return { score, label: 'Fair', color: 'warning' };
+    if (score < 80) return { score, label: 'Good', color: 'default' };
+    return { score, label: 'Strong', color: 'success' };
+  };
+
+  const passwordStrength = getPasswordStrength(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +61,6 @@ export default function SignUpPage() {
       await signUp(email, password, name || undefined);
       setSuccess('Account created! Please check your email to confirm your account.');
       setError('');
-      // Don't auto-redirect, let user know to check email
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
       setSuccess('');
@@ -51,15 +70,25 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="absolute top-4 right-4 text-xs text-gray-500 font-mono">
-        Build: {process.env.NEXT_PUBLIC_BUILD_ID || 'dev-v2'}
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl" />
       </div>
-      <Card className="w-full max-w-md shadow-2xl border-0 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
-        <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
+
+      {/* Top actions */}
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <ThemeToggle />
+        <LanguageSwitcher />
+      </div>
+
+      <Card className="relative w-full max-w-md shadow-elevation-5 border-0 animate-fade-in-up" elevation="floating">
+        <CardHeader className="space-y-1 text-center pb-2">
+          {/* Logo */}
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 shadow-lg">
             <svg
-              className="h-6 w-6 text-white"
+              className="h-7 w-7 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -73,91 +102,120 @@ export default function SignUpPage() {
             </svg>
           </div>
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-          <CardDescription>Start building your family tree today</CardDescription>
+          <CardDescription className="text-base">
+            Start building your family tree today
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name (optional)</Label>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                disabled={loading}
-              />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                disabled={loading}
-              />
-            </div>
+        <CardContent className="pt-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <FloatingInput
+              id="name"
+              label="Name (optional)"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={loading}
+              autoComplete="name"
+            />
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
-              <Input
+            <FloatingInput
+              id="email"
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              autoComplete="email"
+            />
+
+            <div className="space-y-3">
+              <FloatingInput
                 id="password"
+                label="Password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
                 required
                 disabled={loading}
-                minLength={6}
+                autoComplete="new-password"
               />
+
+              {/* Password strength indicator */}
+              {password && (
+                <div className="space-y-1.5 animate-fade-in-up">
+                  <Progress
+                    value={passwordStrength.score}
+                    variant={passwordStrength.color as any}
+                    size="sm"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Password strength:{' '}
+                    <span className={`font-medium ${
+                      passwordStrength.color === 'error' ? 'text-destructive' :
+                      passwordStrength.color === 'warning' ? 'text-amber-600' :
+                      passwordStrength.color === 'success' ? 'text-emerald-600' :
+                      'text-foreground'
+                    }`}>
+                      {passwordStrength.label}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type={showPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your password"
-                required
-                disabled={loading}
-                minLength={6}
-              />
+            <FloatingInput
+              id="confirmPassword"
+              label="Confirm Password"
+              type={showPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              disabled={loading}
+              autoComplete="new-password"
+              error={confirmPassword && password !== confirmPassword ? 'Passwords do not match' : undefined}
+              success={confirmPassword && password === confirmPassword && confirmPassword.length >= 6 ? 'Passwords match' : undefined}
+            />
+
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showPassword ? 'Hide passwords' : 'Show passwords'}
+              </button>
             </div>
 
             {error && (
-              <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
-                {error}
-              </div>
+              <Alert variant="error">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
 
             {success && (
-              <div className="rounded-md bg-green-50 p-3 text-sm text-green-800">
-                {success}
-              </div>
+              <Alert variant="success">
+                <AlertDescription>{success}</AlertDescription>
+              </Alert>
             )}
 
-            <Button type="submit" variant="gradient" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Sign Up'}
+            <Button
+              type="submit"
+              variant="gradient"
+              className="w-full h-12 text-base"
+              loading={loading}
+              disabled={success !== ''}
+            >
+              {loading ? 'Creating account...' : 'Create Account'}
             </Button>
 
-            <div className="text-center text-sm text-gray-600">
+            <div className="text-center text-sm text-muted-foreground">
               Already have an account?{' '}
-              <a href={`/${locale}/sign-in`} className="text-blue-600 hover:underline">
+              <a
+                href={`/${locale}/sign-in`}
+                className="text-primary hover:underline font-medium"
+              >
                 Sign in
               </a>
             </div>

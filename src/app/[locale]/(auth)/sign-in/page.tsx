@@ -1,17 +1,17 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter, useParams} from 'next/navigation';
-import {getSupabaseBrowser} from '@/lib/supabase/browser';
-import {resetPassword} from '@/lib/auth.supabase';
-// Force dynamic rendering to prevent cached guest state
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { getSupabaseBrowser } from '@/lib/supabase/browser';
+import { resetPassword } from '@/lib/auth.supabase';
 export const dynamic = 'force-dynamic';
 
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { FloatingInput } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -20,32 +20,26 @@ export default function SignIn() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {locale} = useParams<{locale: string}>();
+  const { locale } = useParams<{ locale: string }>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    console.log('[SIGN-IN] Attempting sign in for:', email);
+
     try {
-      console.log('[SIGN-IN] Calling signIn...');
-      
-      // Sign in with Supabase
       const supabase = getSupabaseBrowser();
       const { data, error } = await supabase.auth.signInWithPassword({
-        email, 
-        password 
+        email,
+        password
       });
-      
+
       if (error) {
         throw new Error(error.message);
       }
-      
-      console.log('[SIGN-IN] Sign in successful! User:', data.user?.email);
-      
-      // CRITICAL: Sync session with server
+
+      // Sync session with server
       if (data.session) {
-        console.log('[SIGN-IN] Syncing session with server...');
         const syncResponse = await fetch('/api/auth/session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,40 +48,40 @@ export default function SignIn() {
             refresh_token: data.session.refresh_token,
           }),
         });
-        
+
         if (!syncResponse.ok) {
-          console.error('[SIGN-IN] Failed to sync session with server');
           throw new Error('Failed to sync session');
         }
-        
-        console.log('[SIGN-IN] Session synced successfully');
       }
-      
-      console.log('[SIGN-IN] Redirecting to app...');
-      // Use router to trigger server component refresh
+
       router.push(`/${locale}/app`);
-      router.refresh(); // Force server components to re-fetch with new auth state
+      router.refresh();
     } catch (err: any) {
-      console.error('[SIGN-IN] Sign in failed:', err);
-      console.error('[SIGN-IN] Error message:', err.message);
-      console.error('[SIGN-IN] Error details:', JSON.stringify(err, null, 2));
       setError(err.message || 'Failed to sign in');
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Language Switcher - top right corner */}
-      <div className="absolute top-4 right-4">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
+      </div>
+
+      {/* Top actions */}
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <ThemeToggle />
         <LanguageSwitcher />
       </div>
-      
-      <Card className="w-full max-w-md shadow-2xl border-0 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
-        <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
+
+      <Card className="relative w-full max-w-md shadow-elevation-5 border-0 animate-fade-in-up" elevation="floating">
+        <CardHeader className="space-y-1 text-center pb-2">
+          {/* Logo */}
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg">
             <svg
-              className="h-6 w-6 text-white"
+              className="h-7 w-7 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -101,56 +95,62 @@ export default function SignIn() {
             </svg>
           </div>
           <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>Sign in to your family tree account</CardDescription>
+          <CardDescription className="text-base">
+            Sign in to your family tree account
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="filippmiller@gmail.com"
-                required
-                disabled={loading}
-              />
-            </div>
+
+        <CardContent className="pt-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <FloatingInput
+              id="email"
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              autoComplete="email"
+            />
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
-              <Input
+              <FloatingInput
                 id="password"
+                label="Password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Your password"
                 required
                 disabled={loading}
+                autoComplete="current-password"
               />
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? 'Hide password' : 'Show password'}
+                </button>
+              </div>
             </div>
 
             {error && (
-              <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
-                {error}
-              </div>
+              <Alert variant="error">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
 
-            <Button type="submit" variant="gradient" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              variant="gradient"
+              className="w-full h-12 text-base"
+              loading={loading}
+            >
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
 
-            <div className="space-y-2 text-center text-sm">
+            <div className="space-y-3 text-center text-sm">
               <button
                 type="button"
                 onClick={async () => {
@@ -166,14 +166,18 @@ export default function SignIn() {
                     setError(e.message || 'Failed to send reset email');
                   }
                 }}
-                className="text-blue-600 hover:underline"
+                className="text-primary hover:underline transition-colors"
                 disabled={loading}
               >
                 Forgot password?
               </button>
-              <div className="text-gray-600">
+
+              <div className="text-muted-foreground">
                 Don't have an account?{' '}
-                <a href={`/${locale}/sign-up`} className="text-blue-600 hover:underline">
+                <a
+                  href={`/${locale}/sign-up`}
+                  className="text-primary hover:underline font-medium"
+                >
                   Sign up
                 </a>
               </div>
