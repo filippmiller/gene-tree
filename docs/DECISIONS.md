@@ -30,3 +30,18 @@
   - ENV переменные через Railway CLI/Dashboard
   - Автоматические деплои при push в main
 - Ссылки: docs/arch/overview.md, docs/ops/runbook.md, https://gene-tree-production.up.railway.app
+
+## ADR-002: Доставка приглашений (SMS + Email) и ограничения (2026-01-22)
+
+- Дата: 2026-01-22
+- Контекст: Виральный рост требует надежной доставки приглашений, но нужны защита от спама и соблюдение комплаенса (TCPA/GDPR).
+- Варианты:
+  1. Только email (дешевле, но слабый open-rate)
+  2. Только SMS (максимальный open-rate, но комплаенс и стоимость)
+  3. SMS + email fallback (лучшая доставка при аккуратной защите)
+- Решение: Основной канал — SMS (Twilio) с явным согласием на отправку; email рассылается как fallback (Resend), если SMS не удалось отправить или SMS недоступен.
+- Последствия:
+  - Требуются ENV: `TWILIO_*`, `RESEND_*`, `INVITES_MAX_PER_DAY`
+  - Согласие на SMS фиксируется на уровне формы
+  - Включен периметр защиты: rate limit и audit-логи
+- Ссылки: `src/app/api/relatives/route.ts`, `src/lib/invitations/sms.ts`, `src/lib/invitations/email.ts`, `docs/VIRAL_GROWTH_SYSTEM.md`

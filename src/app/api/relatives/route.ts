@@ -3,6 +3,35 @@ import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
 import { createNotification } from '@/lib/notifications';
+import { sendSmsInvite } from '@/lib/invitations/sms';
+import { sendEmailInvite } from '@/lib/invitations/email';
+
+const PHONE_SANITIZE_RE = /[^\d+]/g;
+const INVITES_MAX_PER_DAY = Number.parseInt(process.env.INVITES_MAX_PER_DAY || '25', 10);
+const INVITES_LOOKBACK_MS = 24 * 60 * 60 * 1000;
+
+function normalizePhone(value: string): string {
+  return value.replace(PHONE_SANITIZE_RE, '');
+}
+
+function getInviteLocale(value: unknown): string {
+  if (typeof value !== 'string') {
+    return 'ru';
+  }
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return 'ru';
+  }
+  if (/^[a-z]{2}(-[A-Z]{2})?$/.test(trimmed)) {
+    return trimmed;
+  }
+  return 'ru';
+}
+
+function buildInviteUrl(request: Request, locale: string, token: string): string {
+  const origin = new URL(request.url).origin;
+  return `${origin}/${locale}/invite/${token}`;
+}
 
 export async function POST(request: Request) {
   const requestMeta = extractRequestMeta(request);
@@ -36,8 +65,9 @@ export async function POST(request: Request) {
       lastName,
       email,
       phone,
+      smsConsent,
+      locale,
       relationshipType,
-      gender,
       facebookUrl,
       instagramUrl,
       qualifiers, // halfness, lineage, cousin_degree, cousin_removed, level
@@ -53,10 +83,24 @@ export async function POST(request: Request) {
       );
     }
     
+    const normalizedEmail = typeof email === 'string' ? email.trim() : '';
+    const normalizedPhone = typeof phone === 'string' && phone ? normalizePhone(phone) : '';
+    const hasEmail = Boolean(normalizedEmail);
+    const hasSmsConsent = Boolean(smsConsent);
+    const canSendSms = Boolean(normalizedPhone) && hasSmsConsent && !isDeceased;
+    const canSendEmail = hasEmail && !isDeceased;
+    
     // Contact required only if not deceased
-    if (!isDeceased && !email && !phone) {
+    if (!isDeceased && !hasEmail && !normalizedPhone) {
       return NextResponse.json(
         { error: 'At least one contact method (email or phone) is required' },
+        { status: 400 }
+      );
+    }
+    
+    if (!isDeceased && normalizedPhone && !hasSmsConsent && !hasEmail) {
+      return NextResponse.json(
+        { error: 'SMS consent is required when phone is the only contact method' },
         { status: 400 }
       );
     }
@@ -73,18 +117,32 @@ export async function POST(request: Request) {
     // Search by email (if provided) or by name + connection to current user's network
     let duplicateCheck = null;
     
-    if (email) {
+    if (normalizedEmail) {
       // Check if email already exists in pending_relatives or user_profiles
       const { data: existingByEmail } = await getSupabaseAdmin()
         .from('pending_relatives')
         .select('id, first_name, last_name, email, invited_by')
-        .eq('email', email)
+        .eq('email', normalizedEmail)
         .eq('status', 'pending')
         .limit(1)
         .single();
       
       if (existingByEmail) {
         duplicateCheck = existingByEmail;
+      }
+    }
+
+    if (!duplicateCheck && normalizedPhone) {
+      const { data: existingByPhone } = await getSupabaseAdmin()
+        .from('pending_relatives')
+        .select('id, first_name, last_name, phone, invited_by')
+        .eq('phone', normalizedPhone)
+        .eq('status', 'pending')
+        .limit(1)
+        .single();
+
+      if (existingByPhone) {
+        duplicateCheck = existingByPhone;
       }
     }
 
@@ -112,6 +170,52 @@ export async function POST(request: Request) {
       );
     }
     
+    const shouldInvite = !isDeceased && (canSendSms || canSendEmail);
+    if (shouldInvite && INVITES_MAX_PER_DAY > 0) {
+      const since = new Date(Date.now() - INVITES_LOOKBACK_MS).toISOString();
+      const { count, error: countError } = await getSupabaseAdmin()
+        .from('pending_relatives')
+        .select('id', { count: 'exact', head: true })
+        .eq('invited_by', user.id)
+        .gte('created_at', since)
+        .not('invitation_token', 'is', null);
+
+      if (countError) {
+        await logAudit({
+          action: 'invite_rate_limit_check_failed',
+          entityType: 'pending_relatives',
+          method: 'POST',
+          path: '/api/relatives',
+          requestBody: body,
+          responseStatus: 500,
+          errorMessage: countError.message,
+          errorStack: JSON.stringify(countError),
+          ...requestMeta,
+        });
+        return NextResponse.json(
+          { error: 'Unable to validate invite limits. Please try again.' },
+          { status: 500 }
+        );
+      }
+
+      if ((count || 0) >= INVITES_MAX_PER_DAY) {
+        await logAudit({
+          action: 'invite_rate_limited',
+          entityType: 'pending_relatives',
+          method: 'POST',
+          path: '/api/relatives',
+          requestBody: body,
+          responseStatus: 429,
+          responseBody: { count, max: INVITES_MAX_PER_DAY },
+          ...requestMeta,
+        });
+        return NextResponse.json(
+          { error: 'Invite limit reached. Please try again later.' },
+          { status: 429 }
+        );
+      }
+    }
+
     // Insert into pending_relatives table
     const { data, error } = await getSupabaseAdmin()
       .from('pending_relatives')
@@ -119,15 +223,15 @@ export async function POST(request: Request) {
         invited_by: user.id,
         first_name: firstName,
         last_name: lastName,
-        email: email || null,
-        phone: phone || null,
+        email: normalizedEmail || null,
+        phone: normalizedPhone || null,
         relationship_type: relationshipType,
         related_to_user_id: isDirect ? null : relatedToUserId,
         related_to_relationship: isDirect ? null : relatedToRelationship,
         facebook_url: facebookUrl || null,
         instagram_url: instagramUrl || null,
-        status: email ? 'pending' : 'verified', // If email provided, it's an invitation
-        invitation_token: email ? crypto.randomUUID() : undefined, // Generate token for invitations
+        status: shouldInvite ? 'pending' : 'verified',
+        invitation_token: shouldInvite ? crypto.randomUUID() : undefined,
         // Qualifiers
         halfness: qualifiers?.halfness || null,
         lineage: qualifiers?.lineage || null,
@@ -186,8 +290,100 @@ export async function POST(request: Request) {
       },
     });
     
-    // TODO: In future, send invitation email/SMS here
-    // sendInvitation(data.invitation_token, email, phone);
+    if (shouldInvite && data.invitation_token) {
+      const inviteUrl = buildInviteUrl(request, getInviteLocale(locale), data.invitation_token);
+      const { data: inviterProfile } = await getSupabaseAdmin()
+        .from('user_profiles')
+        .select('first_name, last_name')
+        .eq('id', user.id)
+        .single();
+      const inviterName = inviterProfile
+        ? `${inviterProfile.first_name} ${inviterProfile.last_name}`.trim()
+        : user.user_metadata?.name || user.email || 'A family member';
+      const inviteeName = `${data.first_name} ${data.last_name}`.trim();
+      let invitationSent = false;
+
+      if (canSendSms) {
+        const smsResult = await sendSmsInvite({
+          to: normalizedPhone,
+          inviterName,
+          inviteeName,
+          inviteUrl,
+        });
+
+        if (smsResult.ok) {
+          invitationSent = true;
+          await logAudit({
+            action: 'invitation_sms_sent',
+            entityType: 'pending_relatives',
+            entityId: data.id,
+            method: 'POST',
+            path: '/api/relatives',
+            requestBody: { phone: normalizedPhone },
+            responseStatus: 200,
+            responseBody: { sid: smsResult.sid },
+            ...requestMeta,
+          });
+        } else {
+          await logAudit({
+            action: 'invitation_sms_failed',
+            entityType: 'pending_relatives',
+            entityId: data.id,
+            method: 'POST',
+            path: '/api/relatives',
+            requestBody: { phone: normalizedPhone },
+            responseStatus: 502,
+            errorMessage: smsResult.error || 'sms_send_failed',
+            responseBody: { skipped: smsResult.skipped || false },
+            ...requestMeta,
+          });
+        }
+      }
+
+      if (canSendEmail && (!canSendSms || !invitationSent)) {
+        const emailResult = await sendEmailInvite({
+          to: normalizedEmail,
+          inviterName,
+          inviteeName,
+          inviteUrl,
+        });
+
+        if (emailResult.ok) {
+          invitationSent = true;
+          await logAudit({
+            action: 'invitation_email_sent',
+            entityType: 'pending_relatives',
+            entityId: data.id,
+            method: 'POST',
+            path: '/api/relatives',
+            requestBody: { email: normalizedEmail },
+            responseStatus: 200,
+            responseBody: { id: emailResult.id },
+            ...requestMeta,
+          });
+        } else {
+          await logAudit({
+            action: 'invitation_email_failed',
+            entityType: 'pending_relatives',
+            entityId: data.id,
+            method: 'POST',
+            path: '/api/relatives',
+            requestBody: { email: normalizedEmail },
+            responseStatus: 502,
+            errorMessage: emailResult.error || 'email_send_failed',
+            responseBody: { skipped: emailResult.skipped || false },
+            ...requestMeta,
+          });
+        }
+      }
+
+      if (invitationSent) {
+        await getSupabaseAdmin()
+          .from('pending_relatives')
+          .update({ invited_at: new Date().toISOString() })
+          .eq('id', data.id);
+      }
+    }
     
     return NextResponse.json(data);
   } catch (error) {
@@ -209,7 +405,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // Use SSR client for auth (reads session from cookies)
     const supabase = await getSupabaseSSR();

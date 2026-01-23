@@ -2,6 +2,7 @@ import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
+import ThisDayHub from '@/components/this-day/ThisDayHub';
 import { Card, CardContent, StatCard, FeatureCard } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -136,6 +137,9 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
             }
           />
         </div>
+
+        {/* This Day in Your Family */}
+        <ThisDayHub />
 
         {/* Quick Actions */}
         <Card elevation="raised">

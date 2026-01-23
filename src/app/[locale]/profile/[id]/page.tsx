@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default async function PublicProfilePage({ params }: Props) {
-  const { locale, id } = await params;
+  const { id } = await params;
   const supabase = await getSupabaseSSR();
 
   // Try to fetch from user_profiles first

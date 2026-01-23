@@ -68,6 +68,10 @@
     "storySubmitted": "New story about {name}",
     "storyApproved": "Your story was approved",
     "storyRejected": "Your story was declined",
+    "reactionReceived": "{name} reacted to your {target}",
+    "commentAdded": "{name} commented on your story",
+    "commentReply": "{name} replied to your comment",
+    "mentionInComment": "{name} mentioned you in a comment",
     "time": {
       "justNow": "Just now",
       "minuteAgo": "1 minute ago",
@@ -77,6 +81,171 @@
       "yesterday": "Yesterday",
       "daysAgo": "{count} days ago"
     }
+  },
+  "reactions": {
+    "heart": "Love",
+    "sad": "Sad",
+    "hug": "Hug",
+    "laugh": "Laugh",
+    "pray": "Prayer"
+  },
+  "comments": {
+    "title": "Comments",
+    "placeholder": "Write a comment...",
+    "replyPlaceholder": "Reply to {name}...",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reply": "Reply",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edited": "edited",
+    "noComments": "No comments yet. Be the first to comment!",
+    "charactersRemaining": "{count} characters remaining",
+    "addComment": "Add a comment",
+    "commentsCount": "{count} comments"
+  },
+  "activity": {
+    "title": "Family Activity",
+    "noActivity": "No recent activity",
+    "noActivityHint": "Activity from your family will appear here",
+    "noMore": "No more activity to show",
+    "reactionAdded": "{name} reacted to {target}",
+    "commentAdded": "{name} commented on {target}",
+    "storyCreated": "{name} shared a new story",
+    "photoAdded": "{name} added a photo",
+    "profileUpdated": "{name} updated their profile",
+    "relativeAdded": "{name} added {relative}",
+    "relationshipVerified": "{name} verified a family connection"
+  },
+  "thisDay": {
+    "title": "This Day in Your Family",
+    "noEvents": "No family events today",
+    "sendGreeting": "Send",
+    "greetingSent": "Sent!",
+    "retry": "Retry",
+    "loading": "Loading..."
+  },
+  "photoTags": {
+    "tagPeople": "Tag People",
+    "cancelTagging": "Cancel",
+    "showTags": "Show Tags",
+    "hideTags": "Hide Tags",
+    "searchFamily": "Search family members...",
+    "loading": "Loading...",
+    "noResults": "No family members found",
+    "cancel": "Cancel",
+    "alreadyTagged": "This person is already tagged",
+    "tagged": "Tagged",
+    "taggedBy": "Tagged by",
+    "confirmed": "Confirmed",
+    "pendingConfirmation": "Pending confirmation",
+    "confirmTag": "Confirm",
+    "removeMe": "Remove me",
+    "removeTag": "Remove tag"
+  },
+  "emailPreferences": {
+    "title": "Email Preferences",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "fields": {
+      "weekly_digest": {
+        "label": "Weekly Family Digest",
+        "description": "Receive a summary of family activity every week"
+      },
+      "birthday_reminders": {
+        "label": "Birthday Reminders",
+        "description": "Get notified about upcoming family birthdays"
+      },
+      "anniversary_reminders": {
+        "label": "Anniversary Reminders",
+        "description": "Get notified about upcoming family anniversaries"
+      },
+      "death_commemorations": {
+        "label": "Memorial Reminders",
+        "description": "Receive reminders for memorial dates"
+      },
+      "photo_tag_notifications": {
+        "label": "Photo Tag Notifications",
+        "description": "Get notified when you're tagged in a photo"
+      }
+    },
+    "digestDay": {
+      "label": "Digest Delivery Day",
+      "days": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+      }
+    }
+  },
+  "tribute": {
+    "title": "Memorial Page",
+    "notAvailable": "Tribute page not available",
+    "passedAtAge": "Passed at age {age}",
+    "tributeCount": "tributes",
+    "leaveTribute": "Leave a Tribute",
+    "guestbook": "Guestbook",
+    "noEntriesYet": "No guestbook entries yet",
+    "beFirstToLeave": "Be the first to leave a memory",
+    "loading": "Loading...",
+    "loadMore": "Load more",
+    "anonymous": "Anonymous",
+    "leftFlower": "Left a virtual flower",
+    "litCandle": "Lit a virtual candle",
+    "leftTribute": "Left a tribute",
+    "writeMessage": "Write a message",
+    "leaveFlower": "Leave Flower",
+    "lightCandle": "Light Candle",
+    "writeMemory": "Share a memory or message...",
+    "optionalMessage": "Add a message (optional)...",
+    "messageRequired": "Please write a message",
+    "submitting": "Submitting...",
+    "submitTribute": "Leave Tribute",
+    "tributeSubmitted": "Your tribute has been submitted",
+    "thankYou": "Thank you for honoring their memory"
+  },
+  "elderQuestions": {
+    "title": "Ask the Elder",
+    "description": "Ask questions to older family members and preserve their wisdom",
+    "askQuestion": "Ask a Question",
+    "questionPlaceholder": "What would you like to ask? (e.g., 'What was life like when you were young?')",
+    "questionRequired": "Please write your question",
+    "visibility": "Who can see the answer?",
+    "visibility.family": "Family",
+    "visibility.private": "Just Us",
+    "visibilityFamilyHint": "The answer will be visible to all family members",
+    "visibilityPrivateHint": "Only you and the elder can see this exchange",
+    "cancel": "Cancel",
+    "submitting": "Sending...",
+    "noQuestions": "No questions yet",
+    "you": "You",
+    "askedTo": "asked",
+    "answer": "Answer",
+    "decline": "Decline",
+    "confirmDecline": "Are you sure you want to decline this question?",
+    "answerRequired": "Please write your answer",
+    "writeAnswer": "Share your answer or memory...",
+    "submitAnswer": "Submit Answer",
+    "answeredOn": "Answered on",
+    "questionDeclined": "This question was declined"
+  },
+  "relationshipPath": {
+    "title": "How Are We Related?",
+    "description": "Discover the family connection between any two people in your tree",
+    "person1": "First Person",
+    "person2": "Second Person",
+    "selectPerson": "Select a person...",
+    "selectBothPeople": "Please select both people",
+    "samePerson": "Please select two different people",
+    "searching": "Finding connection...",
+    "findConnection": "Find Connection",
+    "and": "and",
+    "noConnectionFound": "No Connection Found",
+    "noConnectionDescription": "These two people don't appear to be connected in your family tree"
   }
 }
 

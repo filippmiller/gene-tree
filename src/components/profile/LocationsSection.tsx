@@ -1,6 +1,6 @@
 'use client';
 
-export default function LocationsSection({ initialData, userId }: any) {
+export default function LocationsSection() {
   return (
     <div className="text-gray-500">
       <p>Секция "Места проживания" в разработке...</p>

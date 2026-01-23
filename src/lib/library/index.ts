@@ -479,7 +479,7 @@ export function scanRepository(): {
           }
         }
       }
-    } catch (error) {
+    } catch {
       // Ignore permission errors
     }
   }

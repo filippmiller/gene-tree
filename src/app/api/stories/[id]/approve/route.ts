@@ -52,7 +52,7 @@ export async function POST(
 
     // 3. Notify Author
     if (story.author_id !== user.id) {
-      const { data: notificationData, error: notifyError } = await supabase
+      const { data: notificationData } = await supabase
         .from('notifications')
         .insert({
           event_type: 'STORY_APPROVED',

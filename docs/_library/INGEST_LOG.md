@@ -22,6 +22,38 @@ Each entry follows this structure:
 
 ## Entries
 
+### [DESIGN-001] 2026-01-23T12:00:00Z
+
+- **Agent**: claude-opus-4.5 (brainstorm session)
+- **Commit**: N/A (design document, not implementation)
+- **Branch**: main
+- **Keywords**: memories, media, photos, audio, video, tree, stories, privacy, consent, visibility, tagging, ux, architecture, feature-design
+- **Summary**: Multi-agent brainstorming (10 iterations) for "Memories" feature - attaching media to family members from tree view. Recommends extending Stories system with `story_type` field, per-person consent via `story_person_visibility` table, and tree node panel as entry point.
+- **Files Changed**:
+  - `docs/_library/KB.md` (feature design added)
+  - `docs/_library/INDEX.json` (new topic: memories)
+  - `docs/_library/INGEST_LOG.md` (this entry)
+- **Topics Updated**: memories
+- **Status**: PROPOSED (awaiting implementation decision)
+
+---
+
+### [MAP-001] 2026-01-23T00:00:00Z
+
+- **Agent**: librarian-mapper
+- **Commit**: N/A (documentation only)
+- **Branch**: main
+- **Keywords**: architecture, system-map, onboarding, overview, reference, endpoints, database, functions
+- **Summary**: Comprehensive system architecture map for agent onboarding. Documents tech stack, directory structure, database schema, API endpoints, core functions, data flows, current priorities, and technical debt.
+- **Files Changed**:
+  - `docs/_library/KB.md` (system architecture map added)
+  - `docs/_library/INDEX.json` (new topics: system-architecture, invitations, notifications)
+  - `docs/_library/INGEST_LOG.md` (this entry)
+  - `.claude/librarian.json` (configuration created)
+- **Topics Updated**: system-architecture, invitations, notifications
+
+---
+
 ### [INGEST-002] 2026-01-17T12:00:00Z
 
 - **Agent**: claude-opus-4.5

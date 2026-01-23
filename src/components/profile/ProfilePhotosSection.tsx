@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { MediaVisibility, Photo, MediaType, SignedUploadResponse } from '@/types/media';
 import { Image as ImageIcon, Loader2, Upload } from 'lucide-react';
@@ -31,7 +31,7 @@ export default function ProfilePhotosSection({ profileId }: Props) {
   const visibility: MediaVisibility = 'family';
   const mediaType: MediaType = 'portrait';
 
-  async function loadPhotos() {
+  const loadPhotos = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -67,12 +67,11 @@ export default function ProfilePhotosSection({ profileId }: Props) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [profileId, supabase]);
 
   useEffect(() => {
     loadPhotos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId]);
+  }, [loadPhotos]);
 
   async function handleFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;

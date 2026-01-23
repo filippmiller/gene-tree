@@ -1,0 +1,5 @@
+{
+  "backend": "local",
+  "docs_path": "docs/_library",
+  "default_domain": "SYSTEM_OVERVIEW"
+}

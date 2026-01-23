@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const supabase = getSupabaseAdmin();
 

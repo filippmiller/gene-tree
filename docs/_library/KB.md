@@ -5,6 +5,358 @@
 
 ---
 
+## [2026-01-23] FEATURE DESIGN: Memories System (Attach Media to Family Members)
+
+**Ingest ID**: DESIGN-001
+**Tags**: `feature-design`, `memories`, `media`, `stories`, `tree`, `privacy`, `ux`, `architecture`
+**Entry Type**: discovery
+**Status**: PROPOSED (not implemented)
+
+### Summary
+
+Multi-agent brainstorming session (10 iterations) to design a "Memories" feature that allows users to attach photos, audio, and video to family members directly from the tree view. The recommendation is to **extend the existing Stories system** rather than building a new infrastructure.
+
+### The Problem
+
+Users viewing the family tree want to quickly attach contextual media (photos, audio, video) to family members. Current flow requires navigating away from the tree.
+
+### Recommended Architecture
+
+#### Core Principle: Memories ARE Stories
+
+Don't create a new system. Extend the `stories` table with a `story_type` field:
+
+```sql
+-- 1. Extend stories table
+ALTER TABLE stories ADD COLUMN story_type VARCHAR DEFAULT 'story';
+-- Values: 'memory' (lightweight), 'story' (rich), 'document' (archival)
+
+-- 2. Per-person consent tracking
+CREATE TABLE story_person_visibility (
+  story_id UUID REFERENCES stories(id) ON DELETE CASCADE,
+  person_id UUID REFERENCES profiles(id),
+  status VARCHAR DEFAULT 'pending', -- pending, approved, rejected
+  responded_at TIMESTAMPTZ,
+  PRIMARY KEY (story_id, person_id)
+);
+```
+
+#### Privacy Model
+
+| Scenario | Behavior |
+|----------|----------|
+| Self-only memory | Instant publish |
+| Tag living relative | Pending until they approve |
+| Tag deceased person | Visible to immediate family |
+| Ghost profile tagged | Memory waits for profile claim |
+
+**Key insight**: No spam emails to unclaimed profiles. Memories become a "surprise" on signup.
+
+### Backend API Design
+
+```
+POST /api/memories
+- person_ids: UUID[]
+- caption?: string
+- media_type: image | audio | video
+→ Returns upload URL, creates story with type='memory'
+
+PATCH /api/memories/:id/visibility
+- person_id: UUID
+- status: approved | rejected
+→ Each tagged person controls their own visibility
+
+GET /api/memories?person_id=X
+→ Returns memories visible to current user for that person
+```
+
+### Frontend Component Design
+
+**Entry Point**: Tree node panel → "Add Memory" button (person pre-selected)
+
+**UX Flow (3 clicks)**:
+1. Click person in tree
+2. Click "Add Memory" in side panel
+3. Upload media + optional caption → Submit
+
+**Component Hierarchy**:
+```
+TreePage
+└── TreeCanvas (existing)
+└── PersonDetailPanel (enhance)
+    ├── PersonInfo (existing)
+    ├── PersonMemories (NEW - shows existing memories)
+    └── AddMemoryButton (NEW)
+        └── onClick → opens AddMemoryModal
+
+AddMemoryModal (NEW)
+├── MediaUploader (existing, reuse)
+├── PersonSelector (KinshipSearchField, multi-select mode)
+├── CaptionInput (simple textarea)
+└── SubmitButton
+```
+
+### Edge Case: Person Not in Tree
+
+For users who want to tag someone not yet in the tree:
+
+1. "Add Memory" modal has "Person not listed?" link
+2. Opens inline AddRelativeForm
+3. User creates person with relationship type
+4. Returns to modal with new person selected
+5. Memory creation continues
+
+**Safeguard**: New person must have at least one relationship (to current user) to prevent orphans.
+
+### Notifications
+
+Required notification types:
+- `memory_tagged`: "You were tagged in a memory by [name]"
+- `memory_approved`: "Your memory was approved by [name]"
+- `family_memory_added`: "[Name] added a memory of [deceased relative]"
+
+**Batching**: Multiple memories → digest notification, not individual spam.
+
+### Files to Modify (Implementation)
+
+| File | Change |
+|------|--------|
+| `supabase/migrations/` | Add `story_type` column, create `story_person_visibility` table |
+| `src/app/api/memories/route.ts` | NEW - Create memory endpoint |
+| `src/app/api/memories/[id]/visibility/route.ts` | NEW - Visibility approval |
+| `src/components/tree/PersonDetailPanel.tsx` | ADD memory gallery + button |
+| `src/components/stories/AddMemoryModal.tsx` | NEW - Memory creation modal |
+| `src/components/stories/MediaUploader.tsx` | Reuse as-is |
+| `src/lib/notifications.ts` | Add memory notification types |
+
+### Effort Estimate
+
+| Component | Complexity |
+|-----------|------------|
+| Backend (extend stories, new endpoints) | 3-5 days |
+| Frontend (modal, panel, notifications) | 5-7 days |
+| Privacy/visibility system | 2-3 days |
+| **Total MVP** | ~2 weeks |
+
+### Open Questions (for Product)
+
+1. **Storage limits** — Should users have quotas per family?
+2. **Comments/reactions** — Should memories have engagement features?
+3. **Search** — Transcribe audio/video for searchability?
+4. **AI tagging** — Auto-detect faces? (Privacy concerns)
+
+### Strategic Alignment
+
+This feature directly supports the **north star metric**: *Families with 10+ verified profiles and 5+ stories*
+
+Memories lower the barrier to content creation:
+- Simpler than full stories
+- Tree integration encourages spontaneous additions
+- Consent model builds trust
+- Ghost profile tagging drives viral signup
+
+### Agent Consensus
+
+All 4 agents (Judge, Lead, Senior Programmer, Critic Architect) agreed on:
+1. Extend Stories, don't build new system
+2. Entry point = tree node panel
+3. Privacy = per-person approval
+4. MVP = existing relatives; v1.1 = inline person creation
+
+---
+
+## [2026-01-23] SYSTEM ARCHITECTURE MAP
+
+**Ingest ID**: MAP-001
+**Tags**: `architecture`, `system-map`, `onboarding`, `reference`
+
+### System Overview
+
+Gene-Tree is a **privacy-first digital genealogy platform** targeting Russian-speaking diaspora (US, Germany, Israel) and privacy-conscious families. The platform enables verified family tree building with cultural kinship awareness.
+
+### Core Philosophy (5 Pillars)
+
+| Pillar | Description |
+|--------|-------------|
+| **Privacy-First** | Every data field has explicit privacy controls |
+| **Cultural Awareness** | Kinship terminology respects Russian complexity (15+ cousin terms) |
+| **Verification-Based Trust** | Two-way relationship confirmation required |
+| **Preservation Over Perfection** | Support uncertain dates, approximate data, gaps |
+| **Stories Matter** | Photos, voice recordings, memories — not just names and dates |
+
+### Technology Stack
+
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| Framework | Next.js 15 + App Router | Full-stack React with SSR |
+| UI | TailwindCSS + shadcn/ui + Radix | Premium component system |
+| Database | PostgreSQL (Supabase) | Primary data store with RLS |
+| Auth | Supabase Auth (JWT) | Email/password authentication |
+| Storage | Supabase Storage | Avatars (public), media (private) |
+| Visualization | D3.js + ELK.js + XYFlow | Interactive family tree |
+| i18n | next-intl | English + Russian localization |
+| Deployment | Railway | Docker-based CI/CD |
+
+### Directory Structure
+
+```
+src/
+├── app/
+│   ├── api/                    # 43 REST API routes
+│   │   ├── auth/               # Session management
+│   │   ├── relationships/      # Family connections
+│   │   ├── media/              # Photo/story upload & moderation
+│   │   ├── invites/            # Invitation system
+│   │   ├── library/            # Knowledge base API
+│   │   └── health/             # Health checks
+│   └── [locale]/               # i18n pages (en, ru)
+│       ├── (auth)/             # Sign-in, sign-up (public)
+│       └── (protected)/        # Auth-gated routes
+│           ├── dashboard/      # Main dashboard
+│           ├── tree/           # Family tree visualization
+│           ├── profile/        # User profile
+│           ├── relations/      # Relationship management
+│           └── admin/          # Admin tools (librarian)
+├── components/
+│   ├── ui/                     # shadcn/ui base components
+│   ├── tree/                   # D3 visualization components
+│   ├── profile/                # Profile forms (education, residence, bio)
+│   ├── stories/                # Media management
+│   ├── relatives/              # Add relative forms
+│   └── notifications/          # Notification UI
+├── lib/
+│   ├── supabase/               # 3 client types (browser, SSR, admin)
+│   ├── relationships/          # Kinship computation engine
+│   ├── invitations/            # SMS (Twilio) + Email (Resend)
+│   ├── library/                # Knowledge base system
+│   └── notifications.ts        # Family circle fan-out
+├── messages/                   # i18n JSON (en, ru)
+└── types/                      # TypeScript interfaces
+```
+
+### Database Schema (Key Tables)
+
+| Table | Purpose | Key Fields |
+|-------|---------|------------|
+| `user_profiles` | Core user data | first_name, last_name, privacy settings |
+| `pending_relatives` | Unified relationships | invited_by, relationship_type, relationship_status |
+| `relationships` | [DEPRECATED] | Use pending_relatives instead |
+| `invitations` | Email invites | token, expires_at, accepted_at |
+| `photos` | Photo storage | storage_path, moderation_status |
+| `stories` | Text stories | subject_id, content, approved |
+| `voice_stories` | Audio recordings | storage_path, duration_seconds |
+| `notifications` | System notifications | type, target_user_id |
+| `notification_recipients` | Fan-out table | notification_id, user_id, read_at |
+| `education` | Education history | institution_name, degree, years |
+| `residences` | Residence history | city, country, date range |
+| `audit_logs` | Action logging | action, user_id, entity_type |
+
+### API Endpoints Summary
+
+| Category | Endpoints | Description |
+|----------|-----------|-------------|
+| Auth | `/api/auth/session` | Session management |
+| Relationships | `/api/relationships`, `/api/relatives`, `/api/kin/resolve` | Family connections |
+| Media | `/api/media/*`, `/api/avatar/upload` | Photo/story uploads |
+| Voice | `/api/voice-stories/*` | Audio recording |
+| Invitations | `/api/invites/*`, `/api/invitations/*` | Family invitations |
+| Profile | `/api/profile/*` | User profile management |
+| Tree | `/api/tree`, `/api/tree-data` | Tree visualization data |
+| Notifications | `/api/notifications/*` | User notifications |
+| Library | `/api/library/*` | Knowledge base |
+| Health | `/api/health`, `/api/health/db` | System health |
+
+### Core Functions (Business Logic)
+
+| Function | Location | Purpose |
+|----------|----------|---------|
+| `computeRelationship()` | `lib/relationships/computeRelationship.ts` | Calculate indirect relationships |
+| `generateKinshipLabel()` | `lib/relationships/generateLabel.ts` | Generate culturally-aware labels |
+| `sendSmsInvite()` | `lib/invitations/sms.ts` | Twilio SMS delivery |
+| `sendEmailInvite()` | `lib/invitations/email.ts` | Resend email delivery |
+| `createNotification()` | `lib/notifications.ts` | Create and fan-out notifications |
+| `getSupabaseAdmin()` | `lib/supabase/server-admin.ts` | Admin client (bypasses RLS) |
+| `getSupabaseSSR()` | `lib/supabase/server-ssr.ts` | SSR client (respects RLS) |
+| `queryLibrary()` | `lib/library/index.ts` | Knowledge base search |
+| `ingestKnowledge()` | `lib/library/index.ts` | Knowledge base ingestion |
+
+### Data Flows
+
+```
+1. AUTH FLOW
+   Email/Password → Supabase Auth → JWT Cookie → Protected Routes
+
+2. RELATIONSHIP FLOW
+   Add Relative → pending_relatives (status: pending) → Invitation →
+   User Accepts → pending_relatives (status: verified)
+
+3. MEDIA FLOW
+   Signed Upload → Storage → Commit → Moderation Queue →
+   Approve/Reject → Public/Deleted
+
+4. TREE VISUALIZATION
+   user_profiles + pending_relatives → Build Graph →
+   ELK.js Layout → D3.js Render
+
+5. KINSHIP COMPUTATION
+   Source User → BFS Traversal → Path Finding →
+   Relationship Rules → Cultural Label (EN/RU)
+```
+
+### Current Phase: Foundation (Q1 2026)
+
+**Priorities from Master Plan:**
+1. Privacy-first positioning
+2. PostgreSQL recursive CTEs (performance)
+3. Guided onboarding wizard
+4. Observability infrastructure
+
+### North Star Metric
+
+> **Families with 10+ verified profiles and 5+ stories**
+
+### Pain Points / Technical Debt
+
+| Issue | Location | Severity |
+|-------|----------|----------|
+| ~350 ESLint warnings | Various | LOW |
+| `any` types in legacy code | API routes | MEDIUM |
+| Deprecated `relationships` table | Migration 0015+ | LOW |
+| Voice story recording incomplete | `VoiceStoryRecorder.tsx` | MEDIUM |
+| Education/Residence UI incomplete | Profile components | LOW |
+
+### Key Environment Variables
+
+```
+# Client (public)
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+# Server (secret)
+SUPABASE_SERVICE_ROLE_KEY
+DATABASE_URL
+
+# Invitations
+TWILIO_ACCOUNT_SID
+TWILIO_AUTH_TOKEN
+TWILIO_PHONE_NUMBER
+RESEND_API_KEY
+INVITES_MAX_PER_DAY
+```
+
+### Essential Commands
+
+```powershell
+npm install           # Install dependencies
+npm run dev           # Start dev server (localhost:3000)
+npm run typecheck     # TypeScript check
+npm run lint          # ESLint
+npm run build         # Production build
+npm run library:bootstrap  # Scan repo and update knowledge base
+```
+
+---
+
 ## [2026-01-17] Session: Deploy Verification & Codebase Analysis
 
 **Ingest ID**: INGEST-002

@@ -75,7 +75,6 @@ export default function EducationSection({ userId }: Props) {
       <EducationList
         education={education}
         loading={loading}
-        onRefresh={fetchEducation}
       />
     </section>
   );

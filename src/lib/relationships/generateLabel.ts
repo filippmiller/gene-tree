@@ -168,9 +168,7 @@ export function getBloodRelationshipOptions(locale: 'en' | 'ru' = 'ru') {
 /**
  * Get specific gender options for a given relationship code
  */
-export function getGenderSpecificOptions(code: string, locale: 'en' | 'ru' = 'ru') {
-  const maps = kinshipConfig.maps[locale];
-  
+export function getGenderSpecificOptions(code: string) {
   switch (code) {
     case 'parent':
       return [

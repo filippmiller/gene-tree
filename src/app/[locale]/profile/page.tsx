@@ -1,12 +1,9 @@
-import Link from 'next/link';
-
 interface Props {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<{ q?: string }>;
 }
 
-export default async function ProfileSearchPage({ params, searchParams }: Props) {
-  const { locale } = await params;
+export default async function ProfileSearchPage({ searchParams }: Props) {
   const query = (await searchParams)?.q || '';
 
   return (

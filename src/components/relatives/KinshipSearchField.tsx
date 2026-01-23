@@ -23,7 +23,6 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [pathInfo, setPathInfo] = useState<{ path: string; label: string } | null>(null);
   const [applied, setApplied] = useState(false);
 
   /**
@@ -32,8 +31,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
    */
   const searchKinship = useCallback(async (searchPhrase: string) => {
     if (!searchPhrase || searchPhrase.length < 3) {
-      setResults([]);
-      setPathInfo(null);
+      setResults([]);
       setApplied(false);
       return;
     }
@@ -63,8 +61,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
             return;
           }
         } catch {}
-        setResults([]);
-        setPathInfo(null);
+        setResults([]);
         setError(friendly);
         return;
       }
@@ -74,16 +71,12 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
       if (data.results && data.results.length > 0) {
         setResults(data.results);
         // Preview first result but do NOT auto-apply
-        const first = data.results[0];
-        setPathInfo({ path: first.path_expr, label: first.name_ru });
         setApplied(false);
-      } else {
-        setPathInfo(null);
+      } else {
         setError('Не найдено. Попробуйте: "сестра мамы", "дочка брата"');
       }
     } catch (err: any) {
-      setError(err.message);
-      setPathInfo(null);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -113,8 +106,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
         onKeyDown={(e) => {
           if (e.key === 'Enter' && results.length > 0) {
             const r = results[0];
-            onRelationshipFound?.(r.path_expr, r.name_ru);
-            setPathInfo({ path: r.path_expr, label: r.name_ru });
+            onRelationshipFound?.(r.path_expr, r.name_ru);
             setApplied(true);
           }
         }}
@@ -150,8 +142,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
                 <button
                   type="button"
                   onClick={() => {
-                    onRelationshipFound?.(r.path_expr, r.name_ru);
-                    setPathInfo({ path: r.path_expr, label: r.name_ru });
+                    onRelationshipFound?.(r.path_expr, r.name_ru);
                     setApplied(true);
                   }}
                   className="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700"
@@ -167,7 +158,7 @@ export default function KinshipSearchField({ userId, onRelationshipFound }: Prop
           <div>
             <button
               type="button"
-              onClick={() => { setResults([]); setPathInfo(null); setPhrase(''); setApplied(false); }}
+              onClick={() => { setResults([]); setPhrase(''); setApplied(false); }}
               className="text-xs text-gray-600 hover:text-gray-900"
             >
               Сбросить поиск

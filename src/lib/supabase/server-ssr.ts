@@ -1,5 +1,4 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import type { Database } from '@/lib/types/supabase';
 
@@ -31,14 +30,14 @@ export async function getSupabaseSSR() {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set(name, value, options);
-          } catch (error) {
+          } catch {
             // Ignore cookie errors in Server Components
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set(name, '', { ...options, maxAge: 0 });
-          } catch (error) {
+          } catch {
             // Ignore cookie errors in Server Components
           }
         },

@@ -1,7 +1,6 @@
 import {redirect} from 'next/navigation';
 import {getSupabaseSSR} from '@/lib/supabase/server-ssr';
 import SettingsForm from './Form';
-import type { UserProfile } from './types';
 
 export default async function ProfileSettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -10,7 +10,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    headless: false,
+    headless: process.env.PLAYWRIGHT_HEADLESS === '1',
   },
   webServer: {
     command: 'npm run dev',

@@ -34,10 +34,9 @@ interface EducationEntry {
 interface Props {
   education: EducationEntry[];
   loading: boolean;
-  onRefresh: () => void;
 }
 
-export default function EducationList({ education, loading, onRefresh }: Props) {
+export default function EducationList({ education, loading }: Props) {
   if (loading) {
     return (
       <div className="text-center py-8 text-gray-500">

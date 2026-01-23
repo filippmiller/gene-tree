@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
 
 const supabase = createClient(
   'https://mbntpsfllwhlnzuzspvp.supabase.co',
@@ -57,7 +56,7 @@ FROM public.pending_relatives;
 console.log('Applying VIEW fix migration...');
 
 // Execute via REST API using pg_stat_statements workaround
-const { data, error } = await supabase.rpc('exec_sql', { query: sql });
+const { error } = await supabase.rpc('exec_sql', { query: sql });
 
 if (error) {
   console.error('Error:', error);

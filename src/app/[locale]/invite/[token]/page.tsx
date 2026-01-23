@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import InvitationAcceptForm from '@/components/invite/InvitationAcceptForm';
 
@@ -118,7 +117,6 @@ export default async function InvitePage({ params }: PageProps) {
         {/* Accept/Edit/Reject form */}
         <InvitationAcceptForm 
           invitation={invitation}
-          inviterName={inviterName}
           locale={locale}
         />
       </div>

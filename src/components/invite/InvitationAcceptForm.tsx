@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation';
 
 interface Props {
   invitation: any;
-  inviterName: string;
   locale: string;
 }
 
-export default function InvitationAcceptForm({ invitation, inviterName, locale }: Props) {
+export default function InvitationAcceptForm({ invitation, locale }: Props) {
   const router = useRouter();
   const [mode, setMode] = useState<'view' | 'edit'>('view');
   const [loading, setLoading] = useState(false);

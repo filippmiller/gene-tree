@@ -3,13 +3,10 @@
 import {useLocale} from 'next-intl';
 import {usePathname} from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 
 export default function LanguageSwitcher() {
   const locale = useLocale() as 'ru' | 'en';
   const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(false);
-
   const other: 'ru' | 'en' = locale === 'ru' ? 'en' : 'ru';
   const langMap: Record<'ru' | 'en', string> = { ru: 'Русский', en: 'English' };
 
@@ -45,10 +42,9 @@ export default function LanguageSwitcher() {
       variant="ghost" 
       size="sm" 
       onClick={switchLocale}
-      disabled={isLoading}
       className="min-w-[100px]"
     >
-      {isLoading ? '...' : langMap[other]}
+      {langMap[other]}
     </Button>
   );
 }

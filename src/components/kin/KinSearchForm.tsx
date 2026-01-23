@@ -39,7 +39,7 @@ export default function KinSearchForm({ userId }: Props) {
         setResult(data);
         setError(null);
       }
-    } catch (err) {
+    } catch {
       setError('Ошибка сети');
       setResult(null);
     } finally {

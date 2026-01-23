@@ -1,12 +1,6 @@
-import { getTranslations } from 'next-intl/server';
 import LibrarianDashboard from './LibrarianDashboard';
 
-export default async function LibrarianPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+export default async function LibrarianPage() {
   // We can add translations later if needed
   // const t = await getTranslations({ locale, namespace: 'admin' });
 

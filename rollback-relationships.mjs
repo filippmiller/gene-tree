@@ -7,7 +7,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 console.log('🔄 Rolling back test relationships...\n');
 
-const { data, error } = await supabase
+const { error } = await supabase
   .from('relationships')
   .delete()
   .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all

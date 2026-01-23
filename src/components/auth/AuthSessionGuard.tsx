@@ -19,7 +19,7 @@ export function AuthSessionGuard() {
     // Listen for auth state changes (ONLY important events)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((event) => {
       // Only log critical events, not every state change
       if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
         logger.info('[AuthSessionGuard]', event);

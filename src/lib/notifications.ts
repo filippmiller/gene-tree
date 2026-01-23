@@ -6,6 +6,10 @@ import type {
   StorySubmittedPayload,
   StoryApprovedPayload,
   StoryRejectedPayload,
+  ReactionReceivedPayload,
+  CommentAddedPayload,
+  CommentReplyPayload,
+  MentionInCommentPayload,
 } from '@/types/notifications';
 
 // Re-export types for convenience
@@ -17,6 +21,10 @@ export type {
   StorySubmittedPayload,
   StoryApprovedPayload,
   StoryRejectedPayload,
+  ReactionReceivedPayload,
+  CommentAddedPayload,
+  CommentReplyPayload,
+  MentionInCommentPayload,
   NotificationData,
   ActorInfo,
   NotificationWithActor,
@@ -139,6 +147,31 @@ export function getNotificationUrl(
         | null;
       if (storyPayload?.story_id) {
         return `/stories/${storyPayload.story_id}`;
+      }
+      return '/stories';
+    }
+
+    case 'REACTION_RECEIVED': {
+      const reactionPayload = payload as ReactionReceivedPayload | null;
+      if (reactionPayload?.target_type === 'story' && reactionPayload?.target_id) {
+        return `/stories/${reactionPayload.target_id}`;
+      }
+      if (reactionPayload?.target_type === 'photo' && reactionPayload?.target_id) {
+        return `/photos/${reactionPayload.target_id}`;
+      }
+      return '/stories';
+    }
+
+    case 'COMMENT_ADDED':
+    case 'COMMENT_REPLY':
+    case 'MENTION_IN_COMMENT': {
+      const commentPayload = payload as
+        | CommentAddedPayload
+        | CommentReplyPayload
+        | MentionInCommentPayload
+        | null;
+      if (commentPayload?.story_id) {
+        return `/stories/${commentPayload.story_id}`;
       }
       return '/stories';
     }

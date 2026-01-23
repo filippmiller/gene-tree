@@ -1,6 +1,6 @@
 'use client';
 
-export default function BioSection({ initialData, userId }: any) {
+export default function BioSection() {
   return (
     <div className="text-gray-500">
       <p>Секция "О себе" в разработке...</p>

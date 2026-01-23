@@ -76,14 +76,14 @@ export default function ProfileForm({ initialData, userId, profileId }: Props) {
       title: 'Карьера',
       icon: Briefcase,
       description: 'Места работы',
-      component: <EmploymentSection employment={initialData?.employment || []} userId={userId} />,
+      component: <EmploymentSection />,
     },
     {
       id: 'bio' as SectionId,
       title: 'О себе',
       icon: Heart,
       description: 'Биография, интересы',
-      component: <BioSection initialData={initialData} userId={userId} />,
+      component: <BioSection />,
     },
   ];
 

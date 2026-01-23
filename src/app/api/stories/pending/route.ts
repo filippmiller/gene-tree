@@ -6,7 +6,7 @@ import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
  * GET /api/stories/pending
  * Fetch stories waiting for current user's approval
  */
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const supabase = await getSupabaseSSR();
     const { data: { user } } = await supabase.auth.getUser();

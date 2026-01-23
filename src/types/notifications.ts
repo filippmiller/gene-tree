@@ -5,11 +5,24 @@
  * All notification event types supported by the system
  */
 export type NotificationEventType =
+  // Existing events
   | 'relative_added'
   | 'media_added'
   | 'STORY_SUBMITTED'
   | 'STORY_APPROVED'
-  | 'STORY_REJECTED';
+  | 'STORY_REJECTED'
+  // Phase 1: Engagement
+  | 'REACTION_RECEIVED'
+  | 'COMMENT_ADDED'
+  | 'COMMENT_REPLY'
+  | 'MENTION_IN_COMMENT'
+  // Phase 2: Daily engagement (future)
+  | 'BIRTHDAY_REMINDER'
+  | 'PHOTO_TAGGED'
+  // Phase 3: Advanced (future)
+  | 'TRIBUTE_GUESTBOOK'
+  | 'ELDER_QUESTION_ASKED'
+  | 'ELDER_QUESTION_ANSWERED';
 
 /**
  * Payload for 'relative_added' event
@@ -55,6 +68,46 @@ export interface StoryRejectedPayload {
   story_id: string;
   title: string;
   reason?: string;
+}
+
+/**
+ * Payload for 'REACTION_RECEIVED' event
+ */
+export interface ReactionReceivedPayload {
+  target_type: 'story' | 'photo' | 'comment';
+  target_id: string;
+  reaction_type: string;
+  target_title?: string;
+}
+
+/**
+ * Payload for 'COMMENT_ADDED' event
+ */
+export interface CommentAddedPayload {
+  story_id: string;
+  comment_id: string;
+  comment_preview: string;
+  story_title?: string;
+}
+
+/**
+ * Payload for 'COMMENT_REPLY' event
+ */
+export interface CommentReplyPayload {
+  story_id: string;
+  comment_id: string;
+  parent_comment_id: string;
+  comment_preview: string;
+}
+
+/**
+ * Payload for 'MENTION_IN_COMMENT' event
+ */
+export interface MentionInCommentPayload {
+  story_id: string;
+  comment_id: string;
+  comment_preview: string;
+  story_title?: string;
 }
 
 /**
@@ -119,5 +172,14 @@ export function isNotificationEventType(value: string): value is NotificationEve
     'STORY_SUBMITTED',
     'STORY_APPROVED',
     'STORY_REJECTED',
+    'REACTION_RECEIVED',
+    'COMMENT_ADDED',
+    'COMMENT_REPLY',
+    'MENTION_IN_COMMENT',
+    'BIRTHDAY_REMINDER',
+    'PHOTO_TAGGED',
+    'TRIBUTE_GUESTBOOK',
+    'ELDER_QUESTION_ASKED',
+    'ELDER_QUESTION_ANSWERED',
   ].includes(value);
 }

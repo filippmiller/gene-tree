@@ -17,7 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 try {
   console.log('=== Step 1: Check if user_profiles table exists ===');
-  const { data: profiles, error: profilesError, count } = await supabase
+  const { error: profilesError, count } = await supabase
     .from('user_profiles')
     .select('id, role', { count: 'exact', head: true });
   
@@ -42,7 +42,7 @@ try {
   }
   
   console.log('\n=== Step 3: Check storage.objects table (for policies) ===');
-  const { data: storageCheck, error: storageError } = await supabase
+  const { error: storageError } = await supabase
     .from('storage.objects')
     .select('id', { count: 'exact', head: true });
   

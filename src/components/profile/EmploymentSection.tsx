@@ -1,6 +1,6 @@
 'use client';
 
-export default function EmploymentSection({ employment, userId }: any) {
+export default function EmploymentSection() {
   return (
     <div className="text-gray-500">
       <p>Секция "Карьера" в разработке...</p>

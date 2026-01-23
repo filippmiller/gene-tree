@@ -146,12 +146,12 @@ Get stories for specific profile.
 ### POST /api/invitations/accept
 Accept family invitation.
 
-**Body**: `{ invitation_id: string }`
+**Body**: `{ token: string, firstName?: string, lastName?: string, dateOfBirth?: string }`
 
 ### POST /api/invitations/reject
 Reject family invitation.
 
-**Body**: `{ invitation_id: string }`
+**Body**: `{ token: string }`
 
 ### POST /api/invites/accept
 Accept invite (alternative endpoint).
@@ -312,3 +312,33 @@ List agent activity sessions from ingest log
 ---
 
 <!-- New endpoint documentation will be appended here -->
+
+### [2026-01-22] Invite Delivery Updates
+
+- `POST /api/relatives` accepts `smsConsent` and `locale` (for invite link localization) and enforces per-inviter rate limits.
+- `POST /api/invitations/accept` expects `{ token, firstName, lastName, dateOfBirth? }` (token-based acceptance).
+
+
+## Appendix: Relatives Invite (2026-01-22)
+
+### POST /api/relatives
+Create a pending relative and send an invite.
+
+**Body** (partial):
+```
+{
+  "firstName": "Maria",
+  "lastName": "Petrova",
+  "relationshipType": "parent",
+  "email": "maria@example.com",
+  "phone": "+1 555 123 4567",
+  "smsConsent": true,
+  "locale": "ru"
+}
+```
+
+**Notes**:
+- `smsConsent` is required when phone is the only contact.
+- `locale` is used to build the invite link.
+- Rate limits return `429` with `Invite limit reached`.
+

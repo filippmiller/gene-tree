@@ -97,7 +97,7 @@ function scanDir(dir: string, result: ScanResult, depth: number = 0): void {
         }
       }
     }
-  } catch (error) {
+  } catch {
     // Ignore permission errors
   }
 }

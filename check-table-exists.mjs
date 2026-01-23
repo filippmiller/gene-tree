@@ -11,7 +11,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 try {
   // Try to query user_profiles table
-  const { data, error, count } = await supabase
+  const { error, count } = await supabase
     .from('user_profiles')
     .select('id', { count: 'exact', head: true });
   
@@ -28,7 +28,7 @@ try {
     console.log(`   Row count: ${count || 0}`);
     
     // Check for admin role column
-    const { data: sample, error: sampleError } = await supabase
+    const { error: sampleError } = await supabase
       .from('user_profiles')
       .select('id, role')
       .limit(1);

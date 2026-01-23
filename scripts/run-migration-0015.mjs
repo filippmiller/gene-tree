@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
 
 const supabase = createClient(
   'https://mbntpsfllwhlnzuzspvp.supabase.co',
@@ -11,7 +10,7 @@ console.log('🚀 Applying migration 0015: Merge relationships tables...\n');
 // Step 1: Add column via raw query
 console.log('1️⃣ Adding relationship_status column...');
 try {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('pending_relatives')
     .select('relationship_status')
     .limit(1);
@@ -21,7 +20,7 @@ try {
   } else {
     console.log('   ✓ Column already exists');
   }
-} catch (e) {
+} catch {
   console.log('   Will attempt to add column');
 }
 

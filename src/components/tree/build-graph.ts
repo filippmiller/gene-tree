@@ -211,8 +211,8 @@ export function filterGraphByDepth(
   // Фильтруем узлы и рёбра по расстоянию
   const filteredNodeIds = new Set(
     Array.from(distances.entries())
-      .filter(([_, dist]) => dist <= maxDepth)
-      .map(([id, _]) => id)
+      .filter(([, dist]) => dist <= maxDepth)
+      .map(([id]) => id)
   );
 
   const filteredNodes = nodes.filter((node) => filteredNodeIds.has(node.id));

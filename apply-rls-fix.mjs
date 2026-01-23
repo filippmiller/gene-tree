@@ -1,14 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
-import { readFileSync } from 'fs';
-
 const supabaseUrl = 'https://mbntpsfllwhlnzuzspvp.supabase.co';
 const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ibnRwc2ZsbHdobG56dXpzcHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjUxNTk2MCwiZXhwIjoyMDc4MDkxOTYwfQ.69MK8rgK1adYjAIL7tl6ZnbO1RLF-ozNQtnsZ58ts_U';
 
 console.log('🚀 Applying RLS Recursion Fix Migration...\n');
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: { persistSession: false }
-});
 
 const sql = `
 -- Fix RLS Infinite Recursion

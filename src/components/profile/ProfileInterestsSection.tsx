@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Plus, Link as LinkIcon } from 'lucide-react';
 
@@ -32,7 +32,7 @@ export default function ProfileInterestsSection({ profileId }: Props) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  async function loadData() {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const { data: interestsData } = await supabase
@@ -65,12 +65,11 @@ export default function ProfileInterestsSection({ profileId }: Props) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [profileId, supabase]);
 
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId]);
+  }, [loadData]);
 
   async function handleCreateInterest(e: React.FormEvent) {
     e.preventDefault();

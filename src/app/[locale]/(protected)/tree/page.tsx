@@ -17,13 +17,6 @@ export default async function TreePage({ params }: { params: Promise<{ locale: s
 
   if (!user) redirect(`/${locale}/sign-in`);
 
-  // Ensure profile exists
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('id')
-    .eq('id', user.id)
-    .single();
-  // Allow access even without profile
   // Redirect to tree page with user's ID
   redirect(`/${locale}/tree/${user.id}`);
 }

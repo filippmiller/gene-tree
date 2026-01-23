@@ -3,7 +3,7 @@
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, X, Image as ImageIcon, Film } from 'lucide-react';
+import { X, Image as ImageIcon, Film } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface MediaUploaderProps {

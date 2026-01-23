@@ -1,8 +1,94 @@
 {
   "version": "1.0.0",
   "created_at": "2026-01-13T00:00:00Z",
-  "last_updated": "2026-01-13T11:59:27.909Z",
+  "last_updated": "2026-01-23T12:00:00.000Z",
   "topics": {
+    "memories": {
+      "keywords": [
+        "memory",
+        "memories",
+        "attach",
+        "media",
+        "photo",
+        "audio",
+        "video",
+        "tree",
+        "tag",
+        "tagging",
+        "consent",
+        "visibility",
+        "story_type"
+      ],
+      "files": [
+        "src/components/tree/",
+        "src/components/stories/AddStoryDialog.tsx",
+        "src/components/stories/MediaUploader.tsx",
+        "src/app/api/stories/"
+      ],
+      "anchors": [
+        "KB.md#2026-01-23-feature-design-memories-system-attach-media-to-family-members"
+      ]
+    },
+    "system-architecture": {
+      "keywords": [
+        "architecture",
+        "system-map",
+        "overview",
+        "onboarding",
+        "structure",
+        "stack",
+        "philosophy",
+        "pillars"
+      ],
+      "files": [
+        "docs/MASTER_PLAN.md",
+        "docs/arch/overview.md",
+        "NEXT_AGENT_START_HERE.md",
+        "CLAUDE.md"
+      ],
+      "anchors": [
+        "KB.md#2026-01-23-system-architecture-map"
+      ]
+    },
+    "invitations": {
+      "keywords": [
+        "invite",
+        "invitation",
+        "sms",
+        "twilio",
+        "email",
+        "resend",
+        "viral",
+        "growth"
+      ],
+      "files": [
+        "src/lib/invitations/sms.ts",
+        "src/lib/invitations/email.ts",
+        "src/app/api/relatives/route.ts",
+        "src/app/api/invites/",
+        "docs/VIRAL_GROWTH_SYSTEM.md"
+      ],
+      "anchors": [
+        "API.md#invitations"
+      ]
+    },
+    "notifications": {
+      "keywords": [
+        "notification",
+        "alert",
+        "bell",
+        "fan-out",
+        "recipients"
+      ],
+      "files": [
+        "src/lib/notifications.ts",
+        "src/app/api/notifications/",
+        "src/components/notifications/"
+      ],
+      "anchors": [
+        "KB.md#notifications"
+      ]
+    },
     "authentication": {
       "keywords": [
         "auth",

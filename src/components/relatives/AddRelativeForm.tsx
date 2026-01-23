@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
-import { getBloodRelationshipOptions, getGenderSpecificOptions, type Gender, type RelationshipQualifiers } from '@/lib/relationships/generateLabel';
+import { getBloodRelationshipOptions, getGenderSpecificOptions } from '@/lib/relationships/generateLabel';
 import KinshipSearchField from './KinshipSearchField';
 import { mapRuLabelToRelationship } from '@/lib/relationships/kinshipMapping';
 
@@ -23,6 +23,7 @@ interface FormData {
   lastName: string;
   email: string;
   phone: string;
+  smsConsent: boolean;
   facebookUrl?: string;
   instagramUrl?: string;
   isDeceased: boolean;
@@ -49,6 +50,7 @@ export default function AddRelativeForm() {
     lastName: '',
     email: '',
     phone: '',
+    smsConsent: false,
     isDeceased: false,
     knowsBirthDate: false,
     dateOfBirth: undefined,
@@ -56,7 +58,7 @@ export default function AddRelativeForm() {
 
   const relationshipOptions = getBloodRelationshipOptions('ru');
   const specificOptions = formData.relationshipCode
-    ? getGenderSpecificOptions(formData.relationshipCode, 'ru')
+    ? getGenderSpecificOptions(formData.relationshipCode)
     : [];
 
   // Load existing relatives for indirect relationships
@@ -103,6 +105,11 @@ export default function AddRelativeForm() {
       return false;
     }
 
+    if (!formData.isDeceased && formData.phone && !formData.email && !formData.smsConsent) {
+      setError('Для SMS-приглашения нужно подтвердить согласие');
+      return false;
+    }
+
     return true;
   };
 
@@ -123,6 +130,7 @@ export default function AddRelativeForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          locale,
           relationshipType: formData.relationshipCode,
           gender: selectedOption?.gender,
           qualifiers: selectedOption?.qualifiers,
@@ -152,7 +160,9 @@ export default function AddRelativeForm() {
 
   const isEmailValid = !formData.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPhoneValid = !formData.phone || /^[\d\s()+-]{10,}$/.test(formData.phone);
-  const hasValidContact = formData.isDeceased || (formData.email && isEmailValid) || (formData.phone && isPhoneValid);
+  const phoneUsable = Boolean(formData.phone && isPhoneValid && (formData.smsConsent || formData.email));
+  const emailUsable = Boolean(formData.email && isEmailValid);
+  const hasValidContact = formData.isDeceased || emailUsable || phoneUsable;
 
   const canSubmit = formData.firstName && formData.lastName &&
     hasValidContact &&
@@ -180,6 +190,7 @@ export default function AddRelativeForm() {
                 lastName: '',
                 email: '',
                 phone: '',
+                smsConsent: false,
                 isDeceased: false,
                 knowsBirthDate: false,
                 dateOfBirth: undefined,
@@ -204,6 +215,7 @@ export default function AddRelativeForm() {
                 lastName: '',
                 email: '',
                 phone: '',
+                smsConsent: false,
                 isDeceased: false,
                 knowsBirthDate: false,
                 dateOfBirth: undefined,
@@ -401,15 +413,40 @@ export default function AddRelativeForm() {
           Телефон
         </label>
         <input
-          type="tel"
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className={`w-full px-3 py-2 border rounded-md ${formData.phone && !isPhoneValid ? 'border-red-500 bg-red-50' : ''
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => {
+              const nextPhone = e.target.value;
+              setFormData({
+                ...formData,
+                phone: nextPhone,
+                smsConsent: nextPhone ? formData.smsConsent : false,
+              });
+            }}
+            className={`w-full px-3 py-2 border rounded-md ${formData.phone && !isPhoneValid ? 'border-red-500 bg-red-50' : ''
             }`}
-          placeholder="+7 (999) 123-45-67"
+            placeholder="+7 (999) 123-45-67"
         />
         {formData.phone && !isPhoneValid && (
           <p className="text-xs text-red-600 mt-1">Неправильный формат телефона</p>
+        )}
+        {!formData.isDeceased && formData.phone && isPhoneValid && (
+          <div className="mt-2">
+            <label className="flex items-start space-x-2 text-sm text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.smsConsent}
+                onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
+                className="mt-1"
+              />
+              <span>Я подтверждаю, что имею разрешение отправить SMS на этот номер</span>
+            </label>
+            {!formData.email && !formData.smsConsent && (
+              <p className="text-xs text-amber-700 mt-1">
+                Без согласия SMS приглашение не будет отправлено
+              </p>
+            )}
+          </div>
         )}
       </div>
 

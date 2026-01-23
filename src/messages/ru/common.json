@@ -68,6 +68,10 @@
     "storySubmitted": "Новая история о {name}",
     "storyApproved": "Ваша история была одобрена",
     "storyRejected": "Ваша история была отклонена",
+    "reactionReceived": "{name} отреагировал(а) на вашу {target}",
+    "commentAdded": "{name} прокомментировал(а) вашу историю",
+    "commentReply": "{name} ответил(а) на ваш комментарий",
+    "mentionInComment": "{name} упомянул(а) вас в комментарии",
     "time": {
       "justNow": "Только что",
       "minuteAgo": "1 минуту назад",
@@ -77,6 +81,171 @@
       "yesterday": "Вчера",
       "daysAgo": "{count} дней назад"
     }
+  },
+  "reactions": {
+    "heart": "Люблю",
+    "sad": "Грустно",
+    "hug": "Обнимаю",
+    "laugh": "Смешно",
+    "pray": "Молитва"
+  },
+  "comments": {
+    "title": "Комментарии",
+    "placeholder": "Написать комментарий...",
+    "replyPlaceholder": "Ответить {name}...",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "reply": "Ответить",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "edited": "изменено",
+    "noComments": "Комментариев пока нет. Будьте первым!",
+    "charactersRemaining": "Осталось {count} символов",
+    "addComment": "Добавить комментарий",
+    "commentsCount": "{count} комментариев"
+  },
+  "activity": {
+    "title": "Семейная активность",
+    "noActivity": "Нет недавней активности",
+    "noActivityHint": "Активность вашей семьи появится здесь",
+    "noMore": "Больше нет активности",
+    "reactionAdded": "{name} отреагировал(а) на {target}",
+    "commentAdded": "{name} прокомментировал(а) {target}",
+    "storyCreated": "{name} поделился новой историей",
+    "photoAdded": "{name} добавил(а) фото",
+    "profileUpdated": "{name} обновил(а) профиль",
+    "relativeAdded": "{name} добавил(а) {relative}",
+    "relationshipVerified": "{name} подтвердил(а) семейную связь"
+  },
+  "thisDay": {
+    "title": "Этот день в вашей семье",
+    "noEvents": "Сегодня нет семейных событий",
+    "sendGreeting": "Отправить",
+    "greetingSent": "Отправлено!",
+    "retry": "Повторить",
+    "loading": "Загрузка..."
+  },
+  "photoTags": {
+    "tagPeople": "Отметить людей",
+    "cancelTagging": "Отмена",
+    "showTags": "Показать отметки",
+    "hideTags": "Скрыть отметки",
+    "searchFamily": "Поиск членов семьи...",
+    "loading": "Загрузка...",
+    "noResults": "Члены семьи не найдены",
+    "cancel": "Отмена",
+    "alreadyTagged": "Этот человек уже отмечен",
+    "tagged": "Отмечен",
+    "taggedBy": "Отметил(а)",
+    "confirmed": "Подтверждено",
+    "pendingConfirmation": "Ожидает подтверждения",
+    "confirmTag": "Подтвердить",
+    "removeMe": "Убрать меня",
+    "removeTag": "Удалить отметку"
+  },
+  "emailPreferences": {
+    "title": "Настройки уведомлений",
+    "saving": "Сохранение...",
+    "saved": "Сохранено",
+    "fields": {
+      "weekly_digest": {
+        "label": "Еженедельный дайджест",
+        "description": "Получать сводку семейной активности каждую неделю"
+      },
+      "birthday_reminders": {
+        "label": "Напоминания о днях рождения",
+        "description": "Получать уведомления о предстоящих днях рождения в семье"
+      },
+      "anniversary_reminders": {
+        "label": "Напоминания о годовщинах",
+        "description": "Получать уведомления о предстоящих годовщинах"
+      },
+      "death_commemorations": {
+        "label": "Памятные даты",
+        "description": "Получать напоминания о памятных датах"
+      },
+      "photo_tag_notifications": {
+        "label": "Уведомления об отметках на фото",
+        "description": "Получать уведомления, когда вас отмечают на фото"
+      }
+    },
+    "digestDay": {
+      "label": "День доставки дайджеста",
+      "days": {
+        "sunday": "Воскресенье",
+        "monday": "Понедельник",
+        "tuesday": "Вторник",
+        "wednesday": "Среда",
+        "thursday": "Четверг",
+        "friday": "Пятница",
+        "saturday": "Суббота"
+      }
+    }
+  },
+  "tribute": {
+    "title": "Страница памяти",
+    "notAvailable": "Страница памяти недоступна",
+    "passedAtAge": "Ушёл(ла) в возрасте {age} лет",
+    "tributeCount": "записей",
+    "leaveTribute": "Оставить память",
+    "guestbook": "Книга памяти",
+    "noEntriesYet": "Записей пока нет",
+    "beFirstToLeave": "Будьте первым, кто оставит воспоминание",
+    "loading": "Загрузка...",
+    "loadMore": "Загрузить ещё",
+    "anonymous": "Аноним",
+    "leftFlower": "Оставил(а) цветы",
+    "litCandle": "Зажёг(ла) свечу",
+    "leftTribute": "Оставил(а) память",
+    "writeMessage": "Написать сообщение",
+    "leaveFlower": "Цветы",
+    "lightCandle": "Свеча",
+    "writeMemory": "Поделитесь воспоминанием...",
+    "optionalMessage": "Добавьте сообщение (необязательно)...",
+    "messageRequired": "Пожалуйста, напишите сообщение",
+    "submitting": "Отправка...",
+    "submitTribute": "Оставить память",
+    "tributeSubmitted": "Ваша запись отправлена",
+    "thankYou": "Спасибо, что почтили память"
+  },
+  "elderQuestions": {
+    "title": "Спросить старших",
+    "description": "Задавайте вопросы старшим членам семьи и сохраняйте их мудрость",
+    "askQuestion": "Задать вопрос",
+    "questionPlaceholder": "Что бы вы хотели спросить? (например, 'Какой была жизнь в вашей молодости?')",
+    "questionRequired": "Пожалуйста, напишите вопрос",
+    "visibility": "Кто увидит ответ?",
+    "visibility.family": "Семья",
+    "visibility.private": "Только мы",
+    "visibilityFamilyHint": "Ответ будет виден всем членам семьи",
+    "visibilityPrivateHint": "Только вы и отвечающий увидите эту переписку",
+    "cancel": "Отмена",
+    "submitting": "Отправка...",
+    "noQuestions": "Вопросов пока нет",
+    "you": "Вы",
+    "askedTo": "спросил(а)",
+    "answer": "Ответить",
+    "decline": "Отклонить",
+    "confirmDecline": "Вы уверены, что хотите отклонить этот вопрос?",
+    "answerRequired": "Пожалуйста, напишите ответ",
+    "writeAnswer": "Поделитесь ответом или воспоминанием...",
+    "submitAnswer": "Отправить ответ",
+    "answeredOn": "Отвечено",
+    "questionDeclined": "Вопрос отклонён"
+  },
+  "relationshipPath": {
+    "title": "Как мы связаны?",
+    "description": "Узнайте семейную связь между любыми двумя людьми в вашем древе",
+    "person1": "Первый человек",
+    "person2": "Второй человек",
+    "selectPerson": "Выберите человека...",
+    "selectBothPeople": "Пожалуйста, выберите обоих людей",
+    "samePerson": "Пожалуйста, выберите разных людей",
+    "searching": "Поиск связи...",
+    "findConnection": "Найти связь",
+    "and": "и",
+    "noConnectionFound": "Связь не найдена",
+    "noConnectionDescription": "Эти два человека не связаны в вашем семейном древе"
   }
 }
 
