@@ -54,6 +54,29 @@
     "delete": "Удалить",
     "edit": "Редактировать",
     "create": "Создать"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "markAllRead": "Прочитать все",
+    "viewAll": "Показать все",
+    "empty": "Пока нет уведомлений",
+    "emptyHint": "Когда члены семьи добавят контент, вы увидите это здесь",
+    "loading": "Загрузка...",
+    "error": "Не удалось загрузить уведомления",
+    "relativeAdded": "{name} добавлен(а) как ваш(а) {relationship}",
+    "mediaAdded": "Новое {mediaType} добавлено в профиль {name}",
+    "storySubmitted": "Новая история о {name}",
+    "storyApproved": "Ваша история была одобрена",
+    "storyRejected": "Ваша история была отклонена",
+    "time": {
+      "justNow": "Только что",
+      "minuteAgo": "1 минуту назад",
+      "minutesAgo": "{count} минут назад",
+      "hourAgo": "1 час назад",
+      "hoursAgo": "{count} часов назад",
+      "yesterday": "Вчера",
+      "daysAgo": "{count} дней назад"
+    }
   }
 }
 

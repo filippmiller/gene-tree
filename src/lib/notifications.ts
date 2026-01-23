@@ -1,17 +1,36 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import type { Json } from '@/lib/types/supabase';
+import type {
+  NotificationEventType,
+  NotificationPayload,
+  StorySubmittedPayload,
+  StoryApprovedPayload,
+  StoryRejectedPayload,
+} from '@/types/notifications';
 
-export type NotificationEventType = 'relative_added' | 'media_added';
-
-interface BaseNotificationPayload {
-  [key: string]: unknown;
-}
+// Re-export types for convenience
+export type {
+  NotificationEventType,
+  NotificationPayload,
+  RelativeAddedPayload,
+  MediaAddedPayload,
+  StorySubmittedPayload,
+  StoryApprovedPayload,
+  StoryRejectedPayload,
+  NotificationData,
+  ActorInfo,
+  NotificationWithActor,
+  NotificationRow,
+  NotificationsApiResponse,
+} from '@/types/notifications';
+export { isNotificationEventType } from '@/types/notifications';
 
 interface CreateNotificationOptions {
   eventType: NotificationEventType;
-  actorUserId: string; // auth.users.id (совпадает с profile_id в user_profiles)
+  actorUserId: string; // auth.users.id (matches profile_id in user_profiles)
   primaryProfileId?: string | null;
   relatedProfileId?: string | null;
-  payload?: BaseNotificationPayload;
+  payload?: NotificationPayload;
 }
 
 /**
@@ -31,7 +50,7 @@ export async function createNotification(options: CreateNotificationOptions) {
       actor_profile_id: actorUserId,
       primary_profile_id: primaryProfileId ?? actorUserId,
       related_profile_id: relatedProfileId ?? null,
-      payload: (payload ?? null) as any,
+      payload: (payload ?? null) as Json,
     })
     .select('id')
     .single();
@@ -44,8 +63,10 @@ export async function createNotification(options: CreateNotificationOptions) {
   const notificationId: string = notification.id;
 
   // 2) Compute recipients via helper function in DB
-  const { data: familyRows, error: familyError } = await admin
-    .rpc('get_family_circle_profile_ids', { p_user_id: actorUserId });
+  const { data: familyRows, error: familyError } = await admin.rpc(
+    'get_family_circle_profile_ids',
+    { p_user_id: actorUserId }
+  );
 
   if (familyError) {
     console.error('[Notifications] Failed to fetch family circle', familyError);
@@ -76,5 +97,54 @@ export async function createNotification(options: CreateNotificationOptions) {
 
   if (recipientsError) {
     console.error('[Notifications] Failed to insert notification_recipients', recipientsError);
+  }
+}
+
+/**
+ * Generates the navigation URL for a notification based on its event type and payload.
+ *
+ * @param eventType - The type of notification event (string from DB)
+ * @param payload - The notification payload (can be null/undefined)
+ * @param notification - Object containing profile IDs for navigation context
+ * @returns The URL path to navigate to when the notification is clicked
+ */
+export function getNotificationUrl(
+  eventType: string,
+  payload: NotificationPayload | null | undefined,
+  notification: {
+    primary_profile_id?: string | null;
+    related_profile_id?: string | null;
+  }
+): string {
+  switch (eventType) {
+    case 'relative_added':
+      // Navigate to the added person's profile or tree
+      return notification.related_profile_id
+        ? `/profile/${notification.related_profile_id}`
+        : '/tree';
+
+    case 'media_added':
+      // Navigate to the profile with photos
+      return notification.primary_profile_id
+        ? `/profile/${notification.primary_profile_id}`
+        : '/tree';
+
+    case 'STORY_SUBMITTED':
+    case 'STORY_APPROVED':
+    case 'STORY_REJECTED': {
+      const storyPayload = payload as
+        | StorySubmittedPayload
+        | StoryApprovedPayload
+        | StoryRejectedPayload
+        | null;
+      if (storyPayload?.story_id) {
+        return `/stories/${storyPayload.story_id}`;
+      }
+      return '/stories';
+    }
+
+    default:
+      // Fallback to dashboard
+      return '/app';
   }
 }

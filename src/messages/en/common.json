@@ -54,6 +54,29 @@
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all",
+    "empty": "No notifications yet",
+    "emptyHint": "When family members add content, you'll see it here",
+    "loading": "Loading...",
+    "error": "Failed to load notifications",
+    "relativeAdded": "{name} was added as your {relationship}",
+    "mediaAdded": "New {mediaType} added to {name}'s profile",
+    "storySubmitted": "New story about {name}",
+    "storyApproved": "Your story was approved",
+    "storyRejected": "Your story was declined",
+    "time": {
+      "justNow": "Just now",
+      "minuteAgo": "1 minute ago",
+      "minutesAgo": "{count} minutes ago",
+      "hourAgo": "1 hour ago",
+      "hoursAgo": "{count} hours ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{count} days ago"
+    }
   }
 }
 

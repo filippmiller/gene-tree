@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import { cn } from "@/lib/utils";
 
 export default function Nav() {
@@ -91,6 +92,7 @@ export default function Nav() {
 
           {/* Right side actions */}
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <ThemeToggle />
             <div className="hidden sm:block">
               <LanguageSwitcher />
