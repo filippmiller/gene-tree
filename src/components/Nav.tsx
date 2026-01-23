@@ -74,7 +74,7 @@ export default function Nav() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
+              <Link key={item.href} href={item.href} prefetch={false}>
                 <Button
                   variant={isActive(item.href) ? "secondary" : "ghost"}
                   size="sm"
@@ -142,6 +142,7 @@ export default function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Button

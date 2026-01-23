@@ -142,7 +142,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-6">{t('quickActions')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link href={`/${resolvedLocale}/people/new`} className="block group">
+              <Link href={`/${resolvedLocale}/people/new`} prefetch={false} className="block group">
                 <Card
                   interactive
                   elevation="flat"
@@ -165,7 +165,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
                 </Card>
               </Link>
 
-              <Link href={`/${resolvedLocale}/tree`} className="block group">
+              <Link href={`/${resolvedLocale}/tree`} prefetch={false} className="block group">
                 <Card
                   interactive
                   elevation="flat"
