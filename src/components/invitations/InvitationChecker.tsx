@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 export default function InvitationChecker() {
     const router = useRouter();
     const pathname = usePathname();
-    const [hasChecked, setHasChecked] = useState(false);
-
     useEffect(() => {
         // Don't check if we are already on the onboarding page
         if (pathname?.includes('/onboarding/invites')) {
@@ -26,10 +24,8 @@ export default function InvitationChecker() {
                         router.push(`/${locale}/onboarding/invites`);
                     }
                 }
-            } catch (error) {
-                console.error('Failed to check invitations:', error);
-            } finally {
-                setHasChecked(true);
+            } catch {
+                // Silently fail - don't spam console
             }
         };
 

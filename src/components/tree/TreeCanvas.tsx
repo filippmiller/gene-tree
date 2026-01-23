@@ -146,8 +146,8 @@ export function TreeCanvas({ data, onNodeClick, className }: TreeCanvasProps) {
         // Преобразуем наш TreeNode в формат React Flow Node
         setNodes(layoutedNodes as Node[]);
         setEdges(graphEdges as Edge[]);
-      } catch (error) {
-        console.error('Failed to layout tree:', error);
+      } catch {
+        // Layout failed - tree won't render
       } finally {
         setIsLayouting(false);
       }

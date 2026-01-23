@@ -31,14 +31,12 @@ export async function GET(
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching profile stories:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ stories });
 
   } catch (error: any) {
-    console.error('Error in GET /api/stories/profile/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

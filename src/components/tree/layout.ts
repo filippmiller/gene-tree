@@ -18,7 +18,7 @@
  * Используется в: TreeCanvas после buildGraph
  */
 
-import ELK, { ElkNode, ElkExtendedEdge } from 'elkjs/lib/elk.bundled.js';
+import ELK, { ElkNode } from 'elkjs/lib/elk.bundled.js';
 import type { TreeNode, TreeEdge } from './types';
 
 // Инициализируем ELK
@@ -141,8 +141,7 @@ export async function applyLayout(
     });
 
     return layoutedNodes;
-  } catch (error) {
-    console.error('ELK layout failed:', error);
+  } catch {
     // В случае ошибки возвращаем узлы без изменений
     return nodes;
   }
@@ -160,7 +159,6 @@ export async function applyLayout(
  * 
  * @param nodes - текущие узлы (с позициями)
  * @param edges - текущие рёбра
- * @param duration - длительность анимации в мс (по умолчанию 500)
  * @returns Promise с узлами в новых позициях
  * 
  * Используется в: TreeCanvas при динамическом изменении данных
@@ -170,8 +168,7 @@ export async function applyLayout(
  */
 export async function applyLayoutWithAnimation(
   nodes: TreeNode[],
-  edges: TreeEdge[],
-  duration: number = 500
+  edges: TreeEdge[]
 ): Promise<TreeNode[]> {
   // Применяем обычную раскладку
   const layoutedNodes = await applyLayout(nodes, edges);

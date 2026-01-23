@@ -153,8 +153,8 @@ export default function NotificationBell() {
       if (!res.ok) return;
       const json = (await res.json()) as ApiResponse;
       setNotifications(json.notifications || []);
-    } catch (err) {
-      console.error('[NotificationBell] Fetch error:', err);
+    } catch {
+      // Silent fail
     } finally {
       setLoading(false);
     }
@@ -190,8 +190,8 @@ export default function NotificationBell() {
           prev.map((n) => ({ ...n, is_read: true }))
         );
       }
-    } catch (err) {
-      console.error('[NotificationBell] Mark all read error:', err);
+    } catch {
+      // Silent fail
     } finally {
       setMarkingRead(false);
     }
@@ -209,8 +209,8 @@ export default function NotificationBell() {
           n.notification_id === id ? { ...n, is_read: true } : n
         )
       );
-    } catch (err) {
-      console.error('[NotificationBell] Mark read error:', err);
+    } catch {
+      // Silent fail
     }
   };
 

@@ -45,8 +45,7 @@ export function PersonProfileDialog({
 
             if (error) throw error;
             setPerson(data);
-        } catch (error) {
-            console.error('Error fetching person:', error);
+        } catch {
             toast.error('Не удалось загрузить профиль');
         } finally {
             setLoading(false);

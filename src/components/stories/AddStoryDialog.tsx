@@ -14,7 +14,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Mic, Image as ImageIcon, Type, Loader2 } from 'lucide-react';
 import MediaUploader from './MediaUploader';
-import VoiceStoryRecorder from '@/components/profile/VoiceStoryRecorder'; // We might need to adapt this
 import { toast } from 'sonner';
 
 interface AddStoryDialogProps {
@@ -66,8 +65,7 @@ export default function AddStoryDialog({
             setContent('');
             setMediaUrl(null);
             setActiveTab('text');
-        } catch (error) {
-            console.error(error);
+        } catch {
             toast.error('Failed to save story');
         } finally {
             setIsSubmitting(false);

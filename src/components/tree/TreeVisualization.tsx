@@ -34,7 +34,6 @@ export default function TreeVisualization() {
         setNodes(data.nodes || []);
         setEdges(data.edges || []);
       } catch (err) {
-        console.error('Error fetching tree data:', err);
         setError(err instanceof Error ? err.message : 'Failed to load tree');
       } finally {
         setLoading(false);

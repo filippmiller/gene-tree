@@ -366,7 +366,6 @@ export default function FamilyTreeD3({ nodes, edges, onNodeClick }: Props) {
       }
 
     } catch (err) {
-      console.error('Error rendering tree:', err);
       setError(err instanceof Error ? err.message : 'Failed to render tree');
     }
   }, [nodes, edges, isDark, onNodeClick]);

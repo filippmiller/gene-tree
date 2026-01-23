@@ -24,8 +24,8 @@ export default function StoryFeed({ profileId }: StoryFeedProps) {
             if (!response.ok) throw new Error('Failed to fetch stories');
             const data = await response.json();
             setStories(data.stories || []);
-        } catch (error) {
-            console.error(error);
+        } catch {
+            // Silent fail - API might not have stories table yet
         } finally {
             setLoading(false);
         }
