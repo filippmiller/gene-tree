@@ -76,12 +76,12 @@ const buttonVariants = cva(
           "active:text-primary/80",
         ].join(" "),
 
-        // Gradient - Premium, eye-catching CTAs
+        // Gradient - Premium, eye-catching CTAs (Violet theme)
         gradient: [
-          "bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white",
-          "shadow-lg hover:shadow-xl",
+          "bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-600 text-white",
+          "shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30",
           "hover:-translate-y-0.5",
-          "hover:from-blue-700 hover:via-blue-600 hover:to-indigo-700",
+          "hover:from-violet-600 hover:via-purple-600 hover:to-indigo-700",
           "active:translate-y-0 active:scale-[0.98]",
           // Subtle shine effect
           "before:absolute before:inset-0 before:rounded-lg",

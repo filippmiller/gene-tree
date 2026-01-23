@@ -2,8 +2,8 @@
 
 > **Document Purpose:** This is the strategic north star for Gene-Tree development. Every session should begin by reviewing this document to ensure alignment with the project vision, priorities, and philosophy.
 
-**Last Updated:** 2026-01-22
-**Version:** 1.1
+**Last Updated:** 2026-01-23
+**Version:** 1.2
 
 ---
 
@@ -176,6 +176,14 @@ Since deceased people cannot confirm their accounts:
 | Internationalization | ✅ Working | English + Russian |
 | Knowledge Base | ✅ Working | Librarian system for docs |
 | Deployment | ✅ Working | Railway with CI/CD |
+| Reactions System | ✅ Working | Emoji reactions on stories/photos/comments |
+| Threaded Comments | ✅ Working | @mentions, nested replies |
+| Activity Feed | ✅ Working | Family-scoped engagement tracking |
+| "This Day" Widget | ✅ Working | Birthdays, anniversaries, commemorations |
+| Photo Tagging | ✅ Working | Face tagging with coordinates |
+| Memorial Tributes | ✅ Working | Tribute pages for deceased members |
+| Relationship Finder | ✅ Working | "How are we related?" path finder |
+| Ask the Elder | ✅ Working | Q&A queue for family wisdom |
 
 ### What's Partially Built
 
@@ -203,7 +211,7 @@ Deploy:      Railway (primary)
 
 ---
 
-## 4. THE 20-POINT SUCCESS PLAN
+## 5. THE 20-POINT SUCCESS PLAN
 
 ### Phase 1: FOUNDATION (Weeks 1-4)
 
@@ -291,7 +299,7 @@ EFFORT │ QUICK WIN │ STRATEGIC │ EFFORT
 
 ---
 
-## 5. TECHNICAL ARCHITECTURE VISION
+## 6. TECHNICAL ARCHITECTURE VISION
 
 ### Current Architecture
 
@@ -360,7 +368,7 @@ EFFORT │ QUICK WIN │ STRATEGIC │ EFFORT
 
 ---
 
-## 6. FUTURE OUTLOOK (2026-2030)
+## 7. FUTURE OUTLOOK (2026-2030)
 
 ### Vision Statement
 
@@ -490,7 +498,7 @@ EFFORT │ QUICK WIN │ STRATEGIC │ EFFORT
 
 ---
 
-## 7. SUCCESS METRICS
+## 8. SUCCESS METRICS
 
 ### North Star Metric
 
@@ -522,7 +530,7 @@ This measures real engagement, not vanity signups.
 
 ---
 
-## 8. SESSION CHECKLIST
+## 9. SESSION CHECKLIST
 
 ### Before Starting Any Session
 
@@ -559,6 +567,8 @@ Use this checklist to ensure alignment:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.2 | 2026-01-23 | Added engagement features status, UI overhaul design docs |
+| 1.1 | 2026-01-23 | Engagement features deployed (reactions, comments, activity feed, memorial tributes) |
 | 1.0 | 2026-01-22 | Initial master plan created from brain session |
 
 ---

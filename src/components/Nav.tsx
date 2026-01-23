@@ -10,6 +10,16 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { cn } from "@/lib/utils";
+import {
+  Home,
+  Users,
+  Heart,
+  TreePine,
+  User,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -25,69 +35,53 @@ export default function Nav() {
   };
 
   const navItems = [
-    { href: `/${locale}/app`, label: t("dashboard"), icon: (
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    )},
-    { href: `/${locale}/people`, label: t("people"), icon: (
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    )},
-    { href: `/${locale}/relations`, label: t("relations"), icon: (
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-      </svg>
-    )},
-    { href: `/${locale}/tree`, label: t("familyProfile"), icon: (
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-      </svg>
-    )},
-    { href: `/${locale}/my-profile`, label: t("myProfile"), icon: (
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-    )},
+    { href: `/${locale}/app`, label: t("dashboard"), icon: Home },
+    { href: `/${locale}/people`, label: t("people"), icon: Users },
+    { href: `/${locale}/relations`, label: t("relations"), icon: Heart },
+    { href: `/${locale}/tree`, label: t("familyProfile"), icon: TreePine },
+    { href: `/${locale}/my-profile`, label: t("myProfile"), icon: User },
   ];
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 border-b border-white/50 dark:border-white/10 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 shadow-sm shadow-violet-500/5">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo / Brand */}
           <Link
             href={`/${locale}/app`}
-            className="flex items-center gap-2 font-semibold text-lg"
+            className="flex items-center gap-3 font-bold text-lg group"
           >
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 transition-transform group-hover:scale-105">
+              <TreePine className="h-5 w-5 text-white" />
             </div>
-            <span className="hidden sm:inline">GeneTree</span>
+            <span className="hidden sm:inline bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+              GeneTree
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} prefetch={false}>
-                <Button
-                  variant={isActive(item.href) ? "secondary" : "ghost"}
-                  size="sm"
-                  className={cn(
-                    "gap-2 transition-all",
-                    isActive(item.href) && "bg-secondary shadow-sm"
-                  )}
-                >
-                  {item.icon}
-                  <span className="hidden lg:inline">{item.label}</span>
-                </Button>
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-1 bg-white/50 dark:bg-gray-800/50 rounded-full p-1 backdrop-blur-sm border border-white/50 dark:border-white/10">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              return (
+                <Link key={item.href} href={item.href} prefetch={false}>
+                  <button
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                      active
+                        ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-gray-700/80"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="hidden lg:inline">{item.label}</span>
+                  </button>
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right side actions */}
@@ -101,12 +95,10 @@ export default function Nav() {
               variant="ghost"
               size="sm"
               onClick={handleSignOut}
-              className="hidden sm:flex gap-2"
+              className="hidden sm:flex gap-2 text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              {t("signOut")}
+              <LogOut className="h-4 w-4" />
+              <span className="hidden lg:inline">{t("signOut")}</span>
             </Button>
 
             {/* Mobile menu button */}
@@ -118,13 +110,9 @@ export default function Nav() {
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="h-5 w-5" />
               ) : (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+                <Menu className="h-5 w-5" />
               )}
             </Button>
           </div>
@@ -133,44 +121,45 @@ export default function Nav() {
         {/* Mobile Navigation */}
         <div
           className={cn(
-            "md:hidden overflow-hidden transition-all duration-300 ease-smooth",
-            mobileMenuOpen ? "max-h-96 pb-4" : "max-h-0"
+            "md:hidden overflow-hidden transition-all duration-300 ease-out",
+            mobileMenuOpen ? "max-h-[500px] pb-4" : "max-h-0"
           )}
         >
           <div className="flex flex-col gap-1 pt-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={false}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Button
-                  variant={isActive(item.href) ? "secondary" : "ghost"}
-                  className={cn(
-                    "w-full justify-start gap-3",
-                    isActive(item.href) && "bg-secondary"
-                  )}
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={false}
+                  onClick={() => setMobileMenuOpen(false)}
                 >
-                  {item.icon}
-                  {item.label}
-                </Button>
-              </Link>
-            ))}
-            <div className="border-t my-2" />
-            <div className="flex items-center justify-between px-3">
+                  <div
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                      active
+                        ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25"
+                        : "text-foreground hover:bg-white/80 dark:hover:bg-gray-800/80"
+                    )}
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </div>
+                </Link>
+              );
+            })}
+            <div className="border-t border-border/50 my-2" />
+            <div className="flex items-center justify-between px-4 py-2">
               <LanguageSwitcher />
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={handleSignOut}
-                className="gap-2 text-destructive hover:text-destructive"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors"
               >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                {t("signOut")}
-              </Button>
+                <LogOut className="h-4 w-4" />
+                <span className="font-medium">{t("signOut")}</span>
+              </button>
             </div>
           </div>
         </div>

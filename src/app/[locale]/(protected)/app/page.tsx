@@ -3,9 +3,22 @@ import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import ThisDayHub from '@/components/this-day/ThisDayHub';
-import { Card, CardContent, StatCard, FeatureCard } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import ActivityFeed from '@/components/feed/ActivityFeed';
+import { GlassCard } from '@/components/ui/glass-card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Users,
+  Layers,
+  Heart,
+  UserPlus,
+  TreePine,
+  Link2,
+  ScrollText,
+  Settings,
+  ChevronRight,
+  Sparkles,
+} from 'lucide-react';
 
 export default async function AppPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: resolvedLocale } = await params;
@@ -19,7 +32,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
   if (!user) {
     const { redirect } = await import('next/navigation');
     redirect(`/${resolvedLocale}/sign-in`);
-    return null as never; // TypeScript: redirect throws, this is unreachable
+    return null as never;
   }
 
   // Load user profile
@@ -55,49 +68,56 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
   const totalGenerations = generationLevels.size;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/50">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <main className="w-full px-4 sm:px-6 lg:px-12 py-8 space-y-8">
         {/* Welcome Section */}
         <div className="flex flex-col lg:flex-row gap-6 items-start">
-          {/* Welcome Card */}
-          <Card className="flex-1 overflow-hidden" elevation="elevated">
-            <CardContent className="p-0">
-              <div className="relative">
-                {/* Gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 opacity-95" />
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
+          {/* Welcome Card - Glassmorphism Hero */}
+          <GlassCard
+            glass="frosted"
+            padding="none"
+            className="flex-1 overflow-hidden"
+          >
+            <div className="relative">
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600" />
+              {/* Decorative circles */}
+              <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10 blur-2xl" />
+              <div className="absolute -left-10 -bottom-10 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
+              {/* Grid pattern */}
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
 
-                <div className="relative p-6 sm:p-8">
-                  <div className="flex items-center gap-6">
-                    {profile?.avatar_url ? (
-                      <img
-                        src={profile.avatar_url}
-                        alt={userName}
-                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-white/20 shadow-xl ring-4 ring-white/10"
-                      />
-                    ) : (
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-2xl sm:text-3xl font-bold shadow-xl border-4 border-white/20 ring-4 ring-white/10">
-                        {userName.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white truncate">
-                          {t('welcomeBack', { name: userName })}
-                        </h1>
-                        <Badge variant="success" className="hidden sm:flex shrink-0">
-                          Active
-                        </Badge>
-                      </div>
-                      <p className="text-white/80 text-sm sm:text-base">
-                        {t('subtitle')}
-                      </p>
+              <div className="relative p-6 sm:p-8">
+                <div className="flex items-center gap-6">
+                  {profile?.avatar_url ? (
+                    <img
+                      src={profile.avatar_url}
+                      alt={userName}
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-white/30 shadow-2xl ring-4 ring-white/10 backdrop-blur-sm"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-2xl sm:text-3xl font-bold shadow-2xl border-4 border-white/30 ring-4 ring-white/10">
+                      {userName.charAt(0).toUpperCase()}
                     </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h1 className="text-2xl sm:text-3xl font-bold text-white truncate">
+                        {t('welcomeBack', { name: userName })}
+                      </h1>
+                      <Badge className="hidden sm:flex shrink-0 bg-emerald-500/20 text-emerald-100 border-emerald-400/30 backdrop-blur-sm">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        Active
+                      </Badge>
+                    </div>
+                    <p className="text-white/80 text-sm sm:text-base">
+                      {t('subtitle')}
+                    </p>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </GlassCard>
 
           {/* Notifications */}
           <div className="w-full lg:w-80 shrink-0">
@@ -105,36 +125,30 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
           </div>
         </div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid - Gradient Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <StatCard
+          <ModernStatCard
             label={t('totalPeople')}
             value={totalPeople}
-            icon={
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            }
+            icon={<Users className="w-6 h-6" />}
+            gradient="from-violet-500 to-purple-600"
+            shadowColor="shadow-violet-500/25"
           />
 
-          <StatCard
+          <ModernStatCard
             label={t('generations')}
             value={totalGenerations}
-            icon={
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            }
+            icon={<Layers className="w-6 h-6" />}
+            gradient="from-sky-500 to-blue-600"
+            shadowColor="shadow-sky-500/25"
           />
 
-          <StatCard
+          <ModernStatCard
             label={t('relationships')}
             value={totalRelationships}
-            icon={
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            }
+            icon={<Heart className="w-6 h-6" />}
+            gradient="from-rose-500 to-pink-600"
+            shadowColor="shadow-rose-500/25"
           />
         </div>
 
@@ -142,80 +156,205 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
         <ThisDayHub />
 
         {/* Quick Actions */}
-        <Card elevation="raised">
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-6">{t('quickActions')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link href={`/${resolvedLocale}/people/new`} prefetch={false} className="block group">
-                <Card
-                  interactive
-                  elevation="flat"
-                  className="h-full border-2 border-dashed border-muted hover:border-primary/50 hover:bg-primary/5"
-                >
-                  <CardContent className="p-5 flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-foreground">{t('addFamilyMember')}</p>
-                      <p className="text-sm text-muted-foreground truncate">{t('addFamilyMemberDescription')}</p>
-                    </div>
-                    <svg className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </CardContent>
-                </Card>
-              </Link>
+        <GlassCard glass="medium" padding="lg">
+          <h2 className="text-xl font-bold text-foreground mb-6">{t('quickActions')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <QuickActionCard
+              href={`/${resolvedLocale}/people/new`}
+              icon={<UserPlus className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-violet-500 to-purple-600"
+              iconShadow="shadow-violet-500/25"
+              title={t('addFamilyMember')}
+              description={t('addFamilyMemberDescription')}
+            />
 
-              <Link href={`/${resolvedLocale}/tree`} prefetch={false} className="block group">
-                <Card
-                  interactive
-                  elevation="flat"
-                  className="h-full border-2 border-dashed border-muted hover:border-purple-500/50 hover:bg-purple-50/50"
-                >
-                  <CardContent className="p-5 flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white">
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-foreground">{t('viewFamilyTree')}</p>
-                      <p className="text-sm text-muted-foreground truncate">{t('viewFamilyTreeDescription')}</p>
-                    </div>
-                    <svg className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+            <QuickActionCard
+              href={`/${resolvedLocale}/tree`}
+              icon={<TreePine className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-emerald-500 to-teal-600"
+              iconShadow="shadow-emerald-500/25"
+              title={t('viewFamilyTree')}
+              description={t('viewFamilyTreeDescription')}
+            />
+          </div>
+        </GlassCard>
 
         {/* Recent Activity */}
-        <Card elevation="raised">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">{t('recentActivity')}</h2>
-              <Badge variant="secondary">Coming Soon</Badge>
-            </div>
-            <div className="text-center py-12">
-              <div className="mx-auto w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
-                <svg className="h-8 w-8 text-muted-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-              </div>
-              <p className="text-muted-foreground">{t('recentActivityEmpty')}</p>
-              <Button variant="outline" className="mt-4">
-                Start Adding Family
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <GlassCard glass="medium" padding="lg">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-foreground">{t('recentActivity')}</h2>
+          </div>
+          <ActivityFeed limit={10} />
+        </GlassCard>
+
+        {/* Engagement Features */}
+        <GlassCard glass="medium" padding="lg">
+          <h2 className="text-xl font-bold text-foreground mb-6">Explore Your Family</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <FeatureCard
+              href={`/${resolvedLocale}/relationship-finder`}
+              icon={<Link2 className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-emerald-500 to-green-600"
+              iconShadow="shadow-emerald-500/25"
+              title="How Are We Related?"
+              description="Find connections between family members"
+            />
+
+            <FeatureCard
+              href={`/${resolvedLocale}/elder-questions`}
+              icon={<ScrollText className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-amber-500 to-orange-600"
+              iconShadow="shadow-amber-500/25"
+              title="Ask the Elder"
+              description="Preserve family wisdom and stories"
+            />
+
+            <FeatureCard
+              href={`/${resolvedLocale}/family-profile/settings`}
+              icon={<Settings className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-slate-500 to-gray-600"
+              iconShadow="shadow-slate-500/25"
+              title="Email Preferences"
+              description="Configure weekly digest & reminders"
+            />
+          </div>
+        </GlassCard>
       </main>
     </div>
+  );
+}
+
+/**
+ * ModernStatCard - Gradient stat card with glass effect
+ */
+function ModernStatCard({
+  label,
+  value,
+  icon,
+  gradient,
+  shadowColor,
+}: {
+  label: string;
+  value: number | string;
+  icon: React.ReactNode;
+  gradient: string;
+  shadowColor: string;
+}) {
+  return (
+    <div className={`
+      relative overflow-hidden rounded-2xl p-6
+      bg-gradient-to-br ${gradient} text-white
+      shadow-lg ${shadowColor}
+      transition-all duration-300
+      hover:-translate-y-1 hover:shadow-xl
+    `}>
+      {/* Decorative background circles */}
+      <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white/10" />
+      <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/5" />
+
+      {/* Content */}
+      <div className="relative">
+        <p className="text-white/80 text-sm font-medium mb-1">{label}</p>
+        <p className="text-4xl font-bold">{value}</p>
+      </div>
+
+      {/* Icon */}
+      <div className="absolute right-4 bottom-4 text-white/20">
+        {icon}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * QuickActionCard - Interactive glass card for actions
+ */
+function QuickActionCard({
+  href,
+  icon,
+  iconBg,
+  iconShadow,
+  title,
+  description,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  iconBg: string;
+  iconShadow: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Link href={href} prefetch={false} className="block group">
+      <GlassCard
+        glass="subtle"
+        padding="none"
+        hover="lift"
+        className="border-2 border-dashed border-border/50 hover:border-violet-500/30 h-full"
+      >
+        <div className="p-5 flex items-center gap-4">
+          <div className={`
+            w-12 h-12 rounded-xl ${iconBg} ${iconShadow}
+            flex items-center justify-center text-white shadow-lg
+            transition-transform duration-300 group-hover:scale-110
+          `}>
+            {icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-foreground group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+              {title}
+            </p>
+            <p className="text-sm text-muted-foreground truncate">{description}</p>
+          </div>
+          <ChevronRight className="w-5 h-5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-violet-500" />
+        </div>
+      </GlassCard>
+    </Link>
+  );
+}
+
+/**
+ * FeatureCard - Card for engagement features
+ */
+function FeatureCard({
+  href,
+  icon,
+  iconBg,
+  iconShadow,
+  title,
+  description,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  iconBg: string;
+  iconShadow: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Link href={href} prefetch={false} className="block group">
+      <GlassCard
+        glass="subtle"
+        padding="none"
+        hover="lift"
+        className="border-2 border-dashed border-border/50 hover:border-violet-500/30 h-full"
+      >
+        <div className="p-5 flex flex-col items-center text-center gap-3">
+          <div className={`
+            w-14 h-14 rounded-xl ${iconBg} ${iconShadow}
+            flex items-center justify-center text-white shadow-lg
+            transition-transform duration-300 group-hover:scale-110
+          `}>
+            {icon}
+          </div>
+          <div>
+            <p className="font-semibold text-foreground group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+              {title}
+            </p>
+            <p className="text-sm text-muted-foreground">{description}</p>
+          </div>
+        </div>
+      </GlassCard>
+    </Link>
   );
 }

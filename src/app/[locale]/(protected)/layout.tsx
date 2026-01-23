@@ -1,16 +1,20 @@
 import { redirect } from 'next/navigation';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import Nav from '@/components/Nav';
-
+import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import InvitationChecker from '@/components/invitations/InvitationChecker';
 
 /**
  * Protected Layout - Auth Guard
- * 
+ *
  * Ensures all routes under (protected) require authentication.
  * Redirects to sign-in if no session is found.
- * 
- * This runs on the server only, preventing hydration mismatches.
+ *
+ * Features:
+ * - Server-side auth check (secure)
+ * - Top navigation bar
+ * - Mobile bottom navigation
+ * - Responsive layout with max-width
  */
 export default async function ProtectedLayout({
   children,
@@ -33,10 +37,10 @@ export default async function ProtectedLayout({
     <>
       <InvitationChecker />
       <Nav />
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="max-w-7xl mx-auto w-full pb-20 md:pb-0">
         {children}
       </div>
+      <MobileBottomNav />
     </>
   );
 }
-

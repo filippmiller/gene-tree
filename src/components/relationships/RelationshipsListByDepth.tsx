@@ -1,19 +1,14 @@
 /**
  * RelationshipsListByDepth.tsx
- * 
- * Миссия: Отображение родственников с ПРАВИЛЬНОЙ классификацией по глубине
- * 
- * Использует: /api/relationships-depth (с SQL функциями depth)
- * 
- * Разделы:
- * - Parents (depth=1)
- * - Grandparents (depth=2)
- * - Children (depth=1)
- * - Grandchildren (depth=2)
- * - Siblings
- * - Spouses
- * 
- * Исправляет проблему: дедушки больше НЕ попадают в Parents
+ *
+ * Modern glassmorphism design for family relationships display.
+ *
+ * Features:
+ * - Icon badges instead of emoji headers
+ * - Glass card styling
+ * - Modern person cards with avatars
+ * - Responsive grid layout
+ * - Smooth animations
  */
 
 'use client';
@@ -22,6 +17,21 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { logger } from '@/lib/logger';
+import { GlassCard } from '@/components/ui/glass-card';
+import { PersonCard, SpouseCard } from '@/components/ui/person-card';
+import { CategorySection } from '@/components/ui/category-section';
+import { Button } from '@/components/ui/button';
+import {
+  Users,
+  Crown,
+  Baby,
+  Sparkles,
+  Users2,
+  Heart,
+  TreePine,
+  RefreshCw,
+  AlertCircle
+} from 'lucide-react';
 
 interface Person {
   id: string;
@@ -53,7 +63,7 @@ interface Props {
 
 export default function RelationshipsListByDepth({ currentUserId }: Props) {
   const params = useParams();
-  const locale = params.locale as string || 'en';
+  const locale = (params.locale as string) || 'en';
   const [data, setData] = useState<RelationshipsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,12 +72,6 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
     fetchRelationships();
   }, [currentUserId]);
 
-  /**
-   * fetchRelationships - загрузка данных через ВРЕМЕННЫЙ API
-   * 
-   * API: /api/relationships-temp (читает напрямую из pending_relatives)
-   * Возвращает: {parents, grandparents, children, grandchildren, siblings, spouses}
-   */
   const fetchRelationships = async () => {
     try {
       setLoading(true);
@@ -89,157 +93,79 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
     }
   };
 
-  /**
-   * formatLifespan - форматирование дат жизни
-   * Примеры: "(1932–2001)", "(род. 1956)", "(1936–...)"
-   */
-  const formatLifespan = (person: Person): string => {
-    const birthYear = person.birth_date ? new Date(person.birth_date).getFullYear() : null;
-    const deathYear = person.death_date ? new Date(person.death_date).getFullYear() : null;
-
-    if (birthYear && deathYear) {
-      return `(${birthYear}–${deathYear})`;
-    } else if (birthYear && !person.is_alive) {
-      return `(${birthYear}–...)`;
-    } else if (birthYear) {
-      return `(род. ${birthYear})`;
-    }
-    return '';
+  // Labels based on locale
+  const labels = {
+    en: {
+      yourFamily: 'Your Family',
+      totalRelatives: 'Total relatives',
+      parents: 'Parents',
+      parentsDesc: '1 generation up',
+      grandparents: 'Grandparents',
+      grandparentsDesc: '2 generations up',
+      children: 'Children',
+      childrenDesc: '1 generation down',
+      grandchildren: 'Grandchildren',
+      grandchildrenDesc: '2 generations down',
+      siblings: 'Siblings',
+      siblingsDesc: 'Shared parents',
+      spouses: 'Spouses',
+      spousesDesc: 'Marriages & partnerships',
+      noParents: 'No parents in the system',
+      noGrandparents: 'No grandparents in the system',
+      noChildren: 'No children in the system',
+      noGrandchildren: 'No grandchildren in the system',
+      noSiblings: 'No siblings in the system',
+      noSpouses: 'No spouses in the system',
+      visualizeTree: 'Visualize Tree',
+      visualizeDesc: 'View your family tree in graphical form',
+      openTree: 'Open Family Tree',
+      loading: 'Loading relatives...',
+      error: 'Loading Error',
+      tryAgain: 'Try Again',
+      noData: 'No Data',
+      addRelatives: 'Add relatives to build your family tree',
+    },
+    ru: {
+      yourFamily: 'Ваша семья',
+      totalRelatives: 'Всего родственников',
+      parents: 'Родители',
+      parentsDesc: '1 поколение вверх',
+      grandparents: 'Бабушки и Дедушки',
+      grandparentsDesc: '2 поколения вверх',
+      children: 'Дети',
+      childrenDesc: '1 поколение вниз',
+      grandchildren: 'Внуки',
+      grandchildrenDesc: '2 поколения вниз',
+      siblings: 'Братья и Сёстры',
+      siblingsDesc: 'Общие родители',
+      spouses: 'Супруги',
+      spousesDesc: 'Браки и партнёрства',
+      noParents: 'Нет родителей в системе',
+      noGrandparents: 'Нет бабушек и дедушек в системе',
+      noChildren: 'Нет детей в системе',
+      noGrandchildren: 'Нет внуков в системе',
+      noSiblings: 'Нет братьев и сестёр в системе',
+      noSpouses: 'Нет супругов в системе',
+      visualizeTree: 'Визуализировать дерево',
+      visualizeDesc: 'Посмотрите на ваше семейное дерево в графическом виде',
+      openTree: 'Открыть семейное дерево',
+      loading: 'Загрузка родственников...',
+      error: 'Ошибка загрузки',
+      tryAgain: 'Попробовать снова',
+      noData: 'Нет данных',
+      addRelatives: 'Добавьте родственников, чтобы построить ваше семейное дерево',
+    },
   };
 
-  /**
-   * getInitials - получение инициалов для аватара
-   */
-  const getInitials = (name: string): string => {
-    const parts = name.split(' ');
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
-
-  /**
-   * PersonCard - карточка человека
-   */
-  const PersonCard = ({ person }: { person: Person }) => (
-    <Link
-      href={`/${locale}/profile/${person.id}`}
-      className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all"
-    >
-      <div className="flex items-center gap-3">
-        {/* Avatar */}
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
-          {person.photo_url ? (
-            <img
-              src={person.photo_url}
-              alt={person.name}
-              className="w-full h-full rounded-full object-cover"
-            />
-          ) : (
-            getInitials(person.name)
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-gray-900 truncate">{person.name}</div>
-          <div className="text-sm text-gray-500">{formatLifespan(person)}</div>
-          {!person.is_alive && (
-            <div className="text-xs text-gray-400 mt-1">✝ Усопший</div>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-
-  /**
-   * SpouseCard - карточка супруга с датами брака
-   */
-  const SpouseCard = ({ spouse }: { spouse: Spouse }) => (
-    <Link
-      href={`/${locale}/profile/${spouse.id}`}
-      className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all"
-    >
-      <div className="flex items-center gap-3">
-        {/* Avatar */}
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-red-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
-          {spouse.photo_url ? (
-            <img
-              src={spouse.photo_url}
-              alt={spouse.name}
-              className="w-full h-full rounded-full object-cover"
-            />
-          ) : (
-            getInitials(spouse.name)
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-gray-900 truncate">{spouse.name}</div>
-          <div className="text-sm text-gray-500">
-            {formatLifespan(spouse)}
-          </div>
-          {spouse.marriage_date && (
-            <div className="text-xs text-gray-400 mt-1">
-              💍 Брак: {new Date(spouse.marriage_date).getFullYear()}
-              {spouse.divorce_date && ` – ${new Date(spouse.divorce_date).getFullYear()}`}
-            </div>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-
-  /**
-   * RelationshipSection - секция для категории родственников
-   */
-  const RelationshipSection = ({
-    title,
-    description,
-    people,
-    icon,
-    emptyMessage,
-  }: {
-    title: string;
-    description: string;
-    people: Person[];
-    icon: string;
-    emptyMessage: string;
-  }) => (
-    <div className="mb-8">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-2xl">{icon}</span>
-        <div>
-          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-          <p className="text-sm text-gray-500">{description}</p>
-        </div>
-        <span className="ml-auto bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-          {people.length}
-        </span>
-      </div>
-
-      {people.length === 0 ? (
-        <div className="bg-gray-50 rounded-lg p-6 text-center text-gray-500 text-sm">
-          {emptyMessage}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {people.map((person) => (
-            <PersonCard key={person.id} person={person} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  const t = labels[locale as keyof typeof labels] || labels.en;
 
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Загрузка родственников...</p>
+          <div className="w-12 h-12 rounded-full border-4 border-violet-500 border-t-transparent animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">{t.loading}</p>
         </div>
       </div>
     );
@@ -248,46 +174,33 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
   // Error state
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-red-500 text-2xl">⚠️</span>
+      <GlassCard glass="tinted" className="border-destructive/20">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white shadow-lg">
+            <AlertCircle className="w-6 h-6" />
+          </div>
           <div>
-            <h3 className="text-lg font-bold text-red-900">Ошибка загрузки</h3>
-            <p className="text-red-700">{error}</p>
+            <h3 className="text-lg font-bold text-foreground">{t.error}</h3>
+            <p className="text-muted-foreground">{error}</p>
           </div>
         </div>
-        <button
-          onClick={fetchRelationships}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-        >
-          Попробовать снова
-        </button>
-      </div>
+        <Button onClick={fetchRelationships} variant="default" leftIcon={<RefreshCw className="w-4 h-4" />}>
+          {t.tryAgain}
+        </Button>
+      </GlassCard>
     );
   }
 
   // Empty state
   if (!data) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-12 text-center">
-        <svg
-          className="mx-auto h-16 w-16 text-gray-400 mb-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-          />
-        </svg>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">Нет данных</h3>
-        <p className="text-gray-600">
-          Добавьте родственников, чтобы построить ваше семейное дерево
-        </p>
-      </div>
+      <GlassCard glass="medium" className="text-center py-12">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-lg mx-auto mb-4">
+          <Users className="w-8 h-8" />
+        </div>
+        <h3 className="text-xl font-bold text-foreground mb-2">{t.noData}</h3>
+        <p className="text-muted-foreground">{t.addRelatives}</p>
+      </GlassCard>
     );
   }
 
@@ -301,125 +214,270 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
 
   // Main content
   return (
-    <div>
-      {/* Summary card */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 mb-8 text-white">
-        <h2 className="text-2xl font-bold mb-2">Ваша семья</h2>
-        <p className="text-blue-100 mb-4">
-          Всего родственников: {totalCount}
+    <div className="space-y-8">
+      {/* Summary Card */}
+      <GlassCard
+        glass="tinted"
+        padding="lg"
+        className="bg-gradient-to-br from-violet-500/90 to-purple-600/90 text-white border-violet-400/30"
+      >
+        <h2 className="text-2xl font-bold mb-2">{t.yourFamily}</h2>
+        <p className="text-white/80 mb-6">
+          {t.totalRelatives}: {totalCount}
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
-          <div>
-            <div className="text-3xl font-bold">{data.parents.length}</div>
-            <div className="text-sm text-blue-100">Родители</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold">{data.grandparents.length}</div>
-            <div className="text-sm text-blue-100">Бабушки/Дедушки</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold">{data.children.length}</div>
-            <div className="text-sm text-blue-100">Дети</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold">{data.grandchildren.length}</div>
-            <div className="text-sm text-blue-100">Внуки</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold">{data.siblings.length}</div>
-            <div className="text-sm text-blue-100">Братья/Сёстры</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold">{data.spouses.length}</div>
-            <div className="text-sm text-blue-100">Супруги</div>
-          </div>
-        </div>
-      </div>
 
-      {/* Sections */}
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <StatItem
+            icon={<Users className="w-5 h-5" />}
+            value={data.parents.length}
+            label={t.parents}
+          />
+          <StatItem
+            icon={<Crown className="w-5 h-5" />}
+            value={data.grandparents.length}
+            label={t.grandparents}
+          />
+          <StatItem
+            icon={<Baby className="w-5 h-5" />}
+            value={data.children.length}
+            label={t.children}
+          />
+          <StatItem
+            icon={<Sparkles className="w-5 h-5" />}
+            value={data.grandchildren.length}
+            label={t.grandchildren}
+          />
+          <StatItem
+            icon={<Users2 className="w-5 h-5" />}
+            value={data.siblings.length}
+            label={t.siblings}
+          />
+          <StatItem
+            icon={<Heart className="w-5 h-5" />}
+            value={data.spouses.length}
+            label={t.spouses}
+          />
+        </div>
+      </GlassCard>
+
+      {/* Relationship Sections */}
       <div className="space-y-8">
         {/* Parents */}
-        <RelationshipSection
-          title="Родители"
-          description="Depth = 1 (один шаг вверх)"
-          people={data.parents}
-          icon="👨‍👩"
-          emptyMessage="Нет родителей в системе"
-        />
+        <CategorySection
+          category="parents"
+          title={t.parents}
+          description={t.parentsDesc}
+          count={data.parents.length}
+          emptyMessage={t.noParents}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.parents.map((person) => (
+              <PersonCard
+                key={person.id}
+                person={{
+                  id: person.id,
+                  name: person.name,
+                  photoUrl: person.photo_url,
+                  birthDate: person.birth_date,
+                  deathDate: person.death_date,
+                  isAlive: person.is_alive,
+                }}
+                relationshipType="parents"
+                locale={locale}
+                href={`/${locale}/profile/${person.id}`}
+              />
+            ))}
+          </div>
+        </CategorySection>
 
         {/* Grandparents */}
-        <RelationshipSection
-          title="Бабушки и Дедушки"
-          description="Depth = 2 (два шага вверх)"
-          people={data.grandparents}
-          icon="👴👵"
-          emptyMessage="Нет бабушек и дедушек в системе"
-        />
+        <CategorySection
+          category="grandparents"
+          title={t.grandparents}
+          description={t.grandparentsDesc}
+          count={data.grandparents.length}
+          emptyMessage={t.noGrandparents}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.grandparents.map((person) => (
+              <PersonCard
+                key={person.id}
+                person={{
+                  id: person.id,
+                  name: person.name,
+                  photoUrl: person.photo_url,
+                  birthDate: person.birth_date,
+                  deathDate: person.death_date,
+                  isAlive: person.is_alive,
+                }}
+                relationshipType="grandparents"
+                locale={locale}
+                href={`/${locale}/profile/${person.id}`}
+              />
+            ))}
+          </div>
+        </CategorySection>
 
         {/* Spouses */}
         {data.spouses.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">💑</span>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Супруги</h2>
-                <p className="text-sm text-gray-500">Браки и партнёрства</p>
-              </div>
-              <span className="ml-auto bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-medium">
-                {data.spouses.length}
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <CategorySection
+            category="spouses"
+            title={t.spouses}
+            description={t.spousesDesc}
+            count={data.spouses.length}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.spouses.map((spouse) => (
-                <SpouseCard key={spouse.id} spouse={spouse} />
+                <SpouseCard
+                  key={spouse.id}
+                  person={{
+                    id: spouse.id,
+                    name: spouse.name,
+                    photoUrl: spouse.photo_url,
+                    birthDate: spouse.birth_date,
+                    deathDate: spouse.death_date,
+                    isAlive: spouse.is_alive,
+                  }}
+                  marriageDate={spouse.marriage_date}
+                  divorceDate={spouse.divorce_date}
+                  locale={locale}
+                  href={`/${locale}/profile/${spouse.id}`}
+                />
               ))}
             </div>
-          </div>
+          </CategorySection>
         )}
 
         {/* Siblings */}
-        <RelationshipSection
-          title="Братья и Сёстры"
-          description="Люди с общими родителями"
-          people={data.siblings}
-          icon="👫"
-          emptyMessage="Нет братьев и сестёр в системе"
-        />
+        <CategorySection
+          category="siblings"
+          title={t.siblings}
+          description={t.siblingsDesc}
+          count={data.siblings.length}
+          emptyMessage={t.noSiblings}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.siblings.map((person) => (
+              <PersonCard
+                key={person.id}
+                person={{
+                  id: person.id,
+                  name: person.name,
+                  photoUrl: person.photo_url,
+                  birthDate: person.birth_date,
+                  deathDate: person.death_date,
+                  isAlive: person.is_alive,
+                }}
+                relationshipType="siblings"
+                locale={locale}
+                href={`/${locale}/profile/${person.id}`}
+              />
+            ))}
+          </div>
+        </CategorySection>
 
         {/* Children */}
-        <RelationshipSection
-          title="Дети"
-          description="Depth = 1 (один шаг вниз)"
-          people={data.children}
-          icon="👶"
-          emptyMessage="Нет детей в системе"
-        />
+        <CategorySection
+          category="children"
+          title={t.children}
+          description={t.childrenDesc}
+          count={data.children.length}
+          emptyMessage={t.noChildren}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.children.map((person) => (
+              <PersonCard
+                key={person.id}
+                person={{
+                  id: person.id,
+                  name: person.name,
+                  photoUrl: person.photo_url,
+                  birthDate: person.birth_date,
+                  deathDate: person.death_date,
+                  isAlive: person.is_alive,
+                }}
+                relationshipType="children"
+                locale={locale}
+                href={`/${locale}/profile/${person.id}`}
+              />
+            ))}
+          </div>
+        </CategorySection>
 
         {/* Grandchildren */}
-        <RelationshipSection
-          title="Внуки"
-          description="Depth = 2 (два шага вниз)"
-          people={data.grandchildren}
-          icon="👦👧"
-          emptyMessage="Нет внуков в системе"
-        />
+        <CategorySection
+          category="grandchildren"
+          title={t.grandchildren}
+          description={t.grandchildrenDesc}
+          count={data.grandchildren.length}
+          emptyMessage={t.noGrandchildren}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.grandchildren.map((person) => (
+              <PersonCard
+                key={person.id}
+                person={{
+                  id: person.id,
+                  name: person.name,
+                  photoUrl: person.photo_url,
+                  birthDate: person.birth_date,
+                  deathDate: person.death_date,
+                  isAlive: person.is_alive,
+                }}
+                relationshipType="grandchildren"
+                locale={locale}
+                href={`/${locale}/profile/${person.id}`}
+              />
+            ))}
+          </div>
+        </CategorySection>
       </div>
 
-      {/* Link to tree visualization */}
-      <div className="mt-12 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-8 text-center border border-purple-200">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          Визуализировать дерево
+      {/* Tree Visualization CTA */}
+      <GlassCard
+        glass="tinted"
+        padding="lg"
+        className="text-center"
+      >
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 mx-auto mb-4">
+          <TreePine className="w-8 h-8" />
+        </div>
+        <h3 className="text-2xl font-bold text-foreground mb-2">
+          {t.visualizeTree}
         </h3>
-        <p className="text-gray-600 mb-6">
-          Посмотрите на ваше семейное дерево в графическом виде
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          {t.visualizeDesc}
         </p>
-        <Link
-          href={`/${locale}/tree/${currentUserId}`}
-          className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
-        >
-          Открыть семейное дерево →
-        </Link>
+        <Button asChild variant="gradient" size="lg">
+          <Link href={`/${locale}/tree/${currentUserId}`}>
+            {t.openTree} →
+          </Link>
+        </Button>
+      </GlassCard>
+    </div>
+  );
+}
+
+/**
+ * StatItem - Small stat display for summary card
+ */
+function StatItem({
+  icon,
+  value,
+  label
+}: {
+  icon: React.ReactNode;
+  value: number;
+  label: string;
+}) {
+  return (
+    <div className="text-center">
+      <div className="flex items-center justify-center gap-2 mb-1">
+        <span className="opacity-80">{icon}</span>
+        <span className="text-2xl font-bold">{value}</span>
       </div>
+      <div className="text-xs text-white/70 truncate">{label}</div>
     </div>
   );
 }

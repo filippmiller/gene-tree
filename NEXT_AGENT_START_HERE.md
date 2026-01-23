@@ -155,6 +155,24 @@ After completing any session:
 - All 5 migrations applied (0031-0035)
 - CI passed, deployed to Railway
 
+### Security Hardening (2026-01-23)
+- **API routes hardened:** Now use SSR clients, validate ownership, deduplicate notifications
+- **RLS helpers added:** `can_view_story()`, `can_view_photo()`, `can_view_story_comment()`
+- **Family circle locked down:** `get_family_circle_profile_ids()` now only returns data for caller's own profile or service_role
+- **Activity events protected:** `record_activity_event()` restricted to service_role only
+- **Session notes:** `docs/sessions/2026-01-23_engagement-security-hardening-and-migration-completion.md`
+
+### Important Context
+- **Supabase DB password changed:** `P6CQoeMfPyrdwQvc`
+- **Docker issues:** If local Supabase fails, push directly to remote with `supabase db push --password <password>`
+
+### Pages Built (2026-01-23)
+- `/[locale]/relationship-finder` - "How Are We Related?" connection finder
+- `/[locale]/elder-questions` - Ask the Elder Q&A interface
+- `/[locale]/tribute/[profileId]` - Memorial tribute pages for deceased members
+- Dashboard now shows real ActivityFeed instead of "Coming Soon"
+- Dashboard has "Explore Your Family" section with links to new features
+
 ### Next Session Priorities
 - Manual testing of engagement features in browser
 - Add E2E tests for critical paths
