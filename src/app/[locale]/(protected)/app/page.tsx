@@ -18,6 +18,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
   if (!session?.user) {
     const { redirect } = await import('next/navigation');
     redirect(`/${resolvedLocale}/sign-in`);
+    return null as never; // TypeScript: redirect throws, this is unreachable
   }
 
   const user = session.user;
