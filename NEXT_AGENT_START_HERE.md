@@ -2,7 +2,7 @@
 
 > **Purpose:** This document orients any agent or developer starting a new session on Gene-Tree.
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-23
 
 ---
 
@@ -141,7 +141,24 @@ After completing any session:
 
 *Update this section with any blockers or important context for the next session.*
 
-- None currently documented
+### Completed 2026-01-23
+- **10 Engagement Features deployed to production** (see `docs/implementation/ENGAGEMENT_FEATURES.md`)
+  - Emotional reactions on stories/photos
+  - Threaded comments with @mentions
+  - Family activity feed
+  - "This Day in Your Family" widget
+  - Weekly digest infrastructure
+  - Photo face tagging
+  - Memorial tribute pages
+  - "Ask the Elder" queue
+  - "How Are We Related" path finder
+- All 5 migrations applied (0031-0035)
+- CI passed, deployed to Railway
+
+### Next Session Priorities
+- Manual testing of engagement features in browser
+- Add E2E tests for critical paths
+- Voice message stories (enhancement to existing media system)
 
 ---
 
