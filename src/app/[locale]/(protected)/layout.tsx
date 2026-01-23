@@ -22,15 +22,12 @@ export default async function ProtectedLayout({
   const { locale } = await params;
   const supabase = await getSupabaseSSR();
 
-  // Use getSession() - reads from cookies directly, no API call
-  const { data: { session } } = await supabase.auth.getSession();
+  // Use getUser() - verifies token with Supabase Auth server (secure)
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!session) {
-    console.log('[PROTECTED-LAYOUT] No session, redirecting to sign-in');
+  if (!user) {
     redirect(`/${locale}/sign-in`);
   }
-
-  console.log('[PROTECTED-LAYOUT] Session valid, user:', session.user.email);
 
   return (
     <>

@@ -1,30 +1,8 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  console.log('[PROFILE-COMPLETE-API] Request received');
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            cookieStore.set(name, value, options);
-          },
-          remove(name: string, options: any) {
-            cookieStore.set(name, '', { ...options, maxAge: 0 });
-          },
-        },
-      }
-    );
-
     const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     
     if (!user) {
@@ -73,27 +51,17 @@ export async function POST(request: NextRequest) {
     if (occupation) profileData.occupation = occupation;
     if (bio) profileData.bio = bio;
 
-    console.log('[PROFILE-COMPLETE] Creating profile:', { 
-      userId: user.id, 
-      email: user.email,
-      fields: Object.keys(profileData)
-    });
-
     // Insert profile
     const { error: insertError } = await getSupabaseAdmin()
       .from('user_profiles')
       .insert(profileData);
 
     if (insertError) {
-      console.error('[PROFILE-COMPLETE] Error:', insertError);
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
-    console.log('[PROFILE-COMPLETE] Profile created successfully');
-
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('[PROFILE-COMPLETE] Unexpected error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

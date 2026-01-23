@@ -1,38 +1,14 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET /api/relationships - Get all relationships for the authenticated user
-export async function GET(request: NextRequest) {
-  console.log('[RELATIONSHIPS-API] GET request received');
+export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            cookieStore.set(name, value, options);
-          },
-          remove(name: string, options: any) {
-            cookieStore.set(name, '', { ...options, maxAge: 0 });
-          },
-        },
-      }
-    );
-
     const { data: { user } } = await getSupabaseAdmin().auth.getUser();
-    
+
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    console.log('[RELATIONSHIPS-API] Fetching pending relatives for user:', user.id);
 
     // Get pending relatives added by this user (these are the "relationships")
     const { data: pendingRelatives, error } = await getSupabaseAdmin()
@@ -41,7 +17,6 @@ export async function GET(request: NextRequest) {
       .eq('invited_by', user.id);
 
     if (error) {
-      console.error('[RELATIONSHIPS-API] Error fetching pending relatives:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
@@ -70,38 +45,15 @@ export async function GET(request: NextRequest) {
       }
     }));
 
-    console.log('[RELATIONSHIPS-API] Found pending relatives as relationships:', relationships?.length || 0);
-
     return NextResponse.json({ relationships: relationships || [] });
   } catch (error: any) {
-    console.error('[RELATIONSHIPS-API] Unexpected error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 // POST /api/relationships - Create a new relationship
 export async function POST(request: NextRequest) {
-  console.log('[RELATIONSHIPS-API] POST request received');
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            cookieStore.set(name, value, options);
-          },
-          remove(name: string, options: any) {
-            cookieStore.set(name, '', { ...options, maxAge: 0 });
-          },
-        },
-      }
-    );
-
     const { data: { user } } = await getSupabaseAdmin().auth.getUser();
     
     if (!user) {
@@ -117,12 +69,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    console.log('[RELATIONSHIPS-API] Creating relationship:', {
-      user1_id: user.id,
-      user2_id,
-      relationship_type
-    });
 
     const relationshipData: any = {
       user1_id: user.id,
@@ -141,15 +87,11 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('[RELATIONSHIPS-API] Error creating relationship:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log('[RELATIONSHIPS-API] Relationship created successfully:', relationship.id);
-
     return NextResponse.json({ relationship }, { status: 201 });
   } catch (error: any) {
-    console.error('[RELATIONSHIPS-API] Unexpected error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

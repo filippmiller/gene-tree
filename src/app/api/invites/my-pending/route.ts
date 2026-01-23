@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const supabase = await getSupabaseSSR();
     const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -32,7 +32,6 @@ export async function GET(request: Request) {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching pending invites:', error);
       return NextResponse.json({ error: 'Failed to fetch invitations' }, { status: 500 });
     }
 
@@ -51,8 +50,7 @@ export async function GET(request: Request) {
     }));
 
     return NextResponse.json(enhancedData);
-  } catch (error) {
-    console.error('Error in GET /api/invites/my-pending:', error);
+  } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

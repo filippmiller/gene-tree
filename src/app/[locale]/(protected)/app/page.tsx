@@ -11,17 +11,15 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
   const t = await getTranslations({ locale: resolvedLocale, namespace: 'dashboard' });
   const supabase = await getSupabaseSSR();
 
-  // Auth is already checked in layout - just get the session
-  const { data: { session } } = await supabase.auth.getSession();
+  // Auth is already checked in layout - just get the user
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // Handle edge case where session might be null despite layout check
-  if (!session?.user) {
+  // Handle edge case where user might be null despite layout check
+  if (!user) {
     const { redirect } = await import('next/navigation');
     redirect(`/${resolvedLocale}/sign-in`);
     return null as never; // TypeScript: redirect throws, this is unreachable
   }
-
-  const user = session.user;
 
   // Load user profile
   const { data: profile } = await supabase

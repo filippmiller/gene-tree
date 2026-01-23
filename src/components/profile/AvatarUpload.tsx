@@ -54,7 +54,6 @@ export default function AvatarUpload({ profileId, userId, currentAvatar }: Props
       }
 
       const data = await response.json();
-      console.log('[CLIENT] Avatar upload success:', data);
       setPreview(data.url + '?t=' + Date.now());
       
       // Reload page to fetch updated profile data from database

@@ -5,8 +5,6 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function createProfile(prevState: {error?: string} | null, formData: FormData): Promise<{error?: string} | null> {
-  console.log('[PROFILE-ACTION] Starting profile creation...');
-  
   try {
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -28,9 +26,8 @@ export async function createProfile(prevState: {error?: string} | null, formData
     );
 
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
-      console.error('[PROFILE-ACTION] No user found');
       return { error: 'Unauthorized' };
     }
 
@@ -40,7 +37,6 @@ export async function createProfile(prevState: {error?: string} | null, formData
     const gender = formData.get('gender') as string;
 
     if (!first_name || !last_name || !gender) {
-      console.error('[PROFILE-ACTION] Missing required fields');
       return { error: 'Missing required fields: first_name, last_name, gender' };
     }
 
@@ -72,26 +68,16 @@ export async function createProfile(prevState: {error?: string} | null, formData
     if (occupation) profileData.occupation = occupation;
     if (bio) profileData.bio = bio;
 
-    console.log('[PROFILE-ACTION] Creating profile:', { 
-      userId: user.id, 
-      email: user.email,
-      fields: Object.keys(profileData)
-    });
-
     // Insert profile
     const { error: insertError } = await supabase
       .from('user_profiles')
       .insert(profileData);
 
     if (insertError) {
-      console.error('[PROFILE-ACTION] Error:', insertError);
       return { error: insertError.message };
     }
 
-    console.log('[PROFILE-ACTION] Profile created successfully');
-
   } catch (error: any) {
-    console.error('[PROFILE-ACTION] Unexpected error:', error);
     return { error: error.message };
   }
 
