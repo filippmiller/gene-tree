@@ -30,7 +30,7 @@ export default function GuestbookEntry({ entry, className = '' }: GuestbookEntry
   };
 
   const authorName = entry.author
-    ? `${entry.author.first_name} ${entry.author.last_name}`
+    ? [entry.author.first_name, entry.author.last_name].filter(Boolean).join(' ') || t('anonymous')
     : t('anonymous');
 
   return (

@@ -119,11 +119,11 @@ export default function QuestionList({
                 )}
                 <div>
                   <span className="font-medium text-sm">
-                    {isAsker ? t('you') : `${question.asker?.first_name} ${question.asker?.last_name}`}
+                    {isAsker ? t('you') : [question.asker?.first_name, question.asker?.last_name].filter(Boolean).join(' ') || '?'}
                   </span>
                   <span className="text-gray-400 mx-1">{t('askedTo')}</span>
                   <span className="font-medium text-sm">
-                    {isElder ? t('you') : `${question.elder?.first_name} ${question.elder?.last_name}`}
+                    {isElder ? t('you') : [question.elder?.first_name, question.elder?.last_name].filter(Boolean).join(' ') || '?'}
                   </span>
                 </div>
               </div>

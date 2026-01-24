@@ -37,7 +37,14 @@
     "viewFamilyTree": "View Family Tree",
     "viewFamilyTreeDescription": "Explore your family connections",
     "recentActivity": "Recent Activity",
-    "recentActivityEmpty": "No activity yet. Start by adding family members!"
+    "recentActivityEmpty": "No activity yet. Start by adding family members!",
+    "exploreFamily": "Explore Your Family",
+    "howAreWeRelated": "How Are We Related?",
+    "howAreWeRelatedDescription": "Find connections between family members",
+    "askTheElder": "Ask the Elder",
+    "askTheElderDescription": "Preserve family wisdom and stories",
+    "emailPreferences": "Email Preferences",
+    "emailPreferencesDescription": "Configure weekly digest & reminders"
   },
   "people": {
     "title": "People",
@@ -215,8 +222,8 @@
     "questionPlaceholder": "What would you like to ask? (e.g., 'What was life like when you were young?')",
     "questionRequired": "Please write your question",
     "visibility": "Who can see the answer?",
-    "visibility.family": "Family",
-    "visibility.private": "Just Us",
+    "visibilityFamily": "Family",
+    "visibilityPrivate": "Just Us",
     "visibilityFamilyHint": "The answer will be visible to all family members",
     "visibilityPrivateHint": "Only you and the elder can see this exchange",
     "cancel": "Cancel",

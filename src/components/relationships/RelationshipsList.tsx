@@ -94,10 +94,8 @@ export default function RelationshipsList({ currentUserId }: { currentUserId: st
 
   const getDisplayName = (user: User | null): string => {
     if (!user) return 'Unknown';
-    if (user.first_name && user.last_name) {
-      return `${user.first_name} ${user.last_name}`;
-    }
-    return user.email;
+    const name = [user.first_name, user.last_name].filter(Boolean).join(' ');
+    return name || user.email;
   };
 
   const getRelationshipDirection = (rel: Relationship): { person: User | null; type: string; isReverse: boolean } => {

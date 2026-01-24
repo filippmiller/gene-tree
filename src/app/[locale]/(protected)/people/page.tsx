@@ -22,6 +22,59 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
 
   if (!user) redirect(`/${locale}/sign-in`);
 
+  // Translations
+  const t = locale === 'ru' ? {
+    title: 'Члены семьи',
+    subtitle: 'Управляйте семейным деревом и приглашайте родственников',
+    addRelative: 'Добавить родственника',
+    pendingInvitations: 'Ожидающие приглашения',
+    familyMembersWaiting: 'родственников ожидают',
+    addRelatives: 'Добавить родственников',
+    pending: 'Ожидает',
+    inMemory: 'В память',
+    noPendingInvitations: 'Ожидающих приглашений пока нет',
+    addFirstRelative: 'Добавьте первого родственника',
+    confirmedRelatives: 'Подтверждённые родственники',
+    confirmedSubtitle: 'Родственники, которые приняли ваше приглашение',
+    noConfirmedRelatives: 'Подтверждённых родственников пока нет. Пригласите кого-нибудь!',
+    relationshipTypes: {
+      parent: 'родитель',
+      grandparent: 'бабушка/дедушка',
+      child: 'ребёнок',
+      grandchild: 'внук/внучка',
+      sibling: 'брат/сестра',
+      spouse: 'супруг(а)',
+      'aunt-uncle': 'дядя/тётя',
+      'niece-nephew': 'племянник/племянница',
+      cousin: 'двоюродный(ая)',
+    } as Record<string, string>,
+  } : {
+    title: 'Family Members',
+    subtitle: 'Manage your family tree and invite relatives',
+    addRelative: 'Add Relative',
+    pendingInvitations: 'Pending Invitations',
+    familyMembersWaiting: 'family members waiting',
+    addRelatives: 'Add relatives',
+    pending: 'Pending',
+    inMemory: 'In Memory',
+    noPendingInvitations: 'No pending invitations yet',
+    addFirstRelative: 'Add your first relative',
+    confirmedRelatives: 'Confirmed Relatives',
+    confirmedSubtitle: 'Family members who accepted your invitation',
+    noConfirmedRelatives: 'No confirmed relatives yet. Invite someone and ask them to accept!',
+    relationshipTypes: {
+      parent: 'parent',
+      grandparent: 'grandparent',
+      child: 'child',
+      grandchild: 'grandchild',
+      sibling: 'sibling',
+      spouse: 'spouse',
+      'aunt-uncle': 'aunt/uncle',
+      'niece-nephew': 'niece/nephew',
+      cousin: 'cousin',
+    } as Record<string, string>,
+  };
+
   // Fetch pending relatives
   const { data: pendingRelatives } = await supabase
     .from('pending_relatives')
@@ -45,6 +98,10 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
     return colors[type] || 'from-violet-500 to-purple-600';
   };
 
+  const getRelationshipLabel = (type: string) => {
+    return t.relationshipTypes[type] || type;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <div className="container mx-auto px-4 py-8">
@@ -52,17 +109,17 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Family Members
+              {t.title}
             </h1>
             <p className="text-muted-foreground">
-              Manage your family tree and invite relatives
+              {t.subtitle}
             </p>
           </div>
 
           <Button asChild variant="gradient" size="lg" className="shadow-lg shadow-violet-500/25">
             <Link href={`/${locale}/people/new`}>
               <UserPlus className="w-5 h-5 mr-2" />
-              Add Relative
+              {t.addRelative}
             </Link>
           </Button>
         </div>
@@ -75,9 +132,9 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-foreground">Pending Invitations</h2>
+                <h2 className="text-xl font-bold text-foreground">{t.pendingInvitations}</h2>
                 <p className="text-sm text-muted-foreground">
-                  {pendingRelatives?.length || 0} family members waiting
+                  {pendingRelatives?.length || 0} {t.familyMembersWaiting}
                 </p>
               </div>
             </div>
@@ -106,11 +163,11 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                           </span>
                           {rel.is_deceased && (
                             <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full">
-                              In Memory
+                              {t.inMemory}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground capitalize">{rel.relationship_type}</p>
+                        <p className="text-sm text-muted-foreground capitalize">{getRelationshipLabel(rel.relationship_type)}</p>
                         <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                           {rel.email && (
                             <span className="flex items-center gap-1">
@@ -131,14 +188,13 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/${locale}/people/new?relatedTo=${rel.id}`}
-                          onClick={(e) => e.stopPropagation()}
                           className="hidden sm:flex items-center gap-1 px-3 py-1.5 text-sm bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors"
                         >
                           <UserPlus className="w-3.5 h-3.5" />
-                          Add relatives
+                          {t.addRelatives}
                         </Link>
                         <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full">
-                          Pending
+                          {t.pending}
                         </span>
                         <ChevronRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
@@ -152,12 +208,12 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                   <Users className="w-8 h-8" />
                 </div>
                 <p className="text-muted-foreground mb-4">
-                  No pending invitations yet
+                  {t.noPendingInvitations}
                 </p>
                 <Button asChild variant="outline">
                   <Link href={`/${locale}/people/new`}>
                     <UserPlus className="w-4 h-4 mr-2" />
-                    Add your first relative
+                    {t.addFirstRelative}
                   </Link>
                 </Button>
               </div>
@@ -171,9 +227,9 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                 <CheckCircle className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-foreground">Confirmed Relatives</h2>
+                <h2 className="text-xl font-bold text-foreground">{t.confirmedRelatives}</h2>
                 <p className="text-sm text-muted-foreground">
-                  Family members who accepted your invitation
+                  {t.confirmedSubtitle}
                 </p>
               </div>
             </div>
@@ -183,7 +239,7 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                 <CheckCircle className="w-8 h-8" />
               </div>
               <p className="text-muted-foreground">
-                No confirmed relatives yet. Invite someone and ask them to accept!
+                {t.noConfirmedRelatives}
               </p>
             </div>
           </GlassCard>

@@ -24,7 +24,7 @@ export default function TagMarker({
   const [showTooltip, setShowTooltip] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
-  const fullName = `${tag.tagged_profile.first_name} ${tag.tagged_profile.last_name}`.trim();
+  const fullName = [tag.tagged_profile.first_name, tag.tagged_profile.last_name].filter(Boolean).join(' ') || '?';
 
   const handleConfirm = async (confirmed: boolean) => {
     if (confirming) return;

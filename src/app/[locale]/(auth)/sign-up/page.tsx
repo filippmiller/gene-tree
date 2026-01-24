@@ -11,6 +11,57 @@ import { Progress } from '@/components/ui/progress';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
+const translations = {
+  en: {
+    createAccount: 'Create Account',
+    description: 'Start building your family tree today',
+    nameLabel: 'Name (optional)',
+    emailLabel: 'Email Address',
+    passwordLabel: 'Password',
+    confirmPasswordLabel: 'Confirm Password',
+    showPasswords: 'Show passwords',
+    hidePasswords: 'Hide passwords',
+    creating: 'Creating account...',
+    create: 'Create Account',
+    alreadyHaveAccount: 'Already have an account?',
+    signIn: 'Sign in',
+    passwordsDoNotMatch: 'Passwords do not match',
+    passwordsMatch: 'Passwords match',
+    passwordTooShort: 'Password must be at least 6 characters long',
+    accountCreated: 'Account created! Please check your email to confirm your account.',
+    createFailed: 'Failed to create account',
+    passwordStrength: 'Password strength',
+    weak: 'Weak',
+    fair: 'Fair',
+    good: 'Good',
+    strong: 'Strong',
+  },
+  ru: {
+    createAccount: 'Создать аккаунт',
+    description: 'Начните строить своё семейное древо сегодня',
+    nameLabel: 'Имя (необязательно)',
+    emailLabel: 'Email',
+    passwordLabel: 'Пароль',
+    confirmPasswordLabel: 'Подтвердите пароль',
+    showPasswords: 'Показать пароли',
+    hidePasswords: 'Скрыть пароли',
+    creating: 'Создание аккаунта...',
+    create: 'Создать аккаунт',
+    alreadyHaveAccount: 'Уже есть аккаунт?',
+    signIn: 'Войти',
+    passwordsDoNotMatch: 'Пароли не совпадают',
+    passwordsMatch: 'Пароли совпадают',
+    passwordTooShort: 'Пароль должен быть не менее 6 символов',
+    accountCreated: 'Аккаунт создан! Проверьте почту для подтверждения.',
+    createFailed: 'Не удалось создать аккаунт',
+    passwordStrength: 'Надёжность пароля',
+    weak: 'Слабый',
+    fair: 'Средний',
+    good: 'Хороший',
+    strong: 'Надёжный',
+  },
+};
+
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -21,6 +72,7 @@ export default function SignUpPage() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const { locale } = useParams<{ locale: string }>();
+  const t = translations[locale as keyof typeof translations] || translations.en;
 
   // Password strength calculator
   const getPasswordStrength = (pwd: string): { score: number; label: string; color: string } => {
@@ -32,10 +84,10 @@ export default function SignUpPage() {
     if (/[0-9]/.test(pwd)) score += 15;
     if (/[^A-Za-z0-9]/.test(pwd)) score += 10;
 
-    if (score < 30) return { score, label: 'Weak', color: 'error' };
-    if (score < 60) return { score, label: 'Fair', color: 'warning' };
-    if (score < 80) return { score, label: 'Good', color: 'default' };
-    return { score, label: 'Strong', color: 'success' };
+    if (score < 30) return { score, label: t.weak, color: 'error' };
+    if (score < 60) return { score, label: t.fair, color: 'warning' };
+    if (score < 80) return { score, label: t.good, color: 'default' };
+    return { score, label: t.strong, color: 'success' };
   };
 
   const passwordStrength = getPasswordStrength(password);
@@ -46,23 +98,23 @@ export default function SignUpPage() {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t.passwordsDoNotMatch);
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError(t.passwordTooShort);
       setLoading(false);
       return;
     }
 
     try {
       await signUp(email, password, name || undefined);
-      setSuccess('Account created! Please check your email to confirm your account.');
+      setSuccess(t.accountCreated);
       setError('');
     } catch (err: any) {
-      setError(err.message || 'Failed to create account');
+      setError(err.message || t.createFailed);
       setSuccess('');
     } finally {
       setLoading(false);
@@ -70,11 +122,12 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Top actions */}
@@ -83,10 +136,10 @@ export default function SignUpPage() {
         <LanguageSwitcher />
       </div>
 
-      <Card className="relative w-full max-w-md shadow-elevation-5 border-0 animate-fade-in-up" elevation="floating">
+      <Card className="relative w-full max-w-md shadow-xl border border-white/50 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 animate-fade-in-up" elevation="floating">
         <CardHeader className="space-y-1 text-center pb-2">
           {/* Logo */}
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 shadow-lg">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-lg shadow-violet-500/25">
             <svg
               className="h-7 w-7 text-white"
               fill="none"
@@ -101,9 +154,9 @@ export default function SignUpPage() {
               />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent dark:from-violet-400 dark:to-purple-400">{t.createAccount}</CardTitle>
           <CardDescription className="text-base">
-            Start building your family tree today
+            {t.description}
           </CardDescription>
         </CardHeader>
 
@@ -111,7 +164,7 @@ export default function SignUpPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <FloatingInput
               id="name"
-              label="Name (optional)"
+              label={t.nameLabel}
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -121,7 +174,7 @@ export default function SignUpPage() {
 
             <FloatingInput
               id="email"
-              label="Email Address"
+              label={t.emailLabel}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -133,7 +186,7 @@ export default function SignUpPage() {
             <div className="space-y-3">
               <FloatingInput
                 id="password"
-                label="Password"
+                label={t.passwordLabel}
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -151,7 +204,7 @@ export default function SignUpPage() {
                     size="sm"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Password strength:{' '}
+                    {t.passwordStrength}:{' '}
                     <span className={`font-medium ${
                       passwordStrength.color === 'error' ? 'text-destructive' :
                       passwordStrength.color === 'warning' ? 'text-amber-600' :
@@ -167,15 +220,15 @@ export default function SignUpPage() {
 
             <FloatingInput
               id="confirmPassword"
-              label="Confirm Password"
+              label={t.confirmPasswordLabel}
               type={showPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               disabled={loading}
               autoComplete="new-password"
-              error={confirmPassword && password !== confirmPassword ? 'Passwords do not match' : undefined}
-              success={confirmPassword && password === confirmPassword && confirmPassword.length >= 6 ? 'Passwords match' : undefined}
+              error={confirmPassword && password !== confirmPassword ? t.passwordsDoNotMatch : undefined}
+              success={confirmPassword && password === confirmPassword && confirmPassword.length >= 6 ? t.passwordsMatch : undefined}
             />
 
             <div className="flex justify-end">
@@ -184,7 +237,7 @@ export default function SignUpPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showPassword ? 'Hide passwords' : 'Show passwords'}
+                {showPassword ? t.hidePasswords : t.showPasswords}
               </button>
             </div>
 
@@ -207,16 +260,16 @@ export default function SignUpPage() {
               loading={loading}
               disabled={success !== ''}
             >
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading ? t.creating : t.create}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              {t.alreadyHaveAccount}{' '}
               <a
                 href={`/${locale}/sign-in`}
                 className="text-primary hover:underline font-medium"
               >
-                Sign in
+                {t.signIn}
               </a>
             </div>
           </form>

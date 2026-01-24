@@ -106,7 +106,7 @@ export default function ElderQuestionsClient({
           <CardContent className="p-6">
             <AskElderForm
               elderId={selectedElder.id}
-              elderName={`${selectedElder.first_name} ${selectedElder.last_name}`}
+              elderName={[selectedElder.first_name, selectedElder.last_name].filter(Boolean).join(' ') || '?'}
               onSuccess={handleAskSuccess}
               onCancel={() => {
                 setShowForm(false);

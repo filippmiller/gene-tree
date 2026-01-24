@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { Flame } from 'lucide-react';
 import type { ThisDayEvent } from '@/types/this-day';
 import { formatYearsAgo, EVENT_TYPE_CONFIG } from '@/types/this-day';
 import GreetingButton from './GreetingButton';
@@ -16,10 +17,12 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
   const yearsDisplay = formatYearsAgo(event.years_ago, event.event_type);
 
   const profileUrl = `/profile/${event.profile_id}`;
-  const fullName = `${event.profile_first_name} ${event.profile_last_name}`.trim();
+  const fullName = [event.profile_first_name, event.profile_last_name]
+    .filter(Boolean)
+    .join(' ') || '?';
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+    <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/30 rounded-xl border border-white/50 dark:border-white/5 hover:bg-white/80 dark:hover:bg-gray-800/50 hover:shadow-md transition-all duration-200 group">
       {/* Avatar */}
       <Link href={profileUrl} className="flex-shrink-0">
         {event.profile_avatar_url ? (
@@ -28,10 +31,10 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
             alt={fullName}
             width={48}
             height={48}
-            className="w-12 h-12 rounded-full object-cover"
+            className="w-12 h-12 rounded-xl object-cover ring-2 ring-white dark:ring-gray-700 shadow-md group-hover:scale-105 transition-transform duration-200"
           />
         ) : (
-          <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-lg font-medium">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-lg font-semibold shadow-md ring-2 ring-white dark:ring-gray-700 group-hover:scale-105 transition-transform duration-200">
             {event.profile_first_name?.[0] || '?'}
           </div>
         )}
@@ -39,15 +42,15 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <Link href={profileUrl} className="hover:underline">
-          <p className="font-medium text-gray-900 truncate">
+        <Link href={profileUrl} className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
+          <p className="font-semibold text-foreground truncate">
             {fullName}
           </p>
         </Link>
-        <p className="text-sm text-gray-500 truncate">
+        <p className="text-sm text-muted-foreground truncate">
           {event.display_title}
           {yearsDisplay && (
-            <span className="ml-2 text-gray-400">
+            <span className="ml-2 text-muted-foreground/60">
               ({yearsDisplay})
             </span>
           )}
@@ -66,9 +69,12 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
 
       {/* Memorial icon for commemorations */}
       {event.event_type === 'death_commemoration' && (
-        <span className="text-2xl" title="In loving memory">
-          🕯️
-        </span>
+        <div
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/25"
+          title="In loving memory"
+        >
+          <Flame className="w-5 h-5 text-white" />
+        </div>
       )}
     </div>
   );

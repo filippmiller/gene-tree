@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Bell, Loader2, CheckCheck, Inbox } from 'lucide-react';
+import { Bell, Loader2, CheckCheck, Inbox, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/ui/glass-card';
 import NotificationItem, {
   type NotificationRow,
 } from '@/components/notifications/NotificationItem';
@@ -125,19 +126,21 @@ export default function NotificationsPanel() {
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-100 dark:border-gray-800 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-        <div className="flex items-center gap-2">
+    <GlassCard glass="medium" padding="none" className="overflow-hidden">
+      {/* Header with gradient accent */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/50 dark:border-white/10 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
+        <div className="flex items-center gap-2.5">
           <div className="relative">
-            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+              <Bell className="w-4 h-4 text-white" />
+            </div>
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
+              <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-rose-500 rounded-full ring-2 ring-white dark:ring-gray-900 animate-pulse">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
           </div>
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-sm font-semibold text-foreground">
             {t.title}
           </h2>
         </div>
@@ -148,7 +151,7 @@ export default function NotificationsPanel() {
             size="sm"
             onClick={markAllAsRead}
             disabled={markingAll}
-            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="text-xs text-muted-foreground hover:text-violet-600 dark:hover:text-violet-400"
           >
             {markingAll ? (
               <Loader2 className="w-3 h-3 animate-spin mr-1" />
@@ -163,41 +166,39 @@ export default function NotificationsPanel() {
       {/* Content */}
       <div className="max-h-[400px] overflow-y-auto">
         {loading ? (
-          <div className="flex items-center justify-center py-8 text-sm text-gray-500 dark:text-gray-400">
-            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+            <Loader2 className="w-5 h-5 animate-spin mr-2 text-violet-500" />
             {t.loading}
           </div>
         ) : error ? (
           <div className="p-4">
-            <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-950/30 rounded-lg text-sm text-red-600 dark:text-red-400">
+            <div className="flex items-center justify-between p-3 bg-rose-50 dark:bg-rose-950/30 rounded-xl text-sm text-rose-600 dark:text-rose-400 border border-rose-200/50 dark:border-rose-500/20">
               <span>{error}</span>
               <button
                 onClick={() => {
                   setError(null);
                   load();
                 }}
-                className="ml-2 text-red-400 hover:text-red-600 dark:hover:text-red-300"
+                className="ml-2 p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
+                <RefreshCw className="w-4 h-4" />
               </button>
             </div>
           </div>
         ) : data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
-              <Inbox className="w-6 h-6 text-gray-400" />
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-4">
+              <Inbox className="w-7 h-7 text-violet-500" />
             </div>
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            <p className="text-sm font-medium text-foreground mb-1">
               {t.empty}
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[200px]">
+            <p className="text-xs text-muted-foreground max-w-[220px]">
               {t.emptyHint}
             </p>
           </div>
         ) : (
-          <ul className="divide-y divide-gray-50 dark:divide-gray-800/50">
+          <ul className="divide-y divide-border/50">
             {data.slice(0, 8).map((row) => (
               <NotificationItem
                 key={row.notification_id}
@@ -212,12 +213,12 @@ export default function NotificationsPanel() {
 
       {/* Footer - View All link */}
       {data.length > 0 && (
-        <div className="px-4 py-2 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30">
-          <button className="w-full text-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium py-1 transition-colors">
+        <div className="px-4 py-2.5 border-t border-white/50 dark:border-white/10 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
+          <button className="w-full text-center text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-semibold py-1 transition-colors">
             {t.viewAll}
           </button>
         </div>
       )}
-    </section>
+    </GlassCard>
   );
 }

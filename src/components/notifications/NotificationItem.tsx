@@ -67,22 +67,22 @@ function TypeIcon({ eventType }: { eventType: string }) {
 }
 
 /**
- * Get the icon background color based on event type
+ * Get the icon gradient and shadow based on event type
  */
-function getIconBgColor(eventType: string): string {
+function getIconStyles(eventType: string): { gradient: string; shadow: string } {
   switch (eventType) {
     case 'relative_added':
-      return 'bg-blue-500';
+      return { gradient: 'bg-gradient-to-br from-violet-500 to-purple-600', shadow: 'shadow-violet-500/25' };
     case 'media_added':
-      return 'bg-purple-500';
+      return { gradient: 'bg-gradient-to-br from-sky-500 to-blue-600', shadow: 'shadow-sky-500/25' };
     case 'STORY_SUBMITTED':
-      return 'bg-amber-500';
+      return { gradient: 'bg-gradient-to-br from-amber-500 to-orange-600', shadow: 'shadow-amber-500/25' };
     case 'STORY_APPROVED':
-      return 'bg-emerald-500';
+      return { gradient: 'bg-gradient-to-br from-emerald-500 to-green-600', shadow: 'shadow-emerald-500/25' };
     case 'STORY_REJECTED':
-      return 'bg-red-500';
+      return { gradient: 'bg-gradient-to-br from-rose-500 to-pink-600', shadow: 'shadow-rose-500/25' };
     default:
-      return 'bg-gray-500';
+      return { gradient: 'bg-gradient-to-br from-gray-500 to-gray-600', shadow: 'shadow-gray-500/25' };
   }
 }
 
@@ -210,16 +210,18 @@ export default function NotificationItem({
   const message = formatMessage(notification, translations);
   const timeAgo = formatRelativeTime(created_at, locale);
 
+  const iconStyles = getIconStyles(event_type);
+
   return (
     <li
       onClick={handleClick}
       className={cn(
-        'flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200',
-        'hover:bg-gray-50 dark:hover:bg-gray-800/50',
+        'flex items-start gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200',
+        'hover:bg-white/80 dark:hover:bg-gray-800/50 hover:shadow-sm',
         'group',
         is_read
-          ? 'bg-white dark:bg-gray-900'
-          : 'bg-blue-50/70 dark:bg-blue-950/30'
+          ? 'bg-white/30 dark:bg-gray-900/30'
+          : 'bg-violet-50/70 dark:bg-violet-950/20'
       )}
       role="button"
       tabIndex={0}
@@ -233,20 +235,20 @@ export default function NotificationItem({
       {/* Unread indicator */}
       <div className="flex-shrink-0 w-2 pt-3">
         {!is_read && (
-          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
         )}
       </div>
 
       {/* Avatar with type icon overlay */}
       <div className="relative flex-shrink-0">
-        <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-gray-800 shadow-sm">
+        <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-gray-700 shadow-md">
           {payload?.actor_photo_url ? (
             <AvatarImage
               src={payload.actor_photo_url}
               alt={`${payload.first_name || ''} ${payload.last_name || ''}`}
             />
           ) : null}
-          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-600 dark:text-gray-300 text-sm font-medium">
+          <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white text-sm font-medium">
             {getInitials(payload)}
           </AvatarFallback>
         </Avatar>
@@ -254,9 +256,10 @@ export default function NotificationItem({
         {/* Type icon overlay */}
         <div
           className={cn(
-            'absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center',
-            'ring-2 ring-white dark:ring-gray-800',
-            getIconBgColor(event_type)
+            'absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-md flex items-center justify-center',
+            'ring-2 ring-white dark:ring-gray-800 shadow-md',
+            iconStyles.gradient,
+            iconStyles.shadow
           )}
         >
           <TypeIcon eventType={event_type} />
@@ -269,13 +272,13 @@ export default function NotificationItem({
           className={cn(
             'text-sm leading-snug',
             is_read
-              ? 'text-gray-600 dark:text-gray-400'
-              : 'text-gray-900 dark:text-gray-100 font-medium'
+              ? 'text-muted-foreground'
+              : 'text-foreground font-medium'
           )}
         >
           {message}
         </p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+        <p className="text-[11px] text-muted-foreground/70 mt-1">
           {timeAgo}
         </p>
       </div>
@@ -283,7 +286,7 @@ export default function NotificationItem({
       {/* Hover arrow indicator */}
       <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2">
         <svg
-          className="w-4 h-4 text-gray-400"
+          className="w-4 h-4 text-muted-foreground group-hover:text-violet-500 transition-colors"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

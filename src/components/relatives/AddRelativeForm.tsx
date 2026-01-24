@@ -84,7 +84,9 @@ export default function AddRelativeForm() {
 
   // Get prefilled relative name for UI
   const prefilledRelative = existingRelatives.find(r => r.id === relatedToParam);
-  const prefilledName = prefilledRelative ? `${prefilledRelative.first_name} ${prefilledRelative.last_name}` : '';
+  const prefilledName = prefilledRelative
+    ? [prefilledRelative.first_name, prefilledRelative.last_name].filter(Boolean).join(' ')
+    : '';
 
   const validateForm = () => {
     // Email validation

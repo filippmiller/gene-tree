@@ -60,7 +60,7 @@ export default function TributePageLayout({ profileId, className = '' }: Tribute
   }
 
   const { profile, guestbook_count, recent_tributes } = data;
-  const fullName = `${profile.first_name} ${profile.last_name}`;
+  const fullName = [profile.first_name, profile.last_name].filter(Boolean).join(' ') || '?';
   const lifespan = formatLifespan(profile.birth_date, profile.death_date);
   const age = profile.birth_date
     ? calculateAge(profile.birth_date, profile.death_date)

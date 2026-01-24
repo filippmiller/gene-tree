@@ -13,6 +13,43 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
+const translations = {
+  en: {
+    welcomeBack: 'Welcome Back',
+    signInDescription: 'Sign in to your family tree account',
+    emailLabel: 'Email Address',
+    passwordLabel: 'Password',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
+    signIn: 'Sign In',
+    signingIn: 'Signing in...',
+    forgotPassword: 'Forgot password?',
+    noAccount: "Don't have an account?",
+    signUp: 'Sign up',
+    enterEmailFirst: 'Please enter your email first',
+    resetEmailSent: 'Password reset email sent! Check your inbox.',
+    resetEmailFailed: 'Failed to send reset email',
+    signInFailed: 'Failed to sign in',
+  },
+  ru: {
+    welcomeBack: 'С возвращением',
+    signInDescription: 'Войдите в свой аккаунт семейного древа',
+    emailLabel: 'Email',
+    passwordLabel: 'Пароль',
+    showPassword: 'Показать пароль',
+    hidePassword: 'Скрыть пароль',
+    signIn: 'Войти',
+    signingIn: 'Вход...',
+    forgotPassword: 'Забыли пароль?',
+    noAccount: 'Нет аккаунта?',
+    signUp: 'Регистрация',
+    enterEmailFirst: 'Сначала введите email',
+    resetEmailSent: 'Ссылка для сброса пароля отправлена! Проверьте почту.',
+    resetEmailFailed: 'Не удалось отправить письмо для сброса',
+    signInFailed: 'Не удалось войти',
+  },
+};
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +58,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
+  const t = translations[locale as keyof typeof translations] || translations.en;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,17 +95,18 @@ export default function SignIn() {
       router.push(`/${locale}/app`);
       router.refresh();
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+      setError(err.message || t.signInFailed);
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Top actions */}
@@ -76,10 +115,10 @@ export default function SignIn() {
         <LanguageSwitcher />
       </div>
 
-      <Card className="relative w-full max-w-md shadow-elevation-5 border-0 animate-fade-in-up" elevation="floating">
+      <Card className="relative w-full max-w-md shadow-xl border border-white/50 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 animate-fade-in-up" elevation="floating">
         <CardHeader className="space-y-1 text-center pb-2">
           {/* Logo */}
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-lg shadow-violet-500/25">
             <svg
               className="h-7 w-7 text-white"
               fill="none"
@@ -94,9 +133,9 @@ export default function SignIn() {
               />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent dark:from-violet-400 dark:to-purple-400">{t.welcomeBack}</CardTitle>
           <CardDescription className="text-base">
-            Sign in to your family tree account
+            {t.signInDescription}
           </CardDescription>
         </CardHeader>
 
@@ -104,7 +143,7 @@ export default function SignIn() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <FloatingInput
               id="email"
-              label="Email Address"
+              label={t.emailLabel}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -116,7 +155,7 @@ export default function SignIn() {
             <div className="space-y-2">
               <FloatingInput
                 id="password"
-                label="Password"
+                label={t.passwordLabel}
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -130,7 +169,7 @@ export default function SignIn() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showPassword ? 'Hide password' : 'Show password'}
+                  {showPassword ? t.hidePassword : t.showPassword}
                 </button>
               </div>
             </div>
@@ -147,7 +186,7 @@ export default function SignIn() {
               className="w-full h-12 text-base"
               loading={loading}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t.signingIn : t.signIn}
             </Button>
 
             <div className="space-y-3 text-center text-sm">
@@ -155,30 +194,30 @@ export default function SignIn() {
                 type="button"
                 onClick={async () => {
                   if (!email) {
-                    setError('Please enter your email first');
+                    setError(t.enterEmailFirst);
                     return;
                   }
                   try {
                     await resetPassword(email);
                     setError('');
-                    alert('Password reset email sent! Check your inbox.');
+                    alert(t.resetEmailSent);
                   } catch (e: any) {
-                    setError(e.message || 'Failed to send reset email');
+                    setError(e.message || t.resetEmailFailed);
                   }
                 }}
                 className="text-primary hover:underline transition-colors"
                 disabled={loading}
               >
-                Forgot password?
+                {t.forgotPassword}
               </button>
 
               <div className="text-muted-foreground">
-                Don't have an account?{' '}
+                {t.noAccount}{' '}
                 <a
                   href={`/${locale}/sign-up`}
                   className="text-primary hover:underline font-medium"
                 >
-                  Sign up
+                  {t.signUp}
                 </a>
               </div>
             </div>

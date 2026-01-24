@@ -37,7 +37,14 @@
     "viewFamilyTree": "Посмотреть семейное дерево",
     "viewFamilyTreeDescription": "Исследуйте связи внутри вашей семьи",
     "recentActivity": "Недавняя активность",
-    "recentActivityEmpty": "Пока активности нет. Начните с добавления членов семьи!"
+    "recentActivityEmpty": "Пока активности нет. Начните с добавления членов семьи!",
+    "exploreFamily": "Исследуйте свою семью",
+    "howAreWeRelated": "Как мы связаны?",
+    "howAreWeRelatedDescription": "Найдите связи между членами семьи",
+    "askTheElder": "Спросить старшего",
+    "askTheElderDescription": "Сохраните мудрость и истории семьи",
+    "emailPreferences": "Настройки email",
+    "emailPreferencesDescription": "Настройте еженедельный дайджест и напоминания"
   },
   "people": {
     "title": "Люди",
@@ -215,8 +222,8 @@
     "questionPlaceholder": "Что бы вы хотели спросить? (например, 'Какой была жизнь в вашей молодости?')",
     "questionRequired": "Пожалуйста, напишите вопрос",
     "visibility": "Кто увидит ответ?",
-    "visibility.family": "Семья",
-    "visibility.private": "Только мы",
+    "visibilityFamily": "Семья",
+    "visibilityPrivate": "Только мы",
     "visibilityFamilyHint": "Ответ будет виден всем членам семьи",
     "visibilityPrivateHint": "Только вы и отвечающий увидите эту переписку",
     "cancel": "Отмена",

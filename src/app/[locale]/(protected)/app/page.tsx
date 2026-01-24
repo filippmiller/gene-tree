@@ -189,15 +189,15 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
 
         {/* Engagement Features */}
         <GlassCard glass="medium" padding="lg">
-          <h2 className="text-xl font-bold text-foreground mb-6">Explore Your Family</h2>
+          <h2 className="text-xl font-bold text-foreground mb-6">{t('exploreFamily')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <FeatureCard
               href={`/${resolvedLocale}/relationship-finder`}
               icon={<Link2 className="w-6 h-6" />}
               iconBg="bg-gradient-to-br from-emerald-500 to-green-600"
               iconShadow="shadow-emerald-500/25"
-              title="How Are We Related?"
-              description="Find connections between family members"
+              title={t('howAreWeRelated')}
+              description={t('howAreWeRelatedDescription')}
             />
 
             <FeatureCard
@@ -205,8 +205,8 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
               icon={<ScrollText className="w-6 h-6" />}
               iconBg="bg-gradient-to-br from-amber-500 to-orange-600"
               iconShadow="shadow-amber-500/25"
-              title="Ask the Elder"
-              description="Preserve family wisdom and stories"
+              title={t('askTheElder')}
+              description={t('askTheElderDescription')}
             />
 
             <FeatureCard
@@ -214,8 +214,8 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
               icon={<Settings className="w-6 h-6" />}
               iconBg="bg-gradient-to-br from-slate-500 to-gray-600"
               iconShadow="shadow-slate-500/25"
-              title="Email Preferences"
-              description="Configure weekly digest & reminders"
+              title={t('emailPreferences')}
+              description={t('emailPreferencesDescription')}
             />
           </div>
         </GlassCard>

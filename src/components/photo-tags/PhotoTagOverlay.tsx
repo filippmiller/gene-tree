@@ -162,7 +162,7 @@ export default function PhotoTagOverlay({
 
   const filteredMembers = familyMembers.filter(m => {
     if (!searchQuery) return true;
-    const fullName = `${m.first_name} ${m.last_name}`.toLowerCase();
+    const fullName = [m.first_name, m.last_name].filter(Boolean).join(' ').toLowerCase();
     return fullName.includes(searchQuery.toLowerCase());
   });
 

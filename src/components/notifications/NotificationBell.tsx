@@ -248,17 +248,17 @@ export default function NotificationBell() {
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-80 p-0 overflow-hidden"
+        className="w-80 p-0 overflow-hidden rounded-2xl border border-white/50 dark:border-white/10 shadow-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl"
         sideOffset={8}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b px-4 py-3 bg-muted/30">
-          <h3 className="font-semibold text-sm">{t('title')}</h3>
+        {/* Header with gradient accent */}
+        <div className="flex items-center justify-between border-b border-white/50 dark:border-white/10 px-4 py-3 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
+          <h3 className="font-semibold text-sm text-foreground">{t('title')}</h3>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-xs gap-1.5"
+              className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-violet-600 dark:hover:text-violet-400"
               onClick={markAllAsRead}
               disabled={markingRead}
             >
@@ -276,22 +276,24 @@ export default function NotificationBell() {
         <div className="max-h-[320px] overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-5 w-5 animate-spin text-violet-500" />
             </div>
           ) : recentNotifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center px-4">
-              <Bell className="h-8 w-8 text-muted-foreground/50 mb-2" />
+            <div className="flex flex-col items-center justify-center py-10 text-center px-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-3">
+                <Bell className="h-6 w-6 text-violet-500" />
+              </div>
               <p className="text-sm text-muted-foreground">{t('empty')}</p>
             </div>
           ) : (
-            <ul className="divide-y">
+            <ul className="divide-y divide-border/50">
               {recentNotifications.map((row) => (
                 <li
                   key={row.notification_id}
                   className={cn(
-                    'px-4 py-3 cursor-pointer transition-colors',
-                    'hover:bg-muted/50',
-                    !row.is_read && 'bg-primary/5'
+                    'px-4 py-3 cursor-pointer transition-all duration-200',
+                    'hover:bg-white/80 dark:hover:bg-gray-800/50',
+                    !row.is_read && 'bg-violet-50/70 dark:bg-violet-950/20'
                   )}
                   onClick={() => {
                     if (!row.is_read) {
@@ -303,7 +305,7 @@ export default function NotificationBell() {
                     {/* Unread indicator */}
                     <div className="mt-1.5 shrink-0">
                       {!row.is_read ? (
-                        <span className="flex h-2 w-2 rounded-full bg-primary" />
+                        <span className="flex h-2 w-2 rounded-full bg-violet-500 animate-pulse" />
                       ) : (
                         <span className="flex h-2 w-2 rounded-full bg-transparent" />
                       )}
@@ -319,7 +321,7 @@ export default function NotificationBell() {
                       >
                         {formatNotificationText(row, locale)}
                       </p>
-                      <p className="text-[11px] text-muted-foreground mt-1">
+                      <p className="text-[11px] text-muted-foreground/70 mt-1">
                         {formatRelativeTime(row.notification.created_at, locale)}
                       </p>
                     </div>
@@ -332,10 +334,10 @@ export default function NotificationBell() {
 
         {/* Footer */}
         {notifications.length > 0 && (
-          <div className="border-t px-4 py-2 bg-muted/30">
+          <div className="border-t border-white/50 dark:border-white/10 px-4 py-2.5 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
             <Link
               href={`/${locale}/app`}
-              className="text-xs text-primary hover:underline font-medium"
+              className="text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-semibold transition-colors"
               onClick={() => setOpen(false)}
             >
               {t('viewAll')}

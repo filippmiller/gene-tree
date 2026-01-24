@@ -119,16 +119,14 @@ export default function AddRelationshipModal({
   };
 
   const filteredUsers = users.filter(user => {
-    const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+    const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ').toLowerCase();
     const query = searchQuery.toLowerCase();
     return fullName.includes(query) || user.email.toLowerCase().includes(query);
   });
 
   const getDisplayName = (user: UserProfile) => {
-    if (user.first_name && user.last_name) {
-      return `${user.first_name} ${user.last_name}`;
-    }
-    return user.email;
+    const name = [user.first_name, user.last_name].filter(Boolean).join(' ');
+    return name || user.email;
   };
 
   return (

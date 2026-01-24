@@ -66,7 +66,9 @@ export default function RelationshipPathFinder({
 
   const getName = (id: string) => {
     const member = familyMembers.find((m) => m.id === id);
-    return member ? `${member.first_name} ${member.last_name}` : '';
+    return member
+      ? [member.first_name, member.last_name].filter(Boolean).join(' ') || '?'
+      : '';
   };
 
   return (

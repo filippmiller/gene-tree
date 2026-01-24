@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import ActivityItem from './ActivityItem';
 import { Button } from '@/components/ui/button';
-import { Activity, RefreshCw } from 'lucide-react';
+import { Activity, RefreshCw, Inbox } from 'lucide-react';
 import type { ActivityEventWithActor, ActivityFeedResponse } from '@/types/activity';
 
 interface ActivityFeedProps {
@@ -116,9 +116,9 @@ export default function ActivityFeed({
 
   if (isLoading) {
     return (
-      <div className={`${className}`}>
+      <div className={className}>
         <div className="flex items-center justify-center py-8">
-          <RefreshCw className="w-5 h-5 animate-spin text-gray-400" />
+          <RefreshCw className="w-5 h-5 animate-spin text-violet-500" />
         </div>
       </div>
     );
@@ -126,9 +126,11 @@ export default function ActivityFeed({
 
   if (error) {
     return (
-      <div className={`${className}`}>
-        <div className="text-center py-8">
-          <p className="text-red-500 text-sm mb-2">{error}</p>
+      <div className={className}>
+        <div className="flex flex-col items-center justify-center py-8">
+          <div className="p-4 mb-4 bg-rose-50 dark:bg-rose-950/30 rounded-xl border border-rose-200/50 dark:border-rose-500/20">
+            <p className="text-rose-600 dark:text-rose-400 text-sm">{error}</p>
+          </div>
           <Button variant="outline" size="sm" onClick={handleRefresh}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Retry
@@ -139,26 +141,10 @@ export default function ActivityFeed({
   }
 
   return (
-    <div className={`${className}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 text-gray-700">
-          <Activity className="w-5 h-5" />
-          <h3 className="font-semibold">Family Activity</h3>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleRefresh}
-          disabled={isLoading}
-        >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-        </Button>
-      </div>
-
+    <div className={className}>
       {/* Events list */}
       {events.length > 0 ? (
-        <div className="space-y-1">
+        <div className="space-y-2">
           {events.map((event) => (
             <ActivityItem key={event.id} event={event} />
           ))}
@@ -167,21 +153,23 @@ export default function ActivityFeed({
           <div ref={loadMoreRef} className="py-4">
             {isLoadingMore && (
               <div className="flex items-center justify-center">
-                <RefreshCw className="w-4 h-4 animate-spin text-gray-400" />
+                <RefreshCw className="w-4 h-4 animate-spin text-violet-500" />
               </div>
             )}
             {!hasMore && events.length > 0 && (
-              <p className="text-center text-xs text-gray-400">
+              <p className="text-center text-xs text-muted-foreground">
                 No more activity to show
               </p>
             )}
           </div>
         </div>
       ) : (
-        <div className="text-center py-8 text-gray-400">
-          <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
-          <p className="text-sm">No recent activity</p>
-          <p className="text-xs mt-1">
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-4">
+            <Inbox className="w-7 h-7 text-violet-500" />
+          </div>
+          <p className="text-sm font-medium text-foreground mb-1">No recent activity</p>
+          <p className="text-xs text-muted-foreground max-w-[220px]">
             Activity from your family will appear here
           </p>
         </div>

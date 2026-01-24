@@ -23,19 +23,19 @@ export default function PathVisualization({ path, className = '' }: PathVisualiz
               {node.avatar_url ? (
                 <img
                   src={node.avatar_url}
-                  alt={`${node.first_name} ${node.last_name}`}
+                  alt={[node.first_name, node.last_name].filter(Boolean).join(' ') || '?'}
                   className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
                 />
               ) : (
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-lg font-semibold border-2 border-white shadow-md">
-                  {node.first_name.charAt(0)}
+                  {node.first_name?.[0] || '?'}
                 </div>
               )}
               <span className="text-sm font-medium text-gray-800 mt-2 max-w-[80px] text-center truncate">
-                {node.first_name}
+                {node.first_name || '?'}
               </span>
               <span className="text-xs text-gray-500 max-w-[80px] text-center truncate">
-                {node.last_name}
+                {node.last_name || ''}
               </span>
             </div>
 

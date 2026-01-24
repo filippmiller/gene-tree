@@ -55,8 +55,8 @@ export default async function InvitePage({ params }: PageProps) {
   const inviterProfile = invitation.inviter_profile as any;
   const inviter = invitation.inviter as any;
   const inviterName = inviterProfile?.[0]
-    ? `${inviterProfile[0].first_name} ${inviterProfile[0].last_name}`
-    : inviter?.[0]?.email || 'Неизвестный пользователь';
+    ? [inviterProfile[0].first_name, inviterProfile[0].last_name].filter(Boolean).join(' ') || inviter?.[0]?.email || 'Unknown'
+    : inviter?.[0]?.email || 'Unknown';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
