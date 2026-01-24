@@ -1,4 +1,4 @@
-import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
+import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import InvitationAcceptForm from '@/components/invite/InvitationAcceptForm';
 
 interface PageProps {
@@ -7,26 +7,29 @@ interface PageProps {
 
 export default async function InvitePage({ params }: PageProps) {
   const { locale, token } = await params;
-  const supabase = await getSupabaseSSR();
+  // Use admin client because this page must work for unauthenticated users
+  const supabase = getSupabaseAdmin();
 
-  // Fetch invitation details by token
+  // Fetch invitation details by token (simplified query)
   const { data: invitation, error } = await supabase
     .from('pending_relatives')
-    .select(`
-      *,
-      inviter:invited_by (
-        id,
-        email
-      ),
-      inviter_profile:user_profiles!invited_by (
-        first_name,
-        last_name,
-        avatar_url
-      )
-    `)
+    .select('*')
     .eq('invitation_token', token)
     .eq('status', 'pending')
-    .single() as any;
+    .single();
+
+  // Fetch inviter profile separately if invitation found
+  let inviterName = 'Someone';
+  if (invitation?.invited_by) {
+    const { data: inviterProfile } = await supabase
+      .from('user_profiles')
+      .select('first_name, last_name')
+      .eq('id', invitation.invited_by)
+      .single();
+    if (inviterProfile) {
+      inviterName = [inviterProfile.first_name, inviterProfile.last_name].filter(Boolean).join(' ') || 'Someone';
+    }
+  }
 
   // Handle invalid/expired invitation
   if (error || !invitation) {
@@ -50,13 +53,6 @@ export default async function InvitePage({ params }: PageProps) {
       </div>
     );
   }
-
-  // Get inviter name
-  const inviterProfile = invitation.inviter_profile as any;
-  const inviter = invitation.inviter as any;
-  const inviterName = inviterProfile?.[0]
-    ? [inviterProfile[0].first_name, inviterProfile[0].last_name].filter(Boolean).join(' ') || inviter?.[0]?.email || 'Unknown'
-    : inviter?.[0]?.email || 'Unknown';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">

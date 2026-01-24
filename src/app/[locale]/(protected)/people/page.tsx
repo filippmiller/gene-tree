@@ -75,11 +75,20 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
     } as Record<string, string>,
   };
 
-  // Fetch pending relatives
+  // Fetch pending relatives (status = 'pending' only)
   const { data: pendingRelatives } = await supabase
     .from('pending_relatives')
     .select('*')
     .eq('invited_by', user.id)
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false });
+
+  // Fetch confirmed relatives (status = 'accepted')
+  const { data: confirmedRelatives } = await supabase
+    .from('pending_relatives')
+    .select('*')
+    .eq('invited_by', user.id)
+    .eq('status', 'accepted')
     .order('created_at', { ascending: false });
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -234,14 +243,73 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
               </div>
             </div>
 
-            <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 mx-auto mb-4 opacity-50">
-                <CheckCircle className="w-8 h-8" />
+            {confirmedRelatives && confirmedRelatives.length > 0 ? (
+              <div className="space-y-3">
+                {confirmedRelatives.map((rel: any) => (
+                  <Link
+                    key={rel.id}
+                    href={`/${locale}/profile/${rel.id}`}
+                    className="block group"
+                  >
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 border border-white/50 dark:border-white/10 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:border-emerald-500/20 hover:-translate-y-0.5 hover:shadow-glass transition-all duration-300">
+                      {/* Avatar */}
+                      <Avatar className={`w-12 h-12 ring-2 ring-offset-2 ring-offset-background ring-emerald-500 shadow-md`}>
+                        <AvatarFallback className={`bg-gradient-to-br ${getRelationshipColor(rel.relationship_type)} text-white font-semibold`}>
+                          {getInitials(rel.first_name, rel.last_name)}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                            {rel.first_name} {rel.last_name}
+                          </span>
+                          {rel.is_deceased && (
+                            <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                              {t.inMemory}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground capitalize">{getRelationshipLabel(rel.relationship_type)}</p>
+                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                          {rel.email && (
+                            <span className="flex items-center gap-1">
+                              <Mail className="w-3 h-3" />
+                              {rel.email}
+                            </span>
+                          )}
+                          {rel.date_of_birth && (
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(rel.date_of_birth).toLocaleDateString()}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Status badge */}
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium rounded-full flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" />
+                          {locale === 'ru' ? 'Подтверждено' : 'Confirmed'}
+                        </span>
+                        <ChevronRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-              <p className="text-muted-foreground">
-                {t.noConfirmedRelatives}
-              </p>
-            </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 mx-auto mb-4 opacity-50">
+                  <CheckCircle className="w-8 h-8" />
+                </div>
+                <p className="text-muted-foreground">
+                  {t.noConfirmedRelatives}
+                </p>
+              </div>
+            )}
           </GlassCard>
         </div>
       </div>
