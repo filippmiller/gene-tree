@@ -51,12 +51,14 @@ ALTER TABLE public.profile_interests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profile_interest_items ENABLE ROW LEVEL SECURITY;
 
 -- RLS: owner (profile_id = auth.uid()) or admin can manage interests
-CREATE POLICY IF NOT EXISTS "profile_interests_owner_all" ON public.profile_interests
+DROP POLICY IF EXISTS "profile_interests_owner_all" ON public.profile_interests;
+CREATE POLICY "profile_interests_owner_all" ON public.profile_interests
   FOR ALL TO authenticated
   USING (profile_id = auth.uid() OR current_user_is_admin())
   WITH CHECK (profile_id = auth.uid() OR current_user_is_admin());
 
-CREATE POLICY IF NOT EXISTS "profile_interest_items_owner_all" ON public.profile_interest_items
+DROP POLICY IF EXISTS "profile_interest_items_owner_all" ON public.profile_interest_items;
+CREATE POLICY "profile_interest_items_owner_all" ON public.profile_interest_items
   FOR ALL TO authenticated
   USING (
     current_user_is_admin()

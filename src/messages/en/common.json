@@ -253,6 +253,76 @@
     "and": "and",
     "noConnectionFound": "No Connection Found",
     "noConnectionDescription": "These two people don't appear to be connected in your family tree"
+  },
+  "badges": {
+    "title": "Achievements",
+    "earned": "Earned",
+    "locked": "Locked",
+    "progress": "Progress",
+    "featured": "Featured",
+    "setFeatured": "Set as Featured",
+    "removeFeatured": "Remove Featured",
+    "earnedOn": "Earned on {date}",
+    "categories": {
+      "tree_builder": "Tree Builder",
+      "memory_keeper": "Memory Keeper",
+      "storyteller": "Storyteller",
+      "connector": "Connector",
+      "special": "Special"
+    },
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "legendary": "Legendary"
+    },
+    "celebration": {
+      "title": "Badge Unlocked!",
+      "subtitle": "You earned a new achievement",
+      "continue": "Continue"
+    },
+    "stats": {
+      "totalEarned": "Total Earned",
+      "totalAvailable": "Total Available",
+      "completion": "Completion"
+    }
+  },
+  "prompts": {
+    "title": "Story Prompts",
+    "description": "Discover prompts to capture family memories",
+    "categories": {
+      "childhood": "Childhood",
+      "traditions": "Traditions",
+      "life_lessons": "Life Lessons",
+      "historical": "Historical",
+      "relationships": "Relationships",
+      "career": "Career",
+      "personal": "Personal"
+    },
+    "assign": {
+      "title": "Assign Prompt",
+      "selectPerson": "Select a family member",
+      "addMessage": "Add a personal message (optional)",
+      "send": "Send Prompt",
+      "sending": "Sending...",
+      "success": "Prompt sent successfully!",
+      "error": "Failed to send prompt"
+    },
+    "assigned": {
+      "title": "Assigned Prompts",
+      "fromYou": "Sent by you",
+      "toYou": "Sent to you",
+      "pending": "Pending",
+      "answered": "Answered",
+      "declined": "Declined",
+      "answer": "Answer",
+      "decline": "Decline",
+      "viewAnswer": "View Answer"
+    },
+    "library": {
+      "search": "Search prompts...",
+      "noResults": "No prompts found",
+      "browseAll": "Browse All"
+    }
   }
 }
 

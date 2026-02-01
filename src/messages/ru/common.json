@@ -253,6 +253,76 @@
     "and": "и",
     "noConnectionFound": "Связь не найдена",
     "noConnectionDescription": "Эти два человека не связаны в вашем семейном древе"
+  },
+  "badges": {
+    "title": "Достижения",
+    "earned": "Получено",
+    "locked": "Заблокировано",
+    "progress": "Прогресс",
+    "featured": "Избранное",
+    "setFeatured": "Сделать избранным",
+    "removeFeatured": "Убрать из избранного",
+    "earnedOn": "Получено {date}",
+    "categories": {
+      "tree_builder": "Строитель древа",
+      "memory_keeper": "Хранитель памяти",
+      "storyteller": "Рассказчик",
+      "connector": "Связующий",
+      "special": "Особые"
+    },
+    "rarity": {
+      "common": "Обычный",
+      "rare": "Редкий",
+      "legendary": "Легендарный"
+    },
+    "celebration": {
+      "title": "Значок получен!",
+      "subtitle": "Вы заработали новое достижение",
+      "continue": "Продолжить"
+    },
+    "stats": {
+      "totalEarned": "Всего получено",
+      "totalAvailable": "Всего доступно",
+      "completion": "Завершено"
+    }
+  },
+  "prompts": {
+    "title": "Подсказки для историй",
+    "description": "Найдите подсказки для сохранения семейных воспоминаний",
+    "categories": {
+      "childhood": "Детство",
+      "traditions": "Традиции",
+      "life_lessons": "Жизненные уроки",
+      "historical": "Исторические",
+      "relationships": "Отношения",
+      "career": "Карьера",
+      "personal": "Личное"
+    },
+    "assign": {
+      "title": "Назначить подсказку",
+      "selectPerson": "Выберите члена семьи",
+      "addMessage": "Добавьте личное сообщение (необязательно)",
+      "send": "Отправить подсказку",
+      "sending": "Отправка...",
+      "success": "Подсказка успешно отправлена!",
+      "error": "Не удалось отправить подсказку"
+    },
+    "assigned": {
+      "title": "Назначенные подсказки",
+      "fromYou": "Отправлено вами",
+      "toYou": "Отправлено вам",
+      "pending": "Ожидает",
+      "answered": "Отвечено",
+      "declined": "Отклонено",
+      "answer": "Ответить",
+      "decline": "Отклонить",
+      "viewAnswer": "Посмотреть ответ"
+    },
+    "library": {
+      "search": "Поиск подсказок...",
+      "noResults": "Подсказки не найдены",
+      "browseAll": "Смотреть все"
+    }
   }
 }
 

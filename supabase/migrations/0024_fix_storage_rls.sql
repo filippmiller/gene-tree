@@ -55,5 +55,4 @@ UPDATE storage.buckets
 SET public = true
 WHERE id = 'avatars';
 
--- Убедимся что RLS включён
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+-- RLS уже включён по умолчанию в Supabase storage

@@ -307,16 +307,16 @@ ON CONFLICT (profile_id, event_type, related_profile_id) DO NOTHING;
 -- Populate anniversary events from existing spouse relationships
 INSERT INTO daily_events_cache (profile_id, event_type, event_month, event_day, display_title, related_profile_id, years_ago)
 SELECT
-  r.profile_id,
+  r.user1_id,
   'anniversary',
   EXTRACT(MONTH FROM r.marriage_date)::INTEGER,
   EXTRACT(DAY FROM r.marriage_date)::INTEGER,
   p1.first_name || ' & ' || p2.first_name || '''s Anniversary',
-  r.related_profile_id,
+  r.user2_id,
   EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER - EXTRACT(YEAR FROM r.marriage_date)::INTEGER
 FROM relationships r
-JOIN user_profiles p1 ON r.profile_id = p1.id
-JOIN user_profiles p2 ON r.related_profile_id = p2.id
+JOIN user_profiles p1 ON r.user1_id = p1.id
+JOIN user_profiles p2 ON r.user2_id = p2.id
 WHERE r.relationship_type = 'spouse' AND r.marriage_date IS NOT NULL
 ON CONFLICT (profile_id, event_type, related_profile_id) DO NOTHING;
 
