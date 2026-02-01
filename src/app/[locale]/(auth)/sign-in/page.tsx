@@ -30,6 +30,9 @@ const translations = {
     resetEmailSent: 'Password reset email sent! Check your inbox.',
     resetEmailFailed: 'Failed to send reset email',
     signInFailed: 'Failed to sign in',
+    orDivider: 'or',
+    magicLink: 'Sign in with magic link',
+    noPasswordNeeded: 'No password needed',
   },
   ru: {
     welcomeBack: 'С возвращением',
@@ -47,6 +50,9 @@ const translations = {
     resetEmailSent: 'Ссылка для сброса пароля отправлена! Проверьте почту.',
     resetEmailFailed: 'Не удалось отправить письмо для сброса',
     signInFailed: 'Не удалось войти',
+    orDivider: 'или',
+    magicLink: 'Войти по ссылке',
+    noPasswordNeeded: 'Без пароля',
   },
 };
 
@@ -189,7 +195,39 @@ export default function SignIn() {
               {loading ? t.signingIn : t.signIn}
             </Button>
 
-            <div className="space-y-3 text-center text-sm">
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-muted" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white dark:bg-gray-900 px-2 text-muted-foreground">
+                  {t.orDivider}
+                </span>
+              </div>
+            </div>
+
+            <a
+              href={`/${locale}/magic-link${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+              className="flex items-center justify-center gap-2 w-full h-12 rounded-lg border border-muted bg-muted/30 hover:bg-muted/50 transition-colors text-sm font-medium"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                />
+              </svg>
+              {t.magicLink}
+              <span className="text-xs text-muted-foreground">({t.noPasswordNeeded})</span>
+            </a>
+
+            <div className="space-y-3 text-center text-sm mt-6">
               <button
                 type="button"
                 onClick={async () => {

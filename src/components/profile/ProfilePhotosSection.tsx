@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useLocale } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 import type { MediaVisibility, Photo, MediaType, SignedUploadResponse } from '@/types/media';
-import { Image as ImageIcon, Loader2, Upload } from 'lucide-react';
+import { Image as ImageIcon, Loader2, Upload, Wand2, Sparkles } from 'lucide-react';
+import { PhotoMagicDialog } from '@/components/photo';
+import { Badge } from '@/components/ui/badge';
 
 interface Props {
   profileId: string;
@@ -53,6 +55,8 @@ export default function ProfilePhotosSection({ profileId }: Props) {
     statusDone: 'Готово',
     statusError: 'Ошибка',
     loadError: 'Не удалось загрузить фотографии',
+    aiEnhanced: 'ИИ',
+    photoMagic: 'Магия фото',
   } : {
     title: 'My Photos',
     description: 'Personal photos that your relatives will see on your profile page.',
@@ -71,6 +75,14 @@ export default function ProfilePhotosSection({ profileId }: Props) {
     statusDone: 'Done',
     statusError: 'Error',
     loadError: 'Failed to load photos',
+    aiEnhanced: 'AI',
+    photoMagic: 'Photo Magic',
+  };
+
+  const handlePhotoEnhanced = (newPhotoId: string, newPhotoUrl: string) => {
+    // Reload photos to show the new colorized version
+    setHasError(false);
+    loadPhotos();
   };
 
   const loadPhotos = useCallback(async () => {
@@ -280,6 +292,36 @@ export default function ProfilePhotosSection({ profileId }: Props) {
                   <ImageIcon className="w-8 h-8" />
                 </div>
               )}
+
+              {/* AI Enhanced badge */}
+              {photo.ai_enhanced && (
+                <Badge
+                  variant="secondary"
+                  className="absolute top-2 left-2 bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 gap-1"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {t.aiEnhanced}
+                </Badge>
+              )}
+
+              {/* Photo Magic overlay - only for non-AI-enhanced photos */}
+              {photo.url && !photo.ai_enhanced && (
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <PhotoMagicDialog
+                    photoId={photo.id}
+                    photoUrl={photo.url}
+                    photoCaption={photo.caption}
+                    onEnhanced={handlePhotoEnhanced}
+                    trigger={
+                      <button className="flex items-center gap-2 px-3 py-2 bg-white/90 hover:bg-white text-gray-800 rounded-lg text-sm font-medium shadow-lg transition-all transform scale-90 group-hover:scale-100">
+                        <Wand2 className="w-4 h-4 text-purple-500" />
+                        {t.photoMagic}
+                      </button>
+                    }
+                  />
+                </div>
+              )}
+
               {photo.caption && (
                 <figcaption className="absolute bottom-0 inset-x-0 bg-black/50 text-[11px] text-white px-2 py-1 truncate">
                   {photo.caption}

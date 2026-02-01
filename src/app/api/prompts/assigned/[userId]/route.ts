@@ -91,7 +91,7 @@ export async function GET(
       userIds.add(direction === 'received' ? a.from_user_id : a.to_user_id);
     }
 
-    let profiles: Record<string, any> = {};
+    const profiles: Record<string, any> = {};
     if (userIds.size > 0) {
       const { data: profileData } = await supabase
         .from('user_profiles')

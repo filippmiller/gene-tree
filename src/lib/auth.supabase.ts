@@ -1,5 +1,32 @@
 import { getSupabaseBrowser } from '@/lib/supabase/browser';
 
+/**
+ * Send a magic link to the user's email for passwordless authentication.
+ * Works for both new and existing users.
+ */
+export async function signInWithMagicLink(
+  email: string,
+  options?: {
+    redirectTo?: string;
+    shouldCreateUser?: boolean;
+  }
+) {
+  const supabase = getSupabaseBrowser();
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: options?.redirectTo || `${window.location.origin}/auth/callback`,
+      shouldCreateUser: options?.shouldCreateUser ?? true,
+    },
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
 export async function signIn(email: string, password: string) {
   const supabase = getSupabaseBrowser();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });

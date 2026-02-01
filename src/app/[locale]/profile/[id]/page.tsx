@@ -1,7 +1,10 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { notFound } from 'next/navigation';
-import VoiceStoryRecorder from '@/components/profile/VoiceStoryRecorder';
+import { ProfileCompletenessRing } from '@/components/profile/ProfileCompletenessRing';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import VoiceRecorderWrapper from './VoiceRecorderWrapper';
+import VoiceStoriesWrapper from './VoiceStoriesWrapper';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -49,7 +52,7 @@ export default async function PublicProfilePage({ params }: Props) {
   // Try to fetch from user_profiles first
   const { data: profile, error } = await supabase
     .from('user_profiles')
-    .select('id, first_name, middle_name, last_name, birth_date, birth_place, bio, death_date')
+    .select('*')
     .eq('id', id)
     .single() as any;
 
@@ -123,40 +126,93 @@ export default async function PublicProfilePage({ params }: Props) {
   const isDeceased = !!actualProfile.death_date;
   const firstName = actualProfile.first_name || '?';
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-          <div className="flex items-center gap-6">
-            {/* Avatar placeholder */}
-            <div className="h-24 w-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-              {actualProfile.first_name?.[0] || '?'}{actualProfile.last_name?.[0] || ''}
-            </div>
+  // Calculate completeness data for non-pending profiles
+  let hasPhoto = false;
+  let hasStory = false;
+  let hasRelationships = false;
+  let hasResidenceHistory = false;
 
-            <div className="flex-1">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-3xl font-bold text-gray-900">{fullName}</h1>
-                {isDeceased && (
-                  <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-                    {t.deceased}
-                  </span>
-                )}
-                {isFromPending && (
-                  <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm">
-                    {t.pendingProfile}
-                  </span>
+  if (!isFromPending && profile) {
+    hasPhoto = Boolean(profile.avatar_url || profile.current_avatar_id);
+    hasStory = Boolean(profile.bio && profile.bio.length > 20);
+    hasResidenceHistory = Boolean(
+      profile.current_city || profile.birth_city || profile.birth_place
+    );
+
+    // Check for voice stories
+    if (!hasStory) {
+      const { count: storyCount } = await supabaseAdmin
+        .from('voice_stories')
+        .select('id', { count: 'exact', head: true })
+        .eq('target_profile_id', id)
+        .eq('status', 'approved');
+      hasStory = (storyCount || 0) > 0;
+    }
+
+    // Check for relationships
+    const { count: relationshipCount } = await supabaseAdmin
+      .from('relationships')
+      .select('id', { count: 'exact', head: true })
+      .or(`user1_id.eq.${id},user2_id.eq.${id}`);
+    hasRelationships = (relationshipCount || 0) > 0;
+
+    // Check for residence history
+    if (!hasResidenceHistory) {
+      const { count: residenceCount } = await supabaseAdmin
+        .from('person_residence')
+        .select('id', { count: 'exact', head: true })
+        .eq('person_id', id);
+      hasResidenceHistory = (residenceCount || 0) > 0;
+    }
+  }
+
+  return (
+    <TooltipProvider>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 py-12">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Header */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-6">
+            <div className="flex items-center gap-6">
+              {/* Avatar or Progress Ring */}
+              {!isFromPending && profile ? (
+                <ProfileCompletenessRing
+                  profile={profile}
+                  hasPhoto={hasPhoto}
+                  hasStory={hasStory}
+                  hasRelationships={hasRelationships}
+                  hasResidenceHistory={hasResidenceHistory}
+                  size="lg"
+                  locale={locale as 'en' | 'ru'}
+                />
+              ) : (
+                <div className="h-24 w-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                  {actualProfile.first_name?.[0] || '?'}{actualProfile.last_name?.[0] || ''}
+                </div>
+              )}
+
+              <div className="flex-1">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{fullName}</h1>
+                  {isDeceased && (
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm">
+                      {t.deceased}
+                    </span>
+                  )}
+                  {isFromPending && (
+                    <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full text-sm">
+                      {t.pendingProfile}
+                    </span>
+                  )}
+                </div>
+                {actualProfile.birth_date && (
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    {t.born}: {new Date(actualProfile.birth_date).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US')}
+                    {actualProfile.birth_place && ` ${t.inPlace} ${actualProfile.birth_place}`}
+                  </p>
                 )}
               </div>
-              {actualProfile.birth_date && (
-                <p className="text-gray-600 mt-1">
-                  {t.born}: {new Date(actualProfile.birth_date).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US')}
-                  {actualProfile.birth_place && ` ${t.inPlace} ${actualProfile.birth_place}`}
-                </p>
-              )}
             </div>
           </div>
-        </div>
 
         {/* Bio */}
         {actualProfile.bio && (
@@ -178,10 +234,19 @@ export default async function PublicProfilePage({ params }: Props) {
           </div>
         )}
 
-        {/* Voice stories recorder for relatives */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <VoiceStoryRecorder targetProfileId={actualProfile.id} />
-        </div>
+        {/* Voice Stories Section */}
+        <VoiceStoriesWrapper
+          targetProfileId={actualProfile.id}
+          locale={locale as 'en' | 'ru'}
+        />
+
+        {/* Voice Recorder for relatives */}
+        {user && (
+          <VoiceRecorderWrapper
+            targetProfileId={actualProfile.id}
+            locale={locale as 'en' | 'ru'}
+          />
+        )}
 
         {/* Connection request section - only show if not already related */}
         {user && !isAlreadyRelated && (
@@ -215,7 +280,8 @@ export default async function PublicProfilePage({ params }: Props) {
             </a>
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

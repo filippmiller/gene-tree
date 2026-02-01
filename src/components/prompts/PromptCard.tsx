@@ -64,6 +64,10 @@ const categoryConfig: Record<string, { label: { en: string; ru: string }; color:
     label: { en: "Personal", ru: "Личное" },
     color: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400",
   },
+  favorites: {
+    label: { en: "Favorites", ru: "Избранное" },
+    color: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  },
 };
 
 export function PromptCard({

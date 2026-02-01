@@ -15,23 +15,26 @@ export type MediaType =
   | 'video'
   | 'other';
 
+// AI Enhancement types
+export type AIEnhancementType = 'colorization' | 'upscale' | 'restoration' | 'deblur';
+
 export interface Photo {
   id: string;
-  
+
   // Storage location
   bucket: 'avatars' | 'media';
   path: string;
   storage_object_id?: string;
-  
+
   // Ownership & target
   uploaded_by: string;
   target_profile_id?: string;
-  
+
   // Classification
   type: MediaType;
   status: MediaStatus;
   visibility: MediaVisibility;
-  
+
   // Metadata
   caption?: string;
   taken_at?: string;
@@ -39,10 +42,10 @@ export interface Photo {
   sha256?: string;
   width?: number;
   height?: number;
-  
+
   // Timestamps
   created_at: string;
-  
+
   // Moderation fields
   approved_at?: string;
   approved_by?: string;
@@ -50,6 +53,11 @@ export interface Photo {
   rejected_by?: string;
   rejection_reason?: string;
   archived_at?: string;
+
+  // AI Enhancement fields
+  ai_enhanced?: boolean;
+  ai_enhancement_type?: AIEnhancementType;
+  original_photo_id?: string;
 }
 
 export interface PhotoPeople {
@@ -164,4 +172,25 @@ export interface PhotoWithUploader extends Photo {
     id: string;
     email?: string;
   };
+}
+
+// ============================================================================
+// AI Enhancement Types
+// ============================================================================
+
+export interface ColorizeRequest {
+  photoId: string;
+  photoUrl?: string;
+}
+
+export interface ColorizeResponse {
+  success: boolean;
+  originalPhotoId: string;
+  colorizedPhotoId?: string;
+  colorizedUrl?: string;
+  error?: string;
+}
+
+export interface PhotoWithOriginal extends Photo {
+  originalPhoto?: Photo;
 }

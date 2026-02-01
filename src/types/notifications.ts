@@ -16,13 +16,18 @@ export type NotificationEventType =
   | 'COMMENT_ADDED'
   | 'COMMENT_REPLY'
   | 'MENTION_IN_COMMENT'
-  // Phase 2: Daily engagement (future)
+  // Phase 2: Daily engagement - Birthday/Anniversary nudges
   | 'BIRTHDAY_REMINDER'
+  | 'BIRTHDAY_TODAY'
+  | 'ANNIVERSARY_REMINDER'
+  | 'MEMORIAL_REMINDER'
   | 'PHOTO_TAGGED'
   // Phase 3: Advanced (future)
   | 'TRIBUTE_GUESTBOOK'
   | 'ELDER_QUESTION_ASKED'
-  | 'ELDER_QUESTION_ANSWERED';
+  | 'ELDER_QUESTION_ANSWERED'
+  // Story prompts
+  | 'PROMPT_ASSIGNED';
 
 /**
  * Payload for 'relative_added' event
@@ -111,6 +116,52 @@ export interface MentionInCommentPayload {
 }
 
 /**
+ * Payload for 'BIRTHDAY_REMINDER' and 'BIRTHDAY_TODAY' events
+ */
+export interface BirthdayReminderPayload {
+  person_id: string;
+  person_name: string;
+  birth_date: string;
+  age?: number;
+  days_until: number; // 0 = today, 1 = tomorrow, etc.
+  relationship_label?: string;
+}
+
+/**
+ * Payload for 'ANNIVERSARY_REMINDER' event
+ */
+export interface AnniversaryReminderPayload {
+  person1_id: string;
+  person2_id: string;
+  person1_name: string;
+  person2_name: string;
+  marriage_date: string;
+  years_married?: number;
+  days_until: number;
+}
+
+/**
+ * Payload for 'MEMORIAL_REMINDER' event (death anniversary)
+ */
+export interface MemorialReminderPayload {
+  person_id: string;
+  person_name: string;
+  death_date: string;
+  years_since?: number;
+  days_until: number;
+}
+
+/**
+ * Payload for 'PROMPT_ASSIGNED' event
+ */
+export interface PromptAssignedPayload {
+  prompt_id: string;
+  prompt_text: string;
+  assigned_prompt_id: string;
+  message?: string | null;
+}
+
+/**
  * Union of all notification payloads.
  * Note: We use a flexible type here because payloads can vary and
  * the database stores them as JSON. For type-safe access, cast to
@@ -177,9 +228,13 @@ export function isNotificationEventType(value: string): value is NotificationEve
     'COMMENT_REPLY',
     'MENTION_IN_COMMENT',
     'BIRTHDAY_REMINDER',
+    'BIRTHDAY_TODAY',
+    'ANNIVERSARY_REMINDER',
+    'MEMORIAL_REMINDER',
     'PHOTO_TAGGED',
     'TRIBUTE_GUESTBOOK',
     'ELDER_QUESTION_ASKED',
     'ELDER_QUESTION_ANSWERED',
+    'PROMPT_ASSIGNED',
   ].includes(value);
 }

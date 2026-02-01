@@ -6,6 +6,7 @@ import { Flame } from 'lucide-react';
 import type { ThisDayEvent } from '@/types/this-day';
 import { formatYearsAgo, EVENT_TYPE_CONFIG } from '@/types/this-day';
 import GreetingButton from './GreetingButton';
+import { EventCardShare } from '@/components/highlight-cards/EventCardShare';
 
 interface EventCardProps {
   event: ThisDayEvent;
@@ -56,6 +57,9 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
           )}
         </p>
       </div>
+
+      {/* Share Card Button */}
+      <EventCardShare event={event} className="opacity-0 group-hover:opacity-100 transition-opacity" />
 
       {/* Greeting Button */}
       {event.event_type !== 'death_commemoration' && (

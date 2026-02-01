@@ -68,7 +68,7 @@ export async function GET(req: Request) {
 
     // Get user's earned badges if userId provided
     let earnedBadgeIds: string[] = [];
-    let progressMap: Record<string, number> = {};
+    const progressMap: Record<string, number> = {};
 
     if (userId) {
       const { data: userBadges } = await (supabase as any)

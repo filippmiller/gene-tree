@@ -1,5 +1,88 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { NextRequest, NextResponse } from 'next/server';
+
+/**
+ * GET /api/profile/complete
+ * Returns profile completeness data for a given profile
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = await getSupabaseSSR();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const profileId = searchParams.get('profileId') || user.id;
+
+    // Check if user has permission to view this profile
+    // For now, users can view their own profile or profiles in their family
+    const supabaseAdmin = getSupabaseAdmin();
+
+    // Fetch profile data
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from('user_profiles')
+      .select('*')
+      .eq('id', profileId)
+      .single();
+
+    if (profileError || !profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    // Check for photos (avatar)
+    const hasPhoto = Boolean(profile.avatar_url || profile.current_avatar_id);
+
+    // Check for stories (bio or voice_stories)
+    let hasStory = Boolean(profile.bio && profile.bio.length > 20);
+
+    if (!hasStory) {
+      const { count: storyCount } = await supabaseAdmin
+        .from('voice_stories')
+        .select('id', { count: 'exact', head: true })
+        .eq('target_profile_id', profileId)
+        .eq('status', 'approved');
+
+      hasStory = (storyCount || 0) > 0;
+    }
+
+    // Check for relationships
+    const { count: relationshipCount } = await supabaseAdmin
+      .from('relationships')
+      .select('id', { count: 'exact', head: true })
+      .or(`user1_id.eq.${profileId},user2_id.eq.${profileId}`)
+      .eq('verification_status', 'verified');
+
+    const hasRelationships = (relationshipCount || 0) > 0;
+
+    // Check for residence history
+    let hasResidenceHistory = Boolean(
+      profile.current_city || profile.birth_city || profile.birth_place
+    );
+
+    if (!hasResidenceHistory) {
+      const { count: residenceCount } = await supabaseAdmin
+        .from('person_residence')
+        .select('id', { count: 'exact', head: true })
+        .eq('person_id', profileId);
+
+      hasResidenceHistory = (residenceCount || 0) > 0;
+    }
+
+    return NextResponse.json({
+      hasPhoto,
+      hasStory,
+      hasRelationships,
+      hasResidenceHistory,
+    });
+  } catch (error: any) {
+    console.error('Error fetching profile completeness:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {

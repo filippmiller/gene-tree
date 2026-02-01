@@ -43,11 +43,12 @@ export default function InvitationAcceptForm({ invitation, locale }: Props) {
         throw new Error(data.error || 'Не удалось принять приглашение');
       }
 
-      // Redirect to sign-up/sign-in with pre-filled data
+      // Redirect to magic link page for zero-friction auth
+      // The magic link will authenticate and redirect to the app
       const redirectUrl = invitation.email
-        ? `/${locale}/sign-in?email=${encodeURIComponent(invitation.email)}&invitation=${invitation.invitation_token}`
-        : `/${locale}/sign-up?invitation=${invitation.invitation_token}`;
-      
+        ? `/${locale}/magic-link?email=${encodeURIComponent(invitation.email)}&redirect=${encodeURIComponent(`/${locale}/app`)}`
+        : `/${locale}/magic-link?redirect=${encodeURIComponent(`/${locale}/app`)}`;
+
       router.push(redirectUrl);
     } catch (err: any) {
       setError(err.message);
@@ -204,7 +205,7 @@ export default function InvitationAcceptForm({ invitation, locale }: Props) {
 
       {/* Info note */}
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md text-sm text-blue-800">
-        💡 После подтверждения вы будете перенаправлены на страницу входа/регистрации
+        После подтверждения мы отправим вам магическую ссылку на email для моментального входа - без пароля!
       </div>
     </div>
   );

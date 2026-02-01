@@ -10,6 +10,9 @@ import type {
   CommentAddedPayload,
   CommentReplyPayload,
   MentionInCommentPayload,
+  BirthdayReminderPayload,
+  AnniversaryReminderPayload,
+  MemorialReminderPayload,
 } from '@/types/notifications';
 
 // Re-export types for convenience
@@ -25,6 +28,9 @@ export type {
   CommentAddedPayload,
   CommentReplyPayload,
   MentionInCommentPayload,
+  BirthdayReminderPayload,
+  AnniversaryReminderPayload,
+  MemorialReminderPayload,
   NotificationData,
   ActorInfo,
   NotificationWithActor,
@@ -174,6 +180,37 @@ export function getNotificationUrl(
         return `/stories/${commentPayload.story_id}`;
       }
       return '/stories';
+    }
+
+    case 'BIRTHDAY_TODAY':
+    case 'BIRTHDAY_REMINDER': {
+      const birthdayPayload = payload as BirthdayReminderPayload | null;
+      if (birthdayPayload?.person_id) {
+        return `/profile/${birthdayPayload.person_id}`;
+      }
+      return notification.primary_profile_id
+        ? `/profile/${notification.primary_profile_id}`
+        : '/tree';
+    }
+
+    case 'ANNIVERSARY_REMINDER': {
+      const anniversaryPayload = payload as AnniversaryReminderPayload | null;
+      if (anniversaryPayload?.person1_id) {
+        return `/profile/${anniversaryPayload.person1_id}`;
+      }
+      return notification.primary_profile_id
+        ? `/profile/${notification.primary_profile_id}`
+        : '/tree';
+    }
+
+    case 'MEMORIAL_REMINDER': {
+      const memorialPayload = payload as MemorialReminderPayload | null;
+      if (memorialPayload?.person_id) {
+        return `/tribute/${memorialPayload.person_id}`;
+      }
+      return notification.primary_profile_id
+        ? `/tribute/${notification.primary_profile_id}`
+        : '/tree';
     }
 
     default:
