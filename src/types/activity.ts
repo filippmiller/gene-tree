@@ -57,6 +57,7 @@ export interface ActivityDisplayData {
   comment_preview?: string;
   relationship_type?: string;
   related_profile_name?: string;
+  media_type?: string;
 }
 
 /**
