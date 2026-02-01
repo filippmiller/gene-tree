@@ -6,11 +6,15 @@ export default async function DbExplorerPage() {
   const supabase = await getSupabaseSSR();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('first_name, last_name')
-    .eq('id', user?.id ?? '')
-    .single();
+  let profile: { first_name: string | null; last_name: string | null } | null = null;
+  if (user?.id) {
+    const { data } = await supabase
+      .from('user_profiles')
+      .select('first_name, last_name')
+      .eq('id', user.id)
+      .single();
+    profile = data;
+  }
 
   const adminName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Admin';
 
