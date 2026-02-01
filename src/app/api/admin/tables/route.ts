@@ -28,7 +28,8 @@ export async function GET(request: Request) {
 
   try {
     // Get list of tables from information_schema
-    const { data: tables, error: tablesError } = await adminClient.rpc('get_table_list');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: tables, error: tablesError } = await (adminClient.rpc as any)('get_table_list');
 
     if (tablesError) {
       // Fallback: use our predefined table list
@@ -93,8 +94,9 @@ async function getTablesFromConfig(adminClient: ReturnType<typeof getSupabaseAdm
 
     let recordCount = 0;
     try {
-      const { count } = await adminClient
-        .from(tableName as keyof typeof TABLE_CONFIG)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { count } = await (adminClient as any)
+        .from(tableName)
         .select('*', { count: 'exact', head: true });
       recordCount = count || 0;
     } catch {
