@@ -1,6 +1,5 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
-import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import RelationshipPathFinder from '@/components/relationship-path/RelationshipPathFinder';
 
@@ -10,7 +9,6 @@ export default async function RelationshipFinderPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'relationshipPath' });
   const supabase = await getSupabaseSSR();
   const supabaseAdmin = getSupabaseAdmin();
 
@@ -53,14 +51,9 @@ export default async function RelationshipFinderPage({
     .sort((a, b) => (a.first_name || '').localeCompare(b.first_name || ''));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-green-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <main className="w-full px-4 sm:px-6 lg:px-12 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-gray-600 mt-2">{t('description')}</p>
-          </div>
-
           <RelationshipPathFinder
             familyMembers={familyMembers || []}
             currentUserId={user.id}

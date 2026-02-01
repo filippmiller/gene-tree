@@ -1,10 +1,13 @@
+import Link from 'next/link';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { notFound } from 'next/navigation';
 import { ProfileCompletenessRing } from '@/components/profile/ProfileCompletenessRing';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
 import VoiceRecorderWrapper from './VoiceRecorderWrapper';
 import VoiceStoriesWrapper from './VoiceStoriesWrapper';
+import HistoricalTimelineWrapper from './HistoricalTimelineWrapper';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -30,6 +33,7 @@ export default async function PublicProfilePage({ params }: Props) {
     alreadyConnected: 'Вы уже в родстве',
     alreadyConnectedDescription: 'Этот человек уже находится в вашем семейном древе.',
     viewTree: 'Смотреть древо',
+    viewBiography: 'Биография',
   } : {
     deceased: '✠ Deceased',
     pendingProfile: '⚠️ Pending Profile',
@@ -44,6 +48,7 @@ export default async function PublicProfilePage({ params }: Props) {
     alreadyConnected: 'Already Connected',
     alreadyConnectedDescription: 'This person is already in your family tree.',
     viewTree: 'View Tree',
+    viewBiography: 'Biography',
   };
 
   // Get current user
@@ -210,6 +215,20 @@ export default async function PublicProfilePage({ params }: Props) {
                     {actualProfile.birth_place && ` ${t.inPlace} ${actualProfile.birth_place}`}
                   </p>
                 )}
+
+                {/* Biography button */}
+                {!isFromPending && (
+                  <div className="mt-3">
+                    <Link href={`/${locale}/profile/${id}/biography`}>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        {t.viewBiography}
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -233,6 +252,16 @@ export default async function PublicProfilePage({ params }: Props) {
             </p>
           </div>
         )}
+
+        {/* Historical Context Timeline */}
+        <HistoricalTimelineWrapper
+          profileId={actualProfile.id}
+          firstName={actualProfile.first_name || '?'}
+          birthDate={actualProfile.birth_date}
+          deathDate={actualProfile.death_date}
+          avatarUrl={profile?.avatar_url}
+          locale={locale as 'en' | 'ru'}
+        />
 
         {/* Voice Stories Section */}
         <VoiceStoriesWrapper

@@ -323,6 +323,89 @@
       "noResults": "No prompts found",
       "browseAll": "Browse All"
     }
+  },
+  "biography": {
+    "title": "Biography",
+    "readMore": "Read more",
+    "readLess": "Read less",
+    "share": "Share",
+    "print": "Print",
+    "viewFull": "View Full Biography",
+    "backToProfile": "Back to Profile",
+    "loading": "Generating biography...",
+    "notFound": "Profile not found",
+    "accessDenied": "Access denied",
+    "generatedFrom": "Generated from family tree data",
+    "lastUpdated": "Last updated",
+    "missingInfo": "Help complete this biography",
+    "addInfo": "Add this info",
+    "completeness": "Story Completeness",
+    "shareTitle": "Share Biography",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "shareOnTwitter": "Share on X",
+    "shareOnFacebook": "Share on Facebook",
+    "shareOnWhatsApp": "Share on WhatsApp",
+    "sections": {
+      "introduction": "Overview",
+      "early_life": "Early Life",
+      "education": "Education",
+      "career": "Career",
+      "family": "Family",
+      "places": "Places Lived",
+      "legacy": "Legacy"
+    },
+    "importance": {
+      "high": "Important",
+      "medium": "Helpful",
+      "low": "Optional"
+    },
+    "missingFields": {
+      "birth_date": {
+        "label": "Birth Date",
+        "description": "Add the birth date to complete the early life section"
+      },
+      "birth_place": {
+        "label": "Birth Place",
+        "description": "Add where they were born for a richer story"
+      },
+      "death_date": {
+        "label": "Death Date",
+        "description": "Add the passing date if applicable"
+      },
+      "death_place": {
+        "label": "Place of Passing",
+        "description": "Add where they passed away"
+      },
+      "occupation": {
+        "label": "Occupation",
+        "description": "Add their profession or career for the career section"
+      },
+      "bio": {
+        "label": "Biography",
+        "description": "Add a personal biography or life story"
+      },
+      "education": {
+        "label": "Education",
+        "description": "Add education history to enrich their story"
+      },
+      "employment": {
+        "label": "Employment",
+        "description": "Add work history to complete the career section"
+      },
+      "residences": {
+        "label": "Residences",
+        "description": "Add places they lived for the places section"
+      },
+      "relationships": {
+        "label": "Family Connections",
+        "description": "Add family relationships for the family section"
+      },
+      "photos": {
+        "label": "Photos",
+        "description": "Add photos to bring their story to life"
+      }
+    }
   }
 }
 
