@@ -52,7 +52,7 @@ export async function GET(
       return NextResponse.json({ columns: schema, accessLevel: tableConfig.accessLevel });
     }
 
-    const columnInfo: ColumnInfo[] = ((columns as Record<string, string | null>[] | null) || []).map((col) => ({
+    const columnInfo: ColumnInfo[] = ((columns as unknown as Record<string, string | null>[] | null) || []).map((col) => ({
       name: col.column_name || '',
       type: col.data_type || 'text',
       nullable: col.is_nullable === 'YES',
