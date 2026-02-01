@@ -6,17 +6,18 @@ export default async function DbExplorerPage() {
   const supabase = await getSupabaseSSR();
   const { data: { user } } = await supabase.auth.getUser();
 
-  let profile: { first_name: string | null; last_name: string | null } | null = null;
+  let adminName = 'Admin';
   if (user?.id) {
     const { data } = await supabase
       .from('user_profiles')
       .select('first_name, last_name')
       .eq('id', user.id)
       .single();
-    profile = data;
+    if (data) {
+      const profile = data as { first_name: string | null; last_name: string | null };
+      adminName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Admin';
+    }
   }
-
-  const adminName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Admin';
 
   return (
     <div className="space-y-6">

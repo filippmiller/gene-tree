@@ -23,13 +23,13 @@ export default async function AdminRootLayout({
     .from('user_profiles')
     .select('role, first_name, last_name')
     .eq('id', user.id)
-    .single();
+    .single() as { data: { role: string | null; first_name: string | null; last_name: string | null } | null };
 
   if (profile?.role !== 'admin') {
     redirect(`/${locale}/app`);
   }
 
-  const adminName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Admin';
+  const adminName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Admin';
 
   return (
     <AdminLayout adminName={adminName}>

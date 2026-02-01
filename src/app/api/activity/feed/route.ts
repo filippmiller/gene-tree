@@ -303,7 +303,7 @@ async function synthesizeActivityEvents(
             display_data: {
               actor_name: `${photo.uploader.first_name} ${photo.uploader.last_name}`,
               subject_title: photo.caption || 'a photo',
-              related_profile_name: targetName,
+              related_profile_name: targetName ?? undefined,
               media_type: photo.type,
             },
             visibility: photo.visibility || 'family',
