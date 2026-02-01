@@ -20,6 +20,7 @@ import {
   Menu,
   X,
   Trophy,
+  Leaf,
 } from "lucide-react";
 
 export default function Nav() {
@@ -47,24 +48,24 @@ export default function Nav() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/50 dark:border-white/10 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 shadow-sm shadow-violet-500/5">
+    <nav className="sticky top-0 z-50 border-b border-border/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 dark:supports-[backdrop-filter]:bg-gray-900/70 shadow-sm shadow-primary/5">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo / Brand */}
+          {/* Logo / Brand - Heritage Style */}
           <Link
             href={`/${locale}/app`}
             className="flex items-center gap-3 font-bold text-lg group"
           >
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 transition-transform group-hover:scale-105">
-              <TreePine className="h-5 w-5 text-white" />
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-emerald-700 flex items-center justify-center shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
+              <Leaf className="h-5 w-5 text-white" />
             </div>
-            <span className="hidden sm:inline bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="hidden sm:inline bg-gradient-to-r from-primary to-emerald-700 bg-clip-text text-transparent font-heritage">
               GeneTree
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1 bg-white/50 dark:bg-gray-800/50 rounded-full p-1 backdrop-blur-sm border border-white/50 dark:border-white/10">
+          <div className="hidden md:flex items-center gap-1 bg-white/50 dark:bg-gray-800/50 rounded-full p-1 backdrop-blur-sm border border-border/50">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.href);
@@ -72,9 +73,9 @@ export default function Nav() {
                 <Link key={item.href} href={item.href} prefetch={false}>
                   <button
                     className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                      "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                       active
-                        ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25"
+                        ? "bg-gradient-to-r from-primary to-emerald-700 text-white shadow-lg shadow-primary/25"
                         : "text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-gray-700/80"
                     )}
                   >
@@ -123,7 +124,7 @@ export default function Nav() {
         {/* Mobile Navigation */}
         <div
           className={cn(
-            "md:hidden overflow-hidden transition-all duration-300 ease-out",
+            "md:hidden overflow-hidden transition-all duration-300 ease-heritage",
             mobileMenuOpen ? "max-h-[500px] pb-4" : "max-h-0"
           )}
         >
@@ -140,9 +141,9 @@ export default function Nav() {
                 >
                   <div
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300",
                       active
-                        ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25"
+                        ? "bg-gradient-to-r from-primary to-emerald-700 text-white shadow-lg shadow-primary/25"
                         : "text-foreground hover:bg-white/80 dark:hover:bg-gray-800/80"
                     )}
                   >
