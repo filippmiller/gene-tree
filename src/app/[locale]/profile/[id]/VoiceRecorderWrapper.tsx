@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mic, X } from 'lucide-react';
+import { Mic } from 'lucide-react';
 import { VoiceRecorder } from '@/components/voice';
 
 interface Props {

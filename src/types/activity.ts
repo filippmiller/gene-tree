@@ -147,18 +147,36 @@ export function getActivityDescription(event: ActivityEventWithActor): string {
  * Get navigation link for activity event
  */
 export function getActivityLink(event: ActivityEvent): string {
-  switch (event.subject_type) {
-    case 'story':
-      return `/stories/${event.subject_id}`;
-    case 'photo':
-      return `/photos/${event.subject_id}`;
-    case 'profile':
-      return `/profile/${event.subject_id}`;
-    case 'comment':
-      // Comments link to their parent story
-      return event.display_data.subject_title
-        ? `/stories/${event.subject_id}`
-        : '/stories';
+  // Handle synthesized events with prefixed IDs
+  const subjectId = event.subject_id;
+
+  // Extract real ID if prefixed
+  const getRealId = (id: string, prefix: string) =>
+    id.startsWith(prefix) ? id.slice(prefix.length) : id;
+
+  switch (event.event_type) {
+    case 'relative_added':
+      // Link to people page since pending relatives may not have profile pages
+      return '/people';
+    case 'photo_added':
+      const photoId = getRealId(subjectId, 'photo-');
+      return `/photos/${photoId}`;
+    case 'profile_updated':
+      const profileId = getRealId(subjectId, 'profile-').split('-')[0]; // Handle profile-uuid-timestamp format
+      return `/profile/${profileId}`;
+    case 'story_created':
+      return `/stories/${subjectId}`;
+    case 'reaction_added':
+    case 'comment_added':
+      // These events link to their subject (story, photo, etc.)
+      if (event.subject_type === 'story') {
+        return `/stories/${subjectId}`;
+      } else if (event.subject_type === 'photo') {
+        return `/photos/${subjectId}`;
+      }
+      return '/dashboard';
+    case 'relationship_verified':
+      return '/people';
     default:
       return '/dashboard';
   }

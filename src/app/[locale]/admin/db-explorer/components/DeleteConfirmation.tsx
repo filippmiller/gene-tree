@@ -71,7 +71,7 @@ export function DeleteConfirmation({
         </DialogHeader>
 
         <div className="space-y-4">
-          <Alert variant="destructive" className="bg-destructive/10">
+          <Alert variant="error" className="bg-destructive/10">
             <div className="text-sm">
               <p className="font-medium">You are about to delete:</p>
               <p className="mt-1 font-mono text-xs">

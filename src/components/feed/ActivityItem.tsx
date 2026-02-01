@@ -13,6 +13,7 @@ import {
   CheckCircle,
   XCircle,
   ChevronRight,
+  Pencil,
   type LucideIcon
 } from 'lucide-react';
 import type { ActivityEventWithActor } from '@/types/activity';
@@ -37,6 +38,7 @@ const activityIconConfig: Record<string, { icon: LucideIcon; gradient: string; s
   reaction_added: { icon: Heart, gradient: 'from-rose-500 to-pink-600', shadow: 'shadow-rose-500/25' },
   story_created: { icon: BookOpen, gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/25' },
   photo_added: { icon: ImagePlus, gradient: 'from-sky-500 to-blue-600', shadow: 'shadow-sky-500/25' },
+  profile_updated: { icon: Pencil, gradient: 'from-slate-500 to-gray-600', shadow: 'shadow-slate-500/25' },
   STORY_SUBMITTED: { icon: BookOpen, gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/25' },
   STORY_APPROVED: { icon: CheckCircle, gradient: 'from-emerald-500 to-green-600', shadow: 'shadow-emerald-500/25' },
   STORY_REJECTED: { icon: XCircle, gradient: 'from-rose-500 to-pink-600', shadow: 'shadow-rose-500/25' },
@@ -45,10 +47,45 @@ const activityIconConfig: Record<string, { icon: LucideIcon; gradient: string; s
 const defaultIconConfig = { icon: UserPlus, gradient: 'from-gray-500 to-gray-600', shadow: 'shadow-gray-500/25' };
 
 // Determine if an activity subject can receive reactions
-function canReceiveReactions(eventType: string, subjectType: string): boolean {
+function canReceiveReactions(eventType: string, subjectType: string, subjectId: string): boolean {
   // Only stories and photos can receive reactions from activity items
+  // Exclude synthesized events (prefixed IDs) from reactions since they may not have real DB records
+  const isSynthesizedEvent = subjectId.startsWith('relative-') ||
+                             subjectId.startsWith('photo-') ||
+                             subjectId.startsWith('profile-');
+
+  // For synthesized photo events, we can still react (extract real ID)
+  if (eventType === 'photo_added' && subjectId.startsWith('photo-')) {
+    return true;
+  }
+
+  // Other synthesized events don't support reactions
+  if (isSynthesizedEvent) {
+    return false;
+  }
+
   return ['story_created', 'STORY_APPROVED', 'photo_added'].includes(eventType) ||
          ['story', 'photo'].includes(subjectType);
+}
+
+// Extract real ID from potentially prefixed ID
+function getRealSubjectId(subjectId: string): string {
+  if (subjectId.startsWith('photo-')) {
+    return subjectId.slice('photo-'.length);
+  }
+  if (subjectId.startsWith('relative-')) {
+    return subjectId.slice('relative-'.length);
+  }
+  if (subjectId.startsWith('profile-')) {
+    // Handle profile-uuid-timestamp format
+    const parts = subjectId.slice('profile-'.length).split('-');
+    // UUID has 5 parts separated by dashes
+    if (parts.length >= 5) {
+      return parts.slice(0, 5).join('-');
+    }
+    return parts[0];
+  }
+  return subjectId;
 }
 
 export default function ActivityItem({
@@ -72,7 +109,7 @@ export default function ActivityItem({
     ? REACTION_EMOJIS[event.display_data!.reaction_type as keyof typeof REACTION_EMOJIS]
     : null;
 
-  const showReactions = enableReactions && canReceiveReactions(event.event_type, event.subject_type);
+  const showReactions = enableReactions && canReceiveReactions(event.event_type, event.subject_type, event.subject_id);
 
   const handleReaction = useCallback(async (reactionType: ReactionType, e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,15 +119,15 @@ export default function ActivityItem({
     setIsReacting(true);
 
     try {
-      // Toggle reaction
-      const isRemoving = userReaction === reactionType;
+      // Use real subject ID for reactions (extract from prefixed IDs)
+      const realSubjectId = getRealSubjectId(event.subject_id);
 
       const response = await fetch('/api/reactions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           target_type: event.subject_type,
-          target_id: event.subject_id,
+          target_id: realSubjectId,
           reaction_type: reactionType,
         }),
       });

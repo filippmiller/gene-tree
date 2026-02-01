@@ -49,6 +49,7 @@ export default function PhotoMagicDialog({
     beforeUrl: string;
     afterUrl: string;
     newPhotoId?: string;
+    isDemo?: boolean;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,6 +68,7 @@ export default function PhotoMagicDialog({
     save: 'Сохранить',
     tryAnother: 'Попробовать другое',
     errorTitle: 'Ошибка',
+    demoNotice: 'Демо-режим: API не настроен. Настройте REPLICATE_API_TOKEN для реального раскрашивания.',
   } : {
     title: 'Photo Magic',
     subtitle: 'Enhance old photos with AI',
@@ -82,6 +84,7 @@ export default function PhotoMagicDialog({
     save: 'Save',
     tryAnother: 'Try Another',
     errorTitle: 'Error',
+    demoNotice: 'Demo mode: API not configured. Set REPLICATE_API_TOKEN for real colorization.',
   };
 
   const enhancements: Enhancement[] = [
@@ -108,12 +111,13 @@ export default function PhotoMagicDialog({
     },
   ];
 
-  const handleColorized = (colorizedUrl: string, colorizedPhotoId?: string) => {
+  const handleColorized = (colorizedUrl: string, colorizedPhotoId?: string, isDemo?: boolean) => {
     setResult({
       type: 'colorize',
       beforeUrl: photoUrl,
       afterUrl: colorizedUrl,
       newPhotoId: colorizedPhotoId,
+      isDemo,
     });
     setProcessing(null);
     setError(null);
@@ -166,6 +170,12 @@ export default function PhotoMagicDialog({
           {/* Show result comparison */}
           {result && (
             <div className="space-y-4">
+              {/* Demo mode notice */}
+              {result.isDemo && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-700 text-sm">
+                  <p>{t.demoNotice}</p>
+                </div>
+              )}
               <BeforeAfter
                 beforeUrl={result.beforeUrl}
                 afterUrl={result.afterUrl}

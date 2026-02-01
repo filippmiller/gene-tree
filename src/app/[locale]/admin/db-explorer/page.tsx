@@ -9,7 +9,7 @@ export default async function DbExplorerPage() {
   const { data: profile } = await supabase
     .from('user_profiles')
     .select('first_name, last_name')
-    .eq('id', user?.id)
+    .eq('id', user?.id ?? '')
     .single();
 
   const adminName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim() || 'Admin';

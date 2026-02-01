@@ -3,6 +3,7 @@ import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import Nav from '@/components/Nav';
 import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import InvitationChecker from '@/components/invitations/InvitationChecker';
+import PostAuthHandler from '@/components/auth/PostAuthHandler';
 
 /**
  * Protected Layout - Auth Guard
@@ -35,6 +36,7 @@ export default async function ProtectedLayout({
 
   return (
     <>
+      <PostAuthHandler />
       <InvitationChecker />
       <Nav />
       <div className="max-w-7xl mx-auto w-full pb-20 md:pb-0">

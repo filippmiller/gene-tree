@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import ActivityItem from './ActivityItem';
 import { Button } from '@/components/ui/button';
-import { Activity, RefreshCw, Inbox, Wifi, WifiOff, Bell } from 'lucide-react';
+import { RefreshCw, Inbox, Wifi, WifiOff, Bell } from 'lucide-react';
 import { useRealtimeFeed } from '@/hooks/useRealtimeFeed';
 import type { ActivityEventWithActor, ActivityFeedResponse } from '@/types/activity';
 import { cn } from '@/lib/utils';

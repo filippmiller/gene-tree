@@ -21,10 +21,14 @@ export async function GET(request: NextRequest) {
   const error = requestUrl.searchParams.get('error');
   const errorDescription = requestUrl.searchParams.get('error_description');
 
+  // Extract locale from the next parameter or default to 'en'
+  const localeMatch = next.match(/^\/(en|ru)\//);
+  const locale = localeMatch ? localeMatch[1] : 'en';
+
   // Handle error from Supabase (e.g., expired link)
   if (error) {
     console.error('[AUTH-CALLBACK] Error:', error, errorDescription);
-    const errorUrl = new URL('/en/sign-in', requestUrl.origin);
+    const errorUrl = new URL(`/${locale}/sign-in`, requestUrl.origin);
     errorUrl.searchParams.set('error', errorDescription || error);
     return NextResponse.redirect(errorUrl);
   }
@@ -77,5 +81,5 @@ export async function GET(request: NextRequest) {
 
   // If no valid auth parameters or verification failed, redirect to sign-in
   console.log('[AUTH-CALLBACK] No valid auth parameters, redirecting to sign-in');
-  return NextResponse.redirect(new URL('/en/sign-in', requestUrl.origin));
+  return NextResponse.redirect(new URL(`/${locale}/sign-in`, requestUrl.origin));
 }

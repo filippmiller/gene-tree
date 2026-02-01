@@ -8,7 +8,7 @@ import { useLocale } from 'next-intl';
 interface ColorizeButtonProps {
   photoId: string;
   photoUrl?: string;
-  onColorized?: (colorizedUrl: string, colorizedPhotoId?: string) => void;
+  onColorized?: (colorizedUrl: string, colorizedPhotoId?: string, isDemo?: boolean) => void;
   onError?: (error: string) => void;
   variant?: 'default' | 'outline' | 'ghost' | 'secondary';
   size?: 'default' | 'sm' | 'lg' | 'icon';
@@ -82,7 +82,7 @@ export default function ColorizeButton({
       }
 
       setProgress(t.success);
-      onColorized?.(data.colorizedUrl, data.colorizedPhotoId);
+      onColorized?.(data.colorizedUrl, data.colorizedPhotoId, data.demo === true);
 
       // Reset after short delay to show success
       setTimeout(() => {

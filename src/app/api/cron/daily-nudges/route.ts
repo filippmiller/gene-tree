@@ -50,11 +50,10 @@ interface UserProfile {
 interface SpouseRelationship {
   invited_by: string;
   id: string;
+  related_to_user_id: string | null;
   marriage_date: string | null;
-  person1_first_name: string;
-  person1_last_name: string;
-  person2_first_name: string;
-  person2_last_name: string;
+  first_name: string;
+  last_name: string;
 }
 
 interface FamilyMember {
@@ -153,7 +152,16 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const admin = getSupabaseAdmin();
+  let admin: ReturnType<typeof getSupabaseAdmin>;
+  try {
+    admin = getSupabaseAdmin();
+  } catch (envError) {
+    console.error('[Daily Nudges] Failed to initialize Supabase admin:', envError);
+    return NextResponse.json(
+      { error: 'Configuration error', details: String(envError) },
+      { status: 500 }
+    );
+  }
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -331,12 +339,14 @@ export async function GET(request: NextRequest) {
     }
 
     // 3. Process anniversaries from pending_relatives (spouse relationships)
+    // Note: related_to_user_id contains the actual user ID for verified spouses
     const { data: spouseRelations, error: spouseError } = await admin
       .from('pending_relatives')
       .select(
         `
         invited_by,
         id,
+        related_to_user_id,
         marriage_date,
         first_name,
         last_name
@@ -363,7 +373,7 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        // Get person1 details
+        // Get person1 details (the inviter)
         const { data: person1 } = await admin
           .from('user_profiles')
           .select('first_name, last_name')
@@ -372,26 +382,44 @@ export async function GET(request: NextRequest) {
 
         if (!person1) continue;
 
+        // For verified spouses, related_to_user_id contains the actual user ID
+        // For pending invites (not verified), we use the pending_relatives name
+        const spouse2UserId = relation.related_to_user_id || null;
+        let person2Name = `${relation.first_name} ${relation.last_name}`;
+
+        // If spouse has a user profile, get their current name from profile
+        if (spouse2UserId) {
+          const { data: person2Profile } = await admin
+            .from('user_profiles')
+            .select('first_name, last_name')
+            .eq('id', spouse2UserId)
+            .single();
+
+          if (person2Profile) {
+            person2Name = `${person2Profile.first_name} ${person2Profile.last_name}`;
+          }
+        }
+
         const yearsMarried = calculateYears(relation.marriage_date, today) + (daysUntil === 0 ? 0 : 1);
 
         const payload: AnniversaryReminderPayload = {
           person1_id: relation.invited_by,
-          person2_id: relation.id,
+          person2_id: spouse2UserId || relation.id, // Use user ID if available, else record ID
           person1_name: `${person1.first_name} ${person1.last_name}`,
-          person2_name: `${relation.first_name} ${relation.last_name}`,
+          person2_name: person2Name,
           marriage_date: relation.marriage_date,
           years_married: yearsMarried,
           days_until: daysUntil,
         };
 
-        // Create notification
+        // Create notification - use person1 as the primary profile
         const { data: notification, error: notifError } = await admin
           .from('notifications')
           .insert({
             event_type: 'ANNIVERSARY_REMINDER',
             actor_profile_id: relation.invited_by,
             primary_profile_id: relation.invited_by,
-            related_profile_id: relation.id,
+            related_profile_id: spouse2UserId, // Only set if spouse has user profile
             payload: payload as unknown as Json,
           })
           .select('id')
@@ -402,20 +430,26 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        // Get family members of both spouses
+        // Get family members of person1 (and person2 if they have a user account)
+        const allFamily = new Set<string>();
+
         const { data: family1 } = await admin.rpc('get_family_circle_profile_ids', {
           p_user_id: relation.invited_by,
         });
-        const { data: family2 } = await admin.rpc('get_family_circle_profile_ids', {
-          p_user_id: relation.id,
-        });
 
-        const allFamily = new Set<string>();
         for (const m of (family1 as { profile_id: string }[]) || []) {
           allFamily.add(m.profile_id);
         }
-        for (const m of (family2 as { profile_id: string }[]) || []) {
-          allFamily.add(m.profile_id);
+
+        // Only get family circle for spouse2 if they have a real user profile
+        if (spouse2UserId) {
+          const { data: family2 } = await admin.rpc('get_family_circle_profile_ids', {
+            p_user_id: spouse2UserId,
+          });
+
+          for (const m of (family2 as { profile_id: string }[]) || []) {
+            allFamily.add(m.profile_id);
+          }
         }
 
         const recipientRows = Array.from(allFamily).map((profileId) => ({

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { getSupabaseBrowser } from '@/lib/supabase/browser';
 import { Mic, Square, Loader2, Play, Pause, RotateCcw, Check, X, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -92,7 +92,7 @@ export default function VoiceRecorder({
   locale = 'en',
 }: Props) {
   const t = translations[locale];
-  const supabase = createClient();
+  const supabase = getSupabaseBrowser();
 
   const [state, setState] = useState<RecorderState>('idle');
   const [error, setError] = useState<string | null>(null);

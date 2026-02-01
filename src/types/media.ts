@@ -189,6 +189,7 @@ export interface ColorizeResponse {
   colorizedPhotoId?: string;
   colorizedUrl?: string;
   error?: string;
+  demo?: boolean;  // True if demo mode was used (no API key)
 }
 
 export interface PhotoWithOriginal extends Photo {

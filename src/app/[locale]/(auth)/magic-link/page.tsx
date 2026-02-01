@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { signInWithMagicLink } from '@/lib/auth.supabase';
 import { Button } from '@/components/ui/button';
@@ -50,15 +50,19 @@ export default function MagicLinkPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+  const [initialized, setInitialized] = useState(false);
   const { locale } = useParams<{ locale: string }>();
   const searchParams = useSearchParams();
   const t = translations[locale as keyof typeof translations] || translations.en;
 
-  // Pre-fill email from query params (e.g., from invitation)
+  // Pre-fill email from query params (e.g., from invitation) - properly in useEffect
   const prefillEmail = searchParams.get('email');
-  if (prefillEmail && !email && !sent) {
-    setEmail(prefillEmail);
-  }
+  useEffect(() => {
+    if (prefillEmail && !initialized) {
+      setEmail(prefillEmail);
+      setInitialized(true);
+    }
+  }, [prefillEmail, initialized]);
 
   // Get redirect destination from query params
   const redirectTo = searchParams.get('redirect') || `/${locale}/app`;

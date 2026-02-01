@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { getSupabaseBrowser } from '@/lib/supabase/browser';
 import { Play, Pause, Volume2, Clock, User, FileText, MoreVertical, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -71,7 +71,7 @@ export default function VoiceStoriesList({
   showNarrator = true,
 }: Props) {
   const t = translations[locale];
-  const supabase = createClient();
+  const supabase = getSupabaseBrowser();
 
   const [stories, setStories] = useState<VoiceStory[]>([]);
   const [loading, setLoading] = useState(true);
