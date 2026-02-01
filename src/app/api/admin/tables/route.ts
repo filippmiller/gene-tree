@@ -29,7 +29,7 @@ export async function GET(request: Request) {
   try {
     // Get list of tables from information_schema
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: tables, error: tablesError } = await (adminClient.rpc as any)('get_table_list');
+    const { data: tables, error: tablesError } = await (adminClient as any).rpc('get_table_list');
 
     if (tablesError) {
       // Fallback: use our predefined table list
@@ -108,7 +108,7 @@ async function getTablesFromConfig(adminClient: ReturnType<typeof getSupabaseAdm
       name: tableName,
       displayName: config.displayName || tableName,
       category: config.category,
-      accessLevel: config.accessLevel === 'hidden' ? 'read-only' : config.accessLevel,
+      accessLevel: config.accessLevel,
       recordCount,
     });
   }

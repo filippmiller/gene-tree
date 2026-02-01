@@ -193,7 +193,7 @@ export function useRealtimeFeed(options: UseRealtimeFeedOptions = {}): UseRealti
     if (!actor) return;
 
     // Fetch target profile if available
-    let targetName = null;
+    let targetName: string | undefined = undefined;
     if (newRecord.target_profile_id) {
       const target = await fetchActorProfile(newRecord.target_profile_id);
       if (target) {

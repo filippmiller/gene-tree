@@ -335,7 +335,8 @@ export async function extractMigrationData(
   const allPaths: MigrationPath[] = [];
 
   // Get the root user's profile
-  const { data: rootProfile } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: rootProfile } = await (supabase as any)
     .from('user_profiles')
     .select('*')
     .eq('id', userId)
@@ -344,7 +345,8 @@ export async function extractMigrationData(
   const rootBirthYear = rootProfile ? extractYear(rootProfile.birth_date) : undefined;
 
   // Get all related profiles through relationships
-  const { data: relationships } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: relationships } = await (supabase as any)
     .from('relationships')
     .select('user1_id, user2_id')
     .or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
@@ -359,13 +361,15 @@ export async function extractMigrationData(
   }
 
   // Fetch all profiles
-  const { data: profiles } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: profiles } = await (supabase as any)
     .from('user_profiles')
     .select('*')
     .in('id', Array.from(profileIds));
 
   // Fetch all residences for these profiles
-  const { data: allResidences } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: allResidences } = await (supabase as any)
     .from('person_residence')
     .select('*')
     .in('person_id', Array.from(profileIds))
@@ -431,7 +435,8 @@ export async function extractMigrationData(
   }
 
   // Also process deceased relatives
-  const { data: deceasedRelatives } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: deceasedRelatives } = await (supabase as any)
     .from('deceased_relatives')
     .select('*')
     .eq('added_by_user_id', userId);

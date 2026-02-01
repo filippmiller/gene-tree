@@ -32,7 +32,8 @@ export async function GET(req: Request) {
 
     // Call the database function to get the weekly prompt
     const admin = getSupabaseAdmin();
-    const { data: promptResult, error } = await admin.rpc('get_weekly_prompt', {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: promptResult, error } = await (admin as any).rpc('get_weekly_prompt', {
       p_user_id: user.id,
       p_category: category,
     });
@@ -108,7 +109,8 @@ export async function POST(req: Request) {
 
     if (action === 'answered') {
       // Mark as answered using the database function
-      const { error } = await admin.rpc('mark_prompt_answered', {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (admin as any).rpc('mark_prompt_answered', {
         p_user_id: user.id,
         p_prompt_id: promptId,
         p_story_id: storyId || null,
@@ -126,7 +128,8 @@ export async function POST(req: Request) {
         ((now.getTime() - startOfYear.getTime()) / 86400000 + startOfYear.getDay() + 1) / 7
       );
 
-      const { error } = await admin
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (admin as any)
         .from('user_prompt_history')
         .upsert({
           user_id: user.id,

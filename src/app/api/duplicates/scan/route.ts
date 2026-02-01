@@ -63,13 +63,14 @@ export async function GET(request: NextRequest) {
     // Insert new potential duplicates
     let inserted = 0;
     for (const dup of duplicates) {
-      const { error: insertError } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: insertError } = await (supabase as any)
         .from('potential_duplicates')
         .insert({
           profile_a_id: dup.profile_a_id,
           profile_b_id: dup.profile_b_id,
           confidence_score: dup.confidence_score,
-          match_reasons: dup.match_reasons as Record<string, unknown>,
+          match_reasons: dup.match_reasons,
           status: 'pending',
         });
 

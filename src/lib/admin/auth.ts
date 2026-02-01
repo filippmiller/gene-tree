@@ -28,13 +28,14 @@ export async function requireAdminContext(): Promise<AdminAuthResult> {
     return { authorized: false, reason: 'not_authenticated' };
   }
 
-  const { data: profile } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: profile } = await (supabase as any)
     .from('user_profiles')
     .select('role, first_name, last_name')
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin') {
+  if ((profile as { role?: string })?.role !== 'admin') {
     return { authorized: false, reason: 'not_admin' };
   }
 

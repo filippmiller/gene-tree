@@ -30,7 +30,8 @@ export async function logAdminAction(entry: AuditLogEntry): Promise<void> {
   const adminClient = getSupabaseAdmin();
 
   try {
-    await adminClient.from('audit_logs').insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (adminClient as any).from('audit_logs').insert({
       action: entry.action,
       entity_type: entry.entityType,
       entity_id: entry.entityId || null,

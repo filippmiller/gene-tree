@@ -91,14 +91,16 @@ export async function GET(
       userIds.add(direction === 'received' ? a.from_user_id : a.to_user_id);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const profiles: Record<string, any> = {};
     if (userIds.size > 0) {
-      const { data: profileData } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: profileData } = await (supabase as any)
         .from('user_profiles')
         .select('id, first_name, last_name, avatar_url')
         .in('id', Array.from(userIds));
 
-      for (const p of (profileData || [])) {
+      for (const p of (profileData || []) as { id: string }[]) {
         profiles[p.id] = p;
       }
     }

@@ -3,9 +3,15 @@ import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization to avoid build errors when API key is missing
+function getOpenAI(): OpenAI {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY environment variable is required');
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 interface TranscribeRequest {
   storyId: string;
@@ -77,7 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Transcrib
     const audioFile = new File([audioBuffer], 'audio.webm', { type: 'audio/webm' });
 
     // Call OpenAI Whisper API
-    const transcription = await openai.audio.transcriptions.create({
+    const transcription = await getOpenAI().audio.transcriptions.create({
       file: audioFile,
       model: 'whisper-1',
       response_format: 'verbose_json',
