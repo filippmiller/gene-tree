@@ -133,9 +133,48 @@ All 21 roadmap issues closed:
 4. **Testing**: Run full E2E test suite
 5. **Type Generation**: Regenerate Supabase types to remove `as any` casts
 
+## Heritage Design System (Part 2)
+
+Following competitor research of Ancestry.com, MyHeritage, FamilySearch, and modern family apps, implemented a comprehensive "Heritage" design system.
+
+### Design Philosophy
+- **Inspiration**: Sage green from Ancestry/FamilySearch, warm amber accents
+- **Unique Identity**: "Vintage photo album" aesthetic
+- **Typography**: Playfair Display serif for headings, Inter sans for body
+
+### Color Palette Changes
+| Old | New | Meaning |
+|-----|-----|---------|
+| Violet Primary | Heritage Sage (#638552) | Trustworthy, natural |
+| Sky Accent | Rich Amber (#d4874a) | Warm, vintage |
+| Cool Gray Muted | Warm Taupe | Heritage feel |
+
+### New CSS Classes
+- `.heritage-card` - Warm shadow, hover lift
+- `.hint-badge` - Ancestry-style leaf badges
+- `.btn-pill` - Pill-shaped buttons
+- `.photo-frame` / `.photo-frame-vintage` - Photo styling
+- `.story-card` - Paper texture background
+- `.sepia-effect` - Vintage photo filter
+- `.glass-panel` - Frosted glass effect
+
+### New Tailwind Tokens
+- `font-heritage` - Playfair Display serif
+- `rounded-heritage` / `rounded-pill` - Modern border radius
+- `shadow-heritage` / `shadow-frame` - Warm shadows
+- `generation-0` to `generation-4` - Tree colors
+- `relation-parent/child/spouse/sibling` - Relationship colors
+
+### Files Changed
+- `src/app/globals.css` - Complete rewrite with heritage variables
+- `tailwind.config.ts` - Heritage tokens and utilities
+- `docs/DESIGN_SYSTEM.md` - Comprehensive documentation
+
 ## Session Notes
 
 - Railway deployment successful after resolving 13+ TypeScript errors
 - Build time: ~3 minutes on Railway
 - All features bilingual (English/Russian)
 - Demo modes available for AI features without API keys
+- Heritage Design System implemented with competitor-inspired patterns
+- Build verified passing with new design system

@@ -1,102 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* 2026 Warm Social Network Palette */
-    --background: 240 20% 99%;
-    --foreground: 240 10% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
+    /*
+     * Heritage Design System
+     * Inspired by: Ancestry, MyHeritage, FamilySearch
+     * Unique identity: Warm Sage + Rich Amber
+     */
 
-    /* Primary: Warm Violet */
-    --primary: 262 83% 58%;
+    /* Base */
+    --background: 40 30% 98%;
+    --foreground: 30 15% 12%;
+    --card: 40 40% 99%;
+    --card-foreground: 30 15% 12%;
+    --popover: 40 40% 99%;
+    --popover-foreground: 30 15% 12%;
+
+    /* Primary: Heritage Sage Green (inspired by Ancestry/FamilySearch) */
+    --primary: 95 35% 42%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Soft background */
-    --secondary: 240 15% 95%;
-    --secondary-foreground: 240 10% 25%;
+    /* Secondary: Warm cream background */
+    --secondary: 40 25% 94%;
+    --secondary-foreground: 30 15% 25%;
 
-    /* Muted: Warm gray */
-    --muted: 240 12% 93%;
-    --muted-foreground: 240 6% 45%;
+    /* Muted: Warm taupe */
+    --muted: 35 15% 91%;
+    --muted-foreground: 30 10% 45%;
 
-    /* Accent: Sky blue */
-    --accent: 199 89% 48%;
+    /* Accent: Rich Amber/Gold (like vintage photos) */
+    --accent: 32 65% 55%;
     --accent-foreground: 0 0% 100%;
 
-    /* Destructive: Warm red */
-    --destructive: 0 84% 60%;
+    /* Destructive: Soft terracotta red */
+    --destructive: 8 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Success: Emerald */
-    --success: 142 76% 36%;
+    /* Success: Deep forest green */
+    --success: 145 55% 38%;
     --success-foreground: 0 0% 100%;
 
-    /* Warning: Amber */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    /* Warning: Golden amber */
+    --warning: 45 85% 50%;
+    --warning-foreground: 30 20% 15%;
 
-    /* Borders and inputs */
-    --border: 240 10% 90%;
-    --input: 240 10% 90%;
-    --ring: 262 83% 58%;
-    --radius: 0.75rem;
+    /* Info: Dusty blue (old photos) */
+    --info: 210 40% 52%;
+    --info-foreground: 0 0% 100%;
 
-    /* Charts */
-    --chart-1: 262 83% 58%;
-    --chart-2: 199 89% 48%;
-    --chart-3: 24 94% 53%;
-    --chart-4: 142 76% 36%;
-    --chart-5: 340 75% 55%;
+    /* Borders and inputs - warmer */
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 95 35% 42%;
+    --radius: 1rem;
 
-    /* Glassmorphism */
-    --glass-bg: 0 0% 100% / 0.7;
-    --glass-border: 0 0% 100% / 0.5;
-    --glass-shadow: 262 83% 58% / 0.08;
+    /* Charts - heritage palette */
+    --chart-1: 95 35% 42%;
+    --chart-2: 32 65% 55%;
+    --chart-3: 145 55% 38%;
+    --chart-4: 210 40% 52%;
+    --chart-5: 8 70% 55%;
+
+    /* Generation colors (for family tree) */
+    --generation-0: 95 35% 42%;
+    --generation-1: 145 55% 38%;
+    --generation-2: 210 40% 52%;
+    --generation-3: 32 65% 55%;
+    --generation-4: 280 45% 50%;
+
+    /* Relationship colors */
+    --relation-parent: 95 35% 42%;
+    --relation-child: 145 55% 38%;
+    --relation-spouse: 340 55% 52%;
+    --relation-sibling: 210 40% 52%;
+
+    /* Glassmorphism - warmer */
+    --glass-bg: 40 40% 99% / 0.85;
+    --glass-border: 35 20% 88% / 0.6;
+    --glass-shadow: 30 30% 20% / 0.08;
+
+    /* Heritage specific */
+    --paper: 42 35% 96%;
+    --sepia: 35 45% 85%;
+    --antique: 38 30% 92%;
   }
 
   .dark {
-    --background: 240 12% 8%;
-    --foreground: 240 10% 95%;
-    --card: 240 12% 12%;
-    --card-foreground: 240 10% 95%;
-    --popover: 240 12% 12%;
-    --popover-foreground: 240 10% 95%;
+    --background: 30 15% 8%;
+    --foreground: 40 15% 92%;
+    --card: 30 12% 12%;
+    --card-foreground: 40 15% 92%;
+    --popover: 30 12% 12%;
+    --popover-foreground: 40 15% 92%;
 
-    /* Primary: Lighter violet for dark mode */
-    --primary: 262 83% 68%;
-    --primary-foreground: 240 12% 8%;
+    /* Primary: Lighter sage for dark mode */
+    --primary: 95 40% 52%;
+    --primary-foreground: 30 15% 8%;
 
-    --secondary: 240 10% 18%;
-    --secondary-foreground: 240 10% 90%;
-    --muted: 240 10% 18%;
-    --muted-foreground: 240 6% 65%;
-    --accent: 199 89% 58%;
-    --accent-foreground: 240 12% 8%;
-    --destructive: 0 72% 50%;
+    --secondary: 30 10% 18%;
+    --secondary-foreground: 40 15% 88%;
+    --muted: 30 10% 18%;
+    --muted-foreground: 35 8% 60%;
+    --accent: 32 60% 60%;
+    --accent-foreground: 30 15% 8%;
+    --destructive: 8 65% 50%;
     --destructive-foreground: 0 0% 100%;
-    --success: 142 70% 45%;
+    --success: 145 50% 45%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 85% 55%;
-    --warning-foreground: 240 12% 8%;
-    --border: 240 10% 20%;
-    --input: 240 10% 20%;
-    --ring: 262 83% 68%;
+    --warning: 45 80% 55%;
+    --warning-foreground: 30 15% 8%;
+    --info: 210 45% 58%;
+    --info-foreground: 0 0% 100%;
+    --border: 30 10% 22%;
+    --input: 30 10% 22%;
+    --ring: 95 40% 52%;
 
-    --chart-1: 262 83% 68%;
-    --chart-2: 199 89% 58%;
-    --chart-3: 24 94% 60%;
-    --chart-4: 142 70% 45%;
-    --chart-5: 340 70% 60%;
+    --chart-1: 95 40% 52%;
+    --chart-2: 32 60% 60%;
+    --chart-3: 145 50% 45%;
+    --chart-4: 210 45% 58%;
+    --chart-5: 8 65% 55%;
+
+    /* Generation colors - dark mode */
+    --generation-0: 95 40% 52%;
+    --generation-1: 145 50% 45%;
+    --generation-2: 210 45% 58%;
+    --generation-3: 32 60% 60%;
+    --generation-4: 280 50% 55%;
 
     /* Dark glassmorphism */
-    --glass-bg: 240 12% 12% / 0.8;
-    --glass-border: 262 83% 58% / 0.2;
-    --glass-shadow: 0 0% 0% / 0.4;
+    --glass-bg: 30 12% 12% / 0.9;
+    --glass-border: 95 40% 52% / 0.15;
+    --glass-shadow: 0 0% 0% / 0.5;
+
+    /* Heritage specific - dark */
+    --paper: 30 12% 14%;
+    --sepia: 30 15% 18%;
+    --antique: 30 10% 16%;
   }
 }
 
@@ -104,8 +148,119 @@
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Heritage serif headings */
+  h1, h2, h3, .font-heritage {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* Smooth transitions everywhere */
+  a, button, input, select, textarea, [role="button"] {
+    @apply transition-all duration-300;
+  }
+}
+
+@layer components {
+  /* Heritage Card Style */
+  .heritage-card {
+    @apply bg-card rounded-2xl border border-border/50 shadow-elevation-2;
+    @apply transition-all duration-300 ease-smooth;
+  }
+
+  .heritage-card:hover {
+    @apply shadow-elevation-3 -translate-y-0.5;
+  }
+
+  /* Paper texture effect */
+  .paper-texture {
+    background-color: hsl(var(--paper));
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-blend-mode: soft-light;
+  }
+
+  /* Sepia photo effect */
+  .sepia-effect {
+    filter: sepia(15%) saturate(90%);
+    @apply transition-all duration-500;
+  }
+
+  .sepia-effect:hover {
+    filter: sepia(0%) saturate(100%);
+  }
+
+  /* Hint/Match badges (like Ancestry leaf) */
+  .hint-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+    @apply bg-accent/10 text-accent border border-accent/20;
+    @apply transition-all duration-300;
+  }
+
+  .hint-badge:hover {
+    @apply bg-accent/20 border-accent/30;
+  }
+
+  /* Generation badges */
+  .generation-badge {
+    @apply inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold;
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Pill buttons (like Ancestry) */
+  .btn-pill {
+    @apply px-6 py-2.5 rounded-full font-medium;
+    @apply transition-all duration-300 ease-smooth;
+    @apply shadow-btn hover:shadow-btn-hover active:shadow-btn-active;
+    @apply active:scale-[0.98];
+  }
+
+  /* Glass panel */
+  .glass-panel {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 8px 32px hsl(var(--glass-shadow));
+  }
+
+  /* Tree connection lines */
+  .tree-connector {
+    @apply border-primary/40;
+    stroke: hsl(var(--primary) / 0.4);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  /* Profile photo frames */
+  .photo-frame {
+    @apply relative rounded-2xl overflow-hidden;
+    @apply ring-4 ring-white dark:ring-gray-800 shadow-elevation-3;
+  }
+
+  .photo-frame-vintage {
+    @apply photo-frame;
+    @apply ring-[hsl(var(--sepia))];
+  }
+
+  /* Story card (heritage feel) */
+  .story-card {
+    @apply heritage-card p-6;
+    @apply bg-[hsl(var(--paper))];
+  }
+
+  /* Timeline marker */
+  .timeline-marker {
+    @apply w-4 h-4 rounded-full bg-primary border-4 border-background;
+    @apply shadow-elevation-2;
   }
 }
 
@@ -123,4 +278,80 @@
   .pr-safe {
     padding-right: env(safe-area-inset-right, 0px);
   }
+
+  /* Text gradient for heritage effect */
+  .text-gradient-heritage {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Fade edges (for scrollable containers) */
+  .fade-edges {
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  }
+
+  /* Subtle texture overlay */
+  .texture-overlay {
+    position: relative;
+  }
+
+  .texture-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Vintage photo corners */
+  .vintage-corners {
+    @apply relative;
+  }
+
+  .vintage-corners::before,
+  .vintage-corners::after {
+    content: '';
+    @apply absolute w-4 h-4;
+    border: 2px solid hsl(var(--sepia));
+  }
+
+  .vintage-corners::before {
+    @apply top-2 left-2 border-r-0 border-b-0;
+  }
+
+  .vintage-corners::after {
+    @apply bottom-2 right-2 border-l-0 border-t-0;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Selection color */
+::selection {
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary));
+}
+
+/* Focus visible - heritage ring */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.3);
 }
