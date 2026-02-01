@@ -19,6 +19,7 @@ import {
   LogOut,
   Menu,
   X,
+  Trophy,
 } from "lucide-react";
 
 export default function Nav() {
@@ -39,6 +40,7 @@ export default function Nav() {
     { href: `/${locale}/people`, label: t("people"), icon: Users },
     { href: `/${locale}/relations`, label: t("relations"), icon: Heart },
     { href: `/${locale}/tree`, label: t("familyProfile"), icon: TreePine },
+    { href: `/${locale}/achievements`, label: t("achievements"), icon: Trophy },
     { href: `/${locale}/my-profile`, label: t("myProfile"), icon: User },
   ];
 

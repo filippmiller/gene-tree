@@ -1375,6 +1375,101 @@ export type Database = {
         }
         Relationships: []
       }
+      potential_duplicates: {
+        Row: {
+          id: string
+          profile_a_id: string
+          profile_b_id: string
+          confidence_score: number
+          match_reasons: Json
+          status: string
+          reviewed_by: string | null
+          reviewed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          profile_a_id: string
+          profile_b_id: string
+          confidence_score: number
+          match_reasons?: Json
+          status?: string
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          profile_a_id?: string
+          profile_b_id?: string
+          confidence_score?: number
+          match_reasons?: Json
+          status?: string
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "potential_duplicates_profile_a_id_fkey"
+            columns: ["profile_a_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_profile_b_id_fkey"
+            columns: ["profile_b_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merge_history: {
+        Row: {
+          id: string
+          kept_profile_id: string
+          merged_profile_id: string
+          merged_by: string
+          duplicate_record_id: string | null
+          merge_data: Json
+          relationships_transferred: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          kept_profile_id: string
+          merged_profile_id: string
+          merged_by: string
+          duplicate_record_id?: string | null
+          merge_data?: Json
+          relationships_transferred?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          kept_profile_id?: string
+          merged_profile_id?: string
+          merged_by?: string
+          duplicate_record_id?: string | null
+          merge_data?: Json
+          relationships_transferred?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merge_history_duplicate_record_id_fkey"
+            columns: ["duplicate_record_id"]
+            isOneToOne: false
+            referencedRelation: "potential_duplicates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null

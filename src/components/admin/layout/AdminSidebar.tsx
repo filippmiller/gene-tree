@@ -19,6 +19,7 @@ import {
   Bell,
   HelpCircle,
   BookOpen,
+  UserCheck,
 } from 'lucide-react';
 import { NavSection, NavItem } from '../navigation';
 
@@ -109,6 +110,11 @@ export function AdminSidebar({ adminName }: AdminSidebarProps) {
             href={`${basePath}/relationships`}
             label="Relationships"
             icon={GitBranch}
+          />
+          <NavItem
+            href={`${basePath}/duplicates`}
+            label="Duplicate Detection"
+            icon={UserCheck}
           />
           <NavItem
             href={`${basePath}/tables`}

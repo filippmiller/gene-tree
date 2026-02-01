@@ -4,6 +4,7 @@
     "people": "People",
     "relations": "Relations",
     "familyProfile": "Family Profile",
+    "achievements": "Achievements",
     "myProfile": "My Profile",
     "signOut": "Sign Out"
   },
@@ -44,7 +45,9 @@
     "askTheElder": "Ask the Elder",
     "askTheElderDescription": "Preserve family wisdom and stories",
     "emailPreferences": "Email Preferences",
-    "emailPreferencesDescription": "Configure weekly digest & reminders"
+    "emailPreferencesDescription": "Configure weekly digest & reminders",
+    "findRelatives": "Find Relatives",
+    "findRelativesDescription": "Discover potential relatives who share your ancestors"
   },
   "people": {
     "title": "People",
@@ -405,6 +408,85 @@
         "label": "Photos",
         "description": "Add photos to bring their story to life"
       }
+    }
+  },
+  "relativeFinder": {
+    "pageTitle": "Find Relatives",
+    "pageDescription": "Discover potential relatives who share your ancestors",
+    "title": "Find Relatives",
+    "description": "Discover people who share your ancestors without DNA testing",
+    "sharedAncestor": "Shared ancestor",
+    "generations": "generations apart",
+    "connect": "Connect",
+    "sendRequest": "Send Request",
+    "sending": "Sending...",
+    "messagePlaceholder": "Add a personal message (optional)...",
+    "cancel": "Cancel",
+    "requestSent": "Connection request sent successfully!",
+    "requestAccepted": "Connection accepted! You are now connected.",
+    "preferencesSaved": "Preferences saved successfully",
+    "tabs": {
+      "matches": "Potential Matches",
+      "requests": "Connection Requests",
+      "settings": "Privacy Settings"
+    },
+    "matches": {
+      "title": "Potential Relatives",
+      "description": "People who may share common ancestors with you",
+      "noMatches": "No potential matches found yet",
+      "noMatchesHint": "As more people join and build their family trees, you may discover relatives here"
+    },
+    "requests": {
+      "pending": "Pending Requests",
+      "pendingDescription": "People who want to connect with you",
+      "sent": "Sent Requests",
+      "sentDescription": "Connection requests you've sent",
+      "history": "Request History",
+      "noRequests": "No connection requests yet"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "cancelled": "Cancelled"
+    },
+    "sentTo": "Sent",
+    "receivedFrom": "Received",
+    "accept": "Accept",
+    "accepting": "Accepting...",
+    "decline": "Decline",
+    "declining": "Declining...",
+    "cancelRequest": "Cancel Request",
+    "cancelling": "Cancelling...",
+    "preferences": {
+      "title": "Privacy Settings",
+      "description": "Control how you appear in relative matching",
+      "allowMatching": {
+        "label": "Allow Relative Matching",
+        "description": "Let other users find you as a potential relative"
+      },
+      "notifyOnMatch": {
+        "label": "Notify on New Matches",
+        "description": "Receive notifications when potential relatives are found"
+      },
+      "minDepth": {
+        "label": "Minimum Relationship Distance",
+        "description": "Only show matches beyond this many generations",
+        "options": {
+          "2": "Second cousins and beyond",
+          "3": "Third cousins and beyond",
+          "4": "Fourth cousins and beyond",
+          "5": "Fifth cousins and beyond"
+        }
+      },
+      "save": "Save Changes",
+      "saving": "Saving..."
+    },
+    "errors": {
+      "fetchFailed": "Failed to load data. Please try again.",
+      "connectFailed": "Failed to send connection request",
+      "actionFailed": "Action failed. Please try again.",
+      "saveFailed": "Failed to save preferences"
     }
   }
 }

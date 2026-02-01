@@ -18,6 +18,8 @@ import {
   Settings,
   ChevronRight,
   Sparkles,
+  BookOpen,
+  Search,
 } from 'lucide-react';
 
 export default async function AppPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -216,6 +218,24 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
               iconShadow="shadow-slate-500/25"
               title={t('emailPreferences')}
               description={t('emailPreferencesDescription')}
+            />
+
+            <FeatureCard
+              href={`/${resolvedLocale}/find-relatives`}
+              icon={<Search className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-indigo-500 to-violet-600"
+              iconShadow="shadow-indigo-500/25"
+              title={t('findRelatives')}
+              description={t('findRelativesDescription')}
+            />
+
+            <FeatureCard
+              href={`/${resolvedLocale}/memory-book`}
+              icon={<BookOpen className="w-6 h-6" />}
+              iconBg="bg-gradient-to-br from-amber-500 to-orange-600"
+              iconShadow="shadow-amber-500/25"
+              title="Memory Book"
+              description="Create a printable PDF book"
             />
           </div>
         </GlassCard>
