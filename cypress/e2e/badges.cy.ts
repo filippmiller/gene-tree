@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /**
  * E2E Tests for Achievement Badges Feature
  * Tests the badge system API endpoints
