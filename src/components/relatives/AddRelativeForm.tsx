@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { getBloodRelationshipOptions, getGenderSpecificOptions } from '@/lib/relationships/generateLabel';
 import KinshipSearchField from './KinshipSearchField';
 import { mapRuLabelToRelationship } from '@/lib/relationships/kinshipMapping';
+import InviteGuardAlert, { type InviteCheckResult } from './InviteGuardAlert';
 
 interface ExistingRelative {
   id: string;
@@ -40,6 +41,10 @@ export default function AddRelativeForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingRelatives, setExistingRelatives] = useState<ExistingRelative[]>([]);
+
+  // Smart Invite Guard state
+  const [inviteCheck, setInviteCheck] = useState<InviteCheckResult | null>(null);
+  const [isCheckingInvite, setIsCheckingInvite] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     isDirect: relatedToParam ? false : true,
@@ -87,6 +92,115 @@ export default function AddRelativeForm() {
   const prefilledName = prefilledRelative
     ? [prefilledRelative.first_name, prefilledRelative.last_name].filter(Boolean).join(' ')
     : '';
+
+  // Debounced invite eligibility check
+  useEffect(() => {
+    // Skip check for deceased relatives (no invitation will be sent)
+    if (formData.isDeceased) {
+      setInviteCheck(null);
+      return;
+    }
+
+    const email = formData.email?.trim() || '';
+    const phone = formData.phone?.trim() || '';
+
+    // Clear check if no contact info
+    if (!email && !phone) {
+      setInviteCheck(null);
+      return;
+    }
+
+    // Only check if we have valid-looking email or phone
+    const hasValidEmail = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const hasValidPhone = phone && /^[\d\s()+-]{10,}$/.test(phone);
+
+    if (!hasValidEmail && !hasValidPhone) {
+      setInviteCheck(null);
+      return;
+    }
+
+    const checkEligibility = async () => {
+      setIsCheckingInvite(true);
+      try {
+        const res = await fetch('/api/invitations/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: hasValidEmail ? email : undefined,
+            phone: hasValidPhone ? phone : undefined,
+          }),
+        });
+
+        if (res.ok) {
+          const data: InviteCheckResult = await res.json();
+          setInviteCheck(data);
+        } else {
+          // On error, clear check and allow form to proceed
+          setInviteCheck(null);
+        }
+      } catch {
+        // On network error, clear check and allow form to proceed
+        setInviteCheck(null);
+      } finally {
+        setIsCheckingInvite(false);
+      }
+    };
+
+    // Debounce the check by 500ms
+    const timeout = setTimeout(checkEligibility, 500);
+    return () => clearTimeout(timeout);
+  }, [formData.email, formData.phone, formData.isDeceased]);
+
+  // Invite Guard action handlers
+  const handleSendReminder = useCallback(async (inviteId: string) => {
+    try {
+      const res = await fetch('/api/invitations/remind', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inviteId }),
+      });
+
+      if (res.ok) {
+        // Clear the check after successful reminder
+        setInviteCheck(null);
+        setError(null);
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Не удалось отправить напоминание');
+      }
+    } catch {
+      setError('Ошибка сети при отправке напоминания');
+    }
+  }, []);
+
+  const handleSendBridgeRequest = useCallback(async () => {
+    try {
+      const res = await fetch('/api/relatives/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email?.trim() || undefined,
+          phone: formData.phone?.trim() || undefined,
+          relationshipType: formData.relationshipCode,
+        }),
+      });
+
+      if (res.ok) {
+        // Redirect to people page after successful bridge request
+        router.push(`/${locale}/people`);
+        router.refresh();
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Не удалось отправить запрос на подключение');
+      }
+    } catch {
+      setError('Ошибка сети при отправке запроса');
+    }
+  }, [formData.email, formData.phone, formData.relationshipCode, locale, router]);
+
+  const handleDismissInviteCheck = useCallback(() => {
+    setInviteCheck(null);
+  }, []);
 
   const validateForm = () => {
     // Email validation
@@ -166,10 +280,16 @@ export default function AddRelativeForm() {
   const emailUsable = Boolean(formData.email && isEmailValid);
   const hasValidContact = formData.isDeceased || emailUsable || phoneUsable;
 
+  // Check if invite guard allows submission
+  const inviteBlocked = inviteCheck !== null &&
+    inviteCheck.status !== 'OK_TO_INVITE';
+
   const canSubmit = formData.firstName && formData.lastName &&
     hasValidContact &&
     formData.specificRelationship &&
-    (formData.isDirect || (formData.relatedToUserId && formData.relatedToRelationship));
+    (formData.isDirect || (formData.relatedToUserId && formData.relatedToRelationship)) &&
+    !inviteBlocked &&
+    !isCheckingInvite;
 
   const selectedOption = specificOptions.find(opt => opt.value === formData.specificRelationship);
   const relationshipLabel = selectedOption?.label || '';
@@ -451,6 +571,29 @@ export default function AddRelativeForm() {
           </div>
         )}
       </div>
+
+      {/* Smart Invite Guard Alert */}
+      {!formData.isDeceased && (
+        <div className="relative">
+          {isCheckingInvite && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/50 rounded-md z-10">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Проверка...
+              </div>
+            </div>
+          )}
+          <InviteGuardAlert
+            result={inviteCheck}
+            onSendReminder={handleSendReminder}
+            onSendBridgeRequest={handleSendBridgeRequest}
+            onDismiss={handleDismissInviteCheck}
+          />
+        </div>
+      )}
 
       <div className="border-t pt-4">
         <label className="flex items-center space-x-3 cursor-pointer">
