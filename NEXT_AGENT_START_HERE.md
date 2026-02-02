@@ -516,4 +516,122 @@ Or use Supabase Dashboard to apply the migration manually.
 
 ---
 
+## SESSION NOTES: 2026-02-02 (Quick Invite Links with QR Code)
+
+### Summary
+Implemented Quick Invite Links feature - shareable invite links with QR codes for family events and reunions. Supports the viral growth system by enabling mass invitations at family gatherings.
+
+### Status: READY FOR MIGRATION
+
+- Database migration created (needs to be applied)
+- TypeScript types defined
+- API routes implemented (8 endpoints)
+- React components built (6 components)
+- Pages created (management + public signup)
+- Full EN/RU localization
+- Build passing
+
+### Key Files
+
+| Category | Files |
+|----------|-------|
+| Database | `supabase/migrations/20260202500000_quick_invite_links.sql` |
+| Types | `src/types/quick-invite.ts` |
+| API Routes | `src/app/api/quick-links/route.ts` (list, create) |
+| API Routes | `src/app/api/quick-links/[code]/route.ts` (get by code) |
+| API Routes | `src/app/api/quick-links/[code]/signup/route.ts` (public signup) |
+| API Routes | `src/app/api/quick-links/[id]/route.ts` (update, delete) |
+| API Routes | `src/app/api/quick-links/[id]/signups/route.ts` (list signups) |
+| API Routes | `src/app/api/quick-links/signups/[id]/route.ts` (approve/reject) |
+| Components | `src/components/quick-invite/QRCodeDisplay.tsx` |
+| Components | `src/components/quick-invite/QuickInviteLinkGenerator.tsx` |
+| Components | `src/components/quick-invite/ShareButtons.tsx` |
+| Components | `src/components/quick-invite/QuickLinkSignupForm.tsx` |
+| Components | `src/components/quick-invite/QuickLinkApprovalList.tsx` |
+| Components | `src/components/quick-invite/MyQuickLinks.tsx` |
+| Pages | `src/app/[locale]/(protected)/quick-invite/page.tsx` |
+| Pages | `src/app/join/[code]/page.tsx` (public signup page) |
+| Translations | `src/messages/en/common.json`, `src/messages/ru/common.json` |
+
+### Features
+
+1. **QuickInviteLinkGenerator** - Dialog for creating new links
+   - Configurable expiration (1h, 6h, 24h, 7d)
+   - Configurable max uses (default 50)
+   - Optional event name
+   - Shows generated QR code and share buttons
+
+2. **QRCodeDisplay** - QR code with download/print options
+   - Uses `qrcode` npm package
+   - Download as PNG with event name
+   - Print-friendly layout
+
+3. **ShareButtons** - Multi-channel sharing
+   - WhatsApp (wa.me link)
+   - SMS (sms: protocol)
+   - Email (mailto: link)
+   - Native share API fallback
+
+4. **QuickLinkSignupForm** - Public signup for invitees
+   - Name, email, phone
+   - "How are you related?" field
+   - Validation and duplicate prevention
+
+5. **QuickLinkApprovalList** - Approve/reject signups
+   - Bulk approve option
+   - Rejection with reason
+   - Status badges
+
+6. **MyQuickLinks** - Full management UI
+   - List all links with status
+   - Pending approval counts
+   - Deactivate/delete links
+   - View QR codes
+
+### Database Schema
+
+```sql
+quick_invite_links (
+  id, created_by, code, expires_at,
+  max_uses, current_uses, event_name,
+  is_active, created_at, updated_at
+)
+
+quick_link_signups (
+  id, link_id, email, first_name, last_name,
+  phone, claimed_relationship, status,
+  approved_by, approved_at, rejection_reason,
+  created_profile_id, created_at, updated_at
+)
+```
+
+### RLS Policies
+
+- Links: Creator can CRUD, anyone can view active links by code
+- Signups: Link creator can view/update, anyone can create for active links
+
+### To Apply Migration
+
+```bash
+cd C:/dev/gene-tree
+npx supabase db push --password <db_password>
+```
+
+### Testing
+
+1. Apply migration
+2. Run `npm run dev`
+3. Visit `/en/quick-invite` or `/ru/quick-invite`
+4. Create an invite link
+5. Open the public `/join/[code]` page in incognito
+6. Submit a signup
+7. Approve the signup from the management page
+
+### Dependencies Added
+
+- `qrcode` - QR code generation
+- `canvas-confetti` - (previously missing, now installed)
+
+---
+
 *Questions? Check the Master Plan first. If not covered, document the answer for future sessions.*
