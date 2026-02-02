@@ -366,4 +366,154 @@ The sign-up form uses `FloatingInput` components with `id` attributes:
 
 ---
 
+## SESSION NOTES: 2026-02-02 (Honor Tags & Personal Credo)
+
+### Summary
+Implemented two new features based on 30-iteration virtual team brainstorm:
+
+1. **Honor Tags (Теги Почёта)** - Commemorative tags for profiles marking special statuses like "Блокадник", "Ветеран ВОВ", "Ветеран Труда"
+2. **Personal Credo (Личное Кредо)** - Short biography/motto field similar to social media bios
+
+### Status: ✅ FULLY COMPLETE
+
+- ✅ Database migrations applied
+- ✅ API endpoints working
+- ✅ UI integrated into profile page
+- ✅ Build passing
+
+### Key Files
+
+| Category | Files |
+|----------|-------|
+| Database | `supabase/migrations/20260202000000_honor_tags_and_credo.sql`, `20260202000001_seed_honor_tags.sql` |
+| Types | `src/types/honor-tags.ts` |
+| Components | `src/components/honor-tags/HonorTag.tsx`, `HonorTagsSection.tsx`, `HonorTagSelector.tsx` |
+| Components | `src/components/profile/PersonalCredo.tsx` |
+| API Routes | `src/app/api/honor-tags/route.ts`, `categories/route.ts` |
+| API Routes | `src/app/api/profiles/[id]/honor-tags/route.ts`, `[tagId]/route.ts`, `verify/route.ts` |
+| API Routes | `src/app/api/profiles/[id]/credo/route.ts` |
+| Hooks | `src/hooks/useHonorTags.ts` |
+| **UI Wrappers** | `src/app/[locale]/profile/[id]/HonorTagsWrapper.tsx`, `PersonalCredoWrapper.tsx` |
+| Docs | `docs/SESSION_NOTES_HONOR_TAGS_AND_CREDO.md` |
+
+### Profile Page Integration
+
+Both features are integrated in `src/app/[locale]/profile/[id]/page.tsx`:
+- **PersonalCredoWrapper** - Inside header card, shows life motto with quote styling
+- **HonorTagsWrapper** - Below header, shows honor tags with add/verify functionality
+
+### Testing
+
+```bash
+npm run dev
+# Visit: http://localhost:3000/en/profile/{user-id}
+```
+
+### Future Enhancements
+
+1. Document upload UI for `documented` verification level
+2. Verification UI on other users' profiles
+3. Regenerate Supabase types when permissions allow
+
+### Full Details
+
+See `docs/SESSION_NOTES_HONOR_TAGS_AND_CREDO.md` for complete implementation guide
+
+---
+
+## SESSION NOTES: 2026-02-02 (Quick Voice Memory Recording)
+
+### Summary
+Implemented Quick Voice Memory feature - a lightweight voice recording system for quick 60-second audio memories associated with family profiles.
+
+### Status: READY FOR MIGRATION
+
+- Database migration created (needs to be applied)
+- TypeScript types defined
+- Custom hooks implemented
+- API routes created
+- UI components built
+- Profile page integration complete
+- Build passing
+
+### Key Files
+
+| Category | Files |
+|----------|-------|
+| Database | `supabase/migrations/20260202400001_voice_memories.sql` |
+| Types | `src/types/voice-memory.ts` |
+| Hooks | `src/hooks/useVoiceRecorder.ts`, `src/hooks/useVoiceMemories.ts` |
+| API Routes | `src/app/api/voice-memories/route.ts` (list) |
+| API Routes | `src/app/api/voice-memories/upload/route.ts` (get signed URL) |
+| API Routes | `src/app/api/voice-memories/[id]/route.ts` (get, update, delete) |
+| API Routes | `src/app/api/voice-memories/[id]/confirm/route.ts` (confirm upload) |
+| Components | `src/components/voice-memory/QuickVoiceRecorder.tsx` |
+| Components | `src/components/voice-memory/VoiceMemoryPlayer.tsx` |
+| Components | `src/components/voice-memory/VoiceMemoriesList.tsx` |
+| Components | `src/components/voice-memory/QuickVoiceButton.tsx` |
+| Components | `src/components/voice-memory/index.ts` |
+| Profile Wrapper | `src/app/[locale]/profile/[id]/QuickVoiceMemoryWrapper.tsx` |
+| Translations | `src/messages/en/common.json`, `src/messages/ru/common.json` |
+
+### Features
+
+1. **QuickVoiceButton** - Floating action button on profile pages
+2. **QuickVoiceRecorder** - Single-button recording with waveform visualization
+   - Max 60 seconds
+   - Auto-stop at limit
+   - Preview before saving
+   - Title and privacy settings
+3. **VoiceMemoryPlayer** - Playback with progress bar and seek
+4. **VoiceMemoriesList** - Infinite scroll list with lazy loading
+
+### Database Schema
+
+```sql
+voice_memories (
+  id, user_id, profile_id, title, description,
+  storage_path, duration_seconds, file_size_bytes,
+  transcription, privacy_level, created_at, updated_at
+)
+```
+
+Privacy levels: `public`, `family`, `private`
+
+### Storage Bucket
+
+- Name: `voice-memories`
+- Max size: 10MB
+- MIME types: audio/webm, audio/mp4, audio/mpeg, audio/ogg, audio/wav
+- Private (signed URLs)
+
+### RLS Policies
+
+- SELECT: Owner, public memories, family circle for family-level
+- INSERT: Authenticated users for own memories
+- UPDATE/DELETE: Owner only
+
+### To Apply Migration
+
+```bash
+cd C:/dev/gene-tree
+npx supabase db push --password <db_password>
+```
+
+Or use Supabase Dashboard to apply the migration manually.
+
+### Testing
+
+1. Apply migration
+2. Run `npm run dev`
+3. Visit any profile page
+4. Click the floating "Record a memory" button
+5. Record, preview, and save a memory
+
+### Browser Support
+
+- Chrome, Firefox, Safari (modern versions)
+- Requires microphone permission
+- Falls back gracefully for unsupported browsers
+
+---
+
 *Questions? Check the Master Plan first. If not covered, document the answer for future sessions.*

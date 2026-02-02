@@ -301,7 +301,10 @@
       "historical": "Исторические",
       "relationships": "Отношения",
       "career": "Карьера",
-      "personal": "Личное"
+      "personal": "Личное",
+      "family": "Семья",
+      "seasonal": "Сезонные",
+      "relationship": "Отношения"
     },
     "assign": {
       "title": "Назначить подсказку",
@@ -327,6 +330,29 @@
       "search": "Поиск подсказок...",
       "noResults": "Подсказки не найдены",
       "browseAll": "Смотреть все"
+    },
+    "memory": {
+      "title": "Вопросы для воспоминаний",
+      "subtitle": "Поделитесь воспоминанием",
+      "dayPrompt": "Воспоминание дня",
+      "writeStory": "Написать историю",
+      "skip": "Пропустить",
+      "remindLater": "Позже",
+      "answered": "Отвечено",
+      "skipped": "Пропущено",
+      "seeAll": "Все вопросы",
+      "new": "Новый",
+      "allAnswered": "Вы ответили на все вопросы!",
+      "noPromptsAvailable": "Нет доступных вопросов",
+      "refresh": "Обновить",
+      "allPrompts": "Все вопросы",
+      "preserveMemories": "Записывайте истории, чтобы сохранить семейные воспоминания",
+      "skipConfirmTitle": "Пропустить этот вопрос?",
+      "skipConfirmDescription": "Вы можете вернуться к нему позже в списке вопросов.",
+      "cancel": "Отмена",
+      "storyRecorded": "История записана!",
+      "promptSkipped": "Вопрос пропущен",
+      "remindInWeek": "Напомним через неделю"
     }
   },
   "biography": {
@@ -424,6 +450,7 @@
       "notifications": "Уведомления",
       "activityFeed": "Недавняя активность",
       "thisDay": "Этот день в вашей семье",
+      "memoryPrompts": "Вопросы для воспоминаний",
       "quickActions": "Быстрые действия",
       "familyStats": "Статистика семьи",
       "exploreFeatures": "Исследовать возможности"
@@ -432,6 +459,7 @@
       "notifications": "Будьте в курсе семейных событий",
       "activityFeed": "Смотрите последние обновления",
       "thisDay": "Дни рождения и годовщины",
+      "memoryPrompts": "Вдохновляющие вопросы для семейных историй",
       "quickActions": "Быстрые ссылки на частые действия",
       "familyStats": "Статистика вашего древа",
       "exploreFeatures": "Откройте больше возможностей"
@@ -537,6 +565,44 @@
       "hoursAgo": "{count} ч",
       "daysAgo": "{count} д"
     }
+  },
+  "voiceMemories": {
+    "title": "Голосовые записи",
+    "quickRecord": "Быстрая голосовая запись",
+    "recordHint": "Нажмите, чтобы начать запись",
+    "recording": "Запись...",
+    "maxDuration": "Макс. 60 секунд",
+    "preview": "Предпросмотр",
+    "stopRecording": "Нажмите, чтобы остановить",
+    "play": "Воспроизвести",
+    "pause": "Пауза",
+    "reRecord": "Записать заново",
+    "save": "Сохранить",
+    "saving": "Сохранение...",
+    "cancel": "Отмена",
+    "titleLabel": "Название (необязательно)",
+    "titlePlaceholder": "напр., \"Воспоминание о лете 1985\"",
+    "privacyLabel": "Кто может видеть?",
+    "privacyFamily": "Семья",
+    "privacyPrivate": "Только я",
+    "privacyPublic": "Все",
+    "aboutPerson": "О",
+    "success": "Запись сохранена!",
+    "micPermissionDenied": "Доступ к микрофону запрещён. Разрешите доступ в настройках браузера.",
+    "browserNotSupported": "Ваш браузер не поддерживает запись звука. Попробуйте Chrome, Firefox или Safari.",
+    "autoStopWarning": "Запись автоматически остановится через 60 секунд",
+    "noMemories": "Пока нет голосовых записей",
+    "noMemoriesHint": "Будьте первым, кто запишет воспоминание",
+    "loading": "Загрузка...",
+    "loadMore": "Загрузить ещё",
+    "error": "Не удалось загрузить записи",
+    "retry": "Повторить",
+    "download": "Скачать",
+    "delete": "Удалить",
+    "confirmDelete": "Вы уверены, что хотите удалить эту запись?",
+    "recordedBy": "Записал(а)",
+    "noTitle": "Без названия",
+    "recordMemory": "Записать воспоминание"
   }
 }
 

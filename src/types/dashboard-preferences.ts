@@ -9,7 +9,8 @@ export type WidgetId =
   | 'notifications'
   | 'quick_actions'
   | 'family_stats'
-  | 'explore_features';
+  | 'explore_features'
+  | 'memory_prompts';
 
 export interface WidgetConfig {
   visible: boolean;
@@ -32,10 +33,11 @@ export const DEFAULT_DASHBOARD_PREFERENCES: DashboardPreferences = {
   widgets: {
     activity_feed: { visible: true, order: 0 },
     this_day: { visible: true, order: 1 },
-    notifications: { visible: true, order: 2 },
-    quick_actions: { visible: true, order: 3 },
-    family_stats: { visible: true, order: 4 },
-    explore_features: { visible: true, order: 5 },
+    memory_prompts: { visible: true, order: 2 },
+    notifications: { visible: true, order: 3 },
+    quick_actions: { visible: true, order: 4 },
+    family_stats: { visible: true, order: 5 },
+    explore_features: { visible: true, order: 6 },
   },
   layout: 'default',
 };
@@ -58,6 +60,12 @@ export const WIDGET_INFO: WidgetInfo[] = [
     labelKey: 'widgetSettings.widgets.thisDay',
     descriptionKey: 'widgetSettings.widgetsDesc.thisDay',
     icon: 'Calendar',
+  },
+  {
+    id: 'memory_prompts',
+    labelKey: 'widgetSettings.widgets.memoryPrompts',
+    descriptionKey: 'widgetSettings.widgetsDesc.memoryPrompts',
+    icon: 'MessageCircle',
   },
   {
     id: 'quick_actions',

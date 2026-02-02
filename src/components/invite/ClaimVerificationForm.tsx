@@ -23,10 +23,13 @@ interface PendingRelative {
   status: string;
 }
 
+type ViewMode = 'view' | 'edit' | 'dispute';
+
 interface ClaimVerificationFormProps {
   invitation: PendingRelative;
   inviterName: string;
   locale: string;
+  initialMode?: ViewMode;
 }
 
 // Translations for EN/RU
@@ -113,17 +116,16 @@ const translations = {
   },
 };
 
-type ViewMode = 'view' | 'edit' | 'dispute';
-
 export default function ClaimVerificationForm({
   invitation,
   inviterName,
   locale,
+  initialMode = 'view',
 }: ClaimVerificationFormProps) {
   const router = useRouter();
   const t = translations[locale as keyof typeof translations] || translations.en;
 
-  const [mode, setMode] = useState<ViewMode>('view');
+  const [mode, setMode] = useState<ViewMode>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);

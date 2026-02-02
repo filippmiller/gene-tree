@@ -1,8 +1,8 @@
 # Session Notes: Honor Tags & Personal Credo Implementation
 
 **Date:** February 2, 2026
-**Status:** Complete - Build passing, migrations applied
-**Next Agent:** Can continue with frontend integration, testing, or UI refinements
+**Status:** ✅ FULLY COMPLETE - Database, API, UI all integrated
+**Next Agent:** Can continue with verification UI enhancements, document upload, or testing
 
 ---
 
@@ -201,9 +201,74 @@ supabase/migrations/
 docs/analysis/BRAINSTORM_HONOR_TAGS_AND_CREDO.md   # 30-iteration design brainstorm
 ```
 
+### Profile Page Wrappers (UI Integration)
+```
+src/app/[locale]/profile/[id]/
+├── HonorTagsWrapper.tsx               # Client wrapper with state management
+├── PersonalCredoWrapper.tsx           # Client wrapper with edit dialog
+└── page.tsx                           # Server component integrating both
+```
+
 ---
 
-## 5. How Users Interact
+## 5. UI Integration (Profile Page)
+
+### Profile Page Structure
+
+The features are integrated into `src/app/[locale]/profile/[id]/page.tsx`:
+
+```
+Profile Page Layout
+├── Header Card (bg-white rounded-lg)
+│   ├── Avatar / ProfileCompletenessRing
+│   ├── Name, deceased badge, pending badge
+│   ├── Birth date & place
+│   ├── Biography button
+│   └── ┌─────────────────────────────────────┐
+│       │  PersonalCredoWrapper               │  ← Life motto with quote styling
+│       │  (inside header, below bio button)  │
+│       └─────────────────────────────────────┘
+│
+├── ┌─────────────────────────────────────────┐
+│   │  HonorTagsWrapper                       │  ← Honor tags section
+│   │  (GlassCard with medal icon)            │
+│   │  - Shows tags as colored pills          │
+│   │  - "Add" button for own/deceased        │
+│   │  - Verification indicators              │
+│   └─────────────────────────────────────────┘
+│
+├── Bio Section (if exists)
+├── Historical Timeline
+├── Voice Stories
+└── Connection Request Section
+```
+
+### Wrapper Components
+
+**HonorTagsWrapper** (`HonorTagsWrapper.tsx`):
+- Uses `useHonorTags` hook for state
+- Renders `HonorTagsSection` component
+- Opens `HonorTagSelector` modal on "Add" click
+- Handles add/remove tag operations
+
+**PersonalCredoWrapper** (`PersonalCredoWrapper.tsx`):
+- Uses `useCredo` hook for state
+- Renders `PersonalCredo` display component
+- Opens edit dialog with `PersonalCredoInput`
+- Handles save operations
+
+### Permissions Logic
+
+| Context | Honor Tags | Personal Credo |
+|---------|------------|----------------|
+| Own profile | Can add/remove | Can edit |
+| Deceased relative | Can add | Can add memorial quote |
+| Other's profile | View only | View only (if public/family) |
+| Not logged in | View only | View only (if public) |
+
+---
+
+## 7. How Users Interact
 
 ### Adding Honor Tags to Own Profile
 
@@ -243,7 +308,7 @@ docs/analysis/BRAINSTORM_HONOR_TAGS_AND_CREDO.md   # 30-iteration design brainst
 
 ---
 
-## 6. How to Test
+## 8. How to Test
 
 ### Database Verification
 
@@ -283,16 +348,24 @@ POST /api/profiles/{profileId}/honor-tags/{tagId}/verify
 Body: { "verified": true, "comment": "I can confirm this" }
 ```
 
-### Frontend Testing
+### Frontend Testing (UI Already Integrated)
 
-1. Import `HonorTagsSection` into profile page
-2. Pass `profileId` and optionally `editable={true}`
-3. Test adding, viewing, deleting tags
-4. Test verification flow from another user account
+```bash
+npm run dev
+# Visit: http://localhost:3000/en/profile/{user-id}
+```
+
+**Test scenarios:**
+1. **Own profile** - See "Add" button for tags, edit button for credo
+2. **Deceased profile** - Memorial styling, family can add tags
+3. **Other's profile** - View-only mode
+4. **Add tag flow** - Click Add → Select category → Choose tag → See it appear
+5. **Edit credo** - Click quote area → Fill in motto/statement → Save
+6. **Verification** - View other's tag → Click verify → Confirm
 
 ---
 
-## 7. Known Limitations / Future Work
+## 9. Known Limitations / Future Work
 
 1. **Type Generation:** New tables use `as any` type assertions because Supabase type generation requires account permissions we don't have. Regenerate types when possible:
    ```bash
@@ -311,7 +384,7 @@ Body: { "verified": true, "comment": "I can confirm this" }
 
 ---
 
-## 8. Pre-seeded Honor Tags (50+)
+## 10. Pre-seeded Honor Tags (50+)
 
 ### Military WWII (10)
 - WWII Veteran, WWII Combat Veteran, WWII Rear Veteran
@@ -347,7 +420,7 @@ Body: { "verified": true, "comment": "I can confirm this" }
 
 ---
 
-## 9. Icon Mapping
+## 11. Icon Mapping
 
 Components use Lucide icons. Mapping in `HonorTag.tsx`:
 
@@ -370,7 +443,7 @@ const iconMap = {
 
 ---
 
-## 10. Quick Integration Example
+## 12. Quick Reference
 
 ```tsx
 import { HonorTagsSection } from '@/components/honor-tags/HonorTagsSection';

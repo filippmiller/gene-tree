@@ -24,6 +24,7 @@ interface DashboardWidgetsProps {
     quick_actions?: React.ReactNode;
     activity_feed?: React.ReactNode;
     explore_features?: React.ReactNode;
+    memory_prompts?: React.ReactNode;
   };
 }
 
@@ -81,6 +82,8 @@ export default function DashboardWidgets({
         return widgets.activity_feed;
       case 'explore_features':
         return widgets.explore_features;
+      case 'memory_prompts':
+        return widgets.memory_prompts;
       default:
         return null;
     }

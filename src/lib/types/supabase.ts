@@ -1205,6 +1205,45 @@ export type Database = {
         }
         Relationships: []
       }
+      memory_prompts: {
+        Row: {
+          category: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          is_seasonal: boolean | null
+          placeholder_type: string | null
+          prompt_en: string
+          prompt_ru: string
+          season: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_seasonal?: boolean | null
+          placeholder_type?: string | null
+          prompt_en: string
+          prompt_ru: string
+          season?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_seasonal?: boolean | null
+          placeholder_type?: string | null
+          prompt_en?: string
+          prompt_ru?: string
+          season?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       merge_history: {
         Row: {
           created_at: string
@@ -3104,6 +3143,71 @@ export type Database = {
           },
         ]
       }
+      user_prompt_responses: {
+        Row: {
+          context_profile_id: string | null
+          id: string
+          prompt_id: string
+          remind_after: string | null
+          remind_later: boolean | null
+          responded_at: string | null
+          skipped: boolean | null
+          story_id: string | null
+          user_id: string
+        }
+        Insert: {
+          context_profile_id?: string | null
+          id?: string
+          prompt_id: string
+          remind_after?: string | null
+          remind_later?: boolean | null
+          responded_at?: string | null
+          skipped?: boolean | null
+          story_id?: string | null
+          user_id: string
+        }
+        Update: {
+          context_profile_id?: string | null
+          id?: string
+          prompt_id?: string
+          remind_after?: string | null
+          remind_later?: boolean | null
+          responded_at?: string | null
+          skipped?: boolean | null
+          story_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_prompt_responses_context_profile_id_fkey"
+            columns: ["context_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_prompt_responses_context_profile_id_fkey"
+            columns: ["context_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_prompt_responses_context_profile_id_fkey"
+            columns: ["context_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_prompt_responses_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "memory_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_streaks: {
         Row: {
           created_at: string | null
@@ -3148,6 +3252,73 @@ export type Database = {
           weekly_points?: number | null
         }
         Relationships: []
+      }
+      voice_memories: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_seconds: number
+          file_size_bytes: number | null
+          id: string
+          privacy_level: string
+          profile_id: string | null
+          storage_path: string
+          title: string | null
+          transcription: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_seconds: number
+          file_size_bytes?: number | null
+          id?: string
+          privacy_level?: string
+          profile_id?: string | null
+          storage_path: string
+          title?: string | null
+          transcription?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number
+          file_size_bytes?: number | null
+          id?: string
+          privacy_level?: string
+          profile_id?: string | null
+          storage_path?: string
+          title?: string | null
+          transcription?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_memories_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "voice_memories_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "voice_memories_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       voice_stories: {
         Row: {
@@ -3685,6 +3856,20 @@ export type Database = {
           photo_url: string
         }[]
       }
+      get_current_season: { Args: never; Returns: string }
+      get_daily_memory_prompt: {
+        Args: { p_context_profile_id?: string; p_user_id: string }
+        Returns: {
+          category: string
+          is_new: boolean
+          is_seasonal: boolean
+          placeholder_type: string
+          prompt_en: string
+          prompt_id: string
+          prompt_ru: string
+          season: string
+        }[]
+      }
       get_descendants_with_depth: {
         Args: { max_depth?: number; person_id: string }
         Returns: {
@@ -3714,6 +3899,38 @@ export type Database = {
           points: number
           rank: number
           user_id: string
+        }[]
+      }
+      get_memory_prompt_stats: {
+        Args: { p_user_id: string }
+        Returns: {
+          answered_count: number
+          by_category: Json
+          pending_count: number
+          skipped_count: number
+          total_prompts: number
+        }[]
+      }
+      get_memory_prompts_for_user: {
+        Args: {
+          p_category?: string
+          p_include_answered?: boolean
+          p_limit?: number
+          p_offset?: number
+          p_user_id: string
+        }
+        Returns: {
+          category: string
+          is_answered: boolean
+          is_seasonal: boolean
+          is_skipped: boolean
+          placeholder_type: string
+          prompt_en: string
+          prompt_id: string
+          prompt_ru: string
+          responded_at: string
+          season: string
+          story_id: string
         }[]
       }
       get_or_create_message_thread: {
@@ -3900,6 +4117,23 @@ export type Database = {
           points_earned: number
           streak_increased: boolean
         }[]
+      }
+      remind_later_memory_prompt: {
+        Args: { p_days?: number; p_prompt_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      respond_to_memory_prompt: {
+        Args: {
+          p_context_profile_id?: string
+          p_prompt_id: string
+          p_story_id: string
+          p_user_id: string
+        }
+        Returns: boolean
+      }
+      skip_memory_prompt: {
+        Args: { p_prompt_id: string; p_user_id: string }
+        Returns: boolean
       }
       update_last_seen: { Args: never; Returns: undefined }
     }

@@ -301,7 +301,10 @@
       "historical": "Historical",
       "relationships": "Relationships",
       "career": "Career",
-      "personal": "Personal"
+      "personal": "Personal",
+      "family": "Family",
+      "seasonal": "Seasonal",
+      "relationship": "Relationships"
     },
     "assign": {
       "title": "Assign Prompt",
@@ -327,6 +330,29 @@
       "search": "Search prompts...",
       "noResults": "No prompts found",
       "browseAll": "Browse All"
+    },
+    "memory": {
+      "title": "Memory Prompts",
+      "subtitle": "Share a Memory",
+      "dayPrompt": "Memory of the Day",
+      "writeStory": "Write Story",
+      "skip": "Skip",
+      "remindLater": "Later",
+      "answered": "Answered",
+      "skipped": "Skipped",
+      "seeAll": "See all",
+      "new": "New",
+      "allAnswered": "You've answered all prompts!",
+      "noPromptsAvailable": "No prompts available",
+      "refresh": "Refresh",
+      "allPrompts": "All Prompts",
+      "preserveMemories": "Record stories to preserve family memories for generations",
+      "skipConfirmTitle": "Skip this prompt?",
+      "skipConfirmDescription": "You can return to it later in the prompts list.",
+      "cancel": "Cancel",
+      "storyRecorded": "Story recorded!",
+      "promptSkipped": "Prompt skipped",
+      "remindInWeek": "We'll remind you in a week"
     }
   },
   "biography": {
@@ -424,6 +450,7 @@
       "notifications": "Notifications",
       "activityFeed": "Recent Activity",
       "thisDay": "This Day in Your Family",
+      "memoryPrompts": "Memory Prompts",
       "quickActions": "Quick Actions",
       "familyStats": "Family Stats",
       "exploreFeatures": "Explore Features"
@@ -432,6 +459,7 @@
       "notifications": "Stay updated with family activity",
       "activityFeed": "See recent family updates",
       "thisDay": "Birthdays and anniversaries",
+      "memoryPrompts": "Inspiring questions for family stories",
       "quickActions": "Quick links to common actions",
       "familyStats": "Your family tree statistics",
       "exploreFeatures": "Discover more features"
@@ -537,6 +565,44 @@
       "hoursAgo": "{count}h",
       "daysAgo": "{count}d"
     }
+  },
+  "voiceMemories": {
+    "title": "Voice Memories",
+    "quickRecord": "Quick Voice Memory",
+    "recordHint": "Tap to start recording",
+    "recording": "Recording...",
+    "maxDuration": "Max 60 seconds",
+    "preview": "Preview",
+    "stopRecording": "Tap to stop",
+    "play": "Play",
+    "pause": "Pause",
+    "reRecord": "Re-record",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "titleLabel": "Title (optional)",
+    "titlePlaceholder": "e.g., \"Memory of summer 1985\"",
+    "privacyLabel": "Who can see this?",
+    "privacyFamily": "Family",
+    "privacyPrivate": "Only me",
+    "privacyPublic": "Everyone",
+    "aboutPerson": "About",
+    "success": "Memory saved!",
+    "micPermissionDenied": "Microphone access denied. Please allow microphone access in your browser settings.",
+    "browserNotSupported": "Your browser does not support audio recording. Please try Chrome, Firefox, or Safari.",
+    "autoStopWarning": "Recording will auto-stop at 60 seconds",
+    "noMemories": "No voice memories yet",
+    "noMemoriesHint": "Be the first to record a memory",
+    "loading": "Loading...",
+    "loadMore": "Load more",
+    "error": "Failed to load memories",
+    "retry": "Retry",
+    "download": "Download",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this memory?",
+    "recordedBy": "Recorded by",
+    "noTitle": "Untitled memory",
+    "recordMemory": "Record a memory"
   }
 }
 

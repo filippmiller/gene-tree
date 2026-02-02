@@ -6,6 +6,7 @@ import ThisDayHub from '@/components/this-day/ThisDayHub';
 import ActivityFeed from '@/components/feed/ActivityFeed';
 import ProfileCompletionWidget from '@/components/dashboard/ProfileCompletionWidget';
 import DashboardWidgets from '@/components/dashboard/DashboardWidgets';
+import { MemoryPromptsWidget } from '@/components/prompts';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Badge } from '@/components/ui/badge';
 import { calculateCompletion } from '@/lib/profile/completion-calculator';
@@ -160,6 +161,8 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
   );
 
   const thisDayWidget = <ThisDayHub />;
+
+  const memoryPromptsWidget = <MemoryPromptsWidget />;
 
   const quickActionsWidget = (
     <GlassCard glass="medium" padding="lg">
@@ -316,6 +319,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
           widgets={{
             family_stats: familyStatsWidget,
             this_day: thisDayWidget,
+            memory_prompts: memoryPromptsWidget,
             quick_actions: quickActionsWidget,
             activity_feed: activityFeedWidget,
             explore_features: exploreFeaturesWidget,

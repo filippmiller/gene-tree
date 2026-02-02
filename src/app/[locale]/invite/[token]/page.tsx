@@ -1,16 +1,15 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
-import ClaimVerificationForm from '@/components/invite/ClaimVerificationForm';
+import { getFamilyStats } from '@/lib/invitations/family-stats';
+import InviteFlow from '@/components/invite/InviteFlow';
 import { AlertCircle, Trees } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ locale: string; token: string }>;
 }
 
-// Translations for the page header and error states
+// Translations for error states only (main content is in client components)
 const translations = {
   en: {
-    title: 'Family Tree Invitation',
-    invitedYou: 'has invited you to join their family tree',
     notFound: 'Invitation Not Found',
     notFoundDescription: 'This link is invalid or has expired',
     signIn: 'Sign In',
@@ -18,8 +17,6 @@ const translations = {
     alreadyProcessedDescription: 'This invitation has already been accepted or declined',
   },
   ru: {
-    title: 'Приглашение в семейное дерево',
-    invitedYou: 'пригласил(а) вас присоединиться к семье',
     notFound: 'Приглашение не найдено',
     notFoundDescription: 'Ссылка недействительна или срок действия истёк',
     signIn: 'Войти в систему',
@@ -58,20 +55,20 @@ export default async function InvitePage({ params }: PageProps) {
   // Handle invalid invitation (not found)
   if (error || !invitation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-slate-200">
-          <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
+        <div className="max-w-md w-full bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 text-center border border-slate-200 dark:border-slate-700">
+          <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
             <AlertCircle className="h-8 w-8 text-red-500" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
             {t.notFound}
           </h1>
-          <p className="text-slate-600 mb-6">
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
             {t.notFoundDescription}
           </p>
           <a
             href={`/${locale}/sign-in`}
-            className="inline-block px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="inline-block px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
           >
             {t.signIn}
           </a>
@@ -83,20 +80,20 @@ export default async function InvitePage({ params }: PageProps) {
   // Handle already processed invitation
   if (invitation.status !== 'pending') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-slate-200">
-          <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
+        <div className="max-w-md w-full bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 text-center border border-slate-200 dark:border-slate-700">
+          <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
             <AlertCircle className="h-8 w-8 text-amber-500" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
             {t.alreadyProcessed}
           </h1>
-          <p className="text-slate-600 mb-6">
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
             {t.alreadyProcessedDescription}
           </p>
           <a
             href={`/${locale}/sign-in`}
-            className="inline-block px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="inline-block px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
           >
             {t.signIn}
           </a>
@@ -105,29 +102,30 @@ export default async function InvitePage({ params }: PageProps) {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 py-12 px-4">
-      <div className="max-w-xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
-            <Trees className="h-10 w-10 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            {t.title}
-          </h1>
-          <p className="text-slate-600">
-            <span className="font-semibold">{inviterName}</span> {t.invitedYou}
-          </p>
-        </div>
+  // Fetch family stats for the inviter
+  const familyStats = await getFamilyStats(supabase, invitation.invited_by);
 
-        {/* Claim Verification Form */}
-        <ClaimVerificationForm
-          invitation={invitation}
-          inviterName={inviterName}
-          locale={locale}
-        />
-      </div>
-    </div>
+  // Serialize invitation data for client component
+  const serializedInvitation = {
+    id: invitation.id,
+    invitation_token: invitation.invitation_token,
+    first_name: invitation.first_name,
+    last_name: invitation.last_name,
+    email: invitation.email,
+    phone: invitation.phone,
+    relationship_type: invitation.relationship_type,
+    date_of_birth: invitation.date_of_birth,
+    is_deceased: invitation.is_deceased,
+    invited_by: invitation.invited_by,
+    status: invitation.status,
+  };
+
+  return (
+    <InviteFlow
+      invitation={serializedInvitation}
+      inviterName={inviterName}
+      familyStats={familyStats}
+      locale={locale}
+    />
   );
 }
