@@ -1,0 +1,430 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { ChevronLeft, ChevronRight, Loader2, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/ui/glass-card';
+import { Progress } from '@/components/ui/progress';
+import Step1AboutYou from './steps/Step1AboutYou';
+import Step2Parents from './steps/Step2Parents';
+import Step3Siblings from './steps/Step3Siblings';
+import Step4Invite from './steps/Step4Invite';
+import {
+  loadWizardState,
+  saveWizardState,
+  clearWizardState,
+  type WizardState,
+  type AboutYouData,
+  type ParentsData,
+  type SiblingsData,
+  type InviteData,
+} from '@/lib/onboarding/wizard-state';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  userId: string;
+  locale: string;
+  existingProfile?: {
+    first_name?: string;
+    last_name?: string;
+    birth_date?: string;
+    gender?: string;
+    avatar_url?: string;
+  };
+}
+
+const translations = {
+  en: {
+    step1: 'About You',
+    step2: 'Parents',
+    step3: 'Siblings',
+    step4: 'Invite',
+    back: 'Back',
+    next: 'Next',
+    skip: 'Skip',
+    finish: 'Finish Setup',
+    saving: 'Saving...',
+    stepOf: 'Step {current} of {total}',
+    welcomeTitle: 'Welcome to Gene-Tree',
+    welcomeSubtitle: 'Let\'s set up your family tree in just a few minutes',
+    errorSaving: 'There was an error saving your data. Please try again.',
+  },
+  ru: {
+    step1: 'О вас',
+    step2: 'Родители',
+    step3: 'Братья/Сестры',
+    step4: 'Приглашение',
+    back: 'Назад',
+    next: 'Далее',
+    skip: 'Пропустить',
+    finish: 'Завершить',
+    saving: 'Сохранение...',
+    stepOf: 'Шаг {current} из {total}',
+    welcomeTitle: 'Добро пожаловать в Gene-Tree',
+    welcomeSubtitle: 'Настроим ваше семейное древо за несколько минут',
+    errorSaving: 'Произошла ошибка при сохранении. Попробуйте снова.',
+  },
+};
+
+const TOTAL_STEPS = 4;
+
+export default function OnboardingWizard({ userId, locale, existingProfile }: Props) {
+  const router = useRouter();
+  const t = translations[locale as keyof typeof translations] || translations.en;
+  const [state, setState] = useState<WizardState | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [animating, setAnimating] = useState(false);
+  const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
+
+  // Load state on mount
+  useEffect(() => {
+    const loaded = loadWizardState();
+
+    // Pre-fill with existing profile data if available
+    if (existingProfile) {
+      loaded.aboutYou = {
+        ...loaded.aboutYou,
+        firstName: loaded.aboutYou.firstName || existingProfile.first_name || '',
+        lastName: loaded.aboutYou.lastName || existingProfile.last_name || '',
+        birthDate: loaded.aboutYou.birthDate || existingProfile.birth_date || undefined,
+        gender: loaded.aboutYou.gender || (existingProfile.gender as any) || undefined,
+        avatarPreview: loaded.aboutYou.avatarPreview || existingProfile.avatar_url || undefined,
+      };
+    }
+
+    setState(loaded);
+  }, [existingProfile]);
+
+  // Save state whenever it changes
+  useEffect(() => {
+    if (state) {
+      saveWizardState(state);
+    }
+  }, [state]);
+
+  const updateAboutYou = useCallback((data: AboutYouData) => {
+    setState((prev) => (prev ? { ...prev, aboutYou: data } : prev));
+  }, []);
+
+  const updateParents = useCallback((data: ParentsData) => {
+    setState((prev) => (prev ? { ...prev, parents: data } : prev));
+  }, []);
+
+  const updateSiblings = useCallback((data: SiblingsData) => {
+    setState((prev) => (prev ? { ...prev, siblings: data } : prev));
+  }, []);
+
+  const updateInvite = useCallback((data: InviteData) => {
+    setState((prev) => (prev ? { ...prev, invite: data } : prev));
+  }, []);
+
+  const goToStep = useCallback((step: number) => {
+    if (!state) return;
+    setDirection(step > state.currentStep ? 'forward' : 'backward');
+    setAnimating(true);
+    setTimeout(() => {
+      setState((prev) => (prev ? { ...prev, currentStep: step } : prev));
+      setAnimating(false);
+    }, 150);
+  }, [state]);
+
+  const handleNext = useCallback(async () => {
+    if (!state) return;
+
+    // Validate current step
+    if (state.currentStep === 1) {
+      if (!state.aboutYou.firstName || !state.aboutYou.lastName) {
+        setError('Please fill in your name');
+        return;
+      }
+    }
+
+    setError(null);
+
+    // Save step data to server
+    setSaving(true);
+    try {
+      // Save About You data (Step 1)
+      if (state.currentStep === 1) {
+        const formData = new FormData();
+        formData.append('firstName', state.aboutYou.firstName);
+        formData.append('lastName', state.aboutYou.lastName);
+        if (state.aboutYou.birthDate) {
+          formData.append('birthDate', state.aboutYou.birthDate);
+        }
+        if (state.aboutYou.gender) {
+          formData.append('gender', state.aboutYou.gender);
+        }
+        if (state.aboutYou.avatarFile) {
+          formData.append('avatar', state.aboutYou.avatarFile);
+        }
+
+        const response = await fetch('/api/onboarding/step1', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save profile');
+        }
+      }
+
+      // Save Parents data (Step 2)
+      if (state.currentStep === 2) {
+        const response = await fetch('/api/onboarding/step2', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(state.parents),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save parents');
+        }
+
+        const data = await response.json();
+        if (data.createdIds) {
+          setState((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  createdRelativeIds: [...prev.createdRelativeIds, ...data.createdIds],
+                }
+              : prev
+          );
+        }
+      }
+
+      // Save Siblings data (Step 3)
+      if (state.currentStep === 3) {
+        const response = await fetch('/api/onboarding/step3', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(state.siblings),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save siblings');
+        }
+
+        const data = await response.json();
+        if (data.createdIds) {
+          setState((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  createdRelativeIds: [...prev.createdRelativeIds, ...data.createdIds],
+                }
+              : prev
+          );
+        }
+      }
+
+      // Move to next step
+      goToStep(state.currentStep + 1);
+    } catch (err) {
+      console.error('Error saving step:', err);
+      setError(t.errorSaving);
+    } finally {
+      setSaving(false);
+    }
+  }, [state, goToStep, t.errorSaving]);
+
+  const handleBack = useCallback(() => {
+    if (!state || state.currentStep <= 1) return;
+    goToStep(state.currentStep - 1);
+  }, [state, goToStep]);
+
+  const handleFinish = useCallback(async () => {
+    if (!state) return;
+
+    setSaving(true);
+    setError(null);
+
+    try {
+      // Send invite if configured
+      if (state.invite.relativeId && state.invite.email) {
+        await fetch('/api/onboarding/invite', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(state.invite),
+        });
+      }
+
+      // Mark onboarding as complete
+      const response = await fetch('/api/onboarding/complete', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to complete onboarding');
+      }
+
+      // Clear wizard state
+      clearWizardState();
+
+      // Redirect to dashboard
+      router.push(`/${locale}/app`);
+      router.refresh();
+    } catch (err) {
+      console.error('Error completing onboarding:', err);
+      setError(t.errorSaving);
+    } finally {
+      setSaving(false);
+    }
+  }, [state, locale, router, t.errorSaving]);
+
+  const handleSkip = useCallback(() => {
+    if (!state) return;
+    if (state.currentStep === TOTAL_STEPS) {
+      handleFinish();
+    } else {
+      goToStep(state.currentStep + 1);
+    }
+  }, [state, goToStep, handleFinish]);
+
+  if (!state) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const stepTitles = [t.step1, t.step2, t.step3, t.step4];
+  const progress = (state.currentStep / TOTAL_STEPS) * 100;
+
+  const canGoNext =
+    state.currentStep === 1
+      ? state.aboutYou.firstName && state.aboutYou.lastName
+      : true;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-8 px-4">
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+            <Sparkles className="w-4 h-4" />
+            {t.stepOf.replace('{current}', String(state.currentStep)).replace('{total}', String(TOTAL_STEPS))}
+          </div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">{t.welcomeTitle}</h1>
+          <p className="text-muted-foreground">{t.welcomeSubtitle}</p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between mb-2">
+            {stepTitles.map((title, index) => (
+              <button
+                key={index}
+                onClick={() => index + 1 <= state.currentStep && goToStep(index + 1)}
+                disabled={index + 1 > state.currentStep}
+                className={cn(
+                  'text-xs font-medium transition-colors',
+                  index + 1 === state.currentStep
+                    ? 'text-primary'
+                    : index + 1 < state.currentStep
+                    ? 'text-muted-foreground hover:text-foreground cursor-pointer'
+                    : 'text-muted-foreground/50 cursor-not-allowed'
+                )}
+              >
+                {title}
+              </button>
+            ))}
+          </div>
+          <Progress value={progress} variant="gradient" size="md" />
+        </div>
+
+        {/* Step Content */}
+        <GlassCard glass="medium" padding="lg" className="mb-6">
+          <div
+            className={cn(
+              'transition-all duration-150',
+              animating && direction === 'forward' && 'opacity-0 translate-x-4',
+              animating && direction === 'backward' && 'opacity-0 -translate-x-4'
+            )}
+          >
+            {state.currentStep === 1 && (
+              <Step1AboutYou
+                data={state.aboutYou}
+                onChange={updateAboutYou}
+                locale={locale}
+              />
+            )}
+            {state.currentStep === 2 && (
+              <Step2Parents
+                data={state.parents}
+                onChange={updateParents}
+                locale={locale}
+              />
+            )}
+            {state.currentStep === 3 && (
+              <Step3Siblings
+                data={state.siblings}
+                onChange={updateSiblings}
+                locale={locale}
+              />
+            )}
+            {state.currentStep === 4 && (
+              <Step4Invite
+                data={state.invite}
+                onChange={updateInvite}
+                createdRelativeIds={state.createdRelativeIds}
+                locale={locale}
+              />
+            )}
+          </div>
+        </GlassCard>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm text-center">
+            {error}
+          </div>
+        )}
+
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={handleBack}
+            disabled={state.currentStep === 1 || saving}
+            leftIcon={<ChevronLeft className="w-4 h-4" />}
+          >
+            {t.back}
+          </Button>
+
+          <div className="flex items-center gap-3">
+            {state.currentStep > 1 && state.currentStep < TOTAL_STEPS && (
+              <Button variant="ghost" onClick={handleSkip} disabled={saving}>
+                {t.skip}
+              </Button>
+            )}
+
+            {state.currentStep < TOTAL_STEPS ? (
+              <Button
+                onClick={handleNext}
+                disabled={!canGoNext || saving}
+                loading={saving}
+                rightIcon={!saving && <ChevronRight className="w-4 h-4" />}
+              >
+                {saving ? t.saving : t.next}
+              </Button>
+            ) : (
+              <Button
+                variant="gradient"
+                onClick={handleFinish}
+                disabled={saving}
+                loading={saving}
+              >
+                {saving ? t.saving : t.finish}
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

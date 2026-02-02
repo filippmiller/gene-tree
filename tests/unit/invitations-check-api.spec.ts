@@ -531,8 +531,9 @@ describe('POST /api/invitations/check - Error Handling', () => {
       (call) => call[0].action === 'invite_check_exception'
     );
 
-    expect(errorLog[0].requestBody.email).toBe('***');
-    expect(errorLog[0].requestBody.phone).toBe('***');
+    expect(errorLog).toBeDefined();
+    expect(errorLog![0].requestBody.email).toBe('***');
+    expect(errorLog![0].requestBody.phone).toBe('***');
   });
 });
 

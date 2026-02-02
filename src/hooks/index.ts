@@ -6,3 +6,7 @@
 export { useStreak } from "./useStreak";
 export { useGamification } from "./useGamification";
 export { useRealtimeFeed } from "./useRealtimeFeed";
+export { usePresence } from "./usePresence";
+export { useLastSeen } from "./useLastSeen";
+export { useFamilyPresence } from "./useFamilyPresence";
+export { useMessages, useThreadMessages } from "./useMessages";

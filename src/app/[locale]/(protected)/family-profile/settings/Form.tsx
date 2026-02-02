@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { updateProfile } from './actions';
 import type { UserProfile } from './types';
 import DigestPreferences from '@/components/digest/DigestPreferences';
+import { PresenceSettings } from '@/components/presence';
 
 function SubmitBtn() {
   const { pending } = useFormStatus();
@@ -85,6 +86,9 @@ export default function SettingsForm({ initial }: { initial: UserProfile }) {
           <SubmitBtn />
         </form>
       </div>
+
+      {/* Online Presence Settings */}
+      <PresenceSettings initialShowOnlineStatus={(initial as { show_online_status?: boolean })?.show_online_status ?? true} />
 
       {/* Email Preferences Section */}
       <DigestPreferences />

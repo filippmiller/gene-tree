@@ -27,7 +27,10 @@ export type NotificationEventType =
   | 'ELDER_QUESTION_ASKED'
   | 'ELDER_QUESTION_ANSWERED'
   // Story prompts
-  | 'PROMPT_ASSIGNED';
+  | 'PROMPT_ASSIGNED'
+  // Invitation system
+  | 'INVITATION_ACCEPTED'
+  | 'CLAIM_DISPUTED';
 
 /**
  * Payload for 'relative_added' event
@@ -162,6 +165,29 @@ export interface PromptAssignedPayload {
 }
 
 /**
+ * Payload for 'INVITATION_ACCEPTED' event
+ */
+export interface InvitationAcceptedPayload {
+  first_name: string;
+  last_name: string;
+  relationship_type: string;
+  accepted: boolean;
+}
+
+/**
+ * Payload for 'CLAIM_DISPUTED' event
+ * When someone clicks "This isn't me" on an invitation
+ */
+export interface ClaimDisputedPayload {
+  first_name: string;
+  last_name: string;
+  relationship_type: string;
+  reason?: string | null;
+  email?: string | null;
+  phone?: string | null;
+}
+
+/**
  * Union of all notification payloads.
  * Note: We use a flexible type here because payloads can vary and
  * the database stores them as JSON. For type-safe access, cast to
@@ -236,5 +262,7 @@ export function isNotificationEventType(value: string): value is NotificationEve
     'ELDER_QUESTION_ASKED',
     'ELDER_QUESTION_ANSWERED',
     'PROMPT_ASSIGNED',
+    'INVITATION_ACCEPTED',
+    'CLAIM_DISPUTED',
   ].includes(value);
 }

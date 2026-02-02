@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import VoiceRecorderWrapper from './VoiceRecorderWrapper';
 import VoiceStoriesWrapper from './VoiceStoriesWrapper';
 import HistoricalTimelineWrapper from './HistoricalTimelineWrapper';
+import HonorTagsWrapper from './HonorTagsWrapper';
+import PersonalCredoWrapper from './PersonalCredoWrapper';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -231,7 +233,31 @@ export default async function PublicProfilePage({ params }: Props) {
                 )}
               </div>
             </div>
+
+            {/* Personal Credo - inside header card */}
+            {!isFromPending && (
+              <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
+                <PersonalCredoWrapper
+                  profileId={actualProfile.id}
+                  isOwnProfile={user?.id === id}
+                  isDeceasedProfile={isDeceased}
+                  locale={locale as 'en' | 'ru'}
+                />
+              </div>
+            )}
           </div>
+
+        {/* Honor Tags Section */}
+        {!isFromPending && (
+          <div className="mb-6">
+            <HonorTagsWrapper
+              profileId={actualProfile.id}
+              isOwnProfile={user?.id === id}
+              isDeceasedProfile={isDeceased}
+              locale={locale as 'en' | 'ru'}
+            />
+          </div>
+        )}
 
         {/* Bio */}
         {actualProfile.bio && (

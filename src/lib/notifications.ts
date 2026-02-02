@@ -213,6 +213,11 @@ export function getNotificationUrl(
         : '/tree';
     }
 
+    case 'INVITATION_ACCEPTED':
+    case 'CLAIM_DISPUTED':
+      // Navigate to the people page to manage invitations
+      return '/people';
+
     default:
       // Fallback to dashboard
       return '/app';

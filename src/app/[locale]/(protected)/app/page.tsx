@@ -4,8 +4,13 @@ import Link from 'next/link';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import ThisDayHub from '@/components/this-day/ThisDayHub';
 import ActivityFeed from '@/components/feed/ActivityFeed';
+import ProfileCompletionWidget from '@/components/dashboard/ProfileCompletionWidget';
+import DashboardWidgets from '@/components/dashboard/DashboardWidgets';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Badge } from '@/components/ui/badge';
+import { calculateCompletion } from '@/lib/profile/completion-calculator';
+import type { DashboardPreferences } from '@/types/dashboard-preferences';
+import { DEFAULT_DASHBOARD_PREFERENCES } from '@/types/dashboard-preferences';
 import {
   Users,
   Layers,
@@ -37,14 +42,24 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
     return null as never;
   }
 
-  // Load user profile
+  // Load user profile with dashboard preferences
   const { data: profile } = await supabase
     .from('user_profiles')
-    .select('*')
+    .select('*, dashboard_preferences')
     .eq('id', user.id)
     .single() as any;
 
   const userName = profile?.first_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+
+  // Get dashboard preferences with defaults
+  const dashboardPreferences: DashboardPreferences = {
+    ...DEFAULT_DASHBOARD_PREFERENCES,
+    ...(profile?.dashboard_preferences || {}),
+    widgets: {
+      ...DEFAULT_DASHBOARD_PREFERENCES.widgets,
+      ...(profile?.dashboard_preferences?.widgets || {}),
+    },
+  };
 
   // Fetch stats from pending_relatives
   const { data: pendingRelatives } = await supabase
@@ -69,10 +84,173 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
 
   const totalGenerations = generationLevels.size;
 
+  // Calculate profile completion
+  const hasPhoto = Boolean(profile?.avatar_url);
+
+  // Check for parent relationship
+  const { data: relationships } = await supabase
+    .from('relationships')
+    .select('id')
+    .eq('profile_id', user.id)
+    .eq('relationship_type', 'parent')
+    .limit(1);
+
+  const { data: pendingParents } = await supabase
+    .from('pending_relatives')
+    .select('id')
+    .eq('invited_by', user.id)
+    .eq('relationship_type', 'parent')
+    .limit(1);
+
+  const hasParent = (relationships?.length || 0) > 0 || (pendingParents?.length || 0) > 0;
+
+  // Check for stories
+  const { data: stories } = await supabase
+    .from('stories')
+    .select('id')
+    .eq('author_id', user.id)
+    .eq('status', 'approved')
+    .limit(1);
+
+  const hasStory = (stories?.length || 0) > 0;
+
+  const completion = calculateCompletion(
+    {
+      profile: profile as any,
+      hasPhoto,
+      hasParent,
+      hasStory,
+    },
+    resolvedLocale
+  );
+
+  // Widget content definitions
+  const notificationsWidget = (
+    <div className="w-full lg:w-80 shrink-0">
+      <NotificationsPanel />
+    </div>
+  );
+
+  const familyStatsWidget = (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <ModernStatCard
+        label={t('totalPeople')}
+        value={totalPeople}
+        icon={<Users className="w-6 h-6" />}
+        gradient="from-primary to-emerald-700"
+        shadowColor="shadow-primary/25"
+      />
+
+      <ModernStatCard
+        label={t('generations')}
+        value={totalGenerations}
+        icon={<Layers className="w-6 h-6" />}
+        gradient="from-accent to-amber-600"
+        shadowColor="shadow-accent/25"
+      />
+
+      <ModernStatCard
+        label={t('relationships')}
+        value={totalRelationships}
+        icon={<Heart className="w-6 h-6" />}
+        gradient="from-rose-500 to-rose-600"
+        shadowColor="shadow-rose-500/25"
+      />
+    </div>
+  );
+
+  const thisDayWidget = <ThisDayHub />;
+
+  const quickActionsWidget = (
+    <GlassCard glass="medium" padding="lg">
+      <h2 className="text-xl font-bold text-foreground mb-6">{t('quickActions')}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <QuickActionCard
+          href={`/${resolvedLocale}/people/new`}
+          icon={<UserPlus className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-primary to-emerald-700"
+          iconShadow="shadow-primary/25"
+          title={t('addFamilyMember')}
+          description={t('addFamilyMemberDescription')}
+        />
+
+        <QuickActionCard
+          href={`/${resolvedLocale}/tree`}
+          icon={<TreePine className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-accent to-amber-600"
+          iconShadow="shadow-accent/25"
+          title={t('viewFamilyTree')}
+          description={t('viewFamilyTreeDescription')}
+        />
+      </div>
+    </GlassCard>
+  );
+
+  const activityFeedWidget = (
+    <GlassCard glass="medium" padding="lg">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-foreground">{t('recentActivity')}</h2>
+      </div>
+      <ActivityFeed limit={10} />
+    </GlassCard>
+  );
+
+  const exploreFeaturesWidget = (
+    <GlassCard glass="medium" padding="lg">
+      <h2 className="text-xl font-bold text-foreground mb-6">{t('exploreFamily')}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <FeatureCard
+          href={`/${resolvedLocale}/relationship-finder`}
+          icon={<Link2 className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-primary to-emerald-700"
+          iconShadow="shadow-primary/25"
+          title={t('howAreWeRelated')}
+          description={t('howAreWeRelatedDescription')}
+        />
+
+        <FeatureCard
+          href={`/${resolvedLocale}/elder-questions`}
+          icon={<ScrollText className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-accent to-amber-600"
+          iconShadow="shadow-accent/25"
+          title={t('askTheElder')}
+          description={t('askTheElderDescription')}
+        />
+
+        <FeatureCard
+          href={`/${resolvedLocale}/family-profile/settings`}
+          icon={<Settings className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-slate-500 to-gray-600"
+          iconShadow="shadow-slate-500/25"
+          title={t('emailPreferences')}
+          description={t('emailPreferencesDescription')}
+        />
+
+        <FeatureCard
+          href={`/${resolvedLocale}/find-relatives`}
+          icon={<Search className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-info to-blue-600"
+          iconShadow="shadow-info/25"
+          title={t('findRelatives')}
+          description={t('findRelativesDescription')}
+        />
+
+        <FeatureCard
+          href={`/${resolvedLocale}/memory-book`}
+          icon={<BookOpen className="w-6 h-6" />}
+          iconBg="bg-gradient-to-br from-accent to-amber-600"
+          iconShadow="shadow-accent/25"
+          title="Memory Book"
+          description="Create a printable PDF book"
+        />
+      </div>
+    </GlassCard>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <main className="w-full px-4 sm:px-6 lg:px-12 py-8 space-y-8">
-        {/* Welcome Section */}
+        {/* Welcome Section - Always visible */}
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Welcome Card - Heritage Hero */}
           <GlassCard
@@ -123,124 +301,26 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
             </div>
           </GlassCard>
 
-          {/* Notifications */}
-          <div className="w-full lg:w-80 shrink-0">
-            <NotificationsPanel />
-          </div>
+          {/* Notifications in header - show if visible in preferences */}
+          {dashboardPreferences.widgets.notifications?.visible && notificationsWidget}
         </div>
 
-        {/* Stats Grid - Heritage Gradient Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <ModernStatCard
-            label={t('totalPeople')}
-            value={totalPeople}
-            icon={<Users className="w-6 h-6" />}
-            gradient="from-primary to-emerald-700"
-            shadowColor="shadow-primary/25"
-          />
+        {/* Profile Completion Widget - Always visible when incomplete */}
+        {completion.percentage < 100 && (
+          <ProfileCompletionWidget completion={completion} locale={resolvedLocale} />
+        )}
 
-          <ModernStatCard
-            label={t('generations')}
-            value={totalGenerations}
-            icon={<Layers className="w-6 h-6" />}
-            gradient="from-accent to-amber-600"
-            shadowColor="shadow-accent/25"
-          />
-
-          <ModernStatCard
-            label={t('relationships')}
-            value={totalRelationships}
-            icon={<Heart className="w-6 h-6" />}
-            gradient="from-rose-500 to-rose-600"
-            shadowColor="shadow-rose-500/25"
-          />
-        </div>
-
-        {/* This Day in Your Family */}
-        <ThisDayHub />
-
-        {/* Quick Actions */}
-        <GlassCard glass="medium" padding="lg">
-          <h2 className="text-xl font-bold text-foreground mb-6">{t('quickActions')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <QuickActionCard
-              href={`/${resolvedLocale}/people/new`}
-              icon={<UserPlus className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-primary to-emerald-700"
-              iconShadow="shadow-primary/25"
-              title={t('addFamilyMember')}
-              description={t('addFamilyMemberDescription')}
-            />
-
-            <QuickActionCard
-              href={`/${resolvedLocale}/tree`}
-              icon={<TreePine className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-accent to-amber-600"
-              iconShadow="shadow-accent/25"
-              title={t('viewFamilyTree')}
-              description={t('viewFamilyTreeDescription')}
-            />
-          </div>
-        </GlassCard>
-
-        {/* Recent Activity */}
-        <GlassCard glass="medium" padding="lg">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-foreground">{t('recentActivity')}</h2>
-          </div>
-          <ActivityFeed limit={10} />
-        </GlassCard>
-
-        {/* Engagement Features */}
-        <GlassCard glass="medium" padding="lg">
-          <h2 className="text-xl font-bold text-foreground mb-6">{t('exploreFamily')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FeatureCard
-              href={`/${resolvedLocale}/relationship-finder`}
-              icon={<Link2 className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-primary to-emerald-700"
-              iconShadow="shadow-primary/25"
-              title={t('howAreWeRelated')}
-              description={t('howAreWeRelatedDescription')}
-            />
-
-            <FeatureCard
-              href={`/${resolvedLocale}/elder-questions`}
-              icon={<ScrollText className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-accent to-amber-600"
-              iconShadow="shadow-accent/25"
-              title={t('askTheElder')}
-              description={t('askTheElderDescription')}
-            />
-
-            <FeatureCard
-              href={`/${resolvedLocale}/family-profile/settings`}
-              icon={<Settings className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-slate-500 to-gray-600"
-              iconShadow="shadow-slate-500/25"
-              title={t('emailPreferences')}
-              description={t('emailPreferencesDescription')}
-            />
-
-            <FeatureCard
-              href={`/${resolvedLocale}/find-relatives`}
-              icon={<Search className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-info to-blue-600"
-              iconShadow="shadow-info/25"
-              title={t('findRelatives')}
-              description={t('findRelativesDescription')}
-            />
-
-            <FeatureCard
-              href={`/${resolvedLocale}/memory-book`}
-              icon={<BookOpen className="w-6 h-6" />}
-              iconBg="bg-gradient-to-br from-accent to-amber-600"
-              iconShadow="shadow-accent/25"
-              title="Memory Book"
-              description="Create a printable PDF book"
-            />
-          </div>
-        </GlassCard>
+        {/* Customizable Widgets */}
+        <DashboardWidgets
+          initialPreferences={dashboardPreferences}
+          widgets={{
+            family_stats: familyStatsWidget,
+            this_day: thisDayWidget,
+            quick_actions: quickActionsWidget,
+            activity_feed: activityFeedWidget,
+            explore_features: exploreFeaturesWidget,
+          }}
+        />
       </main>
     </div>
   );

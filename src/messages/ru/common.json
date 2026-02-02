@@ -82,6 +82,8 @@
     "commentAdded": "{name} прокомментировал(а) вашу историю",
     "commentReply": "{name} ответил(а) на ваш комментарий",
     "mentionInComment": "{name} упомянул(а) вас в комментарии",
+    "invitationAccepted": "{name} принял(а) ваше приглашение присоединиться к семейному дереву",
+    "claimDisputed": "Кто-то сообщил, что приглашение для {name} было отправлено не тому человеку",
     "time": {
       "justNow": "Только что",
       "minuteAgo": "1 минуту назад",
@@ -410,6 +412,31 @@
       }
     }
   },
+  "widgetSettings": {
+    "title": "Настройка дашборда",
+    "description": "Выберите, какие виджеты показывать на дашборде",
+    "customize": "Настроить",
+    "customizeTooltip": "Показать или скрыть виджеты дашборда",
+    "reset": "Сбросить",
+    "saving": "Сохранение...",
+    "saved": "Сохранено!",
+    "widgets": {
+      "notifications": "Уведомления",
+      "activityFeed": "Недавняя активность",
+      "thisDay": "Этот день в вашей семье",
+      "quickActions": "Быстрые действия",
+      "familyStats": "Статистика семьи",
+      "exploreFeatures": "Исследовать возможности"
+    },
+    "widgetsDesc": {
+      "notifications": "Будьте в курсе семейных событий",
+      "activityFeed": "Смотрите последние обновления",
+      "thisDay": "Дни рождения и годовщины",
+      "quickActions": "Быстрые ссылки на частые действия",
+      "familyStats": "Статистика вашего древа",
+      "exploreFeatures": "Откройте больше возможностей"
+    }
+  },
   "relativeFinder": {
     "pageTitle": "Поиск родственников",
     "pageDescription": "Найдите потенциальных родственников с общими предками",
@@ -487,6 +514,28 @@
       "connectFailed": "Не удалось отправить запрос на связь",
       "actionFailed": "Действие не выполнено. Попробуйте снова.",
       "saveFailed": "Не удалось сохранить настройки"
+    }
+  },
+  "messaging": {
+    "inbox": "Сообщения",
+    "inboxDescription": "Личная переписка с членами семьи",
+    "noConversations": "Пока нет переписок",
+    "noConversationsHint": "Начните переписку с членом семьи из его профиля",
+    "noMessages": "Пока нет сообщений",
+    "unknownUser": "Неизвестный пользователь",
+    "typeMessage": "Введите сообщение...",
+    "enterToSend": "Enter - отправить, Shift+Enter - новая строка",
+    "startConversation": "Начните переписку с {name}",
+    "them": "ним",
+    "sendMessage": "Отправить сообщение",
+    "messageSent": "Сообщение отправлено",
+    "messageError": "Не удалось отправить сообщение",
+    "loading": "Загрузка...",
+    "time": {
+      "now": "сейчас",
+      "minutesAgo": "{count} мин",
+      "hoursAgo": "{count} ч",
+      "daysAgo": "{count} д"
     }
   }
 }

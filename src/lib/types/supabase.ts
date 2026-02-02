@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -12,8 +12,156 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      activity_events: {
+        Row: {
+          actor_id: string
+          created_at: string | null
+          display_data: Json | null
+          event_type: string
+          id: string
+          subject_id: string
+          subject_type: string
+          visibility: string | null
+        }
+        Insert: {
+          actor_id: string
+          created_at?: string | null
+          display_data?: Json | null
+          event_type: string
+          id?: string
+          subject_id: string
+          subject_type: string
+          visibility?: string | null
+        }
+        Update: {
+          actor_id?: string
+          created_at?: string | null
+          display_data?: Json | null
+          event_type?: string
+          id?: string
+          subject_id?: string
+          subject_type?: string
+          visibility?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ancestor_cache: {
+        Row: {
+          ancestor_id: string
+          depth: number
+          last_computed: string | null
+          path: string[]
+          user_id: string
+        }
+        Insert: {
+          ancestor_id: string
+          depth: number
+          last_computed?: string | null
+          path: string[]
+          user_id: string
+        }
+        Update: {
+          ancestor_id?: string
+          depth?: number
+          last_computed?: string | null
+          path?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assigned_prompts: {
+        Row: {
+          answered_at: string | null
+          created_at: string | null
+          from_user_id: string
+          id: string
+          message: string | null
+          prompt_id: string
+          response_story_id: string | null
+          status: string | null
+          to_user_id: string
+        }
+        Insert: {
+          answered_at?: string | null
+          created_at?: string | null
+          from_user_id: string
+          id?: string
+          message?: string | null
+          prompt_id: string
+          response_story_id?: string | null
+          status?: string | null
+          to_user_id: string
+        }
+        Update: {
+          answered_at?: string | null
+          created_at?: string | null
+          from_user_id?: string
+          id?: string
+          message?: string | null
+          prompt_id?: string
+          response_story_id?: string | null
+          status?: string | null
+          to_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assigned_prompts_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "story_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -70,6 +218,264 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      badge_progress: {
+        Row: {
+          badge_id: string
+          current_value: number | null
+          last_updated: string | null
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          current_value?: number | null
+          last_updated?: string | null
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          current_value?: number | null
+          last_updated?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badge_progress_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      badges: {
+        Row: {
+          category: string
+          created_at: string | null
+          criteria_target: string | null
+          criteria_type: string
+          criteria_value: number | null
+          description: string | null
+          description_ru: string | null
+          icon: string
+          id: string
+          is_active: boolean | null
+          name: string
+          name_ru: string | null
+          rarity: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          criteria_target?: string | null
+          criteria_type: string
+          criteria_value?: number | null
+          description?: string | null
+          description_ru?: string | null
+          icon?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          name_ru?: string | null
+          rarity?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          criteria_target?: string | null
+          criteria_type?: string
+          criteria_value?: number | null
+          description?: string | null
+          description_ru?: string | null
+          icon?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          name_ru?: string | null
+          rarity?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      challenge_participants: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          current_progress: number | null
+          id: string
+          joined_at: string | null
+          reward_claimed: boolean | null
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          current_progress?: number | null
+          id?: string
+          joined_at?: string | null
+          reward_claimed?: boolean | null
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          current_progress?: number | null
+          id?: string
+          joined_at?: string | null
+          reward_claimed?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "family_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      connection_requests: {
+        Row: {
+          created_at: string | null
+          from_user_id: string
+          id: string
+          message: string | null
+          relationship_description: string | null
+          responded_at: string | null
+          shared_ancestor_id: string | null
+          status: string
+          to_user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          from_user_id: string
+          id?: string
+          message?: string | null
+          relationship_description?: string | null
+          responded_at?: string | null
+          shared_ancestor_id?: string | null
+          status?: string
+          to_user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          from_user_id?: string
+          id?: string
+          message?: string | null
+          relationship_description?: string | null
+          responded_at?: string | null
+          shared_ancestor_id?: string | null
+          status?: string
+          to_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connection_requests_shared_ancestor_id_fkey"
+            columns: ["shared_ancestor_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connection_requests_shared_ancestor_id_fkey"
+            columns: ["shared_ancestor_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connection_requests_shared_ancestor_id_fkey"
+            columns: ["shared_ancestor_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_events_cache: {
+        Row: {
+          created_at: string | null
+          display_title: string
+          event_day: number
+          event_month: number
+          event_type: string
+          id: string
+          profile_id: string
+          related_profile_id: string | null
+          years_ago: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_title: string
+          event_day: number
+          event_month: number
+          event_type: string
+          id?: string
+          profile_id: string
+          related_profile_id?: string | null
+          years_ago?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          display_title?: string
+          event_day?: number
+          event_month?: number
+          event_type?: string
+          id?: string
+          profile_id?: string
+          related_profile_id?: string | null
+          years_ago?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_events_cache_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_events_cache_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_events_cache_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_events_cache_related_profile_id_fkey"
+            columns: ["related_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_events_cache_related_profile_id_fkey"
+            columns: ["related_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_events_cache_related_profile_id_fkey"
+            columns: ["related_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       deceased_relatives: {
         Row: {
@@ -204,6 +610,85 @@ export type Database = {
           },
         ]
       }
+      elder_questions: {
+        Row: {
+          answer: string | null
+          answered_at: string | null
+          asker_id: string
+          created_at: string | null
+          elder_id: string
+          id: string
+          question: string
+          status: Database["public"]["Enums"]["elder_question_status"] | null
+          visibility: string | null
+        }
+        Insert: {
+          answer?: string | null
+          answered_at?: string | null
+          asker_id: string
+          created_at?: string | null
+          elder_id: string
+          id?: string
+          question: string
+          status?: Database["public"]["Enums"]["elder_question_status"] | null
+          visibility?: string | null
+        }
+        Update: {
+          answer?: string | null
+          answered_at?: string | null
+          asker_id?: string
+          created_at?: string | null
+          elder_id?: string
+          id?: string
+          question?: string
+          status?: Database["public"]["Enums"]["elder_question_status"] | null
+          visibility?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elder_questions_asker_id_fkey"
+            columns: ["asker_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elder_questions_asker_id_fkey"
+            columns: ["asker_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elder_questions_asker_id_fkey"
+            columns: ["asker_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elder_questions_elder_id_fkey"
+            columns: ["elder_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elder_questions_elder_id_fkey"
+            columns: ["elder_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elder_questions_elder_id_fkey"
+            columns: ["elder_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employment: {
         Row: {
           company_name: string
@@ -270,6 +755,207 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      family_challenges: {
+        Row: {
+          challenge_type: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          description_ru: string | null
+          end_date: string
+          family_scope: string | null
+          id: string
+          is_active: boolean | null
+          reward_badge_id: string | null
+          reward_points: number | null
+          start_date: string
+          target_value: number
+          title: string
+          title_ru: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          challenge_type: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          description_ru?: string | null
+          end_date: string
+          family_scope?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward_badge_id?: string | null
+          reward_points?: number | null
+          start_date: string
+          target_value?: number
+          title: string
+          title_ru?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          challenge_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          description_ru?: string | null
+          end_date?: string
+          family_scope?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward_badge_id?: string | null
+          reward_points?: number | null
+          start_date?: string
+          target_value?: number
+          title?: string
+          title_ru?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_challenges_reward_badge_id_fkey"
+            columns: ["reward_badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          from_user_id: string
+          id: string
+          read_at: string | null
+          thread_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          from_user_id: string
+          id?: string
+          read_at?: string | null
+          thread_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          from_user_id?: string
+          id?: string
+          read_at?: string | null
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      honor_tag_verifications: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          id: string
+          profile_honor_tag_id: string
+          verified: boolean
+          verifier_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          profile_honor_tag_id: string
+          verified: boolean
+          verifier_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          profile_honor_tag_id?: string
+          verified?: boolean
+          verifier_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "honor_tag_verifications_profile_honor_tag_id_fkey"
+            columns: ["profile_honor_tag_id"]
+            isOneToOne: false
+            referencedRelation: "profile_honor_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      honor_tags: {
+        Row: {
+          applicable_to_deceased: boolean | null
+          applicable_to_living: boolean | null
+          background_color: string | null
+          category: string
+          code: string
+          color: string | null
+          country_code: string | null
+          created_at: string | null
+          description: string | null
+          description_ru: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          is_official: boolean | null
+          name: string
+          name_ru: string | null
+          requires_verification: boolean | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          applicable_to_deceased?: boolean | null
+          applicable_to_living?: boolean | null
+          background_color?: string | null
+          category: string
+          code: string
+          color?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          description?: string | null
+          description_ru?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_official?: boolean | null
+          name: string
+          name_ru?: string | null
+          requires_verification?: boolean | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          applicable_to_deceased?: boolean | null
+          applicable_to_living?: boolean | null
+          background_color?: string | null
+          category?: string
+          code?: string
+          color?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          description?: string | null
+          description_ru?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_official?: boolean | null
+          name?: string
+          name_ru?: string | null
+          requires_verification?: boolean | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       institution_ref: {
         Row: {
@@ -364,94 +1050,6 @@ export type Database = {
         }
         Relationships: []
       }
-      notification_recipients: {
-        Row: {
-          is_read: boolean
-          notification_id: string
-          profile_id: string
-          read_at: string | null
-        }
-        Insert: {
-          is_read?: boolean
-          notification_id: string
-          profile_id: string
-          read_at?: string | null
-        }
-        Update: {
-          is_read?: boolean
-          notification_id?: string
-          profile_id?: string
-          read_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notification_recipients_notification_id_fkey"
-            columns: ["notification_id"]
-            isOneToOne: false
-            referencedRelation: "notifications"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notification_recipients_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      notifications: {
-        Row: {
-          actor_profile_id: string
-          created_at: string
-          event_type: string
-          id: string
-          payload: Json | null
-          primary_profile_id: string | null
-          related_profile_id: string | null
-        }
-        Insert: {
-          actor_profile_id: string
-          created_at?: string
-          event_type: string
-          id?: string
-          payload?: Json | null
-          primary_profile_id?: string | null
-          related_profile_id?: string | null
-        }
-        Update: {
-          actor_profile_id?: string
-          created_at?: string
-          event_type?: string
-          id?: string
-          payload?: Json | null
-          primary_profile_id?: string | null
-          related_profile_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_actor_profile_id_fkey"
-            columns: ["actor_profile_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_primary_profile_id_fkey"
-            columns: ["primary_profile_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_related_profile_id_fkey"
-            columns: ["related_profile_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       kin_terms_ru: {
         Row: {
           path_expr: string
@@ -520,6 +1118,60 @@ export type Database = {
           },
         ]
       }
+      leaderboard_settings: {
+        Row: {
+          show_badges: boolean | null
+          show_on_leaderboard: boolean | null
+          show_points: boolean | null
+          show_real_name: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          show_badges?: boolean | null
+          show_on_leaderboard?: boolean | null
+          show_points?: boolean | null
+          show_real_name?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          show_badges?: boolean | null
+          show_on_leaderboard?: boolean | null
+          show_points?: boolean | null
+          show_real_name?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      matching_preferences: {
+        Row: {
+          allow_matching: boolean | null
+          created_at: string | null
+          min_ancestor_depth: number | null
+          notify_on_match: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          allow_matching?: boolean | null
+          created_at?: string | null
+          min_ancestor_depth?: number | null
+          notify_on_match?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          allow_matching?: boolean | null
+          created_at?: string | null
+          min_ancestor_depth?: number | null
+          notify_on_match?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       media_jobs: {
         Row: {
           created_at: string | null
@@ -552,6 +1204,309 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      merge_history: {
+        Row: {
+          created_at: string
+          duplicate_record_id: string | null
+          id: string
+          kept_profile_id: string
+          merge_data: Json
+          merged_by: string
+          merged_profile_id: string
+          relationships_transferred: number
+        }
+        Insert: {
+          created_at?: string
+          duplicate_record_id?: string | null
+          id?: string
+          kept_profile_id: string
+          merge_data?: Json
+          merged_by: string
+          merged_profile_id: string
+          relationships_transferred?: number
+        }
+        Update: {
+          created_at?: string
+          duplicate_record_id?: string | null
+          id?: string
+          kept_profile_id?: string
+          merge_data?: Json
+          merged_by?: string
+          merged_profile_id?: string
+          relationships_transferred?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merge_history_duplicate_record_id_fkey"
+            columns: ["duplicate_record_id"]
+            isOneToOne: false
+            referencedRelation: "potential_duplicates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_threads: {
+        Row: {
+          created_at: string | null
+          id: string
+          participant_1: string
+          participant_2: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          participant_1: string
+          participant_2: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          participant_1?: string
+          participant_2?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      milestones: {
+        Row: {
+          category: Database["public"]["Enums"]["milestone_category"]
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          media_urls: string[] | null
+          milestone_date: string
+          milestone_type: string
+          profile_id: string
+          remind_annually: boolean | null
+          reminder_days_before: number | null
+          title: string
+          updated_at: string | null
+          visibility: Database["public"]["Enums"]["media_visibility"]
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["milestone_category"]
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          media_urls?: string[] | null
+          milestone_date: string
+          milestone_type: string
+          profile_id: string
+          remind_annually?: boolean | null
+          reminder_days_before?: number | null
+          title: string
+          updated_at?: string | null
+          visibility?: Database["public"]["Enums"]["media_visibility"]
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["milestone_category"]
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          media_urls?: string[] | null
+          milestone_date?: string
+          milestone_type?: string
+          profile_id?: string
+          remind_annually?: boolean | null
+          reminder_days_before?: number | null
+          title?: string
+          updated_at?: string | null
+          visibility?: Database["public"]["Enums"]["media_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "milestones_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_recipients: {
+        Row: {
+          is_read: boolean
+          notification_id: string
+          profile_id: string
+          read_at: string | null
+        }
+        Insert: {
+          is_read?: boolean
+          notification_id: string
+          profile_id: string
+          read_at?: string | null
+        }
+        Update: {
+          is_read?: boolean
+          notification_id?: string
+          profile_id?: string
+          read_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_recipients_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_recipients_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_recipients_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_recipients_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          actor_profile_id: string
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json | null
+          primary_profile_id: string | null
+          related_profile_id: string | null
+        }
+        Insert: {
+          actor_profile_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+          payload?: Json | null
+          primary_profile_id?: string | null
+          related_profile_id?: string | null
+        }
+        Update: {
+          actor_profile_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          primary_profile_id?: string | null
+          related_profile_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_primary_profile_id_fkey"
+            columns: ["primary_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_primary_profile_id_fkey"
+            columns: ["primary_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_primary_profile_id_fkey"
+            columns: ["primary_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_related_profile_id_fkey"
+            columns: ["related_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_related_profile_id_fkey"
+            columns: ["related_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_related_profile_id_fkey"
+            columns: ["related_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pending_relatives: {
         Row: {
@@ -1002,6 +1957,89 @@ export type Database = {
           },
         ]
       }
+      photo_tags: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_confirmed: boolean | null
+          photo_id: string
+          tagged_by: string
+          tagged_profile_id: string
+          x_percent: number
+          y_percent: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_confirmed?: boolean | null
+          photo_id: string
+          tagged_by: string
+          tagged_profile_id: string
+          x_percent: number
+          y_percent: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_confirmed?: boolean | null
+          photo_id?: string
+          tagged_by?: string
+          tagged_profile_id?: string
+          x_percent?: number
+          y_percent?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photo_tags_photo_id_fkey"
+            columns: ["photo_id"]
+            isOneToOne: false
+            referencedRelation: "photos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_tags_tagged_by_fkey"
+            columns: ["tagged_by"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_tags_tagged_by_fkey"
+            columns: ["tagged_by"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_tags_tagged_by_fkey"
+            columns: ["tagged_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_tags_tagged_profile_id_fkey"
+            columns: ["tagged_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_tags_tagged_profile_id_fkey"
+            columns: ["tagged_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photo_tags_tagged_profile_id_fkey"
+            columns: ["tagged_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       photos: {
         Row: {
           approved_at: string | null
@@ -1140,6 +2178,268 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      point_transactions: {
+        Row: {
+          action_id: string | null
+          action_type: string
+          created_at: string | null
+          description: string | null
+          id: string
+          points: number
+          user_id: string
+        }
+        Insert: {
+          action_id?: string | null
+          action_type: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          points: number
+          user_id: string
+        }
+        Update: {
+          action_id?: string | null
+          action_type?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      point_values: {
+        Row: {
+          action_type: string
+          daily_limit: number | null
+          description: string | null
+          description_ru: string | null
+          is_active: boolean | null
+          points: number
+        }
+        Insert: {
+          action_type: string
+          daily_limit?: number | null
+          description?: string | null
+          description_ru?: string | null
+          is_active?: boolean | null
+          points: number
+        }
+        Update: {
+          action_type?: string
+          daily_limit?: number | null
+          description?: string | null
+          description_ru?: string | null
+          is_active?: boolean | null
+          points?: number
+        }
+        Relationships: []
+      }
+      potential_duplicates: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          id: string
+          match_reasons: Json
+          profile_a_id: string
+          profile_b_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          confidence_score: number
+          created_at?: string
+          id?: string
+          match_reasons?: Json
+          profile_a_id: string
+          profile_b_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          match_reasons?: Json
+          profile_a_id?: string
+          profile_b_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "potential_duplicates_profile_a_id_fkey"
+            columns: ["profile_a_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_profile_a_id_fkey"
+            columns: ["profile_a_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_profile_a_id_fkey"
+            columns: ["profile_a_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_profile_b_id_fkey"
+            columns: ["profile_b_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_profile_b_id_fkey"
+            columns: ["profile_b_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_profile_b_id_fkey"
+            columns: ["profile_b_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_honor_tags: {
+        Row: {
+          added_at: string | null
+          added_by: string | null
+          display_order: number | null
+          document_url: string | null
+          honor_tag_id: string
+          id: string
+          is_featured: boolean | null
+          notes: string | null
+          profile_id: string
+          updated_at: string | null
+          verification_level: string | null
+          verified_by: string[] | null
+        }
+        Insert: {
+          added_at?: string | null
+          added_by?: string | null
+          display_order?: number | null
+          document_url?: string | null
+          honor_tag_id: string
+          id?: string
+          is_featured?: boolean | null
+          notes?: string | null
+          profile_id: string
+          updated_at?: string | null
+          verification_level?: string | null
+          verified_by?: string[] | null
+        }
+        Update: {
+          added_at?: string | null
+          added_by?: string | null
+          display_order?: number | null
+          document_url?: string | null
+          honor_tag_id?: string
+          id?: string
+          is_featured?: boolean | null
+          notes?: string | null
+          profile_id?: string
+          updated_at?: string | null
+          verification_level?: string | null
+          verified_by?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_honor_tags_honor_tag_id_fkey"
+            columns: ["honor_tag_id"]
+            isOneToOne: false
+            referencedRelation: "honor_tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_honor_tags_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_honor_tags_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_honor_tags_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reactions: {
+        Row: {
+          created_at: string | null
+          id: string
+          profile_id: string
+          reaction_type: Database["public"]["Enums"]["reaction_type"]
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          profile_id: string
+          reaction_type: Database["public"]["Enums"]["reaction_type"]
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          profile_id?: string
+          reaction_type?: Database["public"]["Enums"]["reaction_type"]
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reactions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reactions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reactions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       relationship_types: {
         Row: {
@@ -1375,97 +2675,244 @@ export type Database = {
         }
         Relationships: []
       }
-      potential_duplicates: {
+      story_comments: {
         Row: {
+          author_id: string
+          content: string
+          created_at: string | null
           id: string
-          profile_a_id: string
-          profile_b_id: string
-          confidence_score: number
-          match_reasons: Json
-          status: string
-          reviewed_by: string | null
-          reviewed_at: string | null
-          created_at: string
-          updated_at: string
+          mentioned_profile_ids: string[] | null
+          parent_id: string | null
+          story_id: string
+          updated_at: string | null
         }
         Insert: {
+          author_id: string
+          content: string
+          created_at?: string | null
           id?: string
-          profile_a_id: string
-          profile_b_id: string
-          confidence_score: number
-          match_reasons?: Json
-          status?: string
-          reviewed_by?: string | null
-          reviewed_at?: string | null
-          created_at?: string
-          updated_at?: string
+          mentioned_profile_ids?: string[] | null
+          parent_id?: string | null
+          story_id: string
+          updated_at?: string | null
         }
         Update: {
+          author_id?: string
+          content?: string
+          created_at?: string | null
           id?: string
-          profile_a_id?: string
-          profile_b_id?: string
-          confidence_score?: number
-          match_reasons?: Json
-          status?: string
-          reviewed_by?: string | null
-          reviewed_at?: string | null
-          created_at?: string
-          updated_at?: string
+          mentioned_profile_ids?: string[] | null
+          parent_id?: string | null
+          story_id?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "potential_duplicates_profile_a_id_fkey"
-            columns: ["profile_a_id"]
+            foreignKeyName: "story_comments_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "story_comments_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "story_comments_author_id_fkey"
+            columns: ["author_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "potential_duplicates_profile_b_id_fkey"
-            columns: ["profile_b_id"]
+            foreignKeyName: "story_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "story_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      story_prompts: {
+        Row: {
+          category: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          max_age: number | null
+          min_age: number | null
+          prompt_text: string
+          prompt_text_ru: string | null
+          sort_order: number | null
+          tags: string[] | null
+          updated_at: string | null
+          usage_count: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_age?: number | null
+          min_age?: number | null
+          prompt_text: string
+          prompt_text_ru?: string | null
+          sort_order?: number | null
+          tags?: string[] | null
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_age?: number | null
+          min_age?: number | null
+          prompt_text?: string
+          prompt_text_ru?: string | null
+          sort_order?: number | null
+          tags?: string[] | null
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
+      streak_history: {
+        Row: {
+          created_at: string | null
+          ended_at: string
+          id: string
+          started_at: string
+          streak_length: number
+          streak_type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          ended_at: string
+          id?: string
+          started_at: string
+          streak_length: number
+          streak_type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          ended_at?: string
+          id?: string
+          started_at?: string
+          streak_length?: number
+          streak_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tribute_guestbook: {
+        Row: {
+          author_id: string
+          created_at: string | null
+          id: string
+          is_approved: boolean | null
+          message: string | null
+          tribute_profile_id: string
+          tribute_type: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string | null
+          id?: string
+          is_approved?: boolean | null
+          message?: string | null
+          tribute_profile_id: string
+          tribute_type: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string | null
+          id?: string
+          is_approved?: boolean | null
+          message?: string | null
+          tribute_profile_id?: string
+          tribute_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tribute_guestbook_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tribute_guestbook_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tribute_guestbook_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tribute_guestbook_tribute_profile_id_fkey"
+            columns: ["tribute_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tribute_guestbook_tribute_profile_id_fkey"
+            columns: ["tribute_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tribute_guestbook_tribute_profile_id_fkey"
+            columns: ["tribute_profile_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
           },
         ]
       }
-      merge_history: {
+      user_badges: {
         Row: {
+          badge_id: string
+          earned_at: string | null
           id: string
-          kept_profile_id: string
-          merged_profile_id: string
-          merged_by: string
-          duplicate_record_id: string | null
-          merge_data: Json
-          relationships_transferred: number
-          created_at: string
+          is_featured: boolean | null
+          user_id: string
         }
         Insert: {
+          badge_id: string
+          earned_at?: string | null
           id?: string
-          kept_profile_id: string
-          merged_profile_id: string
-          merged_by: string
-          duplicate_record_id?: string | null
-          merge_data?: Json
-          relationships_transferred?: number
-          created_at?: string
+          is_featured?: boolean | null
+          user_id: string
         }
         Update: {
+          badge_id?: string
+          earned_at?: string | null
           id?: string
-          kept_profile_id?: string
-          merged_profile_id?: string
-          merged_by?: string
-          duplicate_record_id?: string | null
-          merge_data?: Json
-          relationships_transferred?: number
-          created_at?: string
+          is_featured?: boolean | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "merge_history_duplicate_record_id_fkey"
-            columns: ["duplicate_record_id"]
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
             isOneToOne: false
-            referencedRelation: "potential_duplicates"
+            referencedRelation: "badges"
             referencedColumns: ["id"]
           },
         ]
@@ -1483,21 +2930,36 @@ export type Database = {
           current_avatar_id: string | null
           current_city: string | null
           current_country: string | null
+          dashboard_preferences: Json | null
           death_date: string | null
           death_place: string | null
+          email_preferences: Json | null
           first_name: string
           gender: string | null
           id: string
           is_living: boolean | null
           last_name: string
+          last_seen_at: string | null
+          life_motto: string | null
+          life_motto_privacy: string | null
           maiden_name: string | null
+          memorial_quote: string | null
+          memorial_quote_added_at: string | null
+          memorial_quote_author: string | null
           middle_name: string | null
           nickname: string | null
           occupation: string | null
+          onboarding_completed: boolean | null
+          onboarding_completed_at: string | null
+          onboarding_step: number | null
+          personal_statement: string | null
+          personal_statement_privacy: string | null
           phone: string | null
           preferred_locale: string | null
           privacy_settings: Json | null
           role: string | null
+          show_online_status: boolean | null
+          tribute_mode_enabled: boolean | null
           updated_at: string | null
         }
         Insert: {
@@ -1512,21 +2974,36 @@ export type Database = {
           current_avatar_id?: string | null
           current_city?: string | null
           current_country?: string | null
+          dashboard_preferences?: Json | null
           death_date?: string | null
           death_place?: string | null
+          email_preferences?: Json | null
           first_name: string
           gender?: string | null
           id: string
           is_living?: boolean | null
           last_name: string
+          last_seen_at?: string | null
+          life_motto?: string | null
+          life_motto_privacy?: string | null
           maiden_name?: string | null
+          memorial_quote?: string | null
+          memorial_quote_added_at?: string | null
+          memorial_quote_author?: string | null
           middle_name?: string | null
           nickname?: string | null
           occupation?: string | null
+          onboarding_completed?: boolean | null
+          onboarding_completed_at?: string | null
+          onboarding_step?: number | null
+          personal_statement?: string | null
+          personal_statement_privacy?: string | null
           phone?: string | null
           preferred_locale?: string | null
           privacy_settings?: Json | null
           role?: string | null
+          show_online_status?: boolean | null
+          tribute_mode_enabled?: boolean | null
           updated_at?: string | null
         }
         Update: {
@@ -1541,21 +3018,36 @@ export type Database = {
           current_avatar_id?: string | null
           current_city?: string | null
           current_country?: string | null
+          dashboard_preferences?: Json | null
           death_date?: string | null
           death_place?: string | null
+          email_preferences?: Json | null
           first_name?: string
           gender?: string | null
           id?: string
           is_living?: boolean | null
           last_name?: string
+          last_seen_at?: string | null
+          life_motto?: string | null
+          life_motto_privacy?: string | null
           maiden_name?: string | null
+          memorial_quote?: string | null
+          memorial_quote_added_at?: string | null
+          memorial_quote_author?: string | null
           middle_name?: string | null
           nickname?: string | null
           occupation?: string | null
+          onboarding_completed?: boolean | null
+          onboarding_completed_at?: string | null
+          onboarding_step?: number | null
+          personal_statement?: string | null
+          personal_statement_privacy?: string | null
           phone?: string | null
           preferred_locale?: string | null
           privacy_settings?: Json | null
           role?: string | null
+          show_online_status?: boolean | null
+          tribute_mode_enabled?: boolean | null
           updated_at?: string | null
         }
         Relationships: [
@@ -1567,6 +3059,95 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_prompt_history: {
+        Row: {
+          answered_at: string | null
+          id: string
+          prompt_id: string
+          shown_at: string | null
+          status: string | null
+          story_id: string | null
+          user_id: string
+          week_number: number
+          year: number
+        }
+        Insert: {
+          answered_at?: string | null
+          id?: string
+          prompt_id: string
+          shown_at?: string | null
+          status?: string | null
+          story_id?: string | null
+          user_id: string
+          week_number: number
+          year: number
+        }
+        Update: {
+          answered_at?: string | null
+          id?: string
+          prompt_id?: string
+          shown_at?: string | null
+          status?: string | null
+          story_id?: string | null
+          user_id?: string
+          week_number?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_prompt_history_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "story_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_streaks: {
+        Row: {
+          created_at: string | null
+          current_streak: number | null
+          last_activity_date: string | null
+          longest_streak: number | null
+          monthly_points: number | null
+          points_last_reset_at: string | null
+          streak_frozen_until: string | null
+          streak_type: string | null
+          total_points: number | null
+          updated_at: string | null
+          user_id: string
+          weekly_points: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_streak?: number | null
+          last_activity_date?: string | null
+          longest_streak?: number | null
+          monthly_points?: number | null
+          points_last_reset_at?: string | null
+          streak_frozen_until?: string | null
+          streak_type?: string | null
+          total_points?: number | null
+          updated_at?: string | null
+          user_id: string
+          weekly_points?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          current_streak?: number | null
+          last_activity_date?: string | null
+          longest_streak?: number | null
+          monthly_points?: number | null
+          points_last_reset_at?: string | null
+          streak_frozen_until?: string | null
+          streak_type?: string | null
+          total_points?: number | null
+          updated_at?: string | null
+          user_id?: string
+          weekly_points?: number | null
+        }
+        Relationships: []
       }
       voice_stories: {
         Row: {
@@ -1981,9 +3562,25 @@ export type Database = {
       }
     }
     Functions: {
+      award_badge: {
+        Args: { p_badge_id: string; p_user_id: string }
+        Returns: boolean
+      }
       can_upload_to_profile: {
         Args: { profile_id: string; user_id: string }
         Returns: boolean
+      }
+      check_all_badges_for_user: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
+      check_and_award_badge: {
+        Args: { p_badge_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      check_honor_tag_verification: {
+        Args: { p_profile_honor_tag_id: string }
+        Returns: undefined
       }
       current_user_is_admin: { Args: never; Returns: boolean }
       fn_add_relationship_by_code: {
@@ -2003,6 +3600,24 @@ export type Database = {
           person_id: string
         }[]
       }
+      fn_find_potential_duplicates: {
+        Args: { p_min_confidence?: number }
+        Returns: {
+          confidence_score: number
+          match_reasons: Json
+          profile_a_id: string
+          profile_b_id: string
+        }[]
+      }
+      fn_find_shared_ancestors: {
+        Args: { p_max_depth?: number; p_user1: string; p_user2: string }
+        Returns: {
+          ancestor_id: string
+          ancestor_name: string
+          user1_depth: number
+          user2_depth: number
+        }[]
+      }
       fn_get_ancestors: {
         Args: { p_max_depth?: number; p_person: string }
         Returns: {
@@ -2017,6 +3632,44 @@ export type Database = {
           depth: number
           descendant_id: string
           path: string[]
+        }[]
+      }
+      fn_get_potential_relatives: {
+        Args: { p_limit?: number; p_max_depth?: number; p_user_id: string }
+        Returns: {
+          relationship_closeness: number
+          relative_avatar_url: string
+          relative_depth: number
+          relative_name: string
+          relative_user_id: string
+          shared_ancestor_id: string
+          shared_ancestor_name: string
+          user_depth: number
+        }[]
+      }
+      fn_refresh_ancestor_cache: {
+        Args: { p_max_depth?: number; p_user_id: string }
+        Returns: number
+      }
+      get_active_challenges: {
+        Args: { p_user_id: string }
+        Returns: {
+          challenge_id: string
+          challenge_type: string
+          current_progress: number
+          days_remaining: number
+          description: string
+          description_ru: string
+          end_date: string
+          is_completed: boolean
+          is_joined: boolean
+          participant_count: number
+          reward_badge_id: string
+          reward_points: number
+          start_date: string
+          target_value: number
+          title: string
+          title_ru: string
         }[]
       }
       get_ancestors_with_depth: {
@@ -2047,7 +3700,69 @@ export type Database = {
       }
       get_family_circle_profile_ids: {
         Args: { p_user_id: string }
-        Returns: { profile_id: string }[]
+        Returns: {
+          profile_id: string
+        }[]
+      }
+      get_family_leaderboard: {
+        Args: { p_limit?: number; p_period?: string; p_user_id: string }
+        Returns: {
+          avatar_url: string
+          badge_count: number
+          current_streak: number
+          display_name: string
+          points: number
+          rank: number
+          user_id: string
+        }[]
+      }
+      get_or_create_message_thread: {
+        Args: { user_a: string; user_b: string }
+        Returns: string
+      }
+      get_profile_honor_tags: {
+        Args: { p_profile_id: string }
+        Returns: {
+          added_at: string
+          background_color: string
+          category: string
+          code: string
+          color: string
+          description: string
+          description_ru: string
+          display_order: number
+          honor_tag_id: string
+          icon: string
+          id: string
+          is_featured: boolean
+          name: string
+          name_ru: string
+          verification_level: string
+          verified_by: string[]
+        }[]
+      }
+      get_prompts_for_age: {
+        Args: { p_age: number; p_category?: string }
+        Returns: {
+          category: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          max_age: number | null
+          min_age: number | null
+          prompt_text: string
+          prompt_text_ru: string | null
+          sort_order: number | null
+          tags: string[] | null
+          updated_at: string | null
+          usage_count: number | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "story_prompts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_reverse_relationship_type: {
         Args: { rel_type: string }
@@ -2079,6 +3794,71 @@ export type Database = {
           photo_url: string
         }[]
       }
+      get_this_day_events: {
+        Args: { p_day?: number; p_month?: number; p_user_id: string }
+        Returns: {
+          display_title: string
+          event_day: number
+          event_month: number
+          event_type: string
+          id: string
+          profile_avatar_url: string
+          profile_first_name: string
+          profile_id: string
+          profile_last_name: string
+          related_profile_id: string
+          years_ago: number
+        }[]
+      }
+      get_user_badge_stats: {
+        Args: { p_user_id: string }
+        Returns: {
+          by_category: Json
+          total_available: number
+          total_earned: number
+        }[]
+      }
+      get_user_gamification_stats: {
+        Args: { p_user_id: string }
+        Returns: {
+          active_challenges: number
+          badges_earned: number
+          challenges_completed: number
+          current_streak: number
+          longest_streak: number
+          monthly_points: number
+          rank_in_family: number
+          total_family_members: number
+          total_points: number
+          weekly_points: number
+        }[]
+      }
+      get_user_prompt_stats: {
+        Args: { p_user_id: string }
+        Returns: {
+          by_category: Json
+          current_week_answered: boolean
+          total_answered: number
+          total_available: number
+          total_shown: number
+          total_skipped: number
+        }[]
+      }
+      get_weekly_prompt: {
+        Args: { p_category?: string; p_user_id: string }
+        Returns: {
+          category: string
+          is_new: boolean
+          prompt_id: string
+          prompt_text: string
+          prompt_text_ru: string
+          tags: string[]
+        }[]
+      }
+      increment_prompt_usage: {
+        Args: { p_prompt_id: string }
+        Returns: undefined
+      }
       is_admin: { Args: { user_id: string }; Returns: boolean }
       is_in_family_circle: {
         Args: { profile_id: string; user_id: string }
@@ -2103,6 +3883,25 @@ export type Database = {
           person_id: string
         }[]
       }
+      mark_prompt_answered: {
+        Args: { p_prompt_id: string; p_story_id?: string; p_user_id: string }
+        Returns: boolean
+      }
+      record_user_activity: {
+        Args: {
+          p_action_id?: string
+          p_action_type: string
+          p_description?: string
+          p_user_id: string
+        }
+        Returns: {
+          badges_earned: string[]
+          new_streak: number
+          points_earned: number
+          streak_increased: boolean
+        }[]
+      }
+      update_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
       certainty_level: "certain" | "approximate" | "unknown"
@@ -2114,6 +3913,7 @@ export type Database = {
         | "university"
         | "vocational"
         | "graduate"
+      elder_question_status: "pending" | "answered" | "declined"
       media_status: "pending" | "approved" | "rejected" | "archived"
       media_type:
         | "avatar"
@@ -2125,6 +3925,14 @@ export type Database = {
         | "certificate"
         | "other"
       media_visibility: "public" | "family" | "private" | "unlisted"
+      milestone_category:
+        | "baby"
+        | "education"
+        | "career"
+        | "relationship"
+        | "life"
+        | "custom"
+      reaction_type: "heart" | "sad" | "hug" | "laugh" | "pray"
       visibility_level: "public" | "family" | "private"
     }
     CompositeTypes: {
@@ -2251,6 +4059,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       certainty_level: ["certain", "approximate", "unknown"],
@@ -2263,6 +4074,7 @@ export const Constants = {
         "vocational",
         "graduate",
       ],
+      elder_question_status: ["pending", "answered", "declined"],
       media_status: ["pending", "approved", "rejected", "archived"],
       media_type: [
         "avatar",
@@ -2275,6 +4087,15 @@ export const Constants = {
         "other",
       ],
       media_visibility: ["public", "family", "private", "unlisted"],
+      milestone_category: [
+        "baby",
+        "education",
+        "career",
+        "relationship",
+        "life",
+        "custom",
+      ],
+      reaction_type: ["heart", "sad", "hug", "laugh", "pray"],
       visibility_level: ["public", "family", "private"],
     },
   },

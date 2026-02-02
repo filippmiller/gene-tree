@@ -1,0 +1,205 @@
+/**
+ * Onboarding Wizard State Management
+ *
+ * Manages the wizard data and progress between steps using localStorage
+ * for persistence across page refreshes.
+ */
+
+import { Gender } from '@/types/database';
+
+// Step 1: About You
+export interface AboutYouData {
+  firstName: string;
+  lastName: string;
+  birthDate?: string;
+  gender?: Gender;
+  avatarFile?: File;
+  avatarPreview?: string;
+}
+
+// Step 2: Parents
+export interface ParentData {
+  firstName: string;
+  lastName: string;
+  birthYear?: string;
+  isDeceased: boolean;
+  skip?: boolean;
+}
+
+export interface ParentsData {
+  mother: ParentData;
+  father: ParentData;
+}
+
+// Step 3: Siblings/Spouse
+export interface SiblingData {
+  firstName: string;
+  lastName: string;
+  birthYear?: string;
+  gender: Gender;
+}
+
+export interface SpouseData {
+  firstName: string;
+  lastName: string;
+  birthYear?: string;
+  marriageYear?: string;
+}
+
+export interface SiblingsData {
+  siblings: SiblingData[];
+  spouse?: SpouseData;
+}
+
+// Step 4: Invite
+export interface InviteData {
+  relativeId?: string;
+  relativeName?: string;
+  relationshipType?: string;
+  email?: string;
+  phone?: string;
+  skip?: boolean;
+}
+
+// Complete wizard state
+export interface WizardState {
+  currentStep: number;
+  aboutYou: AboutYouData;
+  parents: ParentsData;
+  siblings: SiblingsData;
+  invite: InviteData;
+  createdRelativeIds: string[]; // Track created relatives for invite step
+}
+
+const STORAGE_KEY = 'gene-tree-onboarding-wizard';
+
+const defaultState: WizardState = {
+  currentStep: 1,
+  aboutYou: {
+    firstName: '',
+    lastName: '',
+  },
+  parents: {
+    mother: {
+      firstName: '',
+      lastName: '',
+      isDeceased: false,
+    },
+    father: {
+      firstName: '',
+      lastName: '',
+      isDeceased: false,
+    },
+  },
+  siblings: {
+    siblings: [],
+  },
+  invite: {},
+  createdRelativeIds: [],
+};
+
+/**
+ * Load wizard state from localStorage
+ */
+export function loadWizardState(): WizardState {
+  if (typeof window === 'undefined') {
+    return defaultState;
+  }
+
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Don't restore file objects from localStorage
+      if (parsed.aboutYou) {
+        delete parsed.aboutYou.avatarFile;
+      }
+      return { ...defaultState, ...parsed };
+    }
+  } catch (e) {
+    console.error('Failed to load wizard state:', e);
+  }
+
+  return defaultState;
+}
+
+/**
+ * Save wizard state to localStorage
+ */
+export function saveWizardState(state: WizardState): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    // Don't save file objects
+    const toSave = {
+      ...state,
+      aboutYou: {
+        ...state.aboutYou,
+        avatarFile: undefined,
+      },
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  } catch (e) {
+    console.error('Failed to save wizard state:', e);
+  }
+}
+
+/**
+ * Clear wizard state from localStorage
+ */
+export function clearWizardState(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+/**
+ * Update a specific step's data
+ */
+export function updateStepData<K extends keyof WizardState>(
+  state: WizardState,
+  key: K,
+  data: WizardState[K]
+): WizardState {
+  const newState = {
+    ...state,
+    [key]: data,
+  };
+  saveWizardState(newState);
+  return newState;
+}
+
+/**
+ * Move to next step
+ */
+export function nextStep(state: WizardState): WizardState {
+  const newState = {
+    ...state,
+    currentStep: Math.min(state.currentStep + 1, 4),
+  };
+  saveWizardState(newState);
+  return newState;
+}
+
+/**
+ * Move to previous step
+ */
+export function prevStep(state: WizardState): WizardState {
+  const newState = {
+    ...state,
+    currentStep: Math.max(state.currentStep - 1, 1),
+  };
+  saveWizardState(newState);
+  return newState;
+}
+
+/**
+ * Add a created relative ID (for invite step)
+ */
+export function addCreatedRelativeId(state: WizardState, id: string): WizardState {
+  const newState = {
+    ...state,
+    createdRelativeIds: [...state.createdRelativeIds, id],
+  };
+  saveWizardState(newState);
+  return newState;
+}

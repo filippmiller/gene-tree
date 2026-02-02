@@ -82,6 +82,8 @@
     "commentAdded": "{name} commented on your story",
     "commentReply": "{name} replied to your comment",
     "mentionInComment": "{name} mentioned you in a comment",
+    "invitationAccepted": "{name} accepted your invitation to join the family tree",
+    "claimDisputed": "Someone reported that the invitation for {name} was sent to the wrong person",
     "time": {
       "justNow": "Just now",
       "minuteAgo": "1 minute ago",
@@ -410,6 +412,31 @@
       }
     }
   },
+  "widgetSettings": {
+    "title": "Customize Dashboard",
+    "description": "Choose which widgets to display on your dashboard",
+    "customize": "Customize",
+    "customizeTooltip": "Show or hide dashboard widgets",
+    "reset": "Reset to Default",
+    "saving": "Saving...",
+    "saved": "Saved!",
+    "widgets": {
+      "notifications": "Notifications",
+      "activityFeed": "Recent Activity",
+      "thisDay": "This Day in Your Family",
+      "quickActions": "Quick Actions",
+      "familyStats": "Family Stats",
+      "exploreFeatures": "Explore Features"
+    },
+    "widgetsDesc": {
+      "notifications": "Stay updated with family activity",
+      "activityFeed": "See recent family updates",
+      "thisDay": "Birthdays and anniversaries",
+      "quickActions": "Quick links to common actions",
+      "familyStats": "Your family tree statistics",
+      "exploreFeatures": "Discover more features"
+    }
+  },
   "relativeFinder": {
     "pageTitle": "Find Relatives",
     "pageDescription": "Discover potential relatives who share your ancestors",
@@ -487,6 +514,28 @@
       "connectFailed": "Failed to send connection request",
       "actionFailed": "Action failed. Please try again.",
       "saveFailed": "Failed to save preferences"
+    }
+  },
+  "messaging": {
+    "inbox": "Messages",
+    "inboxDescription": "Private conversations with family members",
+    "noConversations": "No conversations yet",
+    "noConversationsHint": "Start a conversation with a family member from their profile",
+    "noMessages": "No messages yet",
+    "unknownUser": "Unknown User",
+    "typeMessage": "Type a message...",
+    "enterToSend": "Press Enter to send, Shift+Enter for new line",
+    "startConversation": "Start a conversation with {name}",
+    "them": "them",
+    "sendMessage": "Send message",
+    "messageSent": "Message sent",
+    "messageError": "Failed to send message",
+    "loading": "Loading...",
+    "time": {
+      "now": "now",
+      "minutesAgo": "{count}m",
+      "hoursAgo": "{count}h",
+      "daysAgo": "{count}d"
     }
   }
 }

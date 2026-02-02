@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import InboxButton from "@/components/messaging/InboxButton";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -89,6 +90,7 @@ export default function Nav() {
 
           {/* Right side actions */}
           <div className="flex items-center gap-2">
+            <InboxButton />
             <NotificationBell />
             <ThemeToggle />
             <div className="hidden sm:block">

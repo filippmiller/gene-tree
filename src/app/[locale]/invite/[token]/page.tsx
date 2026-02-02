@@ -1,21 +1,45 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
-import InvitationAcceptForm from '@/components/invite/InvitationAcceptForm';
+import ClaimVerificationForm from '@/components/invite/ClaimVerificationForm';
+import { AlertCircle, Trees } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ locale: string; token: string }>;
 }
 
+// Translations for the page header and error states
+const translations = {
+  en: {
+    title: 'Family Tree Invitation',
+    invitedYou: 'has invited you to join their family tree',
+    notFound: 'Invitation Not Found',
+    notFoundDescription: 'This link is invalid or has expired',
+    signIn: 'Sign In',
+    alreadyProcessed: 'Already Processed',
+    alreadyProcessedDescription: 'This invitation has already been accepted or declined',
+  },
+  ru: {
+    title: 'Приглашение в семейное дерево',
+    invitedYou: 'пригласил(а) вас присоединиться к семье',
+    notFound: 'Приглашение не найдено',
+    notFoundDescription: 'Ссылка недействительна или срок действия истёк',
+    signIn: 'Войти в систему',
+    alreadyProcessed: 'Уже обработано',
+    alreadyProcessedDescription: 'Это приглашение уже было принято или отклонено',
+  },
+};
+
 export default async function InvitePage({ params }: PageProps) {
   const { locale, token } = await params;
+  const t = translations[locale as keyof typeof translations] || translations.en;
+
   // Use admin client because this page must work for unauthenticated users
   const supabase = getSupabaseAdmin();
 
-  // Fetch invitation details by token (simplified query)
+  // Fetch invitation details by token (check all statuses first to give better error messages)
   const { data: invitation, error } = await supabase
     .from('pending_relatives')
     .select('*')
     .eq('invitation_token', token)
-    .eq('status', 'pending')
     .single();
 
   // Fetch inviter profile separately if invitation found
@@ -31,23 +55,50 @@ export default async function InvitePage({ params }: PageProps) {
     }
   }
 
-  // Handle invalid/expired invitation
+  // Handle invalid invitation (not found)
   if (error || !invitation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Приглашение не найдено
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-slate-200">
+          <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+            <AlertCircle className="h-8 w-8 text-red-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">
+            {t.notFound}
           </h1>
-          <p className="text-gray-600 mb-6">
-            Ссылка недействительна или срок действия истёк
+          <p className="text-slate-600 mb-6">
+            {t.notFoundDescription}
           </p>
           <a
             href={`/${locale}/sign-in`}
-            className="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="inline-block px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
-            Войти в систему
+            {t.signIn}
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle already processed invitation
+  if (invitation.status !== 'pending') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-slate-200">
+          <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full flex items-center justify-center">
+            <AlertCircle className="h-8 w-8 text-amber-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">
+            {t.alreadyProcessed}
+          </h1>
+          <p className="text-slate-600 mb-6">
+            {t.alreadyProcessedDescription}
+          </p>
+          <a
+            href={`/${locale}/sign-in`}
+            className="inline-block px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            {t.signIn}
           </a>
         </div>
       </div>
@@ -55,64 +106,25 @@ export default async function InvitePage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 py-12 px-4">
+      <div className="max-w-xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="text-6xl mb-4">👨‍👩‍👧‍👦</div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Приглашение в семейное дерево
+          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+            <Trees className="h-10 w-10 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            {t.title}
           </h1>
-          <p className="text-gray-600">
-            {inviterName} пригласил вас присоединиться к семье
+          <p className="text-slate-600">
+            <span className="font-semibold">{inviterName}</span> {t.invitedYou}
           </p>
         </div>
 
-        {/* Invitation details card */}
-        <div className="bg-white rounded-lg shadow-xl p-8 mb-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900">
-            Ваши данные
-          </h2>
-          
-          <div className="space-y-3 text-gray-700">
-            <div className="flex justify-between py-2 border-b">
-              <span className="font-medium">Имя:</span>
-              <span>{invitation.first_name}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b">
-              <span className="font-medium">Фамилия:</span>
-              <span>{invitation.last_name}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b">
-              <span className="font-medium">Email:</span>
-              <span>{invitation.email || '—'}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b">
-              <span className="font-medium">Телефон:</span>
-              <span>{invitation.phone || '—'}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b">
-              <span className="font-medium">Тип связи:</span>
-              <span className="capitalize">{invitation.relationship_type}</span>
-            </div>
-            {invitation.date_of_birth && (
-              <div className="flex justify-between py-2 border-b">
-                <span className="font-medium">Дата рождения:</span>
-                <span>{new Date(invitation.date_of_birth).toLocaleDateString('ru-RU')}</span>
-              </div>
-            )}
-            {invitation.is_deceased && (
-              <div className="flex justify-between py-2">
-                <span className="font-medium">Статус:</span>
-                <span className="text-gray-600">† В память об ушедшем</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Accept/Edit/Reject form */}
-        <InvitationAcceptForm 
+        {/* Claim Verification Form */}
+        <ClaimVerificationForm
           invitation={invitation}
+          inviterName={inviterName}
           locale={locale}
         />
       </div>
