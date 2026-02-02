@@ -30,7 +30,10 @@ export type NotificationEventType =
   | 'PROMPT_ASSIGNED'
   // Invitation system
   | 'INVITATION_ACCEPTED'
-  | 'CLAIM_DISPUTED';
+  | 'CLAIM_DISPUTED'
+  // Bridge requests
+  | 'BRIDGE_REQUEST_RECEIVED'
+  | 'BRIDGE_REQUEST_ACCEPTED';
 
 /**
  * Payload for 'relative_added' event
@@ -188,6 +191,26 @@ export interface ClaimDisputedPayload {
 }
 
 /**
+ * Payload for 'BRIDGE_REQUEST_RECEIVED' event
+ */
+export interface BridgeRequestReceivedPayload {
+  request_id: string;
+  claimed_relationship: string;
+  first_name: string;
+  last_name: string;
+}
+
+/**
+ * Payload for 'BRIDGE_REQUEST_ACCEPTED' event
+ */
+export interface BridgeRequestAcceptedPayload {
+  request_id: string;
+  relationship_type: string;
+  first_name: string;
+  last_name: string;
+}
+
+/**
  * Union of all notification payloads.
  * Note: We use a flexible type here because payloads can vary and
  * the database stores them as JSON. For type-safe access, cast to
@@ -264,5 +287,7 @@ export function isNotificationEventType(value: string): value is NotificationEve
     'PROMPT_ASSIGNED',
     'INVITATION_ACCEPTED',
     'CLAIM_DISPUTED',
+    'BRIDGE_REQUEST_RECEIVED',
+    'BRIDGE_REQUEST_ACCEPTED',
   ].includes(value);
 }

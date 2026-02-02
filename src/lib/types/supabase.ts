@@ -302,6 +302,114 @@ export type Database = {
         }
         Relationships: []
       }
+      bridge_blocked_users: {
+        Row: {
+          blocked_user_id: string
+          created_at: string | null
+          id: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          blocked_user_id: string
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          blocked_user_id?: string
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bridge_candidates: {
+        Row: {
+          candidate_user_id: string
+          created_at: string | null
+          dismissed_at: string | null
+          id: string
+          is_dismissed: boolean | null
+          match_reasons: Json | null
+          match_score: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          candidate_user_id: string
+          created_at?: string | null
+          dismissed_at?: string | null
+          id?: string
+          is_dismissed?: boolean | null
+          match_reasons?: Json | null
+          match_score?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          candidate_user_id?: string
+          created_at?: string | null
+          dismissed_at?: string | null
+          id?: string
+          is_dismissed?: boolean | null
+          match_reasons?: Json | null
+          match_score?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bridge_requests: {
+        Row: {
+          claimed_relationship: string
+          common_ancestor_hint: string | null
+          created_at: string | null
+          established_relationship_type: string | null
+          expires_at: string | null
+          id: string
+          requester_id: string
+          responded_at: string | null
+          response_message: string | null
+          status: string | null
+          supporting_info: string | null
+          target_user_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          claimed_relationship: string
+          common_ancestor_hint?: string | null
+          created_at?: string | null
+          established_relationship_type?: string | null
+          expires_at?: string | null
+          id?: string
+          requester_id: string
+          responded_at?: string | null
+          response_message?: string | null
+          status?: string | null
+          supporting_info?: string | null
+          target_user_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          claimed_relationship?: string
+          common_ancestor_hint?: string | null
+          created_at?: string | null
+          established_relationship_type?: string | null
+          expires_at?: string | null
+          id?: string
+          requester_id?: string
+          responded_at?: string | null
+          response_message?: string | null
+          status?: string | null
+          supporting_info?: string | null
+          target_user_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       challenge_participants: {
         Row: {
           challenge_id: string
@@ -540,6 +648,42 @@ export type Database = {
           photos?: Json | null
           relationship_to_adder?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      duplicate_scan_history: {
+        Row: {
+          created_at: string
+          duplicates_found: number
+          duplicates_inserted: number
+          duration_ms: number | null
+          id: string
+          min_confidence: number
+          profiles_scanned: number
+          scan_type: string
+          scanned_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          duplicates_found?: number
+          duplicates_inserted?: number
+          duration_ms?: number | null
+          id?: string
+          min_confidence?: number
+          profiles_scanned?: number
+          scan_type?: string
+          scanned_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          duplicates_found?: number
+          duplicates_inserted?: number
+          duration_ms?: number | null
+          id?: string
+          min_confidence?: number
+          profiles_scanned?: number
+          scan_type?: string
+          scanned_by?: string | null
         }
         Relationships: []
       }
@@ -2280,11 +2424,15 @@ export type Database = {
           confidence_score: number
           created_at: string
           id: string
+          is_deceased_pair: boolean | null
+          kept_profile_id: string | null
           match_reasons: Json
           profile_a_id: string
           profile_b_id: string
+          resolution_notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          shared_relatives_count: number | null
           status: string
           updated_at: string
         }
@@ -2292,11 +2440,15 @@ export type Database = {
           confidence_score: number
           created_at?: string
           id?: string
+          is_deceased_pair?: boolean | null
+          kept_profile_id?: string | null
           match_reasons?: Json
           profile_a_id: string
           profile_b_id: string
+          resolution_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          shared_relatives_count?: number | null
           status?: string
           updated_at?: string
         }
@@ -2304,15 +2456,40 @@ export type Database = {
           confidence_score?: number
           created_at?: string
           id?: string
+          is_deceased_pair?: boolean | null
+          kept_profile_id?: string | null
           match_reasons?: Json
           profile_a_id?: string
           profile_b_id?: string
+          resolution_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          shared_relatives_count?: number | null
           status?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "potential_duplicates_kept_profile_id_fkey"
+            columns: ["kept_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_kept_profile_id_fkey"
+            columns: ["kept_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "potential_duplicates_kept_profile_id_fkey"
+            columns: ["kept_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "potential_duplicates_profile_a_id_fkey"
             columns: ["profile_a_id"]
@@ -2427,6 +2604,125 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quick_invite_links: {
+        Row: {
+          code: string
+          created_at: string | null
+          created_by: string
+          current_uses: number | null
+          event_name: string | null
+          expires_at: string
+          id: string
+          is_active: boolean | null
+          max_uses: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          created_by: string
+          current_uses?: number | null
+          event_name?: string | null
+          expires_at: string
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          created_by?: string
+          current_uses?: number | null
+          event_name?: string | null
+          expires_at?: string
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      quick_link_signups: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          claimed_relationship: string | null
+          created_at: string | null
+          created_profile_id: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          link_id: string
+          phone: string | null
+          rejection_reason: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          claimed_relationship?: string | null
+          created_at?: string | null
+          created_profile_id?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          link_id: string
+          phone?: string | null
+          rejection_reason?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          claimed_relationship?: string | null
+          created_at?: string | null
+          created_profile_id?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          link_id?: string
+          phone?: string | null
+          rejection_reason?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quick_link_signups_created_profile_id_fkey"
+            columns: ["created_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quick_link_signups_created_profile_id_fkey"
+            columns: ["created_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quick_link_signups_created_profile_id_fkey"
+            columns: ["created_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quick_link_signups_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "quick_invite_links"
             referencedColumns: ["id"]
           },
         ]
@@ -3733,6 +4029,14 @@ export type Database = {
       }
     }
     Functions: {
+      accept_bridge_request: {
+        Args: {
+          p_relationship_type: string
+          p_request_id: string
+          p_response_message?: string
+        }
+        Returns: Json
+      }
       award_badge: {
         Args: { p_badge_id: string; p_user_id: string }
         Returns: boolean
@@ -3754,6 +4058,14 @@ export type Database = {
         Returns: undefined
       }
       current_user_is_admin: { Args: never; Returns: boolean }
+      find_bridge_candidates: {
+        Args: { p_user_id: string }
+        Returns: {
+          candidate_id: string
+          match_reasons: Json
+          match_score: number
+        }[]
+      }
       fn_add_relationship_by_code: {
         Args: {
           p_code: string
@@ -3769,6 +4081,20 @@ export type Database = {
         Returns: {
           layer: number
           person_id: string
+        }[]
+      }
+      fn_count_shared_relatives: {
+        Args: { p_profile_a_id: string; p_profile_b_id: string }
+        Returns: number
+      }
+      fn_find_deceased_duplicates: {
+        Args: { p_min_confidence?: number }
+        Returns: {
+          confidence_score: number
+          match_reasons: Json
+          profile_a_id: string
+          profile_b_id: string
+          shared_relatives: number
         }[]
       }
       fn_find_potential_duplicates: {
@@ -3822,6 +4148,7 @@ export type Database = {
         Args: { p_max_depth?: number; p_user_id: string }
         Returns: number
       }
+      generate_invite_code: { Args: never; Returns: string }
       get_active_challenges: {
         Args: { p_user_id: string }
         Returns: {
@@ -3856,6 +4183,7 @@ export type Database = {
           photo_url: string
         }[]
       }
+      get_bridge_request_counts: { Args: { p_user_id: string }; Returns: Json }
       get_current_season: { Args: never; Returns: string }
       get_daily_memory_prompt: {
         Args: { p_context_profile_id?: string; p_user_id: string }
@@ -4075,6 +4403,10 @@ export type Database = {
       increment_prompt_usage: {
         Args: { p_prompt_id: string }
         Returns: undefined
+      }
+      increment_quick_link_usage: {
+        Args: { link_code: string }
+        Returns: boolean
       }
       is_admin: { Args: { user_id: string }; Returns: boolean }
       is_in_family_circle: {

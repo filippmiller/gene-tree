@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { Eye, Users, Heart } from 'lucide-react';
 import {
   describeMatchReasons,
   getConfidenceBadgeVariant,
@@ -17,7 +18,10 @@ interface DuplicateCardProps {
   duplicate: PotentialDuplicate;
   onMerge: (duplicateId: string, keepProfileId: string, mergeProfileId: string) => Promise<void>;
   onDismiss: (duplicateId: string) => Promise<void>;
+  onViewDetails?: () => void;
   isLoading?: boolean;
+  showDeceasedBadge?: boolean;
+  sharedRelativesCount?: number;
 }
 
 function ProfileCard({
@@ -144,7 +148,10 @@ export function DuplicateCard({
   duplicate,
   onMerge,
   onDismiss,
+  onViewDetails,
   isLoading = false,
+  showDeceasedBadge = false,
+  sharedRelativesCount,
 }: DuplicateCardProps) {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [isMerging, setIsMerging] = useState(false);
@@ -193,8 +200,22 @@ export function DuplicateCard({
   return (
     <Card elevation="raised" className="overflow-hidden">
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Potential Duplicate</CardTitle>
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-lg">Potential Duplicate</CardTitle>
+            {showDeceasedBadge && (
+              <Badge variant="secondary" size="sm" className="gap-1">
+                <Heart className="h-3 w-3" />
+                Memorial
+              </Badge>
+            )}
+            {sharedRelativesCount !== undefined && sharedRelativesCount > 0 && (
+              <Badge variant="outline" size="sm" className="gap-1">
+                <Users className="h-3 w-3" />
+                {sharedRelativesCount} shared relative{sharedRelativesCount !== 1 ? 's' : ''}
+              </Badge>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <Badge variant={badgeVariant} size="lg">
               {duplicate.confidence_score}% Match
@@ -237,23 +258,37 @@ export function DuplicateCard({
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t">
-          <Button
-            variant="outline"
-            onClick={handleDismiss}
-            disabled={disabled}
-            loading={isDismissing}
-          >
-            Not a Duplicate
-          </Button>
-          <Button
-            variant="default"
-            onClick={handleMerge}
-            disabled={disabled || !selectedProfile}
-            loading={isMerging}
-          >
-            {selectedProfile ? 'Merge Profiles' : 'Select a Profile to Keep'}
-          </Button>
+        <div className="flex items-center justify-between pt-4 border-t">
+          {onViewDetails && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onViewDetails}
+              disabled={disabled}
+              className="gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              View Details
+            </Button>
+          )}
+          <div className={cn("flex items-center gap-3", !onViewDetails && "ml-auto")}>
+            <Button
+              variant="outline"
+              onClick={handleDismiss}
+              disabled={disabled}
+              loading={isDismissing}
+            >
+              Not a Duplicate
+            </Button>
+            <Button
+              variant="default"
+              onClick={handleMerge}
+              disabled={disabled || !selectedProfile}
+              loading={isMerging}
+            >
+              {selectedProfile ? 'Merge Profiles' : 'Select a Profile to Keep'}
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
