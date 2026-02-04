@@ -22,13 +22,10 @@ export function getSupabaseBrowser(): SupabaseClient<Database> {
   supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
-      autoRefreshToken: true,
+      autoRefreshToken: false, // Disable auto-refresh to prevent crashes on stale tokens
+      detectSessionInUrl: true,
     },
   });
 
   return supabaseInstance;
 }
-
-// DEPRECATED: Use getSupabaseBrowser() instead to avoid multiple instances
-// Only for backwards compatibility - will be removed
-export const supabase = getSupabaseBrowser();
