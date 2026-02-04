@@ -48,4 +48,10 @@ next-env.d.ts
 # testing
 /playwright-report
 /test-results
+/.playwright-mcp
 migration-backup/
+
+# temporary screenshots
+*.png
+!public/**/*.png
+!src/**/*.png
