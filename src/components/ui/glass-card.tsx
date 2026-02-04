@@ -5,16 +5,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * GlassCard - Modern glassmorphism card component
+ * Living Archive GlassCard
  *
- * Provides frosted glass effect with multiple intensity levels.
- * Supports hover animations, glow effects, and color tints.
+ * Premium glassmorphism card with warm golden accents
+ * Provides atmospheric depth and cinematic feel
  */
 
 const glassCardVariants = cva(
   // Base styles
   [
-    "rounded-2xl transition-all duration-300 ease-out",
+    "rounded-2xl transition-all duration-400 ease-cinematic",
     "transform-gpu",
   ].join(" "),
   {
@@ -22,55 +22,74 @@ const glassCardVariants = cva(
       glass: {
         // Subtle - Light glass, barely noticeable
         subtle: [
-          "bg-white/70 dark:bg-gray-900/70",
+          "bg-card/70 dark:bg-card/70",
           "backdrop-blur-sm",
-          "border border-white/50 dark:border-white/10",
+          "border border-border/30",
         ].join(" "),
 
         // Medium - Standard glass card (default)
         medium: [
-          "bg-white/60 dark:bg-gray-900/60",
+          "bg-card/60 dark:bg-card/80",
           "backdrop-blur-md",
-          "border border-white/40 dark:border-white/10",
-          "shadow-glass",
+          "border border-border/30",
+          "shadow-elevation-2",
         ].join(" "),
 
         // Frosted - Heavy blur, prominent glass effect
         frosted: [
-          "bg-white/50 dark:bg-gray-900/50",
-          "backdrop-blur-lg",
-          "border border-white/30 dark:border-white/10",
+          "bg-card/50 dark:bg-card/70",
+          "backdrop-blur-xl",
+          "border border-border/20",
           "shadow-elevation-4",
         ].join(" "),
 
-        // Tinted - Glass with primary color tint
+        // Tinted - Glass with golden tint
         tinted: [
-          "bg-gradient-to-br from-violet-500/10 to-sky-500/5",
-          "dark:from-violet-500/20 dark:to-sky-500/10",
+          "bg-gradient-to-br from-primary/5 via-card/80 to-accent/5",
+          "dark:from-primary/10 dark:via-card/90 dark:to-accent/10",
           "backdrop-blur-md",
-          "border border-violet-500/20 dark:border-violet-400/20",
-          "shadow-glass",
+          "border border-primary/10",
+          "shadow-elevation-2",
         ].join(" "),
 
         // Solid - No glass, just elevated card
         solid: [
           "bg-card",
-          "border border-border",
+          "border border-border/30",
           "shadow-elevation-2",
+        ].join(" "),
+
+        // Dark - For overlay/modal backgrounds
+        dark: [
+          "bg-background/90 dark:bg-background/95",
+          "backdrop-blur-xl",
+          "border border-border/20",
+          "shadow-elevation-5",
         ].join(" "),
       },
       hover: {
         none: "",
-        lift: "hover:-translate-y-1 hover:shadow-glass-hover",
-        glow: "hover:shadow-glow hover:border-violet-500/30",
+        lift: [
+          "hover:-translate-y-1",
+          "hover:shadow-elevation-4",
+          "hover:border-primary/20",
+        ].join(" "),
+        glow: [
+          "hover:shadow-glow-primary",
+          "hover:border-primary/30",
+        ].join(" "),
         scale: "hover:scale-[1.02]",
-        subtle: "hover:bg-white/70 dark:hover:bg-gray-900/70 hover:border-violet-500/20",
+        subtle: [
+          "hover:bg-card/80",
+          "hover:border-primary/20",
+        ].join(" "),
       },
       padding: {
         none: "p-0",
         sm: "p-4",
         md: "p-6",
         lg: "p-8",
+        xl: "p-10",
       },
     },
     defaultVariants: {
@@ -111,7 +130,7 @@ const GlassCardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5", className)}
+    className={cn("flex flex-col space-y-2", className)}
     {...props}
   />
 ));
@@ -127,7 +146,7 @@ const GlassCardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-xl font-semibold leading-none tracking-tight text-foreground",
+      "font-display text-xl font-medium leading-tight tracking-tight text-foreground",
       className
     )}
     {...props}
@@ -144,7 +163,7 @@ const GlassCardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-muted-foreground leading-relaxed", className)}
     {...props}
   />
 ));

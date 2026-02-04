@@ -6,18 +6,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Premium Progress component with Stripe-level polish
+ * Living Archive Progress Component
+ *
+ * Premium progress bar with golden accents
  *
  * Features:
- * - Multiple variants: default, success, warning, error
+ * - Multiple variants: default (gold), success, warning, error
  * - Size options: sm, md, lg
  * - Animated fill with smooth transitions
  * - Optional label and value display
  * - Indeterminate state with shimmer
+ * - Circular progress variant
  */
 
 const progressVariants = cva(
-  "relative w-full overflow-hidden rounded-full bg-secondary",
+  "relative w-full overflow-hidden rounded-full bg-muted/50",
   {
     variants: {
       size: {
@@ -33,15 +36,17 @@ const progressVariants = cva(
 );
 
 const progressIndicatorVariants = cva(
-  "h-full transition-all duration-500 ease-smooth rounded-full",
+  "h-full transition-all duration-500 ease-cinematic rounded-full",
   {
     variants: {
       variant: {
-        default: "bg-primary",
-        success: "bg-emerald-500",
-        warning: "bg-amber-500",
-        error: "bg-red-500",
-        gradient: "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500",
+        // Default - Golden gradient
+        default: "bg-gradient-to-r from-primary to-primary/80",
+        success: "bg-gradient-to-r from-success to-success/80",
+        warning: "bg-gradient-to-r from-warning to-warning/80",
+        error: "bg-gradient-to-r from-destructive to-destructive/80",
+        // Premium gradient
+        gradient: "bg-gradient-to-r from-primary via-accent to-primary",
       },
     },
     defaultVariants: {
@@ -84,14 +89,14 @@ const Progress = React.forwardRef<
     return (
       <div className="w-full">
         {(label || showValue) && (
-          <div className="flex justify-between items-center mb-1.5">
+          <div className="flex justify-between items-center mb-2">
             {label && (
               <span className="text-sm font-medium text-foreground">
                 {label}
               </span>
             )}
             {showValue && !indeterminate && (
-              <span className="text-sm font-medium text-muted-foreground">
+              <span className="text-sm font-medium text-muted-foreground tabular-nums">
                 {Math.round(percentage)}%
               </span>
             )}
@@ -153,9 +158,9 @@ const CircularProgress = ({
 
   const colorMap = {
     default: "text-primary",
-    success: "text-emerald-500",
-    warning: "text-amber-500",
-    error: "text-red-500",
+    success: "text-success",
+    warning: "text-warning",
+    error: "text-destructive",
   };
 
   return (
@@ -174,7 +179,7 @@ const CircularProgress = ({
       >
         {/* Background circle */}
         <circle
-          className="text-secondary"
+          className="text-muted/50"
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="none"
@@ -184,7 +189,7 @@ const CircularProgress = ({
         />
         {/* Progress circle */}
         <circle
-          className="transition-all duration-500 ease-smooth"
+          className="transition-all duration-500 ease-cinematic"
           stroke="currentColor"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
@@ -200,7 +205,7 @@ const CircularProgress = ({
       {showValue && !indeterminate && size !== "sm" && (
         <span
           className={cn(
-            "absolute font-semibold",
+            "absolute font-semibold tabular-nums",
             size === "md" && "text-xs",
             size === "lg" && "text-sm"
           )}

@@ -4,68 +4,74 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * World-class button component with Stripe-level polish
+ * Living Archive Button Component
+ *
+ * Premium, cinematic button design with golden accents
  *
  * Features:
- * - Multiple variants: default, secondary, outline, ghost, destructive, gradient, success
- * - Size variants: sm, md (default), lg, icon
- * - Built-in loading state with spinner
+ * - Multiple variants: default (gold), secondary, outline, ghost, destructive, gradient
+ * - Size variants: sm, default, lg, icon variants
+ * - Built-in loading state with elegant spinner
  * - Icon support (left, right, or icon-only)
- * - Smooth hover animations with lift effect
+ * - Smooth hover animations with lift and glow
  * - Active/pressed state with subtle sink
- * - Full accessibility support
  */
 
 const buttonVariants = cva(
-  // Base styles - applies to ALL buttons
+  // Base styles
   [
-    "group relative inline-flex items-center justify-center gap-2",
-    "whitespace-nowrap rounded-lg text-sm font-semibold",
-    "ring-offset-background transition-all duration-200 ease-smooth",
+    "group relative inline-flex items-center justify-center gap-2.5",
+    "whitespace-nowrap text-sm font-medium",
+    "ring-offset-background transition-all duration-300 ease-cinematic",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
-    // Smooth transform for hover/active states
     "transform-gpu",
   ].join(" "),
   {
     variants: {
       variant: {
-        // Primary - Bold, confident, main CTAs
+        // Primary - Golden accent, main CTAs
         default: [
-          "bg-primary text-primary-foreground",
-          "shadow-btn hover:shadow-btn-hover",
-          "hover:-translate-y-0.5 hover:bg-primary/90",
+          "bg-primary text-primary-foreground font-semibold",
+          "shadow-btn",
+          "hover:-translate-y-0.5 hover:shadow-glow-primary",
           "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
+          // Subtle inner highlight
+          "before:absolute before:inset-0 before:rounded-[inherit]",
+          "before:bg-gradient-to-b before:from-white/10 before:to-transparent",
+          "before:opacity-100",
         ].join(" "),
 
-        // Secondary - Subtle, supporting actions
+        // Secondary - Muted, supporting actions
         secondary: [
           "bg-secondary text-secondary-foreground",
-          "shadow-btn hover:shadow-btn-hover",
-          "hover:-translate-y-0.5 hover:bg-secondary/80",
+          "border border-border/50",
+          "shadow-btn",
+          "hover:-translate-y-0.5 hover:bg-secondary/80 hover:border-primary/20",
           "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
         ].join(" "),
 
         // Outline - Bordered, minimal weight
         outline: [
-          "border-2 border-input bg-background",
-          "hover:border-primary hover:bg-accent hover:text-accent-foreground",
-          "hover:-translate-y-0.5 hover:shadow-btn-hover",
+          "border-2 border-border bg-transparent",
+          "hover:border-primary/50 hover:bg-primary/5 hover:text-primary",
+          "hover:-translate-y-0.5",
           "active:translate-y-0 active:scale-[0.98]",
         ].join(" "),
 
         // Ghost - Invisible until hover
         ghost: [
-          "hover:bg-accent hover:text-accent-foreground",
-          "active:bg-accent/80 active:scale-[0.98]",
+          "hover:bg-muted hover:text-foreground",
+          "active:bg-muted/80 active:scale-[0.98]",
         ].join(" "),
 
         // Destructive - Dangerous actions
         destructive: [
           "bg-destructive text-destructive-foreground",
-          "shadow-btn hover:shadow-btn-hover",
+          "shadow-btn",
           "hover:-translate-y-0.5 hover:bg-destructive/90",
+          "hover:shadow-[0_0_20px_-5px_hsl(var(--destructive)/0.4)]",
           "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
         ].join(" "),
 
@@ -76,16 +82,16 @@ const buttonVariants = cva(
           "active:text-primary/80",
         ].join(" "),
 
-        // Gradient - Premium, eye-catching CTAs (Violet theme)
+        // Gradient - Premium, eye-catching CTAs (Gold gradient)
         gradient: [
-          "bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-600 text-white",
-          "shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30",
-          "hover:-translate-y-0.5",
-          "hover:from-violet-600 hover:via-purple-600 hover:to-indigo-700",
+          "text-primary-foreground font-semibold",
+          "bg-gradient-to-r from-archive-gold-500 via-primary to-archive-copper-500",
+          "shadow-glow",
+          "hover:-translate-y-0.5 hover:shadow-glow-lg",
           "active:translate-y-0 active:scale-[0.98]",
-          // Subtle shine effect
-          "before:absolute before:inset-0 before:rounded-lg",
-          "before:bg-gradient-to-r before:from-white/0 before:via-white/25 before:to-white/0",
+          // Shine effect
+          "before:absolute before:inset-0 before:rounded-[inherit]",
+          "before:bg-gradient-to-r before:from-white/0 before:via-white/20 before:to-white/0",
           "before:translate-x-[-100%] hover:before:translate-x-[100%]",
           "before:transition-transform before:duration-700 before:ease-out",
           "overflow-hidden",
@@ -93,19 +99,29 @@ const buttonVariants = cva(
 
         // Success - Positive confirmations
         success: [
-          "bg-emerald-600 text-white",
-          "shadow-btn hover:shadow-btn-hover",
-          "hover:-translate-y-0.5 hover:bg-emerald-700",
+          "bg-success text-success-foreground",
+          "shadow-btn",
+          "hover:-translate-y-0.5 hover:bg-success/90",
+          "hover:shadow-[0_0_20px_-5px_hsl(var(--success)/0.4)]",
+          "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
+        ].join(" "),
+
+        // Copper - Accent variant
+        copper: [
+          "bg-accent text-accent-foreground font-semibold",
+          "shadow-btn",
+          "hover:-translate-y-0.5 hover:shadow-glow-accent",
           "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
         ].join(" "),
       },
       size: {
-        sm: "h-8 px-3 text-xs rounded-md [&_svg]:size-3.5",
-        default: "h-10 px-4 py-2 [&_svg]:size-4",
-        lg: "h-12 px-6 text-base rounded-xl [&_svg]:size-5",
-        icon: "h-10 w-10 [&_svg]:size-4",
-        "icon-sm": "h-8 w-8 rounded-md [&_svg]:size-3.5",
-        "icon-lg": "h-12 w-12 rounded-xl [&_svg]:size-5",
+        sm: "h-9 px-4 text-xs rounded-lg [&_svg]:size-3.5",
+        default: "h-11 px-5 py-2.5 rounded-xl [&_svg]:size-4",
+        lg: "h-13 px-7 text-base rounded-xl [&_svg]:size-5",
+        xl: "h-14 px-8 text-base rounded-2xl [&_svg]:size-5",
+        icon: "h-11 w-11 rounded-xl [&_svg]:size-4",
+        "icon-sm": "h-9 w-9 rounded-lg [&_svg]:size-3.5",
+        "icon-lg": "h-13 w-13 rounded-xl [&_svg]:size-5",
       },
     },
     defaultVariants: {
@@ -115,7 +131,7 @@ const buttonVariants = cva(
   }
 );
 
-// Loading spinner component
+// Elegant loading spinner
 const ButtonSpinner = ({ className }: { className?: string }) => (
   <svg
     className={cn("animate-spinner", className)}
@@ -124,15 +140,15 @@ const ButtonSpinner = ({ className }: { className?: string }) => (
     viewBox="0 0 24 24"
   >
     <circle
-      className="opacity-25"
+      className="opacity-20"
       cx="12"
       cy="12"
       r="10"
       stroke="currentColor"
-      strokeWidth="4"
+      strokeWidth="3"
     />
     <path
-      className="opacity-75"
+      className="opacity-80"
       fill="currentColor"
       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
     />
@@ -167,7 +183,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     const isDisabled = disabled || loading;
 
-    // For asChild, we pass through without modification
+    // For asChild, pass through without modification
     if (asChild) {
       return (
         <Comp
@@ -193,7 +209,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <ButtonSpinner
             className={cn(
               size === "sm" || size === "icon-sm" ? "size-3.5" : "",
-              size === "lg" || size === "icon-lg" ? "size-5" : "",
+              size === "lg" || size === "icon-lg" || size === "xl" ? "size-5" : "",
               !size || size === "default" || size === "icon" ? "size-4" : ""
             )}
           />
@@ -201,7 +217,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <span className="inline-flex shrink-0">{leftIcon}</span>
         ) : null}
 
-        {/* Button text - hidden when icon-only and loading */}
+        {/* Button text */}
         {children && (
           <span
             className={cn(

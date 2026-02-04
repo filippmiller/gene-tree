@@ -1,148 +1,150 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIVING ARCHIVE DESIGN SYSTEM
+   A cinematic, emotionally resonant design for preserving family legacy
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @layer base {
   :root {
-    /*
-     * Heritage Design System
-     * Inspired by: Ancestry, MyHeritage, FamilySearch
-     * Unique identity: Warm Sage + Rich Amber
-     */
+    /* ─────────────────────────────────────────────────────────────────────────
+       LIGHT MODE (Secondary - for accessibility)
+       Warm, museum-like atmosphere
+       ───────────────────────────────────────────────────────────────────────── */
 
-    /* Base */
-    --background: 40 30% 98%;
-    --foreground: 30 15% 12%;
-    --card: 40 40% 99%;
-    --card-foreground: 30 15% 12%;
-    --popover: 40 40% 99%;
-    --popover-foreground: 30 15% 12%;
+    /* Core Backgrounds */
+    --background: 40 20% 97%;
+    --foreground: 30 10% 10%;
+    --card: 40 25% 99%;
+    --card-foreground: 30 10% 10%;
+    --popover: 40 25% 99%;
+    --popover-foreground: 30 10% 10%;
 
-    /* Primary: Heritage Sage Green (inspired by Ancestry/FamilySearch) */
-    --primary: 95 35% 42%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary: Antique Gold */
+    --primary: 43 55% 55%;
+    --primary-foreground: 30 10% 8%;
 
-    /* Secondary: Warm cream background */
-    --secondary: 40 25% 94%;
-    --secondary-foreground: 30 15% 25%;
+    /* Secondary: Warm Stone */
+    --secondary: 35 15% 92%;
+    --secondary-foreground: 30 10% 25%;
 
-    /* Muted: Warm taupe */
-    --muted: 35 15% 91%;
-    --muted-foreground: 30 10% 45%;
+    /* Muted: Soft Taupe */
+    --muted: 30 10% 90%;
+    --muted-foreground: 30 8% 45%;
 
-    /* Accent: Rich Amber/Gold (like vintage photos) */
-    --accent: 32 65% 55%;
+    /* Accent: Aged Copper */
+    --accent: 25 50% 50%;
     --accent-foreground: 0 0% 100%;
 
-    /* Destructive: Soft terracotta red */
-    --destructive: 8 70% 55%;
+    /* Semantic Colors */
+    --destructive: 0 45% 45%;
     --destructive-foreground: 0 0% 100%;
-
-    /* Success: Deep forest green */
-    --success: 145 55% 38%;
+    --success: 145 35% 40%;
     --success-foreground: 0 0% 100%;
-
-    /* Warning: Golden amber */
-    --warning: 45 85% 50%;
-    --warning-foreground: 30 20% 15%;
-
-    /* Info: Dusty blue (old photos) */
-    --info: 210 40% 52%;
+    --warning: 38 80% 55%;
+    --warning-foreground: 30 15% 10%;
+    --info: 210 35% 50%;
     --info-foreground: 0 0% 100%;
 
-    /* Borders and inputs - warmer */
-    --border: 35 20% 88%;
-    --input: 35 20% 88%;
-    --ring: 95 35% 42%;
-    --radius: 1rem;
+    /* Borders & Inputs */
+    --border: 35 15% 85%;
+    --input: 35 15% 88%;
+    --ring: 43 55% 55%;
+    --radius: 0.75rem;
 
-    /* Charts - heritage palette */
-    --chart-1: 95 35% 42%;
-    --chart-2: 32 65% 55%;
-    --chart-3: 145 55% 38%;
-    --chart-4: 210 40% 52%;
-    --chart-5: 8 70% 55%;
+    /* Charts */
+    --chart-1: 43 55% 55%;
+    --chart-2: 25 50% 50%;
+    --chart-3: 145 35% 40%;
+    --chart-4: 210 35% 50%;
+    --chart-5: 340 40% 50%;
 
-    /* Generation colors (for family tree) */
-    --generation-0: 95 35% 42%;
-    --generation-1: 145 55% 38%;
-    --generation-2: 210 40% 52%;
-    --generation-3: 32 65% 55%;
-    --generation-4: 280 45% 50%;
+    /* Glass Effects */
+    --glass-bg: 40 25% 99% / 0.85;
+    --glass-border: 35 15% 85% / 0.5;
+    --glass-shadow: 30 20% 20% / 0.1;
 
-    /* Relationship colors */
-    --relation-parent: 95 35% 42%;
-    --relation-child: 145 55% 38%;
-    --relation-spouse: 340 55% 52%;
-    --relation-sibling: 210 40% 52%;
-
-    /* Glassmorphism - warmer */
-    --glass-bg: 40 40% 99% / 0.85;
-    --glass-border: 35 20% 88% / 0.6;
-    --glass-shadow: 30 30% 20% / 0.08;
-
-    /* Heritage specific */
-    --paper: 42 35% 96%;
-    --sepia: 35 45% 85%;
-    --antique: 38 30% 92%;
+    /* Archive Palette - Light */
+    --archive-gold: 43 55% 55%;
+    --archive-copper: 25 50% 50%;
+    --archive-ivory: 42 40% 96%;
+    --archive-parchment: 38 35% 92%;
+    --archive-ink: 30 10% 10%;
   }
 
+  /* ─────────────────────────────────────────────────────────────────────────
+     DARK MODE (Primary - The Signature Look)
+     Cinematic, vault-like atmosphere
+     ───────────────────────────────────────────────────────────────────────── */
   .dark {
-    --background: 30 15% 8%;
-    --foreground: 40 15% 92%;
-    --card: 30 12% 12%;
-    --card-foreground: 40 15% 92%;
-    --popover: 30 12% 12%;
-    --popover-foreground: 40 15% 92%;
+    /* Core Backgrounds - Deep, warm charcoal */
+    --background: 240 5% 6%;
+    --foreground: 40 10% 92%;
+    --card: 240 4% 9%;
+    --card-foreground: 40 10% 92%;
+    --popover: 240 4% 9%;
+    --popover-foreground: 40 10% 92%;
 
-    /* Primary: Lighter sage for dark mode */
-    --primary: 95 40% 52%;
-    --primary-foreground: 30 15% 8%;
+    /* Primary: Luminous Antique Gold */
+    --primary: 43 65% 58%;
+    --primary-foreground: 240 5% 6%;
 
-    --secondary: 30 10% 18%;
-    --secondary-foreground: 40 15% 88%;
-    --muted: 30 10% 18%;
-    --muted-foreground: 35 8% 60%;
-    --accent: 32 60% 60%;
-    --accent-foreground: 30 15% 8%;
-    --destructive: 8 65% 50%;
+    /* Secondary: Warm Graphite */
+    --secondary: 240 3% 14%;
+    --secondary-foreground: 40 10% 85%;
+
+    /* Muted: Smoke */
+    --muted: 240 3% 16%;
+    --muted-foreground: 40 5% 55%;
+
+    /* Accent: Aged Copper/Rose Gold */
+    --accent: 25 55% 55%;
+    --accent-foreground: 240 5% 6%;
+
+    /* Semantic Colors - Muted, sophisticated */
+    --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 100%;
-    --success: 145 50% 45%;
-    --success-foreground: 0 0% 100%;
-    --warning: 45 80% 55%;
-    --warning-foreground: 30 15% 8%;
-    --info: 210 45% 58%;
-    --info-foreground: 0 0% 100%;
-    --border: 30 10% 22%;
-    --input: 30 10% 22%;
-    --ring: 95 40% 52%;
+    --success: 150 45% 45%;
+    --success-foreground: 240 5% 6%;
+    --warning: 38 85% 55%;
+    --warning-foreground: 240 5% 6%;
+    --info: 210 50% 55%;
+    --info-foreground: 240 5% 6%;
 
-    --chart-1: 95 40% 52%;
-    --chart-2: 32 60% 60%;
-    --chart-3: 145 50% 45%;
-    --chart-4: 210 45% 58%;
-    --chart-5: 8 65% 55%;
+    /* Borders & Inputs - Subtle, refined */
+    --border: 240 3% 18%;
+    --input: 240 3% 16%;
+    --ring: 43 65% 58%;
 
-    /* Generation colors - dark mode */
-    --generation-0: 95 40% 52%;
-    --generation-1: 145 50% 45%;
-    --generation-2: 210 45% 58%;
-    --generation-3: 32 60% 60%;
-    --generation-4: 280 50% 55%;
+    /* Charts */
+    --chart-1: 43 65% 58%;
+    --chart-2: 25 55% 55%;
+    --chart-3: 150 45% 45%;
+    --chart-4: 210 50% 55%;
+    --chart-5: 340 50% 55%;
 
-    /* Dark glassmorphism */
-    --glass-bg: 30 12% 12% / 0.9;
-    --glass-border: 95 40% 52% / 0.15;
+    /* Glass Effects - Warm, atmospheric */
+    --glass-bg: 240 4% 9% / 0.9;
+    --glass-border: 43 65% 58% / 0.1;
     --glass-shadow: 0 0% 0% / 0.5;
 
-    /* Heritage specific - dark */
-    --paper: 30 12% 14%;
-    --sepia: 30 15% 18%;
-    --antique: 30 10% 16%;
+    /* Archive Palette - Dark */
+    --archive-gold: 43 65% 58%;
+    --archive-copper: 25 55% 55%;
+    --archive-void: 240 5% 4%;
+    --archive-obsidian: 240 4% 9%;
+    --archive-smoke: 240 3% 16%;
+    --archive-platinum: 40 5% 70%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
   * {
@@ -151,207 +153,563 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  }
-
-  /* Heritage serif headings */
-  h1, h2, h3, .font-heritage {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-    font-weight: 600;
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'kern' 1, 'liga' 1;
     letter-spacing: -0.01em;
   }
 
-  /* Smooth transitions everywhere */
+  /* Elegant Serif Headings */
+  h1, h2, h3, .font-display {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+    font-weight: 400;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+    font-weight: 500;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+    font-weight: 500;
+  }
+
+  /* Monospace for data */
+  code, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.9em;
+  }
+
+  /* Smooth transitions */
   a, button, input, select, textarea, [role="button"] {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-out;
+  }
+
+  /* Focus states */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--primary) / 0.5);
+  }
+
+  /* Selection */
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @layer components {
-  /* Heritage Card Style */
-  .heritage-card {
-    @apply bg-card rounded-2xl border border-border/50 shadow-elevation-2;
-    @apply transition-all duration-300 ease-smooth;
+  /* ─────────────────────────────────────────────────────────────────────────
+     ARCHIVE CARD - The signature card style
+     ───────────────────────────────────────────────────────────────────────── */
+  .archive-card {
+    @apply relative overflow-hidden rounded-2xl;
+    @apply bg-card border border-border/50;
+    @apply shadow-xl shadow-black/10;
+    @apply transition-all duration-500 ease-out;
+
+    /* Subtle inner border glow */
+    box-shadow:
+      0 0 0 1px hsl(var(--border) / 0.5),
+      0 4px 24px -4px hsl(0 0% 0% / 0.15),
+      inset 0 1px 0 hsl(var(--primary) / 0.05);
   }
 
-  .heritage-card:hover {
-    @apply shadow-elevation-3 -translate-y-0.5;
+  .archive-card:hover {
+    @apply border-primary/20;
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.15),
+      0 8px 40px -8px hsl(0 0% 0% / 0.25),
+      0 0 60px -20px hsl(var(--primary) / 0.15),
+      inset 0 1px 0 hsl(var(--primary) / 0.1);
   }
 
-  /* Paper texture effect */
-  .paper-texture {
-    background-color: hsl(var(--paper));
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-blend-mode: soft-light;
+  /* ─────────────────────────────────────────────────────────────────────────
+     GLASS PANEL - Frosted glass effect
+     ───────────────────────────────────────────────────────────────────────── */
+  .glass-panel {
+    @apply relative overflow-hidden rounded-2xl;
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow:
+      0 8px 32px hsl(var(--glass-shadow)),
+      inset 0 1px 0 hsl(var(--primary) / 0.05);
   }
 
-  /* Sepia photo effect */
-  .sepia-effect {
-    filter: sepia(15%) saturate(90%);
-    @apply transition-all duration-500;
+  /* ─────────────────────────────────────────────────────────────────────────
+     GOLDEN ACCENT - Primary action emphasis
+     ───────────────────────────────────────────────────────────────────────── */
+  .golden-glow {
+    box-shadow:
+      0 0 20px -5px hsl(var(--primary) / 0.4),
+      0 0 40px -10px hsl(var(--primary) / 0.2);
   }
 
-  .sepia-effect:hover {
-    filter: sepia(0%) saturate(100%);
+  .golden-border {
+    @apply border border-primary/30;
+    box-shadow: inset 0 1px 0 hsl(var(--primary) / 0.1);
   }
 
-  /* Hint/Match badges (like Ancestry leaf) */
-  .hint-badge {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
-    @apply bg-accent/10 text-accent border border-accent/20;
+  /* ─────────────────────────────────────────────────────────────────────────
+     PHOTO FRAMES - Cinematic image treatment
+     ───────────────────────────────────────────────────────────────────────── */
+  .photo-frame {
+    @apply relative overflow-hidden rounded-xl;
+    box-shadow:
+      0 4px 20px -4px hsl(0 0% 0% / 0.3),
+      inset 0 0 0 1px hsl(var(--primary) / 0.1);
+  }
+
+  .photo-frame::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 50%,
+      hsl(0 0% 0% / 0.15) 100%
+    );
+  }
+
+  .photo-frame-vintage {
+    @apply photo-frame;
+    filter: sepia(8%) contrast(105%) saturate(95%);
+    @apply transition-all duration-700;
+  }
+
+  .photo-frame-vintage:hover {
+    filter: sepia(0%) contrast(100%) saturate(100%);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     CINEMATIC TEXT - Dramatic typography
+     ───────────────────────────────────────────────────────────────────────── */
+  .text-cinematic {
+    @apply font-display;
+    text-shadow: 0 2px 20px hsl(0 0% 0% / 0.3);
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(43 65% 68%) 0%,
+      hsl(43 65% 58%) 50%,
+      hsl(25 55% 55%) 100%
+    );
+  }
+
+  .text-gradient-platinum {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(40 5% 80%) 0%,
+      hsl(40 5% 70%) 50%,
+      hsl(40 5% 60%) 100%
+    );
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     TIMELINE - Vertical history visualization
+     ───────────────────────────────────────────────────────────────────────── */
+  .timeline-line {
+    @apply absolute left-4 top-0 bottom-0 w-px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      hsl(var(--primary) / 0.3) 10%,
+      hsl(var(--primary) / 0.3) 90%,
+      transparent
+    );
+  }
+
+  .timeline-marker {
+    @apply relative z-10 w-3 h-3 rounded-full;
+    @apply bg-primary border-2 border-background;
+    box-shadow:
+      0 0 0 4px hsl(var(--background)),
+      0 0 12px hsl(var(--primary) / 0.4);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     STORY CARD - Memory preservation
+     ───────────────────────────────────────────────────────────────────────── */
+  .story-card {
+    @apply archive-card;
+    @apply bg-gradient-to-br from-card to-card/95;
+  }
+
+  .story-card::before {
+    content: '';
+    @apply absolute inset-0 pointer-events-none opacity-30;
+    background: radial-gradient(
+      ellipse at top right,
+      hsl(var(--primary) / 0.1),
+      transparent 60%
+    );
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     BADGE STYLES - Refined indicators
+     ───────────────────────────────────────────────────────────────────────── */
+  .badge-gold {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-primary/15 text-primary border border-primary/25;
     @apply transition-all duration-300;
   }
 
-  .hint-badge:hover {
-    @apply bg-accent/20 border-accent/30;
+  .badge-gold:hover {
+    @apply bg-primary/25 border-primary/40;
   }
 
-  /* Generation badges */
-  .generation-badge {
-    @apply inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold;
-    @apply bg-primary text-primary-foreground;
+  .badge-subtle {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-muted text-muted-foreground;
   }
 
-  /* Pill buttons (like Ancestry) */
-  .btn-pill {
-    @apply px-6 py-2.5 rounded-full font-medium;
-    @apply transition-all duration-300 ease-smooth;
-    @apply shadow-btn hover:shadow-btn-hover active:shadow-btn-active;
-    @apply active:scale-[0.98];
-  }
-
-  /* Glass panel */
-  .glass-panel {
-    background: hsl(var(--glass-bg));
-    backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--glass-border));
-    box-shadow: 0 8px 32px hsl(var(--glass-shadow));
-  }
-
-  /* Tree connection lines */
+  /* ─────────────────────────────────────────────────────────────────────────
+     TREE VISUALIZATION - Family connections
+     ───────────────────────────────────────────────────────────────────────── */
   .tree-connector {
-    @apply border-primary/40;
     stroke: hsl(var(--primary) / 0.4);
     stroke-width: 2;
     fill: none;
   }
 
-  /* Profile photo frames */
-  .photo-frame {
-    @apply relative rounded-2xl overflow-hidden;
-    @apply ring-4 ring-white dark:ring-gray-800 shadow-elevation-3;
+  .tree-node {
+    @apply rounded-xl bg-card border border-border;
+    @apply shadow-lg shadow-black/10;
+    @apply transition-all duration-300;
   }
 
-  .photo-frame-vintage {
-    @apply photo-frame;
-    @apply ring-[hsl(var(--sepia))];
+  .tree-node:hover {
+    @apply border-primary/30;
+    box-shadow:
+      0 8px 32px -8px hsl(0 0% 0% / 0.2),
+      0 0 24px -8px hsl(var(--primary) / 0.2);
   }
 
-  /* Story card (heritage feel) */
-  .story-card {
-    @apply heritage-card p-6;
-    @apply bg-[hsl(var(--paper))];
+  /* ─────────────────────────────────────────────────────────────────────────
+     NAVIGATION - Refined nav elements
+     ───────────────────────────────────────────────────────────────────────── */
+  .nav-link {
+    @apply relative px-4 py-2 text-sm font-medium;
+    @apply text-muted-foreground hover:text-foreground;
+    @apply transition-all duration-300;
   }
 
-  /* Timeline marker */
-  .timeline-marker {
-    @apply w-4 h-4 rounded-full bg-primary border-4 border-background;
-    @apply shadow-elevation-2;
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 -translate-x-1/2;
+    @apply bg-primary rounded-full;
+    @apply transition-all duration-300;
+  }
+
+  .nav-link:hover::after,
+  .nav-link[data-active="true"]::after {
+    @apply w-1/2;
+  }
+
+  .nav-link[data-active="true"] {
+    @apply text-primary;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     INPUT STYLES - Refined form elements
+     ───────────────────────────────────────────────────────────────────────── */
+  .input-archive {
+    @apply w-full px-4 py-3 rounded-xl;
+    @apply bg-muted/50 border border-border;
+    @apply text-foreground placeholder:text-muted-foreground;
+    @apply transition-all duration-300;
+    @apply focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     DIVIDERS - Elegant separators
+     ───────────────────────────────────────────────────────────────────────── */
+  .divider-gold {
+    @apply relative h-px w-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.3) 20%,
+      hsl(var(--primary) / 0.3) 80%,
+      transparent
+    );
+  }
+
+  .divider-fade {
+    @apply relative h-px w-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border)) 20%,
+      hsl(var(--border)) 80%,
+      transparent
+    );
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @layer utilities {
-  /* Safe area padding for notched devices (iPhone X+) */
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .pt-safe {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-  .pl-safe {
-    padding-left: env(safe-area-inset-left, 0px);
-  }
-  .pr-safe {
-    padding-right: env(safe-area-inset-right, 0px);
+  /* Safe area padding */
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  .pl-safe { padding-left: env(safe-area-inset-left, 0px); }
+  .pr-safe { padding-right: env(safe-area-inset-right, 0px); }
+
+  /* Film grain overlay */
+  .grain-overlay {
+    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.015];
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
 
-  /* Text gradient for heritage effect */
-  .text-gradient-heritage {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
-  }
-
-  /* Fade edges (for scrollable containers) */
-  .fade-edges {
-    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-  }
-
-  /* Subtle texture overlay */
-  .texture-overlay {
-    position: relative;
-  }
-
-  .texture-overlay::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-
-  /* Vintage photo corners */
-  .vintage-corners {
+  /* Vignette effect */
+  .vignette {
     @apply relative;
   }
 
-  .vintage-corners::before,
-  .vintage-corners::after {
+  .vignette::before {
     content: '';
-    @apply absolute w-4 h-4;
-    border: 2px solid hsl(var(--sepia));
+    @apply absolute inset-0 pointer-events-none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      hsl(0 0% 0% / 0.4) 100%
+    );
   }
 
-  .vintage-corners::before {
-    @apply top-2 left-2 border-r-0 border-b-0;
+  /* Fade edges for scroll containers */
+  .fade-edges-x {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
   }
 
-  .vintage-corners::after {
-    @apply bottom-2 right-2 border-l-0 border-t-0;
+  .fade-edges-y {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
   }
+
+  /* Spotlight effect */
+  .spotlight {
+    @apply relative;
+  }
+
+  .spotlight::before {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background: radial-gradient(
+      800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      hsl(var(--primary) / 0.06),
+      transparent 40%
+    );
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animated underline */
+  .animated-underline {
+    @apply relative;
+    background-image: linear-gradient(
+      to right,
+      hsl(var(--primary)),
+      hsl(var(--primary))
+    );
+    background-size: 0% 2px;
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    @apply transition-all duration-500;
+  }
+
+  .animated-underline:hover {
+    background-size: 100% 2px;
+  }
+
+  /* Hover reveal */
+  .hover-reveal {
+    @apply opacity-0 translate-y-2 transition-all duration-300;
+  }
+
+  .group:hover .hover-reveal,
+  .peer:hover ~ .hover-reveal {
+    @apply opacity-100 translate-y-0;
+  }
+
+  /* Stagger children animations */
+  .stagger-children > * {
+    @apply opacity-0 translate-y-4;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 500ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 600ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 700ms; }
 }
 
-/* Custom scrollbar */
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
-  border-radius: 4px;
+  background: hsl(var(--muted) / 0.3);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--primary) / 0.4);
+  background-clip: content-box;
 }
 
-/* Selection color */
-::selection {
-  background: hsl(var(--primary) / 0.2);
-  color: hsl(var(--primary));
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Focus visible - heritage ring */
-:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.3);
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .grain-overlay,
+  .vignette::before {
+    display: none !important;
+  }
 }

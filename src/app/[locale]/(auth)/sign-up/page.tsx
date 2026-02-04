@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { UserPlus } from 'lucide-react';
 
 const translations = {
   en: {
@@ -122,40 +123,46 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      {/* Background decoration */}
+    <div className="relative flex min-h-screen items-center justify-center p-4 bg-background overflow-hidden">
+      {/* Cinematic background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Primary golden glow */}
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]" />
+        {/* Center subtle glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
+        {/* Film grain overlay */}
+        <div className="grain-overlay" />
+        {/* Vignette */}
+        <div className="vignette" />
       </div>
 
       {/* Top actions */}
-      <div className="absolute top-4 right-4 flex items-center gap-2">
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
         <ThemeToggle />
         <LanguageSwitcher />
       </div>
 
-      <Card className="relative w-full max-w-md shadow-xl border border-white/50 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 animate-fade-in-up" elevation="floating">
+      <Card
+        className="relative w-full max-w-md border-border/30 bg-card/80 backdrop-blur-xl animate-fade-in-up"
+        elevation="floating"
+      >
+        {/* Subtle top gradient border */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
         <CardHeader className="space-y-1 text-center pb-2">
           {/* Logo */}
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-lg shadow-violet-500/25">
-            <svg
-              className="h-7 w-7 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              />
-            </svg>
+          <div className="mx-auto mb-4 relative">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-accent shadow-glow-lg">
+              {/* Inner glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-transparent via-white/10 to-white/20" />
+              <UserPlus className="h-8 w-8 text-primary-foreground relative z-10" />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent dark:from-violet-400 dark:to-purple-400">{t.createAccount}</CardTitle>
-          <CardDescription className="text-base">
+          <CardTitle className="text-2xl font-display font-medium text-gradient-gold">
+            {t.createAccount}
+          </CardTitle>
+          <CardDescription className="text-base text-muted-foreground">
             {t.description}
           </CardDescription>
         </CardHeader>
@@ -207,8 +214,8 @@ export default function SignUpPage() {
                     {t.passwordStrength}:{' '}
                     <span className={`font-medium ${
                       passwordStrength.color === 'error' ? 'text-destructive' :
-                      passwordStrength.color === 'warning' ? 'text-amber-600' :
-                      passwordStrength.color === 'success' ? 'text-emerald-600' :
+                      passwordStrength.color === 'warning' ? 'text-warning' :
+                      passwordStrength.color === 'success' ? 'text-success' :
                       'text-foreground'
                     }`}>
                       {passwordStrength.label}
@@ -235,7 +242,7 @@ export default function SignUpPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="text-xs text-muted-foreground hover:text-primary transition-colors"
               >
                 {showPassword ? t.hidePasswords : t.showPasswords}
               </button>
@@ -267,7 +274,7 @@ export default function SignUpPage() {
               {t.alreadyHaveAccount}{' '}
               <a
                 href={`/${locale}/sign-in`}
-                className="text-primary hover:underline font-medium"
+                className="text-primary hover:text-primary/80 hover:underline font-medium transition-colors"
               >
                 {t.signIn}
               </a>

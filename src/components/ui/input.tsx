@@ -3,22 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Premium Input component with Stripe-level polish
+ * Living Archive Input Component
+ *
+ * Premium input design with golden accents and refined interactions
  *
  * Features:
- * - Floating label that animates on focus
+ * - Floating label animation
  * - Validation states (success, error, warning)
  * - Left/right icon slots
  * - Helper text with animation
- * - Smooth focus transitions
- * - Full accessibility support
+ * - Smooth focus transitions with golden glow
  */
 
 const inputVariants = cva(
   [
-    "flex w-full rounded-lg border bg-background text-sm",
-    "transition-all duration-200 ease-smooth",
-    "placeholder:text-muted-foreground",
+    "flex w-full rounded-xl border bg-muted/30 text-sm",
+    "transition-all duration-300 ease-cinematic",
+    "placeholder:text-muted-foreground/60",
     "focus:outline-none",
     "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-muted/50",
     "file:border-0 file:bg-transparent file:text-sm file:font-medium",
@@ -27,31 +28,39 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: [
-          "border-input",
-          "hover:border-muted-foreground/50",
-          "focus:border-primary focus:ring-2 focus:ring-primary/20",
+          "border-border/50",
+          "hover:border-border",
+          "focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20",
         ].join(" "),
 
         error: [
-          "border-destructive",
-          "focus:border-destructive focus:ring-2 focus:ring-destructive/20",
-          "text-destructive",
+          "border-destructive/50",
+          "focus:bg-background focus:border-destructive focus:ring-2 focus:ring-destructive/20",
+          "text-destructive placeholder:text-destructive/50",
         ].join(" "),
 
         success: [
-          "border-emerald-500",
-          "focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20",
+          "border-success/50",
+          "focus:bg-background focus:border-success focus:ring-2 focus:ring-success/20",
         ].join(" "),
 
         warning: [
-          "border-amber-500",
-          "focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20",
+          "border-warning/50",
+          "focus:bg-background focus:border-warning focus:ring-2 focus:ring-warning/20",
+        ].join(" "),
+
+        // Archive variant - with golden accents
+        archive: [
+          "border-primary/20 bg-muted/20",
+          "hover:border-primary/30",
+          "focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/30",
+          "focus:shadow-glow-primary",
         ].join(" "),
       },
       inputSize: {
-        sm: "h-8 px-3 text-xs",
-        md: "h-10 px-3",
-        lg: "h-12 px-4 text-base",
+        sm: "h-9 px-3 text-xs rounded-lg",
+        md: "h-11 px-4",
+        lg: "h-13 px-5 text-base",
       },
     },
     defaultVariants: {
@@ -105,7 +114,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {/* Left icon */}
           {leftIcon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
               {leftIcon}
             </div>
           )}
@@ -114,8 +123,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             className={cn(
               inputVariants({ variant: resolvedVariant, inputSize }),
-              leftIcon && "pl-10",
-              rightIcon && "pr-10",
+              leftIcon && "pl-11",
+              rightIcon && "pr-11",
               className
             )}
             ref={ref}
@@ -127,7 +136,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {/* Right icon */}
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
               {rightIcon}
             </div>
           )}
@@ -138,10 +147,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <p
             id={props.id ? `${props.id}-helper` : undefined}
             className={cn(
-              "mt-1.5 text-xs transition-all duration-200",
+              "mt-2 text-xs transition-all duration-300",
               "animate-fade-in-up",
               error && "text-destructive",
-              success && "text-emerald-600",
+              success && "text-success",
               !error && !success && "text-muted-foreground"
             )}
           >
@@ -178,7 +187,7 @@ const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
             id={inputId}
             className={cn(
               inputVariants({ variant: resolvedVariant, inputSize: "lg" }),
-              "peer pt-4 pb-1",
+              "peer pt-5 pb-2",
               className
             )}
             placeholder=" "
@@ -201,14 +210,14 @@ const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              "absolute left-3 transition-all duration-200 ease-smooth pointer-events-none",
+              "absolute left-4 transition-all duration-300 ease-cinematic pointer-events-none",
               "text-muted-foreground",
               isFloating
-                ? "top-1 text-[10px] font-medium"
+                ? "top-2 text-[10px] font-medium tracking-wide uppercase"
                 : "top-1/2 -translate-y-1/2 text-sm",
               isFocused && "text-primary",
               error && "text-destructive",
-              success && "text-emerald-600"
+              success && "text-success"
             )}
           >
             {label}
@@ -219,10 +228,10 @@ const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
         {(error || success || props.helperText) && (
           <p
             className={cn(
-              "mt-1.5 text-xs transition-all duration-200",
+              "mt-2 text-xs transition-all duration-300",
               "animate-fade-in-up",
               error && "text-destructive",
-              success && "text-emerald-600",
+              success && "text-success",
               !error && !success && "text-muted-foreground"
             )}
           >
@@ -269,7 +278,7 @@ const SearchInput = React.forwardRef<
           <button
             type="button"
             onClick={onClear}
-            className="hover:text-foreground transition-colors"
+            className="hover:text-foreground transition-colors p-1 rounded-lg hover:bg-muted"
             aria-label="Clear search"
           >
             <svg

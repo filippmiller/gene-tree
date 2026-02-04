@@ -3,28 +3,32 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Badge component for status indicators, labels, and tags
+ * Living Archive Badge Component
+ *
+ * Premium badge design with golden accents
  *
  * Features:
- * - Multiple variants: default, secondary, outline, destructive, success, warning
+ * - Multiple variants: default (gold), secondary, outline, destructive, success, warning
  * - Size variants: sm, md, lg
  * - Optional dot indicator for status
  * - Removable badges with close button
  * - Smooth hover animations
+ * - Golden glow effect on primary badges
  */
 
 const badgeVariants = cva(
   [
     "inline-flex items-center justify-center gap-1.5",
-    "font-medium transition-all duration-200",
+    "font-medium transition-all duration-300",
     "rounded-full border",
   ].join(" "),
   {
     variants: {
       variant: {
+        // Default - Golden/Primary
         default: [
-          "bg-primary text-primary-foreground border-transparent",
-          "hover:bg-primary/90",
+          "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground border-primary/30",
+          "shadow-glow hover:shadow-glow-lg",
         ].join(" "),
 
         secondary: [
@@ -34,7 +38,13 @@ const badgeVariants = cva(
 
         outline: [
           "bg-transparent text-foreground border-border",
-          "hover:bg-accent hover:text-accent-foreground",
+          "hover:bg-muted hover:border-primary/30",
+        ].join(" "),
+
+        // Archive variant - subtle gold
+        archive: [
+          "bg-primary/10 text-primary border-primary/20",
+          "hover:bg-primary/20 hover:border-primary/30",
         ].join(" "),
 
         destructive: [
@@ -43,19 +53,17 @@ const badgeVariants = cva(
         ].join(" "),
 
         success: [
-          "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
-          "dark:text-emerald-400",
-          "hover:bg-emerald-500/20",
+          "bg-success/10 text-success border-success/20",
+          "hover:bg-success/20",
         ].join(" "),
 
         warning: [
-          "bg-amber-500/10 text-amber-700 border-amber-500/20",
-          "dark:text-amber-400",
-          "hover:bg-amber-500/20",
+          "bg-warning/10 text-warning border-warning/20",
+          "hover:bg-warning/20",
         ].join(" "),
 
         info: [
-          "bg-blue-500/10 text-blue-700 border-blue-500/20",
+          "bg-blue-500/10 text-blue-600 border-blue-500/20",
           "dark:text-blue-400",
           "hover:bg-blue-500/20",
         ].join(" "),
@@ -103,9 +111,9 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ) => {
     const dotColorClasses = {
       default: "bg-current",
-      success: "bg-emerald-500",
-      warning: "bg-amber-500",
-      destructive: "bg-red-500",
+      success: "bg-success",
+      warning: "bg-warning",
+      destructive: "bg-destructive",
     };
 
     return (
@@ -189,7 +197,7 @@ const StatusBadge = React.forwardRef<
     busy: { variant: "destructive", dotColor: "destructive", label: "Busy" },
     away: { variant: "warning", dotColor: "warning", label: "Away" },
     pending: { variant: "warning", dotColor: "warning", label: "Pending" },
-    verified: { variant: "success", dotColor: "success", label: "Verified" },
+    verified: { variant: "archive", dotColor: "success", label: "Verified" },
   };
 
   const config = statusConfig[status];

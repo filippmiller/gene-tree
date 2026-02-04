@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -21,15 +21,35 @@ import {
   Menu,
   X,
   Trophy,
-  Leaf,
+  Sparkles,
 } from "lucide-react";
 
+/**
+ * Living Archive Navigation
+ *
+ * Premium, cinematic navigation with golden accents
+ * Features:
+ * - Floating glass design
+ * - Golden active state indicators
+ * - Smooth animations
+ * - Responsive mobile menu
+ */
 export default function Nav() {
   const pathname = usePathname();
   const params = useParams();
   const locale = params.locale as string;
   const t = useTranslations("nav");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll for floating nav effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -49,58 +69,113 @@ export default function Nav() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 dark:supports-[backdrop-filter]:bg-gray-900/70 shadow-sm shadow-primary/5">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo / Brand - Heritage Style */}
+    <nav
+      className={cn(
+        "sticky top-0 z-50 transition-all duration-500",
+        scrolled
+          ? "py-2"
+          : "py-3"
+      )}
+    >
+      {/* Background with blur */}
+      <div
+        className={cn(
+          "absolute inset-0 transition-all duration-500",
+          scrolled
+            ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-black/5"
+            : "bg-transparent"
+        )}
+      />
+
+      <div className="container mx-auto px-4 sm:px-6 relative">
+        <div className="flex h-14 items-center justify-between">
+          {/* Logo - Elegant serif with golden accent */}
           <Link
             href={`/${locale}/app`}
-            className="flex items-center gap-3 font-bold text-lg group"
+            className="flex items-center gap-3 group"
           >
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-emerald-700 flex items-center justify-center shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
-              <Leaf className="h-5 w-5 text-white" />
+            {/* Icon mark */}
+            <div className={cn(
+              "relative h-10 w-10 rounded-xl overflow-hidden",
+              "bg-gradient-to-br from-primary via-primary to-accent",
+              "shadow-glow transition-all duration-300",
+              "group-hover:shadow-glow-lg group-hover:scale-105"
+            )}>
+              {/* Inner glow */}
+              <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20" />
+              {/* Icon */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-primary-foreground" />
+              </div>
             </div>
-            <span className="hidden sm:inline bg-gradient-to-r from-primary to-emerald-700 bg-clip-text text-transparent font-heritage">
-              GeneTree
-            </span>
+
+            {/* Wordmark */}
+            <div className="hidden sm:block">
+              <span className="font-display text-xl font-medium tracking-tight text-gradient-gold">
+                GeneTree
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1 bg-white/50 dark:bg-gray-800/50 rounded-full p-1 backdrop-blur-sm border border-border/50">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              return (
-                <Link key={item.href} href={item.href} prefetch={false}>
-                  <button
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
-                      active
-                        ? "bg-gradient-to-r from-primary to-emerald-700 text-white shadow-lg shadow-primary/25"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-gray-700/80"
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </button>
-                </Link>
-              );
-            })}
+          <div className="hidden md:flex items-center">
+            <div className={cn(
+              "flex items-center gap-1 p-1.5 rounded-2xl",
+              "bg-muted/50 backdrop-blur-sm",
+              "border border-border/30"
+            )}>
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                return (
+                  <Link key={item.href} href={item.href} prefetch={false}>
+                    <button
+                      className={cn(
+                        "relative flex items-center gap-2 px-4 py-2.5 rounded-xl",
+                        "text-sm font-medium transition-all duration-300",
+                        active
+                          ? "text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                      )}
+                    >
+                      {/* Active background */}
+                      {active && (
+                        <div className={cn(
+                          "absolute inset-0 rounded-xl",
+                          "bg-gradient-to-r from-primary via-primary to-accent",
+                          "shadow-glow-primary"
+                        )} />
+                      )}
+                      {/* Content */}
+                      <Icon className={cn("h-4 w-4 relative z-10", active && "drop-shadow-sm")} />
+                      <span className={cn("hidden lg:inline relative z-10", active && "drop-shadow-sm")}>
+                        {item.label}
+                      </span>
+                    </button>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           {/* Right side actions */}
           <div className="flex items-center gap-2">
             <InboxButton />
             <NotificationBell />
-            <ThemeToggle />
-            <div className="hidden sm:block">
+
+            <div className="hidden sm:flex items-center gap-1 pl-2 border-l border-border/30 ml-2">
+              <ThemeToggle />
               <LanguageSwitcher />
             </div>
+
             <Button
               variant="ghost"
               size="sm"
               onClick={handleSignOut}
-              className="hidden sm:flex gap-2 text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400"
+              className={cn(
+                "hidden sm:flex gap-2 ml-2",
+                "text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              )}
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden lg:inline">{t("signOut")}</span>
@@ -110,15 +185,27 @@ export default function Nav() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className={cn(
+                "md:hidden relative",
+                mobileMenuOpen && "bg-muted"
+              )}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+              <div className="relative w-5 h-5">
+                <Menu
+                  className={cn(
+                    "absolute inset-0 h-5 w-5 transition-all duration-300",
+                    mobileMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                  )}
+                />
+                <X
+                  className={cn(
+                    "absolute inset-0 h-5 w-5 transition-all duration-300",
+                    mobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
+                  )}
+                />
+              </div>
             </Button>
           </div>
         </div>
@@ -126,41 +213,63 @@ export default function Nav() {
         {/* Mobile Navigation */}
         <div
           className={cn(
-            "md:hidden overflow-hidden transition-all duration-300 ease-heritage",
-            mobileMenuOpen ? "max-h-[500px] pb-4" : "max-h-0"
+            "md:hidden overflow-hidden transition-all duration-500 ease-cinematic",
+            mobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
           )}
         >
-          <div className="flex flex-col gap-1 pt-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <div
+          <div className={cn(
+            "mt-3 p-3 rounded-2xl",
+            "bg-card/95 backdrop-blur-xl",
+            "border border-border/50",
+            "shadow-elevation-4"
+          )}>
+            <div className="flex flex-col gap-1">
+              {navItems.map((item, index) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    prefetch={false}
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{ animationDelay: `${index * 50}ms` }}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300",
-                      active
-                        ? "bg-gradient-to-r from-primary to-emerald-700 text-white shadow-lg shadow-primary/25"
-                        : "text-foreground hover:bg-white/80 dark:hover:bg-gray-800/80"
+                      mobileMenuOpen && "animate-fade-in-up"
                     )}
                   >
-                    <Icon className="h-5 w-5" />
-                    <span className="font-medium">{item.label}</span>
-                  </div>
-                </Link>
-              );
-            })}
-            <div className="border-t border-border/50 my-2" />
-            <div className="flex items-center justify-between px-4 py-2">
-              <LanguageSwitcher />
+                    <div
+                      className={cn(
+                        "flex items-center gap-3 px-4 py-3 rounded-xl",
+                        "transition-all duration-300",
+                        active
+                          ? "bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground shadow-glow-primary"
+                          : "text-foreground hover:bg-muted"
+                      )}
+                    >
+                      <Icon className="h-5 w-5" />
+                      <span className="font-medium">{item.label}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="divider-gold my-3" />
+
+            <div className="flex items-center justify-between px-2 py-2">
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <LanguageSwitcher />
+              </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-xl",
+                  "text-destructive",
+                  "hover:bg-destructive/10",
+                  "transition-all duration-300"
+                )}
               >
                 <LogOut className="h-4 w-4" />
                 <span className="font-medium">{t("signOut")}</span>

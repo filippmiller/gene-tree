@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { Sparkles, KeyRound } from 'lucide-react';
 
 const translations = {
   en: {
@@ -107,40 +108,46 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      {/* Background decoration */}
+    <div className="relative flex min-h-screen items-center justify-center p-4 bg-background overflow-hidden">
+      {/* Cinematic background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Primary golden glow */}
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]" />
+        {/* Center subtle glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
+        {/* Film grain overlay */}
+        <div className="grain-overlay" />
+        {/* Vignette */}
+        <div className="vignette" />
       </div>
 
       {/* Top actions */}
-      <div className="absolute top-4 right-4 flex items-center gap-2">
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
         <ThemeToggle />
         <LanguageSwitcher />
       </div>
 
-      <Card className="relative w-full max-w-md shadow-xl border border-white/50 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 animate-fade-in-up" elevation="floating">
+      <Card
+        className="relative w-full max-w-md border-border/30 bg-card/80 backdrop-blur-xl animate-fade-in-up"
+        elevation="floating"
+      >
+        {/* Subtle top gradient border */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
         <CardHeader className="space-y-1 text-center pb-2">
           {/* Logo */}
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-lg shadow-violet-500/25">
-            <svg
-              className="h-7 w-7 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
+          <div className="mx-auto mb-4 relative">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-accent shadow-glow-lg">
+              {/* Inner glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-transparent via-white/10 to-white/20" />
+              <Sparkles className="h-8 w-8 text-primary-foreground relative z-10" />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent dark:from-violet-400 dark:to-purple-400">{t.welcomeBack}</CardTitle>
-          <CardDescription className="text-base">
+          <CardTitle className="text-2xl font-display font-medium text-gradient-gold">
+            {t.welcomeBack}
+          </CardTitle>
+          <CardDescription className="text-base text-muted-foreground">
             {t.signInDescription}
           </CardDescription>
         </CardHeader>
@@ -173,7 +180,7 @@ export default function SignIn() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
                 >
                   {showPassword ? t.hidePassword : t.showPassword}
                 </button>
@@ -197,10 +204,10 @@ export default function SignIn() {
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-muted" />
+                <div className="w-full border-t border-border/50" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-gray-900 px-2 text-muted-foreground">
+                <span className="bg-card px-3 text-muted-foreground">
                   {t.orDivider}
                 </span>
               </div>
@@ -208,22 +215,10 @@ export default function SignIn() {
 
             <a
               href={`/${locale}/magic-link${email ? `?email=${encodeURIComponent(email)}` : ''}`}
-              className="flex items-center justify-center gap-2 w-full h-12 rounded-lg border border-muted bg-muted/30 hover:bg-muted/50 transition-colors text-sm font-medium"
+              className="flex items-center justify-center gap-2 w-full h-12 rounded-xl border border-border/50 bg-muted/30 hover:bg-muted/50 hover:border-primary/30 transition-all duration-300 text-sm font-medium group"
             >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                />
-              </svg>
-              {t.magicLink}
+              <KeyRound className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              <span>{t.magicLink}</span>
               <span className="text-xs text-muted-foreground">({t.noPasswordNeeded})</span>
             </a>
 
@@ -243,7 +238,7 @@ export default function SignIn() {
                     setError(e.message || t.resetEmailFailed);
                   }
                 }}
-                className="text-primary hover:underline transition-colors"
+                className="text-primary hover:text-primary/80 hover:underline transition-colors"
                 disabled={loading}
               >
                 {t.forgotPassword}
@@ -253,7 +248,7 @@ export default function SignIn() {
                 {t.noAccount}{' '}
                 <a
                   href={`/${locale}/sign-up`}
-                  className="text-primary hover:underline font-medium"
+                  className="text-primary hover:text-primary/80 hover:underline font-medium transition-colors"
                 >
                   {t.signUp}
                 </a>
