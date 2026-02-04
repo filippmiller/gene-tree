@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import type { QuickLinkSignupRequest } from '@/types/quick-invite';
 
 /**
- * POST /api/quick-links/[code]/signup
+ * POST /api/quick-links/by-code/[code]/signup
  * Submit a signup via quick link (public endpoint)
  */
 export async function POST(

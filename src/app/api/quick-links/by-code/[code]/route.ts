@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 
 /**
- * GET /api/quick-links/[code]
+ * GET /api/quick-links/by-code/[code]
  * Get link info by code (public endpoint for signup page)
  */
 export async function GET(

@@ -112,7 +112,7 @@ export function QuickLinkSignupForm({
     setErrorMessage('');
 
     try {
-      const response = await fetch(`/api/quick-links/${code}/signup`, {
+      const response = await fetch(`/api/quick-links/by-code/${code}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

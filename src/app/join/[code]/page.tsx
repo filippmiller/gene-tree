@@ -53,7 +53,7 @@ async function getLinkInfo(code: string): Promise<LinkInfo> {
     const host = headersList.get('host') || 'localhost:3000';
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
-    const response = await fetch(`${protocol}://${host}/api/quick-links/${code}`, {
+    const response = await fetch(`${protocol}://${host}/api/quick-links/by-code/${code}`, {
       cache: 'no-store',
     });
 
