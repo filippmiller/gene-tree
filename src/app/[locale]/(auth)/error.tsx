@@ -1,23 +1,28 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { RefreshCw, KeyRound, ArrowRight, Shield } from 'lucide-react';
 
 const translations = {
   en: {
-    title: 'Session Error',
-    description: 'Your session has expired or is invalid. Please clear your browser data and try again.',
-    clearAndRetry: 'Clear & Retry',
-    goToSignIn: 'Go to Sign In',
+    subtitle: 'SESSION EXPIRED',
+    title: 'Time to',
+    titleHighlight: 'Reconnect',
+    description: 'Your session has timed out for security. Clear your session data and sign in again to continue where you left off.',
+    clearAndRetry: 'Clear Session & Continue',
+    goToSignIn: 'Sign In',
+    security: 'Your data remains safe and secure',
   },
   ru: {
-    title: 'Ошибка сессии',
-    description: 'Ваша сессия истекла или недействительна. Очистите данные браузера и попробуйте снова.',
-    clearAndRetry: 'Очистить и повторить',
-    goToSignIn: 'Перейти к входу',
+    subtitle: 'СЕССИЯ ИСТЕКЛА',
+    title: 'Пора',
+    titleHighlight: 'Переподключиться',
+    description: 'Ваша сессия истекла в целях безопасности. Очистите данные сессии и войдите снова, чтобы продолжить.',
+    clearAndRetry: 'Очистить и продолжить',
+    goToSignIn: 'Войти',
+    security: 'Ваши данные в безопасности',
   },
 };
 
@@ -31,14 +36,14 @@ export default function AuthError({
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
   const t = translations[locale as keyof typeof translations] || translations.en;
+  const [isClearing, setIsClearing] = useState(false);
 
   useEffect(() => {
-    // Log error for debugging
     console.error('Auth error:', error);
   }, [error]);
 
-  const handleClearAndRetry = () => {
-    // Clear Supabase-related localStorage items
+  const handleClearAndRetry = async () => {
+    setIsClearing(true);
     if (typeof window !== 'undefined') {
       const keysToRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -49,7 +54,6 @@ export default function AuthError({
       }
       keysToRemove.forEach(key => localStorage.removeItem(key));
 
-      // Also clear session storage
       for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
         if (key && (key.includes('supabase') || key.includes('sb-'))) {
@@ -57,51 +61,87 @@ export default function AuthError({
         }
       }
     }
-
-    // Reset the error boundary
+    await new Promise(r => setTimeout(r, 500));
     reset();
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-4 bg-background overflow-hidden">
-      {/* Background */}
+    <div className="relative flex min-h-screen items-center justify-center p-4 bg-[#0a0a0c] overflow-hidden">
+      {/* Cinematic Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-destructive/5 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
+        {/* Animated gradient orbs */}
+        <div className="absolute top-1/3 -right-32 w-[500px] h-[500px] bg-amber-500/8 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '5s' }} />
+        <div className="absolute -bottom-20 left-1/4 w-[400px] h-[400px] bg-orange-600/6 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '7s' }} />
+
+        {/* Radial gradient center */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-amber-500/5 to-orange-500/5 rounded-full blur-[180px]" />
+
+        {/* Film grain */}
+        <div className="grain-overlay opacity-30" />
+
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]" />
       </div>
 
-      <Card className="relative w-full max-w-md border-border/30 bg-card/80 backdrop-blur-xl" elevation="floating">
-        <CardHeader className="space-y-1 text-center pb-2">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-destructive/10">
-            <AlertCircle className="h-8 w-8 text-destructive" />
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-lg text-center space-y-8 animate-fade-in-up">
+        {/* Decorative icon */}
+        <div className="relative mx-auto w-24 h-24">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-600/10 rounded-3xl blur-xl" />
+          <div className="relative w-full h-full bg-gradient-to-br from-zinc-900/90 to-zinc-800/80 rounded-3xl border border-amber-500/20 flex items-center justify-center backdrop-blur-xl">
+            <KeyRound className="w-10 h-10 text-amber-400/80" />
           </div>
-          <CardTitle className="text-2xl font-display font-medium">
-            {t.title}
-          </CardTitle>
-          <CardDescription className="text-base text-muted-foreground">
-            {t.description}
-          </CardDescription>
-        </CardHeader>
+          {/* Subtle glow ring */}
+          <div className="absolute -inset-1 rounded-[26px] bg-gradient-to-r from-amber-500/20 via-transparent to-orange-500/20 opacity-50" />
+        </div>
 
-        <CardContent className="space-y-4">
+        {/* Typography */}
+        <div className="space-y-4">
+          <p className="text-xs font-medium tracking-[0.3em] text-amber-500/70 uppercase">
+            {t.subtitle}
+          </p>
+          <h1 className="text-4xl md:text-5xl font-display font-light text-white/90 tracking-tight">
+            {t.title}{' '}
+            <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent font-medium">
+              {t.titleHighlight}
+            </span>
+          </h1>
+          <p className="text-base text-zinc-400 max-w-md mx-auto leading-relaxed">
+            {t.description}
+          </p>
+        </div>
+
+        {/* Action buttons */}
+        <div className="space-y-3 pt-4">
           <Button
             onClick={handleClearAndRetry}
-            variant="default"
-            className="w-full h-12"
+            disabled={isClearing}
+            className="w-full h-14 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-medium text-base rounded-xl shadow-lg shadow-amber-500/20 transition-all duration-300 hover:shadow-amber-500/30 hover:scale-[1.02]"
           >
-            <RefreshCw className="mr-2 h-4 w-4" />
+            {isClearing ? (
+              <RefreshCw className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              <RefreshCw className="mr-2 h-5 w-5" />
+            )}
             {t.clearAndRetry}
           </Button>
 
           <Button
             onClick={() => window.location.href = `/${locale}/sign-in`}
             variant="outline"
-            className="w-full h-12"
+            className="w-full h-14 bg-white/5 border-white/10 hover:bg-white/10 hover:border-amber-500/30 text-white font-medium text-base rounded-xl backdrop-blur-sm transition-all duration-300 group"
           >
             {t.goToSignIn}
+            <ArrowRight className="ml-2 h-4 w-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Security note */}
+        <div className="flex items-center justify-center gap-2 pt-4 text-zinc-500">
+          <Shield className="w-4 h-4 text-green-500/70" />
+          <span className="text-xs">{t.security}</span>
+        </div>
+      </div>
     </div>
   );
 }
