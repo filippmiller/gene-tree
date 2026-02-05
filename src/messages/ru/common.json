@@ -7,7 +7,19 @@
     "familyProfile": "Семейный профиль",
     "achievements": "Достижения",
     "myProfile": "Мой профиль",
-    "signOut": "Выйти"
+    "signOut": "Выйти",
+    "main": "Главное",
+    "family": "Семья",
+    "memories": "Воспоминания",
+    "discover": "Открытия",
+    "addPerson": "Добавить",
+    "stories": "Истории",
+    "photos": "Фотографии",
+    "capsules": "Капсулы",
+    "connections": "Связи",
+    "questions": "Вопросы",
+    "search": "Поиск",
+    "profile": "Профиль"
   },
   "auth": {
     "signIn": "Войти",

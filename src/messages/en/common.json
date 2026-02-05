@@ -7,7 +7,19 @@
     "familyProfile": "Family Profile",
     "achievements": "Achievements",
     "myProfile": "My Profile",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "main": "Main",
+    "family": "Family",
+    "memories": "Memories",
+    "discover": "Discover",
+    "addPerson": "Add Person",
+    "stories": "Stories",
+    "photos": "Photos",
+    "capsules": "Capsules",
+    "connections": "Connections",
+    "questions": "Questions",
+    "search": "Search",
+    "profile": "Profile"
   },
   "auth": {
     "signIn": "Sign In",

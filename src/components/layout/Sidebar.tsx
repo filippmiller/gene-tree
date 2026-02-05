@@ -84,35 +84,35 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
   // Navigation groups
   const navGroups: NavGroup[] = [
     {
-      title: locale === "ru" ? "Главное" : "Main",
+      title: t("main"),
       items: [
         { href: `/${locale}/app`, label: t("dashboard"), icon: Home },
         { href: `/${locale}/family-chat`, label: t("familyChat"), icon: MessageCircle },
       ],
     },
     {
-      title: locale === "ru" ? "Семья" : "Family",
+      title: t("family"),
       items: [
         { href: `/${locale}/people`, label: t("people"), icon: Users },
         { href: `/${locale}/tree`, label: t("familyProfile"), icon: TreePine },
         { href: `/${locale}/relations`, label: t("relations"), icon: Heart },
-        { href: `/${locale}/people/new`, label: locale === "ru" ? "Добавить" : "Add Person", icon: UserPlus },
+        { href: `/${locale}/people/new`, label: t("addPerson"), icon: UserPlus },
       ],
     },
     {
-      title: locale === "ru" ? "Воспоминания" : "Memories",
+      title: t("memories"),
       items: [
-        { href: `/${locale}/stories`, label: locale === "ru" ? "Истории" : "Stories", icon: BookOpen },
-        { href: `/${locale}/photos`, label: locale === "ru" ? "Фотографии" : "Photos", icon: Camera },
-        { href: `/${locale}/time-capsules`, label: locale === "ru" ? "Капсулы" : "Capsules", icon: Timer },
+        { href: `/${locale}/stories`, label: t("stories"), icon: BookOpen },
+        { href: `/${locale}/photos`, label: t("photos"), icon: Camera },
+        { href: `/${locale}/time-capsules`, label: t("capsules"), icon: Timer },
       ],
     },
     {
-      title: locale === "ru" ? "Открытия" : "Discover",
+      title: t("discover"),
       items: [
-        { href: `/${locale}/relationship-finder`, label: locale === "ru" ? "Связи" : "Connections", icon: Link2 },
-        { href: `/${locale}/elder-questions`, label: locale === "ru" ? "Вопросы" : "Questions", icon: ScrollText },
-        { href: `/${locale}/find-relatives`, label: locale === "ru" ? "Поиск" : "Search", icon: Search },
+        { href: `/${locale}/relationship-finder`, label: t("connections"), icon: Link2 },
+        { href: `/${locale}/elder-questions`, label: t("questions"), icon: ScrollText },
+        { href: `/${locale}/find-relatives`, label: t("search"), icon: Search },
         { href: `/${locale}/achievements`, label: t("achievements"), icon: Trophy },
       ],
     },
@@ -322,7 +322,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
           {!collapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">
-                {profile?.first_name || (locale === "ru" ? "Профиль" : "Profile")}
+                {profile?.first_name || t("profile")}
               </p>
               <p className="text-xs text-archive-silver truncate">
                 {profile?.email}
