@@ -65,24 +65,28 @@ export async function GET() {
       return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
     }
 
-    // Get members with profiles
-    const { data: members, error: membersError } = await (supabase as any)
-      .from('family_chat_members')
-      .select(
-        `
-        *,
-        profile:user_profiles(first_name, last_name, avatar_url)
-      `
-      )
-      .eq('chat_id', chatId)
-      .order('joined_at', { ascending: true });
+    // Get members with profiles using RLS-safe function
+    const { data: members, error: membersError } = await (supabase.rpc as any)(
+      'get_family_chat_members',
+      { p_chat_id: chatId }
+    );
 
     if (membersError) {
       console.error('[FamilyChat] Failed to fetch members:', membersError);
     }
 
+    // Transform to expected format
+    const membersWithProfile = (members || []).map((m: any) => ({
+      ...m,
+      profile: {
+        first_name: m.first_name,
+        last_name: m.last_name,
+        avatar_url: m.avatar_url,
+      },
+    }));
+
     // Get current user's membership
-    const currentMember = (members || []).find((m: any) => m.user_id === user.id);
+    const currentMember = (membersWithProfile || []).find((m: any) => m.user_id === user.id);
 
     if (!currentMember) {
       return NextResponse.json(
@@ -118,7 +122,7 @@ export async function GET() {
     const chatWithDetails: FamilyChatWithDetails = {
       ...chat,
       unread_count: unreadCount || 0,
-      member_count: (members || []).length,
+      member_count: (membersWithProfile || []).length,
       last_message: lastMessage
         ? {
             content: lastMessage.content,
@@ -133,7 +137,7 @@ export async function GET() {
 
     return NextResponse.json({
       chat: chatWithDetails,
-      members: members as FamilyChatMemberWithProfile[],
+      members: membersWithProfile as FamilyChatMemberWithProfile[],
       current_member: currentMember as FamilyChatMember,
     });
   } catch (error) {
