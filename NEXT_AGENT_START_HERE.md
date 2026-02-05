@@ -421,98 +421,54 @@ See `docs/SESSION_NOTES_HONOR_TAGS_AND_CREDO.md` for complete implementation gui
 
 ---
 
-## SESSION NOTES: 2026-02-02 (Quick Voice Memory Recording)
+## SESSION NOTES: 2026-02-06 (Voice Story Recording Consolidation)
 
 ### Summary
-Implemented Quick Voice Memory feature - a lightweight voice recording system for quick 60-second audio memories associated with family profiles.
+Consolidated two separate voice recording systems into one unified system using `voice_stories`. Removed all `voice_memories` dead code (~2,200 lines). Voice recording now fully works end-to-end.
 
-### Status: READY FOR MIGRATION
+### Status: ✅ FULLY COMPLETE & DEPLOYED
 
-- Database migration created (needs to be applied)
-- TypeScript types defined
-- Custom hooks implemented
-- API routes created
-- UI components built
-- Profile page integration complete
-- Build passing
+### What Changed
 
-### Key Files
+| Change | Details |
+|--------|---------|
+| **VoiceRecorder rewritten** | Uses shared `useVoiceRecorder` hook, visibility controls, 5-min max |
+| **signed-upload API** | Now accepts `visibility` param (was hardcoded 'family') |
+| **commit API** | Auto-approves self-stories (narrator === target) |
+| **Migration applied** | Added `description` column to voice_stories, dropped voice_memories |
+| **Dead code removed** | 15 files, ~2,200 lines of voice_memories code deleted |
+
+### Key Files (Unified Voice System)
 
 | Category | Files |
 |----------|-------|
-| Database | `supabase/migrations/20260202400001_voice_memories.sql` |
-| Types | `src/types/voice-memory.ts` |
-| Hooks | `src/hooks/useVoiceRecorder.ts`, `src/hooks/useVoiceMemories.ts` |
-| API Routes | `src/app/api/voice-memories/route.ts` (list) |
-| API Routes | `src/app/api/voice-memories/upload/route.ts` (get signed URL) |
-| API Routes | `src/app/api/voice-memories/[id]/route.ts` (get, update, delete) |
-| API Routes | `src/app/api/voice-memories/[id]/confirm/route.ts` (confirm upload) |
-| Components | `src/components/voice-memory/QuickVoiceRecorder.tsx` |
-| Components | `src/components/voice-memory/VoiceMemoryPlayer.tsx` |
-| Components | `src/components/voice-memory/VoiceMemoriesList.tsx` |
-| Components | `src/components/voice-memory/QuickVoiceButton.tsx` |
-| Components | `src/components/voice-memory/index.ts` |
-| Profile Wrapper | `src/app/[locale]/profile/[id]/QuickVoiceMemoryWrapper.tsx` |
-| Translations | `src/messages/en/common.json`, `src/messages/ru/common.json` |
+| Database | `voice_stories` table (migration 0028 + consolidation 20260205500000) |
+| Hook | `src/hooks/useVoiceRecorder.ts` (shared MediaRecorder logic, 5-min max) |
+| Component | `src/components/voice/VoiceRecorder.tsx` (recording UI with visibility controls) |
+| Component | `src/components/voice/VoiceStoriesList.tsx` (playback list) |
+| API | `src/app/api/voice-stories/signed-upload/route.ts` |
+| API | `src/app/api/voice-stories/commit/route.ts` |
+| API | `src/app/api/transcribe/route.ts` (OpenAI Whisper) |
+| API | `src/app/api/voice-stories/update-transcript/route.ts` |
+| Profile | `src/app/[locale]/profile/[id]/VoiceRecorderWrapper.tsx` |
+| Profile | `src/app/[locale]/profile/[id]/VoiceStoriesWrapper.tsx` |
+| Dialog | `src/components/stories/AddStoryDialog.tsx` (Voice tab) |
 
-### Features
+### Recording Flow
 
-1. **QuickVoiceButton** - Floating action button on profile pages
-2. **QuickVoiceRecorder** - Single-button recording with waveform visualization
-   - Max 60 seconds
-   - Auto-stop at limit
-   - Preview before saving
-   - Title and privacy settings
-3. **VoiceMemoryPlayer** - Playback with progress bar and seek
-4. **VoiceMemoriesList** - Infinite scroll list with lazy loading
+1. Record on profile page or AddStoryDialog Voice tab
+2. Preview with playback, select visibility (public/family/private)
+3. Three-phase upload: signed URL -> storage -> commit
+4. OpenAI Whisper auto-transcribes
+5. User can edit transcript
+6. Self-stories auto-approved; others go through moderation
 
-### Database Schema
+### Deleted Files (voice_memories system)
 
-```sql
-voice_memories (
-  id, user_id, profile_id, title, description,
-  storage_path, duration_seconds, file_size_bytes,
-  transcription, privacy_level, created_at, updated_at
-)
-```
-
-Privacy levels: `public`, `family`, `private`
-
-### Storage Bucket
-
-- Name: `voice-memories`
-- Max size: 10MB
-- MIME types: audio/webm, audio/mp4, audio/mpeg, audio/ogg, audio/wav
-- Private (signed URLs)
-
-### RLS Policies
-
-- SELECT: Owner, public memories, family circle for family-level
-- INSERT: Authenticated users for own memories
-- UPDATE/DELETE: Owner only
-
-### To Apply Migration
-
-```bash
-cd C:/dev/gene-tree
-npx supabase db push --password <db_password>
-```
-
-Or use Supabase Dashboard to apply the migration manually.
-
-### Testing
-
-1. Apply migration
-2. Run `npm run dev`
-3. Visit any profile page
-4. Click the floating "Record a memory" button
-5. Record, preview, and save a memory
-
-### Browser Support
-
-- Chrome, Firefox, Safari (modern versions)
-- Requires microphone permission
-- Falls back gracefully for unsupported browsers
+All files under `src/components/voice-memory/`, `src/app/api/voice-memories/`,
+`src/hooks/useVoiceMemories.ts`, `src/types/voice-memory.ts`,
+`src/app/[locale]/profile/[id]/QuickVoiceMemoryWrapper.tsx`,
+`supabase/migrations/20260202400001_voice_memories.sql`
 
 ---
 

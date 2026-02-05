@@ -4,6 +4,38 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
+## [2026-02-06] - Voice Story Recording Consolidation
+
+**Status**: Completed
+**Commits**: `dab5bca`
+
+### What was done
+- Consolidated two voice recording systems (voice_stories + voice_memories) into one unified system
+- Rewrote VoiceRecorder component to use shared useVoiceRecorder hook
+- Added visibility controls (public/family/private) to recording UI
+- Increased max recording from 60s to 5 minutes
+- Updated signed-upload API to accept visibility parameter
+- Added auto-approval for self-stories in commit API
+- Applied migration: description column on voice_stories, dropped voice_memories table/bucket
+- Deleted 15 files (~2,200 lines) of voice_memories dead code
+- Updated Master Plan: item #7 marked complete, AI Transcription marked built
+
+### Decisions made
+- Chose voice_stories over voice_memories as unified table (already deployed, richer features)
+- "Pragmatic Middle" approach: reuse hook but clean up component
+- Auto-approve self-stories to reduce moderation friction
+
+### Issues encountered
+- Migration conflict: local file deleted but remote history expected it. Fixed with `migration repair --status reverted`
+
+### Next steps
+- Test voice recording end-to-end in production after Railway deployment
+- Consider adding story prompts integration for guided recording
+
+**Session notes**: `.claude/sessions/2026-02-06-voice-story-consolidation.md`
+
+---
+
 ## [2026-02-05] - Time Capsules Bug Fixes & Verification
 
 **Status**: Completed

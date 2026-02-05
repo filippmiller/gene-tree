@@ -2,8 +2,8 @@
 
 > **Document Purpose:** This is the strategic north star for Gene-Tree development. Every session should begin by reviewing this document to ensure alignment with the project vision, priorities, and philosophy.
 
-**Last Updated:** 2026-01-23
-**Version:** 1.2
+**Last Updated:** 2026-02-06
+**Version:** 1.3
 
 ---
 
@@ -160,7 +160,7 @@ Since deceased people cannot confirm their accounts:
 
 ## 4. CURRENT STATE
 
-### What's Built & Working (January 2026)
+### What's Built & Working (February 2026)
 
 | Feature | Status | Notes |
 |---------|--------|-------|
@@ -184,6 +184,12 @@ Since deceased people cannot confirm their accounts:
 | Memorial Tributes | ✅ Working | Tribute pages for deceased members |
 | Relationship Finder | ✅ Working | "How are we related?" path finder |
 | Ask the Elder | ✅ Working | Q&A queue for family wisdom |
+| Honor Tags | ✅ Working | Commemorative profile tags with verification |
+| Personal Credo | ✅ Working | Life motto / short biography field |
+| Voice Stories | ✅ Working | 5-min recording, Whisper transcription, visibility controls |
+| Family Group Chat | ✅ Working | Real-time messaging with system reminders |
+| Time Capsules | ✅ Working | Scheduled delivery, family broadcast, after-passing trigger |
+| Quick Invite Links | ✅ Working | QR codes, multi-channel sharing |
 
 ### What's Partially Built
 
@@ -191,7 +197,7 @@ Since deceased people cannot confirm their accounts:
 |---------|--------|-----|
 | Education History | Schema ready | UI incomplete |
 | Residence History | Schema ready | UI incomplete |
-| Voice Stories | Schema ready | Recording integration pending |
+| Voice Stories | ✅ Working | Record up to 5min, AI transcription (Whisper), visibility controls |
 | Background Jobs | Infrastructure ready | Processing incomplete |
 | Notifications | Basic working | UI integration partial |
 
@@ -235,7 +241,7 @@ Deploy:      Railway (primary)
 | 6 | **Quick-Add from Tree View** | Product | HIGH | LOW |
 |   | Click person → "+" buttons for add parent/child/spouse/sibling | | | |
 | 7 | **Voice Story Recording** | Product | MEDIUM | LOW |
-|   | Complete pending refactor, one-tap recording, AI transcription | | | |
+|   | ~~Complete pending refactor, one-tap recording, AI transcription~~ ✅ DONE (2026-02-06) | | | |
 | 8 | **Freemium Pricing Model** | Business | HIGH | MEDIUM |
 |   | Free (50 profiles) → Premium ($7.99/mo) → Family ($14.99/mo) | | | |
 | 9 | **Search Infrastructure** | Technical | HIGH | MEDIUM |
@@ -442,7 +448,7 @@ EFFORT │ QUICK WIN │ STRATEGIC │ EFFORT
 
 | Feature | Description | Status |
 |---------|-------------|--------|
-| **AI Transcription** | Automatic transcription of voice stories | Concept |
+| **AI Transcription** | Automatic transcription of voice stories | ✅ Built (OpenAI Whisper, 2026-02-06) |
 | **Photo Restoration** | AI-powered enhancement of old photos | Concept |
 | **Translation Layer** | Auto-translate stories between family languages | Concept |
 | **Relationship Suggestions** | "Based on ages, Maria might be Ivan's mother" | Concept |
@@ -567,6 +573,7 @@ Use this checklist to ensure alignment:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.3 | 2026-02-06 | Voice Story Recording complete (#7), AI Transcription built, consolidated voice systems |
 | 1.2 | 2026-01-23 | Added engagement features status, UI overhaul design docs |
 | 1.1 | 2026-01-23 | Engagement features deployed (reactions, comments, activity feed, memorial tributes) |
 | 1.0 | 2026-01-22 | Initial master plan created from brain session |
