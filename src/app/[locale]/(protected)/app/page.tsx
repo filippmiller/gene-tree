@@ -26,6 +26,7 @@ import {
   BookOpen,
   Search,
   ArrowUpRight,
+  Timer,
 } from 'lucide-react';
 
 export default async function AppPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -225,17 +226,21 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
             title="Memory Book"
             description="Create a printable PDF book"
           />
+
+          <ArchiveFeatureCard
+            href={`/${resolvedLocale}/time-capsules`}
+            icon={<Timer className="w-5 h-5" />}
+            title={resolvedLocale === 'ru' ? 'Капсулы времени' : 'Time Capsules'}
+            description={resolvedLocale === 'ru' ? 'Послания в будущее' : 'Messages for the future'}
+          />
         </div>
       </CardContent>
     </Card>
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Subtle background texture */}
-      <div className="grain-overlay" />
-
-      <main className="w-full px-4 sm:px-6 lg:px-12 py-8 space-y-8">
+    <div className="min-h-screen">
+      <main className="w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-8 space-y-6 lg:space-y-8 max-w-7xl">
         {/* Hero Welcome Section */}
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Welcome Card - Cinematic Hero */}

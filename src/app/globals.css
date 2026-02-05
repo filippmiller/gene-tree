@@ -474,6 +474,17 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @layer utilities {
+  /* ─────────────────────────────────────────────────────────────────────────
+     SIDEBAR UTILITIES - Deep dark backgrounds for navigation
+     ───────────────────────────────────────────────────────────────────────── */
+  .bg-archive-void { background-color: #0a0a0c; }
+  .bg-archive-obsidian { background-color: #141417; }
+  .bg-archive-charcoal { background-color: #1a1a1e; }
+  .bg-archive-smoke { background-color: #27272b; }
+  .text-archive-platinum { color: #b4b4b8; }
+  .text-archive-silver { color: #9a9a9e; }
+  .text-archive-ivory { color: #f8f8f5; }
+
   /* Safe area padding */
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }

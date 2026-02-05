@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
-import Nav from '@/components/Nav';
-import MobileBottomNav from '@/components/navigation/MobileBottomNav';
+import { AppShell } from '@/components/layout';
 import InvitationChecker from '@/components/invitations/InvitationChecker';
 import PostAuthHandler from '@/components/auth/PostAuthHandler';
 import OnboardingChecker from '@/components/onboarding/OnboardingChecker';
@@ -16,9 +15,8 @@ import { PresenceInitializer } from '@/components/presence';
  * Features:
  * - Server-side auth check (secure)
  * - Onboarding redirect for new users
- * - Top navigation bar
- * - Mobile bottom navigation
- * - Responsive layout with max-width
+ * - Bitrix24-style sidebar navigation
+ * - Responsive layout with collapsible sidebar
  */
 export default async function ProtectedLayout({
   children,
@@ -52,11 +50,9 @@ export default async function ProtectedLayout({
       <InvitationChecker />
       <OnboardingChecker onboardingCompleted={onboardingCompleted} />
       <PresenceInitializer initialUserId={user.id} />
-      <Nav />
-      <div className="max-w-7xl mx-auto w-full pb-20 md:pb-0">
+      <AppShell>
         {children}
-      </div>
-      <MobileBottomNav />
+      </AppShell>
     </>
   );
 }
