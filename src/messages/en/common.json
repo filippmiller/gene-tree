@@ -109,7 +109,9 @@
       "hoursAgo": "{count} hours ago",
       "yesterday": "Yesterday",
       "daysAgo": "{count} days ago"
-    }
+    },
+    "bridgeRequestReceived": "{name} wants to connect as family!",
+    "bridgeRequestAccepted": "Your bridge request was accepted by {name}"
   },
   "reactions": {
     "heart": "Love",
@@ -818,10 +820,6 @@
       "error": "Something went wrong"
     }
   },
-  "notifications": {
-    "bridgeRequestReceived": "{name} wants to connect as family!",
-    "bridgeRequestAccepted": "Your bridge request was accepted by {name}"
-  },
   "duplicates": {
     "title": "Duplicate Detection",
     "description": "Review and merge duplicate profiles to maintain data quality",
@@ -949,6 +947,79 @@
     "notifications": {
       "newMessage": "New message from {name}",
       "newMessages": "{count} new messages in Family Chat"
+    }
+  },
+  "addRelative": {
+    "pageTitle": "Add Family Member",
+    "pageDescription": "Invite a relative to join your family tree. They'll receive an invitation to create their account.",
+    "whoAreYouAdding": "Who are you adding?",
+    "directRelative": "A direct relative",
+    "directRelativeHint": "Mom, dad, brother, sister, spouse, etc.",
+    "indirectRelative": "Relative of my relative",
+    "indirectRelativeHint": "For example, mom's brother, sister's daughter, etc.",
+    "addingRelativesFor": "Adding relatives for: {name}",
+    "whoseRelative": "Whose relative?",
+    "select": "Select...",
+    "addDirectRelativesFirst": "First add direct relatives",
+    "howRelated": "How are they related?",
+    "relationshipType": "Relationship type",
+    "selectType": "Select type...",
+    "specificRelationship": "Specific relationship",
+    "adding": "Adding:",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Smith",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "invalidEmail": "Invalid email format",
+    "emailInviteHint": "An invitation to join the tree will be sent to this address",
+    "phone": "Phone",
+    "phonePlaceholder": "+1 (555) 123-4567",
+    "invalidPhone": "Invalid phone format",
+    "smsConsent": "I confirm I have permission to send SMS to this number",
+    "smsConsentWarning": "Without consent, SMS invitation will not be sent",
+    "checking": "Checking...",
+    "inMemory": "In memory of the departed",
+    "inMemoryHint": "Profile will be created to preserve memory. Email and phone are optional.",
+    "knowsBirthDate": "Do you know the birth date?",
+    "birthDateHint": "The person can confirm or correct the date when they receive the invitation",
+    "socialMedia": "Social media (optional)",
+    "facebookProfile": "Facebook profile",
+    "facebookPlaceholder": "https://facebook.com/...",
+    "instagramProfile": "Instagram profile",
+    "instagramPlaceholder": "https://instagram.com/...",
+    "requiredFieldsNote": "* First name, last name, relationship type, and at least one contact (email or phone) are required",
+    "requiredFieldsNoteDeceased": "* First name, last name, and relationship type are required",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "inviteRelative": "Invite Relative",
+    "networkErrorReminder": "Network error while sending reminder",
+    "failedToSendReminder": "Failed to send reminder",
+    "networkErrorBridge": "Network error while sending request",
+    "failedToSendBridge": "Failed to send connection request",
+    "provideContact": "Please provide at least one contact (email or phone)",
+    "smsConsentRequired": "SMS consent is required for SMS invitation",
+    "serverError": "Server error. Please try again later.",
+    "quickSearch": "Quick search by phrase (optional)",
+    "quickSearchPlaceholder": "e.g., \"mom's sister\", \"brother's daughter\", \"dad's grandma\"",
+    "quickSearchHint": "Enter a phrase to automatically detect the relationship type",
+    "relationshipTypes": {
+      "parent": "Parent",
+      "child": "Child",
+      "spouse": "Spouse",
+      "sibling": "Sibling",
+      "grandparent": "Grandparent",
+      "grandchild": "Grandchild",
+      "auntUncle": "Aunt/Uncle",
+      "nieceNephew": "Niece/Nephew",
+      "cousin": "Cousin"
+    },
+    "indirectTypes": {
+      "sibling": "Sibling",
+      "child": "Son/Daughter",
+      "parent": "Parent",
+      "spouse": "Spouse"
     }
   },
   "timeCapsules": {

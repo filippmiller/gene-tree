@@ -168,73 +168,75 @@ export function getBloodRelationshipOptions(locale: 'en' | 'ru' = 'ru') {
 /**
  * Get specific gender options for a given relationship code
  */
-export function getGenderSpecificOptions(code: string) {
+export function getGenderSpecificOptions(code: string, locale: 'en' | 'ru' = 'ru') {
+  const isEn = locale === 'en';
+
   switch (code) {
     case 'parent':
       return [
-        { value: 'mother', label: 'Мама', gender: 'female' as Gender, qualifiers: {} },
-        { value: 'father', label: 'Папа', gender: 'male' as Gender, qualifiers: {} },
+        { value: 'mother', label: isEn ? 'Mother' : 'Мама', gender: 'female' as Gender, qualifiers: {} },
+        { value: 'father', label: isEn ? 'Father' : 'Папа', gender: 'male' as Gender, qualifiers: {} },
       ];
-    
+
     case 'child':
       return [
-        { value: 'son', label: 'Сын', gender: 'male' as Gender, qualifiers: {} },
-        { value: 'daughter', label: 'Дочь', gender: 'female' as Gender, qualifiers: {} },
+        { value: 'son', label: isEn ? 'Son' : 'Сын', gender: 'male' as Gender, qualifiers: {} },
+        { value: 'daughter', label: isEn ? 'Daughter' : 'Дочь', gender: 'female' as Gender, qualifiers: {} },
       ];
 
     case 'spouse':
       return [
-        { value: 'husband', label: 'Муж', gender: 'male' as Gender, qualifiers: {} },
-        { value: 'wife', label: 'Жена', gender: 'female' as Gender, qualifiers: {} },
-        { value: 'partner', label: 'Партнёр', gender: 'unknown' as Gender, qualifiers: {} },
+        { value: 'husband', label: isEn ? 'Husband' : 'Муж', gender: 'male' as Gender, qualifiers: {} },
+        { value: 'wife', label: isEn ? 'Wife' : 'Жена', gender: 'female' as Gender, qualifiers: {} },
+        { value: 'partner', label: isEn ? 'Partner' : 'Партнёр', gender: 'unknown' as Gender, qualifiers: {} },
       ];
-    
+
     case 'sibling':
       return [
-        { value: 'brother', label: 'Брат (родной)', gender: 'male' as Gender, qualifiers: { halfness: 'full' as Halfness } },
-        { value: 'sister', label: 'Сестра (родная)', gender: 'female' as Gender, qualifiers: { halfness: 'full' as Halfness } },
-        { value: 'half_brother_p', label: 'Единокровный брат', gender: 'male' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'paternal' as Lineage } },
-        { value: 'half_sister_p', label: 'Единокровная сестра', gender: 'female' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'paternal' as Lineage } },
-        { value: 'half_brother_m', label: 'Единоутробный брат', gender: 'male' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'maternal' as Lineage } },
-        { value: 'half_sister_m', label: 'Единоутробная сестра', gender: 'female' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'maternal' as Lineage } },
+        { value: 'brother', label: isEn ? 'Brother' : 'Брат (родной)', gender: 'male' as Gender, qualifiers: { halfness: 'full' as Halfness } },
+        { value: 'sister', label: isEn ? 'Sister' : 'Сестра (родная)', gender: 'female' as Gender, qualifiers: { halfness: 'full' as Halfness } },
+        { value: 'half_brother_p', label: isEn ? 'Half-brother (paternal)' : 'Единокровный брат', gender: 'male' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'paternal' as Lineage } },
+        { value: 'half_sister_p', label: isEn ? 'Half-sister (paternal)' : 'Единокровная сестра', gender: 'female' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'paternal' as Lineage } },
+        { value: 'half_brother_m', label: isEn ? 'Half-brother (maternal)' : 'Единоутробный брат', gender: 'male' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'maternal' as Lineage } },
+        { value: 'half_sister_m', label: isEn ? 'Half-sister (maternal)' : 'Единоутробная сестра', gender: 'female' as Gender, qualifiers: { halfness: 'half' as Halfness, lineage: 'maternal' as Lineage } },
       ];
-    
+
     case 'grandparent':
       return [
-        { value: 'grandfather', label: 'Дедушка', gender: 'male' as Gender, qualifiers: {} },
-        { value: 'grandmother', label: 'Бабушка', gender: 'female' as Gender, qualifiers: {} },
+        { value: 'grandfather', label: isEn ? 'Grandfather' : 'Дедушка', gender: 'male' as Gender, qualifiers: {} },
+        { value: 'grandmother', label: isEn ? 'Grandmother' : 'Бабушка', gender: 'female' as Gender, qualifiers: {} },
       ];
-    
+
     case 'grandchild':
       return [
-        { value: 'grandson', label: 'Внук', gender: 'male' as Gender, qualifiers: {} },
-        { value: 'granddaughter', label: 'Внучка', gender: 'female' as Gender, qualifiers: {} },
+        { value: 'grandson', label: isEn ? 'Grandson' : 'Внук', gender: 'male' as Gender, qualifiers: {} },
+        { value: 'granddaughter', label: isEn ? 'Granddaughter' : 'Внучка', gender: 'female' as Gender, qualifiers: {} },
       ];
-    
+
     case 'aunt_uncle':
       return [
-        { value: 'uncle', label: 'Дядя', gender: 'male' as Gender, qualifiers: { level: 0 } },
-        { value: 'aunt', label: 'Тётя', gender: 'female' as Gender, qualifiers: { level: 0 } },
-        { value: 'uncle_2nd', label: 'Двоюродный дядя', gender: 'male' as Gender, qualifiers: { level: 1 } },
-        { value: 'aunt_2nd', label: 'Двоюродная тётя', gender: 'female' as Gender, qualifiers: { level: 1 } },
+        { value: 'uncle', label: isEn ? 'Uncle' : 'Дядя', gender: 'male' as Gender, qualifiers: { level: 0 } },
+        { value: 'aunt', label: isEn ? 'Aunt' : 'Тётя', gender: 'female' as Gender, qualifiers: { level: 0 } },
+        { value: 'uncle_2nd', label: isEn ? 'Great-uncle' : 'Двоюродный дядя', gender: 'male' as Gender, qualifiers: { level: 1 } },
+        { value: 'aunt_2nd', label: isEn ? 'Great-aunt' : 'Двоюродная тётя', gender: 'female' as Gender, qualifiers: { level: 1 } },
       ];
-    
+
     case 'niece_nephew':
       return [
-        { value: 'nephew', label: 'Племянник', gender: 'male' as Gender, qualifiers: { level: 0 } },
-        { value: 'niece', label: 'Племянница', gender: 'female' as Gender, qualifiers: { level: 0 } },
-        { value: 'nephew_2nd', label: 'Двоюродный племянник', gender: 'male' as Gender, qualifiers: { level: 1 } },
-        { value: 'niece_2nd', label: 'Двоюродная племянница', gender: 'female' as Gender, qualifiers: { level: 1 } },
+        { value: 'nephew', label: isEn ? 'Nephew' : 'Племянник', gender: 'male' as Gender, qualifiers: { level: 0 } },
+        { value: 'niece', label: isEn ? 'Niece' : 'Племянница', gender: 'female' as Gender, qualifiers: { level: 0 } },
+        { value: 'nephew_2nd', label: isEn ? 'Grand-nephew' : 'Двоюродный племянник', gender: 'male' as Gender, qualifiers: { level: 1 } },
+        { value: 'niece_2nd', label: isEn ? 'Grand-niece' : 'Двоюродная племянница', gender: 'female' as Gender, qualifiers: { level: 1 } },
       ];
-    
+
     case 'cousin':
       return [
-        { value: 'cousin_m_1st', label: 'Двоюродный брат', gender: 'male' as Gender, qualifiers: { cousin_degree: 1, cousin_removed: 0 } },
-        { value: 'cousin_f_1st', label: 'Двоюродная сестра', gender: 'female' as Gender, qualifiers: { cousin_degree: 1, cousin_removed: 0 } },
-        { value: 'cousin_m_2nd', label: 'Троюродный брат', gender: 'male' as Gender, qualifiers: { cousin_degree: 2, cousin_removed: 0 } },
-        { value: 'cousin_f_2nd', label: 'Троюродная сестра', gender: 'female' as Gender, qualifiers: { cousin_degree: 2, cousin_removed: 0 } },
+        { value: 'cousin_m_1st', label: isEn ? 'Cousin (male)' : 'Двоюродный брат', gender: 'male' as Gender, qualifiers: { cousin_degree: 1, cousin_removed: 0 } },
+        { value: 'cousin_f_1st', label: isEn ? 'Cousin (female)' : 'Двоюродная сестра', gender: 'female' as Gender, qualifiers: { cousin_degree: 1, cousin_removed: 0 } },
+        { value: 'cousin_m_2nd', label: isEn ? 'Second cousin (male)' : 'Троюродный брат', gender: 'male' as Gender, qualifiers: { cousin_degree: 2, cousin_removed: 0 } },
+        { value: 'cousin_f_2nd', label: isEn ? 'Second cousin (female)' : 'Троюродная сестра', gender: 'female' as Gender, qualifiers: { cousin_degree: 2, cousin_removed: 0 } },
       ];
-    
+
     default:
       return [];
   }

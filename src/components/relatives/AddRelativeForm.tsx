@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { getBloodRelationshipOptions, getGenderSpecificOptions } from '@/lib/relationships/generateLabel';
 import KinshipSearchField from './KinshipSearchField';
 import { mapRuLabelToRelationship } from '@/lib/relationships/kinshipMapping';
@@ -38,6 +39,7 @@ export default function AddRelativeForm() {
   const params = useParams();
   const locale = (params.locale as string) || 'ru';
   const router = useRouter();
+  const t = useTranslations('addRelative');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingRelatives, setExistingRelatives] = useState<ExistingRelative[]>([]);
@@ -61,9 +63,9 @@ export default function AddRelativeForm() {
     dateOfBirth: undefined,
   });
 
-  const relationshipOptions = getBloodRelationshipOptions('ru');
+  const relationshipOptions = getBloodRelationshipOptions(locale as 'en' | 'ru');
   const specificOptions = formData.relationshipCode
-    ? getGenderSpecificOptions(formData.relationshipCode)
+    ? getGenderSpecificOptions(formData.relationshipCode, locale as 'en' | 'ru')
     : [];
 
   // Load existing relatives for indirect relationships
@@ -166,10 +168,10 @@ export default function AddRelativeForm() {
         setError(null);
       } else {
         const data = await res.json();
-        setError(data.error || 'Не удалось отправить напоминание');
+        setError(data.error || t('failedToSendReminder'));
       }
     } catch {
-      setError('Ошибка сети при отправке напоминания');
+      setError(t('networkErrorReminder'));
     }
   }, []);
 
@@ -191,10 +193,10 @@ export default function AddRelativeForm() {
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error || 'Не удалось отправить запрос на подключение');
+        setError(data.error || t('failedToSendBridge'));
       }
     } catch {
-      setError('Ошибка сети при отправке запроса');
+      setError(t('networkErrorBridge'));
     }
   }, [formData.email, formData.phone, formData.relationshipCode, locale, router]);
 
@@ -205,24 +207,24 @@ export default function AddRelativeForm() {
   const validateForm = () => {
     // Email validation
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Неправильный формат email');
+      setError(t('invalidEmail'));
       return false;
     }
 
     // Phone validation (basic)
     if (formData.phone && !/^[\d\s()+-]{10,}$/.test(formData.phone)) {
-      setError('Неправильный формат телефона');
+      setError(t('invalidPhone'));
       return false;
     }
 
     // Contact required only if not deceased
     if (!formData.isDeceased && !formData.email && !formData.phone) {
-      setError('Укажите хотя бы один контакт (email или телефон)');
+      setError(t('provideContact'));
       return false;
     }
 
     if (!formData.isDeceased && formData.phone && !formData.email && !formData.smsConsent) {
-      setError('Для SMS-приглашения нужно подтвердить согласие');
+      setError(t('smsConsentRequired'));
       return false;
     }
 
@@ -256,7 +258,7 @@ export default function AddRelativeForm() {
       // Check if response is JSON
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Ошибка сервера. Попробуйте позже.');
+        throw new Error(t('serverError'));
       }
 
       const data = await response.json();
@@ -297,7 +299,7 @@ export default function AddRelativeForm() {
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl border-0 p-8 space-y-6">
       <div>
-        <h2 className="text-xl font-semibold mb-4">Кого вы добавляете?</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('whoAreYouAdding')}</h2>
 
         <div className="space-y-3">
           <label className="flex items-start p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
@@ -320,8 +322,8 @@ export default function AddRelativeForm() {
               className="mt-1 mr-3"
             />
             <div>
-              <div className="font-medium">Прямого родственника</div>
-              <div className="text-sm text-gray-600">Мама, папа, брат, сестра, супруг(а) и т.д.</div>
+              <div className="font-medium">{t('directRelative')}</div>
+              <div className="text-sm text-gray-600">{t('directRelativeHint')}</div>
             </div>
           </label>
 
@@ -345,8 +347,8 @@ export default function AddRelativeForm() {
               className="mt-1 mr-3"
             />
             <div>
-              <div className="font-medium">Родственника моего родственника</div>
-              <div className="text-sm text-gray-600">Например, брат мамы, дочь сестры и т.д.</div>
+              <div className="font-medium">{t('indirectRelative')}</div>
+              <div className="text-sm text-gray-600">{t('indirectRelativeHint')}</div>
             </div>
           </label>
         </div>
@@ -357,14 +359,14 @@ export default function AddRelativeForm() {
           {prefilledName && (
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
               <span className="text-sm font-medium text-blue-900">
-                Добавляем родственников для: {prefilledName}
+                {t('addingRelativesFor', { name: prefilledName })}
               </span>
             </div>
           )}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Чей родственник? *
+                {t('whoseRelative')} *
               </label>
               <select
                 className="w-full px-3 py-2 border rounded-md"
@@ -372,9 +374,9 @@ export default function AddRelativeForm() {
                 onChange={(e) => setFormData({ ...formData, relatedToUserId: e.target.value })}
                 required={!formData.isDirect}
               >
-                <option value="">Выберите...</option>
+                <option value="">{t('select')}</option>
                 {existingRelatives.length === 0 ? (
-                  <option disabled>Сначала добавьте прямых родственников</option>
+                  <option disabled>{t('addDirectRelativesFirst')}</option>
                 ) : (
                   existingRelatives.map((rel) => (
                     <option key={rel.id} value={rel.id}>
@@ -387,7 +389,7 @@ export default function AddRelativeForm() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Кем приходится? *
+                {t('howRelated')} *
               </label>
               <select
                 className="w-full px-3 py-2 border rounded-md"
@@ -395,38 +397,40 @@ export default function AddRelativeForm() {
                 onChange={(e) => setFormData({ ...formData, relatedToRelationship: e.target.value })}
                 required={!formData.isDirect}
               >
-                <option value="">Выберите...</option>
-                <option value="sibling">Брат/Сестра</option>
-                <option value="child">Сын/Дочь</option>
-                <option value="parent">Родитель</option>
-                <option value="spouse">Супруг(а)</option>
+                <option value="">{t('select')}</option>
+                <option value="sibling">{t('indirectTypes.sibling')}</option>
+                <option value="child">{t('indirectTypes.child')}</option>
+                <option value="parent">{t('indirectTypes.parent')}</option>
+                <option value="spouse">{t('indirectTypes.spouse')}</option>
               </select>
             </div>
           </div>
         </div>
       )}
 
-      {/* Kinship search by Russian phrase */}
-      <KinshipSearchField
-        userId={formData.relatedToUserId}
-        onRelationshipFound={(pathExpr, canonicalLabel) => {
-          const mapped = mapRuLabelToRelationship(canonicalLabel || '');
-          if (mapped) {
-            setFormData(prev => ({
-              ...prev,
-              relationshipCode: mapped.relationshipCode,
-              specificRelationship: mapped.specificValue,
-            }));
-          } else {
-            console.warn('Kinship mapping not recognized for label:', canonicalLabel, 'path:', pathExpr);
-          }
-        }}
-      />
+      {/* Kinship search by Russian phrase - only shown for Russian locale */}
+      {locale === 'ru' && (
+        <KinshipSearchField
+          userId={formData.relatedToUserId}
+          onRelationshipFound={(pathExpr, canonicalLabel) => {
+            const mapped = mapRuLabelToRelationship(canonicalLabel || '');
+            if (mapped) {
+              setFormData(prev => ({
+                ...prev,
+                relationshipCode: mapped.relationshipCode,
+                specificRelationship: mapped.specificValue,
+              }));
+            } else {
+              console.warn('Kinship mapping not recognized for label:', canonicalLabel, 'path:', pathExpr);
+            }
+          }}
+        />
+      )}
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Тип родства *
+            {t('relationshipType')} *
           </label>
           <select
             value={formData.relationshipCode}
@@ -438,7 +442,7 @@ export default function AddRelativeForm() {
             className="w-full px-3 py-2 border rounded-md"
             required
           >
-            <option value="">Выберите тип...</option>
+            <option value="">{t('selectType')}</option>
             {relationshipOptions.map((opt) => (
               <option key={opt.code} value={opt.code}>
                 {opt.label}
@@ -450,7 +454,7 @@ export default function AddRelativeForm() {
         {formData.relationshipCode && specificOptions.length > 0 && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Конкретная связь *
+              {t('specificRelationship')} *
             </label>
             <select
               value={formData.specificRelationship}
@@ -458,7 +462,7 @@ export default function AddRelativeForm() {
               className="w-full px-3 py-2 border rounded-md"
               required
             >
-              <option value="">Выберите...</option>
+              <option value="">{t('select')}</option>
               {specificOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -471,35 +475,35 @@ export default function AddRelativeForm() {
 
       {relationshipLabel && (
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-md text-sm">
-          <span className="font-medium">Добавляем:</span> {relationshipLabel}
+          <span className="font-medium">{t('adding')}</span> {relationshipLabel}
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Имя *
+            {t('firstName')} *
           </label>
           <input
             type="text"
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             className="w-full px-3 py-2 border rounded-md"
-            placeholder="Иван"
+            placeholder={t('firstNamePlaceholder')}
             required
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Фамилия *
+            {t('lastName')} *
           </label>
           <input
             type="text"
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             className="w-full px-3 py-2 border rounded-md"
-            placeholder="Иванов"
+            placeholder={t('lastNamePlaceholder')}
             required
           />
         </div>
@@ -507,7 +511,7 @@ export default function AddRelativeForm() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email
+          {t('email')}
         </label>
         <input
           type="email"
@@ -515,24 +519,24 @@ export default function AddRelativeForm() {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className={`w-full px-3 py-2 border rounded-md ${formData.email && !isEmailValid ? 'border-red-500 bg-red-50' : ''
             }`}
-          placeholder="email@example.com"
+          placeholder={t('emailPlaceholder')}
         />
         {formData.email && !isEmailValid && (
-          <p className="text-xs text-red-600 mt-1">Неправильный формат email</p>
+          <p className="text-xs text-red-600 mt-1">{t('invalidEmail')}</p>
         )}
         {formData.email && isEmailValid && !formData.isDeceased && (
           <div className="mt-2 p-2 bg-blue-50 text-blue-700 text-xs rounded flex items-center">
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            На этот адрес будет отправлено приглашение присоединиться к дереву
+            {t('emailInviteHint')}
           </div>
         )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Телефон
+          {t('phone')}
         </label>
         <input
             type="tel"
@@ -547,10 +551,10 @@ export default function AddRelativeForm() {
             }}
             className={`w-full px-3 py-2 border rounded-md ${formData.phone && !isPhoneValid ? 'border-red-500 bg-red-50' : ''
             }`}
-            placeholder="+7 (999) 123-45-67"
+            placeholder={t('phonePlaceholder')}
         />
         {formData.phone && !isPhoneValid && (
-          <p className="text-xs text-red-600 mt-1">Неправильный формат телефона</p>
+          <p className="text-xs text-red-600 mt-1">{t('invalidPhone')}</p>
         )}
         {!formData.isDeceased && formData.phone && isPhoneValid && (
           <div className="mt-2">
@@ -561,11 +565,11 @@ export default function AddRelativeForm() {
                 onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
                 className="mt-1"
               />
-              <span>Я подтверждаю, что имею разрешение отправить SMS на этот номер</span>
+              <span>{t('smsConsent')}</span>
             </label>
             {!formData.email && !formData.smsConsent && (
               <p className="text-xs text-amber-700 mt-1">
-                Без согласия SMS приглашение не будет отправлено
+                {t('smsConsentWarning')}
               </p>
             )}
           </div>
@@ -582,7 +586,7 @@ export default function AddRelativeForm() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Проверка...
+                {t('checking')}
               </div>
             </div>
           )}
@@ -603,11 +607,11 @@ export default function AddRelativeForm() {
             onChange={(e) => setFormData({ ...formData, isDeceased: e.target.checked })}
             className="w-4 h-4 text-blue-600"
           />
-          <span className="text-sm font-medium text-gray-700">В память об ушедшем</span>
+          <span className="text-sm font-medium text-gray-700">{t('inMemory')}</span>
         </label>
         {formData.isDeceased && (
           <p className="text-xs text-gray-500 mt-1 ml-7">
-            Профиль будет создан для сохранения памяти. Email и телефон необязательны.
+            {t('inMemoryHint')}
           </p>
         )}
       </div>
@@ -620,7 +624,7 @@ export default function AddRelativeForm() {
             onChange={(e) => setFormData({ ...formData, knowsBirthDate: e.target.checked, dateOfBirth: e.target.checked ? formData.dateOfBirth : undefined })}
             className="w-4 h-4 text-blue-600"
           />
-          <span className="text-sm font-medium text-gray-700">Вы знаете дату рождения?</span>
+          <span className="text-sm font-medium text-gray-700">{t('knowsBirthDate')}</span>
         </label>
         {formData.knowsBirthDate && (
           <div className="mt-3 ml-7">
@@ -631,46 +635,46 @@ export default function AddRelativeForm() {
               className="w-full px-3 py-2 border rounded-md"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Пользователь сможет подтвердить или исправить дату при получении приглашения
+              {t('birthDateHint')}
             </p>
           </div>
         )}
       </div>
 
       <div className="border-t pt-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">Социальные сети (опционально)</h3>
+        <h3 className="text-sm font-medium text-gray-700 mb-3">{t('socialMedia')}</h3>
 
         <div className="space-y-3">
           <div>
             <label className="block text-sm text-gray-600 mb-1">
-              Facebook профиль
+              {t('facebookProfile')}
             </label>
             <input
               type="url"
               value={formData.facebookUrl || ''}
               onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
               className="w-full px-3 py-2 border rounded-md"
-              placeholder="https://facebook.com/..."
+              placeholder={t('facebookPlaceholder')}
             />
           </div>
 
           <div>
             <label className="block text-sm text-gray-600 mb-1">
-              Instagram профиль
+              {t('instagramProfile')}
             </label>
             <input
               type="url"
               value={formData.instagramUrl || ''}
               onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
               className="w-full px-3 py-2 border rounded-md"
-              placeholder="https://instagram.com/..."
+              placeholder={t('instagramPlaceholder')}
             />
           </div>
         </div>
       </div>
 
       <div className="text-sm text-gray-600">
-        * Необходимо указать имя, фамилию, тип связи{!formData.isDeceased && ' и хотя бы один контакт (email или телефон)'}
+        {formData.isDeceased ? t('requiredFieldsNoteDeceased') : t('requiredFieldsNote')}
       </div>
 
       {error && (
@@ -686,14 +690,14 @@ export default function AddRelativeForm() {
           className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
           disabled={isSubmitting}
         >
-          Отмена
+          {t('cancel')}
         </button>
         <button
           type="submit"
           disabled={!canSubmit || isSubmitting}
           className="flex-1 px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Сохранение...' : 'Пригласить родственника'}
+          {isSubmitting ? t('saving') : t('inviteRelative')}
         </button>
       </div>
     </form>

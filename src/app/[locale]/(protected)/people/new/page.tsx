@@ -1,23 +1,39 @@
-import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import AddRelativeForm from '@/components/relatives/AddRelativeForm';
 
-export const metadata: Metadata = {
-  title: 'Add Relative',
-  description: 'Invite a family member to join your family tree',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'addRelative' });
 
-export default function AddRelativePage() {
+  return {
+    title: t('pageTitle'),
+    description: t('pageDescription'),
+  };
+}
+
+export default async function AddRelativePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'addRelative' });
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Add Family Member
+          {t('pageTitle')}
         </h1>
         <p className="text-gray-600">
-          Invite a relative to join your family tree. They'll receive an invitation to create their account.
+          {t('pageDescription')}
         </p>
       </div>
-      
+
       <AddRelativeForm />
     </div>
   );
