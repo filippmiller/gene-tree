@@ -9,7 +9,7 @@
  */
 
 import { redirect } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { RelativeFinderClient } from '@/components/relative-finder';
 
@@ -29,7 +29,11 @@ export async function generateMetadata({ params }: FindRelativesPageProps) {
 
 export default async function FindRelativesPage({ params }: FindRelativesPageProps) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'relativeFinder' });
+
+  // Enable static rendering and set request locale
+  setRequestLocale(locale);
+
+  const t = await getTranslations('relativeFinder');
 
   // Get authenticated user
   const supabase = await getSupabaseSSR();

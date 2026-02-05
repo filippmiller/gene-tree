@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { sendTimeCapsuleNotification } from '@/lib/time-capsules/email-notification';
+import { DEFAULT_EMAIL_PREFERENCES } from '@/types/email-preferences';
 import type { TimeCapsuleDeliveredPayload } from '@/types/notifications';
 import type { Json } from '@/lib/types/supabase';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type SupabaseAny = any;
 
 interface TimeCapsuleRow {
@@ -119,6 +121,41 @@ export async function GET(request: NextRequest) {
               notification_id: notif.id,
               profile_id: capsule.recipient_profile_id,
             });
+        }
+
+        // Send email notification if enabled
+        const { data: recipientProfile } = await admin
+          .from('user_profiles')
+          .select('first_name, email_preferences')
+          .eq('id', capsule.recipient_profile_id)
+          .single();
+
+        // Get recipient's email from auth.users
+        const { data: authUser } = await admin.auth.admin.getUserById(capsule.recipient_profile_id);
+
+        if (recipientProfile && authUser?.user?.email) {
+          const savedPrefs = typeof recipientProfile.email_preferences === 'object'
+            ? (recipientProfile.email_preferences as Record<string, unknown>)
+            : {};
+          const emailPrefs = {
+            ...DEFAULT_EMAIL_PREFERENCES,
+            ...savedPrefs,
+          };
+
+          // Only send if user has time capsule notifications enabled
+          if (emailPrefs.time_capsule_notifications !== false) {
+            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://gene-tree.com';
+            const viewUrl = `${baseUrl}/time-capsules?capsule=${capsule.id}`;
+
+            await sendTimeCapsuleNotification({
+              to: authUser.user.email,
+              recipientName: recipientProfile.first_name || 'there',
+              senderName: creatorName,
+              capsuleTitle: capsule.title,
+              viewUrl,
+              locale: 'en', // TODO: Get from recipient profile
+            });
+          }
         }
       }
 

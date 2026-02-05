@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { MemoryPromptsList } from '@/components/prompts';
 import { GlassCard } from '@/components/ui/glass-card';
 import { MessageCircle, BookOpen, Sparkles } from 'lucide-react';
@@ -9,7 +9,9 @@ export default async function PromptsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'prompts' });
+
+  // Enable static rendering and set request locale
+  setRequestLocale(locale);
 
   return (
     <div className="min-h-screen bg-background">

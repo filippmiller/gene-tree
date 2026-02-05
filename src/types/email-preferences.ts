@@ -15,6 +15,7 @@ export interface EmailPreferences {
   anniversary_reminders: boolean;
   death_commemorations: boolean;
   photo_tag_notifications: boolean;
+  time_capsule_notifications: boolean;
   digest_day: DigestDay;
 }
 
@@ -27,6 +28,7 @@ export const DEFAULT_EMAIL_PREFERENCES: EmailPreferences = {
   anniversary_reminders: true,
   death_commemorations: false,
   photo_tag_notifications: true,
+  time_capsule_notifications: true,
   digest_day: 'sunday',
 };
 
@@ -39,6 +41,7 @@ export interface UpdateEmailPreferencesRequest {
   anniversary_reminders?: boolean;
   death_commemorations?: boolean;
   photo_tag_notifications?: boolean;
+  time_capsule_notifications?: boolean;
   digest_day?: DigestDay;
 }
 
@@ -97,6 +100,11 @@ export const EMAIL_PREFERENCE_FIELDS: {
     label: 'Photo Tag Notifications',
     description: 'Get notified when you\'re tagged in a photo',
   },
+  {
+    key: 'time_capsule_notifications',
+    label: 'Time Capsule Notifications',
+    description: 'Get notified when a time capsule is delivered to you',
+  },
 ];
 
 /**
@@ -113,6 +121,7 @@ export function validateEmailPreferences(prefs: unknown): prefs is EmailPreferen
     typeof p.anniversary_reminders === 'boolean' &&
     typeof p.death_commemorations === 'boolean' &&
     typeof p.photo_tag_notifications === 'boolean' &&
+    (typeof p.time_capsule_notifications === 'boolean' || p.time_capsule_notifications === undefined) &&
     DIGEST_DAY_OPTIONS.some(d => d.value === p.digest_day)
   );
 }

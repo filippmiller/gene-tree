@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname, useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -13,9 +12,7 @@ import {
   Users,
   Heart,
   TreePine,
-  User,
   LogOut,
-  Settings,
   MessageCircle,
   Trophy,
   Search,
@@ -28,9 +25,6 @@ import {
   Sparkles,
   UserPlus,
   Camera,
-  Bell,
-  HelpCircle,
-  Gift,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -53,8 +47,7 @@ interface NavGroup {
 
 export default function Sidebar({ collapsed, onToggle, className }: SidebarProps) {
   const pathname = usePathname();
-  const params = useParams();
-  const locale = params.locale as string;
+  const locale = useLocale();
   const t = useTranslations("nav");
 
   const [profile, setProfile] = useState<{ avatar_url?: string; first_name?: string; email?: string } | null>(null);
@@ -78,42 +71,44 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    // Use current locale for sign-in page
     window.location.href = `/${locale}/sign-in`;
   };
 
   // Navigation groups
+  // Note: Using next-intl Link which automatically prefixes with locale
   const navGroups: NavGroup[] = [
     {
       title: t("main"),
       items: [
-        { href: `/${locale}/app`, label: t("dashboard"), icon: Home },
-        { href: `/${locale}/family-chat`, label: t("familyChat"), icon: MessageCircle },
+        { href: "/app", label: t("dashboard"), icon: Home },
+        { href: "/family-chat", label: t("familyChat"), icon: MessageCircle },
       ],
     },
     {
       title: t("family"),
       items: [
-        { href: `/${locale}/people`, label: t("people"), icon: Users },
-        { href: `/${locale}/tree`, label: t("familyProfile"), icon: TreePine },
-        { href: `/${locale}/relations`, label: t("relations"), icon: Heart },
-        { href: `/${locale}/people/new`, label: t("addPerson"), icon: UserPlus },
+        { href: "/people", label: t("people"), icon: Users },
+        { href: "/tree", label: t("familyProfile"), icon: TreePine },
+        { href: "/relations", label: t("relations"), icon: Heart },
+        { href: "/people/new", label: t("addPerson"), icon: UserPlus },
       ],
     },
     {
       title: t("memories"),
       items: [
-        { href: `/${locale}/stories`, label: t("stories"), icon: BookOpen },
-        { href: `/${locale}/photos`, label: t("photos"), icon: Camera },
-        { href: `/${locale}/time-capsules`, label: t("capsules"), icon: Timer },
+        { href: "/stories", label: t("stories"), icon: BookOpen },
+        { href: "/photos", label: t("photos"), icon: Camera },
+        { href: "/time-capsules", label: t("capsules"), icon: Timer },
       ],
     },
     {
       title: t("discover"),
       items: [
-        { href: `/${locale}/relationship-finder`, label: t("connections"), icon: Link2 },
-        { href: `/${locale}/elder-questions`, label: t("questions"), icon: ScrollText },
-        { href: `/${locale}/find-relatives`, label: t("search"), icon: Search },
-        { href: `/${locale}/achievements`, label: t("achievements"), icon: Trophy },
+        { href: "/relationship-finder", label: t("connections"), icon: Link2 },
+        { href: "/elder-questions", label: t("questions"), icon: ScrollText },
+        { href: "/find-relatives", label: t("search"), icon: Search },
+        { href: "/achievements", label: t("achievements"), icon: Trophy },
       ],
     },
   ];
@@ -139,7 +134,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
          ═══════════════════════════════════════════════════════════════════════ */}
       <div className="relative flex items-center justify-between h-16 px-4 border-b border-white/5">
         <Link
-          href={`/${locale}/app`}
+          href="/app"
           className="flex items-center gap-3 group overflow-hidden"
         >
           {/* Logo Icon */}
@@ -287,7 +282,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
         )}>
           {/* Avatar */}
           <Link
-            href={`/${locale}/my-profile`}
+            href="/my-profile"
             prefetch={false}
             className="group relative flex-shrink-0"
           >

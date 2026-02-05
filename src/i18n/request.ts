@@ -1,40 +1,25 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from './routing';
-import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 
+/**
+ * Server-side i18n Request Configuration
+ *
+ * IMPORTANT: URL is the SINGLE SOURCE OF TRUTH for locale.
+ *
+ * The middleware handles all locale detection and redirection:
+ * - Authenticated users → redirect to their preferred locale (from DB)
+ * - Anonymous users → redirect based on Accept-Language header
+ * - All rendering uses URL locale only
+ *
+ * This eliminates mixed language bugs caused by multiple locale sources.
+ */
 export default getRequestConfig(async ({ requestLocale }) => {
-  // Priority:
-  // 1. URL locale (from request)
-  // 2. User's saved preference in DB
-  // 3. Default locale
-  
+  // URL locale is authoritative - set by middleware
   let locale = await requestLocale;
-  
-  // If no locale in URL, try to get from user profile
-  if (!locale || !routing.locales.includes(locale as any)) {
-    try {
-      const supabase = await getSupabaseSSR();
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('preferred_locale')
-          .eq('id', user.id)
-          .single() as any;
-        
-        if (profile?.preferred_locale) {
-          locale = profile.preferred_locale;
-        }
-      }
-    } catch (error) {
-      console.error('Failed to get user locale:', error);
-    }
-    
-    // Fallback to default
-    if (!locale || !routing.locales.includes(locale as any)) {
-      locale = routing.defaultLocale;
-    }
+
+  // Validate locale, fallback to default if invalid
+  if (!locale || !routing.locales.includes(locale as 'ru' | 'en')) {
+    locale = routing.defaultLocale;
   }
 
   return {

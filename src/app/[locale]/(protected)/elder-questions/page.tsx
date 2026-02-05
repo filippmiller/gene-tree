@@ -1,5 +1,5 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import ElderQuestionsClient from './ElderQuestionsClient';
 
@@ -9,7 +9,11 @@ export default async function ElderQuestionsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'elderQuestions' });
+
+  // Enable static rendering and set request locale
+  setRequestLocale(locale);
+
+  const t = await getTranslations('elderQuestions');
   const supabase = await getSupabaseSSR();
 
   const {

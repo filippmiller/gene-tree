@@ -1,6 +1,6 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
-import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import ThisDayHub from '@/components/this-day/ThisDayHub';
 import ActivityFeed from '@/components/feed/ActivityFeed';
@@ -31,15 +31,19 @@ import {
 } from 'lucide-react';
 
 export default async function AppPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale: resolvedLocale } = await params;
-  const t = await getTranslations({ locale: resolvedLocale, namespace: 'dashboard' });
+  const { locale } = await params;
+
+  // Enable static rendering and set request locale
+  setRequestLocale(locale);
+
+  const t = await getTranslations('dashboard');
   const supabase = await getSupabaseSSR();
 
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     const { redirect } = await import('next/navigation');
-    redirect(`/${resolvedLocale}/sign-in`);
+    redirect(`/${locale}/sign-in`);
     return null as never;
   }
 
@@ -115,7 +119,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
       hasParent,
       hasStory,
     },
-    resolvedLocale
+    locale
   );
 
   // Widget content definitions
@@ -166,14 +170,14 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
         <h2 className="font-display text-xl font-medium text-foreground mb-6">{t('quickActions')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ArchiveActionCard
-            href={`/${resolvedLocale}/people/new`}
+            href={`/people/new`}
             icon={<UserPlus className="w-5 h-5" />}
             title={t('addFamilyMember')}
             description={t('addFamilyMemberDescription')}
           />
 
           <ArchiveActionCard
-            href={`/${resolvedLocale}/tree`}
+            href={`/tree`}
             icon={<TreePine className="w-5 h-5" />}
             title={t('viewFamilyTree')}
             description={t('viewFamilyTreeDescription')}
@@ -200,42 +204,42 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
         <h2 className="font-display text-xl font-medium text-foreground mb-6">{t('exploreFamily')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <ArchiveFeatureCard
-            href={`/${resolvedLocale}/relationship-finder`}
+            href={`/relationship-finder`}
             icon={<Link2 className="w-5 h-5" />}
             title={t('howAreWeRelated')}
             description={t('howAreWeRelatedDescription')}
           />
 
           <ArchiveFeatureCard
-            href={`/${resolvedLocale}/elder-questions`}
+            href={`/elder-questions`}
             icon={<ScrollText className="w-5 h-5" />}
             title={t('askTheElder')}
             description={t('askTheElderDescription')}
           />
 
           <ArchiveFeatureCard
-            href={`/${resolvedLocale}/family-profile/settings`}
+            href={`/family-profile/settings`}
             icon={<Settings className="w-5 h-5" />}
             title={t('emailPreferences')}
             description={t('emailPreferencesDescription')}
           />
 
           <ArchiveFeatureCard
-            href={`/${resolvedLocale}/find-relatives`}
+            href={`/find-relatives`}
             icon={<Search className="w-5 h-5" />}
             title={t('findRelatives')}
             description={t('findRelativesDescription')}
           />
 
           <ArchiveFeatureCard
-            href={`/${resolvedLocale}/memory-book`}
+            href={`/memory-book`}
             icon={<BookOpen className="w-5 h-5" />}
             title={t('memoryBook')}
             description={t('memoryBookDescription')}
           />
 
           <ArchiveFeatureCard
-            href={`/${resolvedLocale}/time-capsules`}
+            href={`/time-capsules`}
             icon={<Timer className="w-5 h-5" />}
             title={t('timeCapsules')}
             description={t('timeCapsulesDescription')}
@@ -309,7 +313,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
 
         {/* Profile Completion */}
         {completion.percentage < 100 && (
-          <ProfileCompletionWidget completion={completion} locale={resolvedLocale} />
+          <ProfileCompletionWidget completion={completion} locale={locale} />
         )}
 
         {/* Customizable Widgets */}
