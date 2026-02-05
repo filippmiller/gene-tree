@@ -5,7 +5,7 @@ import type {
   TimeCapsuleListResponse,
 } from '@/lib/time-capsules/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type SupabaseAny = any;
 
 /**
@@ -26,11 +26,11 @@ export async function GET(request: NextRequest) {
   const filter = searchParams.get('filter') || 'all'; // 'all', 'sent', 'received'
 
   // Using any type here since time_capsules table is new and not yet in generated types
+  // Note: created_by references auth.users, so we join user_profiles via inner join by ID match
   let query = (supabase as SupabaseAny)
     .from('time_capsules')
     .select(`
       *,
-      creator:user_profiles!created_by(id, first_name, last_name, avatar_url),
       recipient:user_profiles!recipient_profile_id(id, first_name, last_name, avatar_url)
     `, { count: 'exact' });
 
@@ -53,8 +53,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to load time capsules' }, { status: 500 });
   }
 
+  // Fetch creator profiles for all capsules
+  const creatorIds = [...new Set((data || []).map((c: { created_by: string }) => c.created_by))];
+  const { data: creators } = await supabase
+    .from('user_profiles')
+    .select('id, first_name, last_name, avatar_url')
+    .in('id', creatorIds);
+
+  const creatorsMap = new Map(
+    (creators || []).map((c: { id: string; first_name: string; last_name: string; avatar_url: string | null }) => [c.id, c])
+  );
+
+  // Attach creator info to each capsule
+  const capsulesWithCreators = (data || []).map((capsule: { created_by: string }) => ({
+    ...capsule,
+    creator: creatorsMap.get(capsule.created_by) || null,
+  }));
+
   const response: TimeCapsuleListResponse = {
-    data: (data || []) as TimeCapsuleListResponse['data'],
+    data: capsulesWithCreators as TimeCapsuleListResponse['data'],
     total: count || 0,
     hasMore: (data?.length || 0) === limit,
   };
@@ -153,7 +170,6 @@ export async function POST(request: NextRequest) {
     })
     .select(`
       *,
-      creator:user_profiles!created_by(id, first_name, last_name, avatar_url),
       recipient:user_profiles!recipient_profile_id(id, first_name, last_name, avatar_url)
     `)
     .single();
@@ -163,5 +179,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create time capsule' }, { status: 500 });
   }
 
-  return NextResponse.json(capsule, { status: 201 });
+  // Fetch creator profile
+  const { data: creatorProfile } = await supabase
+    .from('user_profiles')
+    .select('id, first_name, last_name, avatar_url')
+    .eq('id', user.id)
+    .single();
+
+  return NextResponse.json({ ...capsule, creator: creatorProfile }, { status: 201 });
 }
