@@ -4260,6 +4260,10 @@ export type Database = {
         Args: { p_badge_id: string; p_user_id: string }
         Returns: boolean
       }
+      can_send_family_chat_message: {
+        Args: { p_chat_id: string; p_sender_id: string }
+        Returns: boolean
+      }
       can_upload_to_profile: {
         Args: { profile_id: string; user_id: string }
         Returns: boolean
@@ -4432,6 +4436,43 @@ export type Database = {
           is_alive: boolean
           name: string
           photo_url: string
+        }[]
+      }
+      get_family_chat_members: {
+        Args: { p_chat_id: string }
+        Returns: {
+          avatar_url: string
+          chat_id: string
+          email_notifications: boolean
+          first_name: string
+          id: string
+          is_muted: boolean
+          joined_at: string
+          last_name: string
+          last_read_at: string
+          last_read_message_id: string
+          muted_until: string
+          notifications_enabled: boolean
+          role: Database["public"]["Enums"]["family_chat_role"]
+          user_id: string
+        }[]
+      }
+      get_family_chat_messages: {
+        Args: { p_chat_id: string; p_cursor?: string; p_limit?: number }
+        Returns: {
+          chat_id: string
+          content: string
+          created_at: string
+          edited_at: string
+          id: string
+          is_deleted: boolean
+          memory_source_id: string
+          message_type: Database["public"]["Enums"]["chat_message_type"]
+          metadata: Json
+          sender_avatar_url: string
+          sender_first_name: string
+          sender_id: string
+          sender_last_name: string
         }[]
       }
       get_family_circle_profile_ids: {
