@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Send, Mail, Phone, User, Check, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Mail, Phone, User, Check, AlertCircle } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { GlassCard } from '@/components/ui/glass-card';
@@ -78,24 +77,27 @@ export default function Step4Invite({ data, onChange, createdRelativeIds, locale
   // Fetch created relatives info
   useEffect(() => {
     const fetchRelatives = async () => {
-      if (createdRelativeIds.length === 0) {
-        setLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch('/api/relatives');
         if (response.ok) {
           const allRelatives = await response.json();
-          // Filter to only show relatives created in this wizard session
-          const filtered = allRelatives
-            .filter((r: any) => createdRelativeIds.includes(r.id))
-            .map((r: any) => ({
+          // Show all pending relatives if no specific IDs, or filter by session IDs
+          let filtered;
+          if (createdRelativeIds.length > 0) {
+            // Filter to only show relatives created in this wizard session
+            filtered = allRelatives.filter((r: any) => createdRelativeIds.includes(r.id));
+          } else {
+            // Fallback: show all pending relatives (for resume scenarios)
+            filtered = allRelatives.filter((r: any) => r.status === 'pending');
+          }
+
+          setCreatedRelatives(
+            filtered.map((r: any) => ({
               id: r.id,
               name: [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Unknown',
               relationship: r.relationship_type,
-            }));
-          setCreatedRelatives(filtered);
+            }))
+          );
         }
       } catch (err) {
         console.error('Failed to fetch relatives:', err);

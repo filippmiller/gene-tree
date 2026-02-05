@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import Step1AboutYou from './steps/Step1AboutYou';
 import Step2Parents from './steps/Step2Parents';
 import Step3Siblings from './steps/Step3Siblings';
 import Step4Invite from './steps/Step4Invite';
+import { FamilyProgressTracker } from './FamilyProgressTracker';
 import {
   loadWizardState,
   saveWizardState,
@@ -22,8 +23,11 @@ import {
 } from '@/lib/onboarding/wizard-state';
 import { cn } from '@/lib/utils';
 
+const FAMILY_GOAL = 5; // "First Five Minutes" goal
+
 interface Props {
-  userId: string;
+  /** User ID for future use (profile operations) */
+  userId?: string;
   locale: string;
   existingProfile?: {
     first_name?: string;
@@ -69,7 +73,7 @@ const translations = {
 
 const TOTAL_STEPS = 4;
 
-export default function OnboardingWizard({ userId, locale, existingProfile }: Props) {
+export default function OnboardingWizard({ locale, existingProfile }: Props) {
   const router = useRouter();
   const t = translations[locale as keyof typeof translations] || translations.en;
   const [state, setState] = useState<WizardState | null>(null);
@@ -284,6 +288,22 @@ export default function OnboardingWizard({ userId, locale, existingProfile }: Pr
     }
   }, [state, goToStep, handleFinish]);
 
+  // Calculate family members count for progress tracker
+  const familyMembersCount = useMemo(() => {
+    if (!state) return 0;
+
+    // Count from in-form data (what user has entered but may not have saved yet)
+    const inFormCount =
+      (state.parents.mother.firstName && !state.parents.mother.skip ? 1 : 0) +
+      (state.parents.father.firstName && !state.parents.father.skip ? 1 : 0) +
+      state.siblings.siblings.filter((s) => s.firstName).length +
+      (state.siblings.spouse?.firstName ? 1 : 0);
+
+    // Use MAX of in-form count vs. saved count to avoid double-counting during save transitions
+    // createdRelativeIds tracks relatives saved to DB from previous steps
+    return Math.max(inFormCount, state.createdRelativeIds.length);
+  }, [state]);
+
   if (!state) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -312,6 +332,17 @@ export default function OnboardingWizard({ userId, locale, existingProfile }: Pr
           <h1 className="text-3xl font-bold text-foreground mb-2">{t.welcomeTitle}</h1>
           <p className="text-muted-foreground">{t.welcomeSubtitle}</p>
         </div>
+
+        {/* Family Progress Tracker - shows after step 1 */}
+        {state.currentStep > 1 && (
+          <div className="mb-6">
+            <FamilyProgressTracker
+              count={familyMembersCount}
+              goal={FAMILY_GOAL}
+              locale={locale}
+            />
+          </div>
+        )}
 
         {/* Progress Bar */}
         <div className="mb-8">
