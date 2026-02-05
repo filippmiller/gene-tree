@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
-    "gene-tree_frommssqlda"
+    "gene-tree_frommssqlda",
+    "src/lib/biography/generator.test.ts"
   ]
 }
