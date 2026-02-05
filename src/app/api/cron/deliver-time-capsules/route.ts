@@ -93,12 +93,37 @@ export async function GET(request: NextRequest) {
         ? `${creatorProfile.first_name} ${creatorProfile.last_name}`
         : 'A family member';
 
-      // Send notification to recipient (if specific recipient)
+      // Determine recipients: specific person or family broadcast
+      let recipientIds: string[] = [];
+
       if (capsule.recipient_profile_id) {
+        // Specific recipient
+        recipientIds = [capsule.recipient_profile_id];
+      } else {
+        // Family broadcast - get all family circle members
+        const { data: familyMembers, error: familyError } = await admin.rpc(
+          'get_family_circle_profile_ids',
+          { p_user_id: capsule.created_by }
+        );
+
+        if (familyError) {
+          console.error(`[CRON:TIME_CAPSULES] Failed to get family circle for ${capsule.created_by}:`, familyError);
+        } else if (familyMembers && familyMembers.length > 0) {
+          // Exclude the creator from recipients (don't notify yourself)
+          recipientIds = familyMembers
+            .map((m: { profile_id: string }) => m.profile_id)
+            .filter((id: string) => id !== capsule.created_by);
+          console.log(`[CRON:TIME_CAPSULES] Broadcasting capsule ${capsule.id} to ${recipientIds.length} family members`);
+        }
+      }
+
+      // Send notifications to all recipients
+      for (const recipientId of recipientIds) {
         const payload: TimeCapsuleDeliveredPayload = {
           capsule_id: capsule.id,
           title: capsule.title,
           creator_name: creatorName,
+          is_broadcast: !capsule.recipient_profile_id,
         };
 
         // Create notification for the recipient
@@ -107,7 +132,7 @@ export async function GET(request: NextRequest) {
           .insert({
             event_type: 'TIME_CAPSULE_DELIVERED',
             actor_profile_id: capsule.created_by,
-            primary_profile_id: capsule.recipient_profile_id,
+            primary_profile_id: recipientId,
             payload: payload as unknown as Json,
           })
           .select('id')
@@ -119,7 +144,7 @@ export async function GET(request: NextRequest) {
             .from('notification_recipients')
             .insert({
               notification_id: notif.id,
-              profile_id: capsule.recipient_profile_id,
+              profile_id: recipientId,
             });
         }
 
@@ -127,11 +152,11 @@ export async function GET(request: NextRequest) {
         const { data: recipientProfile } = await admin
           .from('user_profiles')
           .select('first_name, email_preferences')
-          .eq('id', capsule.recipient_profile_id)
+          .eq('id', recipientId)
           .single();
 
         // Get recipient's email from auth.users
-        const { data: authUser } = await admin.auth.admin.getUserById(capsule.recipient_profile_id);
+        const { data: authUser } = await admin.auth.admin.getUserById(recipientId);
 
         if (recipientProfile && authUser?.user?.email) {
           const savedPrefs = typeof recipientProfile.email_preferences === 'object'

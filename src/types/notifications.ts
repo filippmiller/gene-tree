@@ -222,6 +222,8 @@ export interface TimeCapsuleDeliveredPayload {
   capsule_id: string;
   title: string;
   creator_name: string;
+  /** True if this is a family broadcast (sent to all family members) */
+  is_broadcast?: boolean;
 }
 
 /**
