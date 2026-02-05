@@ -10,7 +10,8 @@ export type WidgetId =
   | 'quick_actions'
   | 'family_stats'
   | 'explore_features'
-  | 'memory_prompts';
+  | 'memory_prompts'
+  | 'time_capsules';
 
 export interface WidgetConfig {
   visible: boolean;
@@ -35,9 +36,10 @@ export const DEFAULT_DASHBOARD_PREFERENCES: DashboardPreferences = {
     this_day: { visible: true, order: 1 },
     memory_prompts: { visible: true, order: 2 },
     notifications: { visible: true, order: 3 },
-    quick_actions: { visible: true, order: 4 },
-    family_stats: { visible: true, order: 5 },
-    explore_features: { visible: true, order: 6 },
+    time_capsules: { visible: true, order: 4 },
+    quick_actions: { visible: true, order: 5 },
+    family_stats: { visible: true, order: 6 },
+    explore_features: { visible: true, order: 7 },
   },
   layout: 'default',
 };
@@ -84,5 +86,11 @@ export const WIDGET_INFO: WidgetInfo[] = [
     labelKey: 'widgetSettings.widgets.exploreFeatures',
     descriptionKey: 'widgetSettings.widgetsDesc.exploreFeatures',
     icon: 'Compass',
+  },
+  {
+    id: 'time_capsules',
+    labelKey: 'widgetSettings.widgets.timeCapsules',
+    descriptionKey: 'widgetSettings.widgetsDesc.timeCapsules',
+    icon: 'Timer',
   },
 ];

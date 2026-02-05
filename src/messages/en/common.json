@@ -472,7 +472,8 @@
       "memoryPrompts": "Memory Prompts",
       "quickActions": "Quick Actions",
       "familyStats": "Family Stats",
-      "exploreFeatures": "Explore Features"
+      "exploreFeatures": "Explore Features",
+      "timeCapsules": "Time Capsules"
     },
     "widgetsDesc": {
       "notifications": "Stay updated with family activity",
@@ -481,7 +482,8 @@
       "memoryPrompts": "Inspiring questions for family stories",
       "quickActions": "Quick links to common actions",
       "familyStats": "Your family tree statistics",
-      "exploreFeatures": "Discover more features"
+      "exploreFeatures": "Discover more features",
+      "timeCapsules": "Messages scheduled for the future"
     }
   },
   "relativeFinder": {

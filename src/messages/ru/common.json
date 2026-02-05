@@ -472,7 +472,8 @@
       "memoryPrompts": "Вопросы для воспоминаний",
       "quickActions": "Быстрые действия",
       "familyStats": "Статистика семьи",
-      "exploreFeatures": "Исследовать возможности"
+      "exploreFeatures": "Исследовать возможности",
+      "timeCapsules": "Капсулы времени"
     },
     "widgetsDesc": {
       "notifications": "Будьте в курсе семейных событий",
@@ -481,7 +482,8 @@
       "memoryPrompts": "Вдохновляющие вопросы для семейных историй",
       "quickActions": "Быстрые ссылки на частые действия",
       "familyStats": "Статистика вашего древа",
-      "exploreFeatures": "Откройте больше возможностей"
+      "exploreFeatures": "Откройте больше возможностей",
+      "timeCapsules": "Послания, запланированные на будущее"
     }
   },
   "relativeFinder": {

@@ -25,6 +25,7 @@ interface DashboardWidgetsProps {
     activity_feed?: React.ReactNode;
     explore_features?: React.ReactNode;
     memory_prompts?: React.ReactNode;
+    time_capsules?: React.ReactNode;
   };
 }
 
@@ -63,7 +64,7 @@ export default function DashboardWidgets({
 
   // Get visible widgets sorted by order
   const visibleWidgetIds = Object.entries(preferences.widgets)
-    .filter(([_, config]) => config.visible)
+    .filter(([, config]) => config.visible)
     .sort(([, a], [, b]) => a.order - b.order)
     .map(([id]) => id as WidgetId);
 
@@ -84,6 +85,8 @@ export default function DashboardWidgets({
         return widgets.explore_features;
       case 'memory_prompts':
         return widgets.memory_prompts;
+      case 'time_capsules':
+        return widgets.time_capsules;
       default:
         return null;
     }

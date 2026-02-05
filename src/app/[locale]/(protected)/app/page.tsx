@@ -7,6 +7,7 @@ import ActivityFeed from '@/components/feed/ActivityFeed';
 import ProfileCompletionWidget from '@/components/dashboard/ProfileCompletionWidget';
 import DashboardWidgets from '@/components/dashboard/DashboardWidgets';
 import { MemoryPromptsWidget } from '@/components/prompts';
+import TimeCapsuleWidget from '@/components/dashboard/TimeCapsuleWidget';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { calculateCompletion } from '@/lib/profile/completion-calculator';
@@ -152,6 +153,12 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
   const thisDayWidget = <ThisDayHub />;
 
   const memoryPromptsWidget = <MemoryPromptsWidget />;
+
+  const timeCapsuleWidget = (
+    <div className="w-full lg:w-80 shrink-0">
+      <TimeCapsuleWidget />
+    </div>
+  );
 
   const quickActionsWidget = (
     <Card elevation="raised" className="overflow-hidden">
@@ -312,6 +319,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
             family_stats: familyStatsWidget,
             this_day: thisDayWidget,
             memory_prompts: memoryPromptsWidget,
+            time_capsules: timeCapsuleWidget,
             quick_actions: quickActionsWidget,
             activity_feed: activityFeedWidget,
             explore_features: exploreFeaturesWidget,
