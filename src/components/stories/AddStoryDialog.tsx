@@ -1,7 +1,7 @@
-
 'use client';
 
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
 import {
     Dialog,
     DialogContent,
@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Mic, Image as ImageIcon, Type, Loader2 } from 'lucide-react';
 import MediaUploader from './MediaUploader';
+import VoiceRecorder from '@/components/voice/VoiceRecorder';
 import { toast } from 'sonner';
 
 interface AddStoryDialogProps {
@@ -29,11 +30,15 @@ export default function AddStoryDialog({
     subjectId,
     onSuccess
 }: AddStoryDialogProps) {
+    const params = useParams();
+    const locale = (params.locale as 'en' | 'ru') || 'en';
+
     const [activeTab, setActiveTab] = useState('text');
     const [content, setContent] = useState('');
     const [mediaUrl, setMediaUrl] = useState<string | null>(null);
     const [mediaType, setMediaType] = useState<'image' | 'video' | 'audio' | 'text'>('text');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [voiceStoryComplete, setVoiceStoryComplete] = useState(false);
 
     const handleSubmit = async () => {
         if (!content && !mediaUrl && activeTab !== 'audio') {
@@ -65,6 +70,7 @@ export default function AddStoryDialog({
             setContent('');
             setMediaUrl(null);
             setActiveTab('text');
+            setVoiceStoryComplete(false);
         } catch {
             toast.error('Failed to save story');
         } finally {
@@ -120,21 +126,28 @@ export default function AddStoryDialog({
                         </TabsContent>
 
                         <TabsContent value="audio" className="space-y-4">
-                            <div className="p-4 border rounded-lg bg-gray-50 text-center">
-                                <p className="text-sm text-gray-500 mb-4">
-                                    Record a voice message. It will be saved as an audio story.
-                                </p>
-                                {/* 
-                  TODO: VoiceStoryRecorder needs to be adapted to return the URL 
-                  instead of handling upload internally, OR we use it as is if it fits.
-                  For now, let's assume we need to refactor it or use a simpler recorder here.
-                  Actually, let's use a placeholder message if we haven't refactored it yet.
-                */}
-                                <p className="text-xs text-amber-600">
-                                    Voice recording integration pending refactor.
-                                    Please use Text or Media for now.
-                                </p>
-                            </div>
+                            {voiceStoryComplete ? (
+                                <div className="p-4 border rounded-lg bg-green-50 text-center">
+                                    <p className="text-sm text-green-700">
+                                        {locale === 'ru'
+                                            ? 'Голосовая история успешно сохранена!'
+                                            : 'Voice story saved successfully!'}
+                                    </p>
+                                </div>
+                            ) : (
+                                <VoiceRecorder
+                                    targetProfileId={subjectId}
+                                    locale={locale}
+                                    onComplete={() => {
+                                        setVoiceStoryComplete(true);
+                                        toast.success(locale === 'ru'
+                                            ? 'Голосовая история сохранена!'
+                                            : 'Voice story saved!');
+                                        onSuccess?.();
+                                    }}
+                                    onCancel={() => setActiveTab('text')}
+                                />
+                            )}
                         </TabsContent>
                     </div>
                 </Tabs>
