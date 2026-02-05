@@ -235,12 +235,7 @@ export async function POST(request: NextRequest) {
         content,
         message_type: 'user',
       })
-      .select(
-        `
-        *,
-        sender:user_profiles(first_name, last_name, avatar_url)
-      `
-      )
+      .select('*')
       .single();
 
     if (insertError || !message) {
@@ -250,6 +245,13 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Get sender profile
+    const { data: senderProfile } = await supabase
+      .from('user_profiles')
+      .select('first_name, last_name, avatar_url')
+      .eq('id', user.id)
+      .single();
 
     // Update user's last_read_at
     await (supabase as any)
@@ -262,7 +264,10 @@ export async function POST(request: NextRequest) {
       .eq('user_id', user.id);
 
     return NextResponse.json({
-      message: message as FamilyChatMessageWithSender,
+      message: {
+        ...message,
+        sender: senderProfile || null,
+      } as FamilyChatMessageWithSender,
     });
   } catch (error) {
     console.error('[FamilyChat] POST error:', error);
