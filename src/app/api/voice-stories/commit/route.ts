@@ -46,7 +46,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  // Optional: check that file exists in storage (skipped for now to keep it light)
+  // Auto-approve self-stories (narrator recording about themselves)
+  if (story.narrator_profile_id === story.target_profile_id) {
+    await admin
+      .from('voice_stories')
+      .update({ status: 'approved' })
+      .eq('id', story.id);
+  }
 
   // Create media_jobs entry for future transcription
   const { error: jobError } = await admin

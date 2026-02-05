@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-const MAX_DURATION_SECONDS = 60;
+const MAX_DURATION_SECONDS = 300; // 5 minutes
 
 export interface UseVoiceRecorderReturn {
   isRecording: boolean;

@@ -9,6 +9,7 @@ interface SignedVoiceUploadRequest {
   content_type: string;
   file_ext: string;
   title?: string;
+  visibility?: 'public' | 'family' | 'private';
 }
 
 interface SignedVoiceUploadResponse {
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { target_profile_id, duration_seconds, size, content_type, file_ext, title } = body;
+  const { target_profile_id, duration_seconds, size, content_type, file_ext, title, visibility } = body;
 
   if (!target_profile_id || !size || !content_type || !file_ext) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
       duration_seconds: duration_seconds ?? null,
       size_bytes: size,
       title: title || null,
-      visibility: 'family',
+      visibility: visibility || 'family',
       status: 'pending',
     })
     .select('id')

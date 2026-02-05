@@ -10,7 +10,6 @@ import VoiceStoriesWrapper from './VoiceStoriesWrapper';
 import HistoricalTimelineWrapper from './HistoricalTimelineWrapper';
 import HonorTagsWrapper from './HonorTagsWrapper';
 import PersonalCredoWrapper from './PersonalCredoWrapper';
-import QuickVoiceMemoryWrapper from './QuickVoiceMemoryWrapper';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -303,14 +302,6 @@ export default async function PublicProfilePage({ params }: Props) {
             locale={locale as 'en' | 'ru'}
           />
         )}
-
-        {/* Quick Voice Memories Section (short recordings) */}
-        <QuickVoiceMemoryWrapper
-          profileId={actualProfile.id}
-          profileName={fullName}
-          locale={locale as 'en' | 'ru'}
-          currentUserId={user?.id}
-        />
 
         {/* Connection request section - only show if not already related */}
         {user && !isAlreadyRelated && (
