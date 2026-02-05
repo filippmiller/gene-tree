@@ -52,40 +52,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check membership
-    const { data: membership } = await (supabase as any)
-      .from('family_chat_members')
-      .select('id')
-      .eq('chat_id', chatId)
-      .eq('user_id', user.id)
-      .single();
-
-    if (!membership) {
-      return NextResponse.json(
-        { error: 'You are not a member of this chat' },
-        { status: 403 }
-      );
-    }
-
-    // Build query
-    let query = (supabase as any)
-      .from('family_chat_messages')
-      .select(
-        `
-        *,
-        sender:user_profiles(first_name, last_name, avatar_url)
-      `
-      )
-      .eq('chat_id', chatId)
-      .eq('is_deleted', false)
-      .order('created_at', { ascending: false })
-      .limit(limit + 1); // Fetch one extra to check if there are more
-
-    if (cursor) {
-      query = query.lt('created_at', cursor);
-    }
-
-    const { data: messages, error } = await query;
+    // Use RLS-safe function to get messages
+    const { data: messages, error } = await (supabase.rpc as any)(
+      'get_family_chat_messages',
+      {
+        p_chat_id: chatId,
+        p_cursor: cursor || null,
+        p_limit: limit,
+      }
+    );
 
     if (error) {
       console.error('[FamilyChat] Failed to fetch messages:', error);
@@ -98,13 +73,32 @@ export async function GET(request: NextRequest) {
     const hasMore = messages && messages.length > limit;
     const resultMessages = hasMore ? messages.slice(0, limit) : messages || [];
 
+    // Transform to expected format with sender object
+    const formattedMessages = resultMessages.map((m: any) => ({
+      id: m.id,
+      chat_id: m.chat_id,
+      sender_id: m.sender_id,
+      content: m.content,
+      message_type: m.message_type,
+      metadata: m.metadata,
+      memory_source_id: m.memory_source_id,
+      is_deleted: m.is_deleted,
+      created_at: m.created_at,
+      edited_at: m.edited_at,
+      sender: m.sender_id ? {
+        first_name: m.sender_first_name,
+        last_name: m.sender_last_name,
+        avatar_url: m.sender_avatar_url,
+      } : null,
+    }));
+
     // Reverse to get chronological order (oldest first in the page)
-    resultMessages.reverse();
+    formattedMessages.reverse();
 
     return NextResponse.json({
-      messages: resultMessages as FamilyChatMessageWithSender[],
+      messages: formattedMessages as FamilyChatMessageWithSender[],
       has_more: hasMore,
-      cursor: hasMore ? resultMessages[0]?.created_at : undefined,
+      cursor: hasMore ? formattedMessages[0]?.created_at : undefined,
     });
   } catch (error) {
     console.error('[FamilyChat] Messages GET error:', error);
