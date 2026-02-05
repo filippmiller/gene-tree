@@ -223,15 +223,15 @@ export default async function AppPage({ params }: { params: Promise<{ locale: st
           <ArchiveFeatureCard
             href={`/${resolvedLocale}/memory-book`}
             icon={<BookOpen className="w-5 h-5" />}
-            title="Memory Book"
-            description="Create a printable PDF book"
+            title={t('memoryBook')}
+            description={t('memoryBookDescription')}
           />
 
           <ArchiveFeatureCard
             href={`/${resolvedLocale}/time-capsules`}
             icon={<Timer className="w-5 h-5" />}
-            title={resolvedLocale === 'ru' ? 'Капсулы времени' : 'Time Capsules'}
-            description={resolvedLocale === 'ru' ? 'Послания в будущее' : 'Messages for the future'}
+            title={t('timeCapsules')}
+            description={t('timeCapsulesDescription')}
           />
         </div>
       </CardContent>

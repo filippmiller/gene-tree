@@ -60,7 +60,11 @@
     "emailPreferences": "Настройки email",
     "emailPreferencesDescription": "Настройте еженедельный дайджест и напоминания",
     "findRelatives": "Найти родственников",
-    "findRelativesDescription": "Откройте потенциальных родственников с общими предками"
+    "findRelativesDescription": "Откройте потенциальных родственников с общими предками",
+    "memoryBook": "Книга памяти",
+    "memoryBookDescription": "Создайте PDF-книгу для печати",
+    "timeCapsules": "Капсулы времени",
+    "timeCapsulesDescription": "Послания в будущее"
   },
   "people": {
     "title": "Люди",

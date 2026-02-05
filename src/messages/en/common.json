@@ -60,7 +60,11 @@
     "emailPreferences": "Email Preferences",
     "emailPreferencesDescription": "Configure weekly digest & reminders",
     "findRelatives": "Find Relatives",
-    "findRelativesDescription": "Discover potential relatives who share your ancestors"
+    "findRelativesDescription": "Discover potential relatives who share your ancestors",
+    "memoryBook": "Memory Book",
+    "memoryBookDescription": "Create a printable PDF book",
+    "timeCapsules": "Time Capsules",
+    "timeCapsulesDescription": "Messages for the future"
   },
   "people": {
     "title": "People",
