@@ -1,49 +1,13 @@
--- Migration: Full-Text Search with pg_trgm
+-- Migration: Fix search_profiles functions schema
 -- Date: 2026-02-05
--- Description: Enables fuzzy text search for profile names using trigram similarity
---
--- Features:
---   - pg_trgm extension for similarity matching
---   - GIN indexes for fast fuzzy searches
---   - search_profiles() function supporting partial name matching
---   - Weighted scoring based on match quality
+-- Description: Removes family_id references (column doesn't exist in user_profiles)
 
 -- =======================
--- 1. ENABLE pg_trgm EXTENSION
+-- 1. DROP AND RECREATE search_profiles
 -- =======================
 
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
--- =======================
--- 2. CREATE GIN INDEXES FOR TRIGRAM SEARCH
--- =======================
--- GIN indexes dramatically speed up LIKE/ILIKE and similarity queries
-
--- Index on first_name for fast fuzzy matching
-CREATE INDEX IF NOT EXISTS idx_user_profiles_first_name_trgm
-ON public.user_profiles
-USING GIN (first_name gin_trgm_ops);
-
--- Index on last_name for fast fuzzy matching
-CREATE INDEX IF NOT EXISTS idx_user_profiles_last_name_trgm
-ON public.user_profiles
-USING GIN (last_name gin_trgm_ops);
-
--- Index on middle_name for fast fuzzy matching
-CREATE INDEX IF NOT EXISTS idx_user_profiles_middle_name_trgm
-ON public.user_profiles
-USING GIN (middle_name gin_trgm_ops);
-
--- Index on maiden_name for fast fuzzy matching
-CREATE INDEX IF NOT EXISTS idx_user_profiles_maiden_name_trgm
-ON public.user_profiles
-USING GIN (maiden_name gin_trgm_ops);
-
--- =======================
--- 3. SEARCH PROFILES FUNCTION
--- =======================
--- Searches profiles using trigram similarity with weighted scoring
--- Supports partial matching on first, last, middle, and maiden names
+DROP FUNCTION IF EXISTS public.search_profiles(TEXT, UUID, INT, FLOAT);
+DROP FUNCTION IF EXISTS public.search_profiles(TEXT, INT, FLOAT);
 
 CREATE OR REPLACE FUNCTION public.search_profiles(
   search_query TEXT,
@@ -116,9 +80,11 @@ $$;
 COMMENT ON FUNCTION public.search_profiles IS 'Fuzzy search for profiles using pg_trgm trigram similarity';
 
 -- =======================
--- 4. SEARCH PROFILES BY FULL NAME
+-- 2. DROP AND RECREATE search_profiles_fullname
 -- =======================
--- Optimized for "John Smith" style queries that span multiple name parts
+
+DROP FUNCTION IF EXISTS public.search_profiles_fullname(TEXT, UUID, INT);
+DROP FUNCTION IF EXISTS public.search_profiles_fullname(TEXT, INT);
 
 CREATE OR REPLACE FUNCTION public.search_profiles_fullname(
   search_query TEXT,
@@ -198,19 +164,8 @@ $$;
 COMMENT ON FUNCTION public.search_profiles_fullname IS 'Fuzzy search for profiles using full name matching';
 
 -- =======================
--- 5. GRANT PERMISSIONS
+-- 3. GRANT PERMISSIONS
 -- =======================
 
 GRANT EXECUTE ON FUNCTION public.search_profiles TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_profiles_fullname TO authenticated;
-
--- =======================
--- VERIFICATION
--- =======================
--- Test queries to verify the functions work:
---
--- -- Test single name search
--- SELECT * FROM public.search_profiles('john');
---
--- -- Test full name search
--- SELECT * FROM public.search_profiles_fullname('john smith');
