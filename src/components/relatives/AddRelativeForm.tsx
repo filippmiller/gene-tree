@@ -36,6 +36,7 @@ interface FormData {
 export default function AddRelativeForm() {
   const searchParams = useSearchParams();
   const relatedToParam = searchParams.get('relatedTo');
+  const relationTypeParam = searchParams.get('relationType'); // From Quick-Add menu
   const params = useParams();
   const locale = (params.locale as string) || 'ru';
   const router = useRouter();
@@ -48,10 +49,23 @@ export default function AddRelativeForm() {
   const [inviteCheck, setInviteCheck] = useState<InviteCheckResult | null>(null);
   const [isCheckingInvite, setIsCheckingInvite] = useState(false);
 
+  // Map relationType param to relationship code
+  const getInitialRelationshipCode = () => {
+    if (!relationTypeParam) return '';
+    const mapping: Record<string, string> = {
+      parent: 'parent',
+      child: 'child',
+      spouse: 'spouse',
+      sibling: 'sibling',
+    };
+    return mapping[relationTypeParam] || '';
+  };
+
   const [formData, setFormData] = useState<FormData>({
     isDirect: relatedToParam ? false : true,
     relatedToUserId: relatedToParam || undefined,
-    relationshipCode: '',
+    relatedToRelationship: relationTypeParam || undefined, // Pre-fill from Quick-Add
+    relationshipCode: getInitialRelationshipCode(),
     specificRelationship: '',
     firstName: '',
     lastName: '',

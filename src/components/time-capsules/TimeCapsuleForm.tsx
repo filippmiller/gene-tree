@@ -2,7 +2,6 @@
 
 import { useState, useRef } from 'react';
 import { format, addDays } from 'date-fns';
-import { ru, enUS } from 'date-fns/locale';
 import {
   Calendar as CalendarIcon,
   Upload,
@@ -10,7 +9,6 @@ import {
   Loader2,
   Mic,
   Video,
-  Image as ImageIcon,
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -56,12 +54,14 @@ export default function TimeCapsuleForm({
   onSuccess,
   onCancel,
 }: TimeCapsuleFormProps) {
-  const dateLocale = locale === 'ru' ? ru : enUS;
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Special value for "To My Family" option (Radix Select doesn't allow empty strings)
+  const FAMILY_BROADCAST_VALUE = '__family_broadcast__';
 
   // Form state
   const [recipientId, setRecipientId] = useState<string>(
-    initialData?.recipient_profile_id || ''
+    initialData?.recipient_profile_id || FAMILY_BROADCAST_VALUE
   );
   const [title, setTitle] = useState(initialData?.title || '');
   const [message, setMessage] = useState(initialData?.message || '');
@@ -239,7 +239,7 @@ export default function TimeCapsuleForm({
       }
 
       const payload: CreateTimeCapsuleRequest = {
-        recipient_profile_id: recipientId || null,
+        recipient_profile_id: recipientId === FAMILY_BROADCAST_VALUE ? null : recipientId,
         title: title.trim(),
         message: message.trim() || null,
         media_type: mediaUrl ? mediaType : null,
@@ -294,7 +294,7 @@ export default function TimeCapsuleForm({
             <SelectValue placeholder={t.selectRecipient} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">
+            <SelectItem value={FAMILY_BROADCAST_VALUE}>
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
                 <span>{t.toFamily}</span>

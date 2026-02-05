@@ -1051,6 +1051,13 @@
     "notifications": {
       "delivered": "{name} sent you a time capsule: {title}"
     }
+  },
+  "quickAdd": {
+    "addParent": "Add Parent",
+    "addChild": "Add Child",
+    "addSpouse": "Add Spouse",
+    "addSibling": "Add Sibling",
+    "addRelativeFor": "Add relative for {name}"
   }
 }
 

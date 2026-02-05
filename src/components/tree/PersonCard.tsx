@@ -1,47 +1,51 @@
 /**
  * PersonCard.tsx
- * 
+ *
  * Миссия: Карточка человека в семейном дереве
- * 
+ *
  * Отображает:
  * - Фото (аватар) или placeholder
  * - Имя (first_name + last_name)
  * - Даты жизни: (1901–1988) или (род. 1956)
  * - Визуальные индикаторы: пол (цвет рамки), жив ли человек
- * 
+ * - Quick-Add меню при наведении (добавление родственников)
+ *
  * Размер: 180×80px (компактная карточка)
- * Стиль: тень, скругление углов, при hover - увеличение
- * 
+ * Стиль: тень, скругление углов, при hover - увеличение + quick-add кнопки
+ *
  * Используется в: TreeCanvas как nodeTypes.person
  */
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import type { PersonNodeData } from './types';
+import { QuickAddMenu } from './QuickAddMenu';
 
 /**
  * PersonCard - React Flow узел для отображения человека
- * 
+ *
  * @param data - данные узла {person: Person}
- * 
+ *
  * Связи:
  * - Регистрируется в TreeCanvas как nodeTypes.person
  * - Handle компоненты создают точки подключения для рёбер
+ * - QuickAddMenu появляется при hover для быстрого добавления родственников
  */
 export function PersonCard({ data }: { data: PersonNodeData }) {
   const { person } = data;
+  const [isHovered, setIsHovered] = useState(false);
 
   /**
    * formatLifespan - форматирование дат жизни
-   * 
+   *
    * Форматы:
    * - "(1901–1988)" - обе даты известны
    * - "(род. 1956)" - только дата рождения
    * - "(† 1988)" - только дата смерти (редко)
    * - "" - даты неизвестны
-   * 
+   *
    * Миссия: компактное отображение временного периода жизни
    */
   const formatLifespan = () => {
@@ -62,12 +66,12 @@ export function PersonCard({ data }: { data: PersonNodeData }) {
 
   /**
    * getBorderColor - цвет рамки в зависимости от пола
-   * 
+   *
    * Цвета:
    * - male: голубой (#3b82f6)
    * - female: розовый (#ec4899)
    * - other/unknown: серый (#6b7280)
-   * 
+   *
    * Миссия: визуальная идентификация пола без текста
    */
   const getBorderColor = () => {
@@ -83,7 +87,7 @@ export function PersonCard({ data }: { data: PersonNodeData }) {
 
   /**
    * getInitials - получить инициалы для placeholder аватара
-   * 
+   *
    * Миссия: если нет фото, показать инициалы (F M для Filip Miller)
    */
   const getInitials = () => {
@@ -103,6 +107,8 @@ export function PersonCard({ data }: { data: PersonNodeData }) {
         hover:shadow-lg hover:scale-105
         cursor-pointer
       `}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Handle для входящих рёбер (сверху) */}
       <Handle
@@ -137,7 +143,7 @@ export function PersonCard({ data }: { data: PersonNodeData }) {
         <div className="font-semibold text-sm text-gray-900 truncate">
           {person.name}
         </div>
-        
+
         {/* Даты жизни */}
         <div className="text-xs text-gray-600">
           {formatLifespan()}
@@ -156,6 +162,13 @@ export function PersonCard({ data }: { data: PersonNodeData }) {
         type="source"
         position={Position.Bottom}
         className="w-2 h-2 !bg-gray-400"
+      />
+
+      {/* Quick-Add Menu - показывается при наведении */}
+      <QuickAddMenu
+        personId={person.id}
+        personName={person.name}
+        visible={isHovered}
       />
     </div>
   );

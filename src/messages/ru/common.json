@@ -1051,6 +1051,13 @@
     "notifications": {
       "delivered": "{name} отправил(а) вам капсулу времени: {title}"
     }
+  },
+  "quickAdd": {
+    "addParent": "Добавить родителя",
+    "addChild": "Добавить ребёнка",
+    "addSpouse": "Добавить супруга",
+    "addSibling": "Добавить брата/сестру",
+    "addRelativeFor": "Добавить родственника для {name}"
   }
 }
 
