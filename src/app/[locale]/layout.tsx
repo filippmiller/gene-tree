@@ -12,7 +12,8 @@ export default async function LocaleLayout({
   const { locale: resolvedLocale } = await params;
   if (!locales.includes(resolvedLocale as any)) notFound();
 
-  const messages = await getMessages();
+  // Explicitly pass locale to getMessages to ensure URL locale takes priority
+  const messages = await getMessages({locale: resolvedLocale});
 
   return (
     <NextIntlClientProvider locale={resolvedLocale} messages={messages}>
