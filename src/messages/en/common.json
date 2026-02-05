@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "people": "People",
+    "familyChat": "Family Chat",
     "relations": "Relations",
     "familyProfile": "Family Profile",
     "achievements": "Achievements",
@@ -891,6 +892,75 @@
       "deathDate": "Death Date",
       "deathPlace": "Death Place",
       "occupation": "Occupation"
+    }
+  },
+  "familyChat": {
+    "title": "Family Chat",
+    "description": "Chat with your entire family in real-time",
+    "pageTitle": "Family Chat",
+    "emptyState": "No messages yet",
+    "emptyStateHint": "Be the first to say hello to your family!",
+    "typeMessage": "Type a message...",
+    "enterToSend": "Press Enter to send, Shift+Enter for new line",
+    "members": "members",
+    "connected": "Connected",
+    "reconnecting": "Reconnecting...",
+    "viewMembers": "View members",
+    "settings": "Settings",
+    "muteNotifications": "Mute notifications",
+    "enableNotifications": "Enable notifications",
+    "youAreAdmin": "You are an admin",
+    "youAreMember": "You are a member",
+    "youAreMuted": "You are muted and cannot send messages",
+    "mutedUntil": "until {time}",
+    "loadOlder": "Load older messages",
+    "systemMessages": {
+      "birthday": "Today is {name}'s birthday! Send them your wishes!",
+      "birthdayUpcoming": "{name}'s birthday is coming up!",
+      "anniversary": "Happy anniversary to {name1} and {name2}!",
+      "memorial": "Today we remember {name}",
+      "welcome": "Welcome to the family chat, {name}!",
+      "memory": "On this day {years} year(s) ago, {sender} wrote:"
+    },
+    "admin": {
+      "title": "Admin",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "makeAdmin": "Make admin",
+      "removeAdmin": "Remove admin",
+      "deleteMessage": "Delete message"
+    },
+    "notifications": {
+      "newMessage": "New message from {name}",
+      "newMessages": "{count} new messages in Family Chat"
+    }
+  },
+  "timeCapsules": {
+    "title": "Time Capsules",
+    "subtitle": "Messages for the future",
+    "createNew": "Create Time Capsule",
+    "sealedUntil": "Sealed until {date}",
+    "deliveredOn": "Delivered on {date}",
+    "from": "From {name}",
+    "to": "To {name}",
+    "toFamily": "To My Family",
+    "scheduleDelivery": "Schedule Delivery",
+    "writeMessage": "Write your message...",
+    "addMedia": "Add audio, video, or photo",
+    "sealCapsule": "Seal Time Capsule",
+    "editCapsule": "Edit Capsule",
+    "deleteCapsule": "Delete Capsule",
+    "confirmDelete": "Are you sure? This capsule will be permanently deleted.",
+    "emptyState": "No time capsules yet. Create one to send a message to the future.",
+    "emptyReceived": "No time capsules have been delivered to you yet.",
+    "tabSent": "Sent",
+    "tabReceived": "Received",
+    "deliveryTrigger": {
+      "date": "On a specific date",
+      "afterPassing": "After I'm gone"
+    },
+    "notifications": {
+      "delivered": "{name} sent you a time capsule: {title}"
     }
   }
 }

@@ -33,7 +33,12 @@ export type NotificationEventType =
   | 'CLAIM_DISPUTED'
   // Bridge requests
   | 'BRIDGE_REQUEST_RECEIVED'
-  | 'BRIDGE_REQUEST_ACCEPTED';
+  | 'BRIDGE_REQUEST_ACCEPTED'
+  // Time capsules
+  | 'TIME_CAPSULE_DELIVERED'
+  // Family chat
+  | 'FAMILY_CHAT_MESSAGE'
+  | 'FAMILY_CHAT_MENTION';
 
 /**
  * Payload for 'relative_added' event
@@ -211,6 +216,35 @@ export interface BridgeRequestAcceptedPayload {
 }
 
 /**
+ * Payload for 'TIME_CAPSULE_DELIVERED' event
+ */
+export interface TimeCapsuleDeliveredPayload {
+  capsule_id: string;
+  title: string;
+  creator_name: string;
+}
+
+/**
+ * Payload for 'FAMILY_CHAT_MESSAGE' event
+ */
+export interface FamilyChatMessagePayload {
+  chat_id: string;
+  message_id: string;
+  sender_name: string;
+  preview: string;
+}
+
+/**
+ * Payload for 'FAMILY_CHAT_MENTION' event
+ */
+export interface FamilyChatMentionPayload {
+  chat_id: string;
+  message_id: string;
+  sender_name: string;
+  preview: string;
+}
+
+/**
  * Union of all notification payloads.
  * Note: We use a flexible type here because payloads can vary and
  * the database stores them as JSON. For type-safe access, cast to
@@ -289,5 +323,8 @@ export function isNotificationEventType(value: string): value is NotificationEve
     'CLAIM_DISPUTED',
     'BRIDGE_REQUEST_RECEIVED',
     'BRIDGE_REQUEST_ACCEPTED',
+    'TIME_CAPSULE_DELIVERED',
+    'FAMILY_CHAT_MESSAGE',
+    'FAMILY_CHAT_MENTION',
   ].includes(value);
 }

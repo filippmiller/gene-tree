@@ -965,6 +965,152 @@ export type Database = {
           },
         ]
       }
+      family_chat_members: {
+        Row: {
+          chat_id: string
+          email_notifications: boolean | null
+          id: string
+          is_muted: boolean | null
+          joined_at: string | null
+          last_read_at: string | null
+          last_read_message_id: string | null
+          muted_until: string | null
+          notifications_enabled: boolean | null
+          role: Database["public"]["Enums"]["family_chat_role"] | null
+          user_id: string
+        }
+        Insert: {
+          chat_id: string
+          email_notifications?: boolean | null
+          id?: string
+          is_muted?: boolean | null
+          joined_at?: string | null
+          last_read_at?: string | null
+          last_read_message_id?: string | null
+          muted_until?: string | null
+          notifications_enabled?: boolean | null
+          role?: Database["public"]["Enums"]["family_chat_role"] | null
+          user_id: string
+        }
+        Update: {
+          chat_id?: string
+          email_notifications?: boolean | null
+          id?: string
+          is_muted?: boolean | null
+          joined_at?: string | null
+          last_read_at?: string | null
+          last_read_message_id?: string | null
+          muted_until?: string | null
+          notifications_enabled?: boolean | null
+          role?: Database["public"]["Enums"]["family_chat_role"] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_chat_members_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "family_group_chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_chat_messages: {
+        Row: {
+          chat_id: string
+          content: string
+          created_at: string | null
+          deleted_at: string | null
+          deleted_by: string | null
+          edited_at: string | null
+          id: string
+          is_deleted: boolean | null
+          memory_source_id: string | null
+          message_type: Database["public"]["Enums"]["chat_message_type"] | null
+          metadata: Json | null
+          sender_id: string | null
+        }
+        Insert: {
+          chat_id: string
+          content: string
+          created_at?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          edited_at?: string | null
+          id?: string
+          is_deleted?: boolean | null
+          memory_source_id?: string | null
+          message_type?: Database["public"]["Enums"]["chat_message_type"] | null
+          metadata?: Json | null
+          sender_id?: string | null
+        }
+        Update: {
+          chat_id?: string
+          content?: string
+          created_at?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          edited_at?: string | null
+          id?: string
+          is_deleted?: boolean | null
+          memory_source_id?: string | null
+          message_type?: Database["public"]["Enums"]["chat_message_type"] | null
+          metadata?: Json | null
+          sender_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_chat_messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "family_group_chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_chat_messages_memory_source_id_fkey"
+            columns: ["memory_source_id"]
+            isOneToOne: false
+            referencedRelation: "family_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_group_chats: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          member_limit: number | null
+          name: string | null
+          tree_root_user_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          member_limit?: number | null
+          name?: string | null
+          tree_root_user_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          member_limit?: number | null
+          name?: string | null
+          tree_root_user_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       family_messages: {
         Row: {
           content: string
@@ -3147,6 +3293,79 @@ export type Database = {
         }
         Relationships: []
       }
+      time_capsules: {
+        Row: {
+          created_at: string
+          created_by: string
+          delivered_at: string | null
+          delivery_status: string
+          delivery_trigger: string
+          id: string
+          media_type: string | null
+          media_url: string | null
+          message: string | null
+          privacy_level: string
+          recipient_profile_id: string | null
+          scheduled_delivery_date: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          delivered_at?: string | null
+          delivery_status?: string
+          delivery_trigger?: string
+          id?: string
+          media_type?: string | null
+          media_url?: string | null
+          message?: string | null
+          privacy_level?: string
+          recipient_profile_id?: string | null
+          scheduled_delivery_date: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          delivered_at?: string | null
+          delivery_status?: string
+          delivery_trigger?: string
+          id?: string
+          media_type?: string | null
+          media_url?: string | null
+          message?: string | null
+          privacy_level?: string
+          recipient_profile_id?: string | null
+          scheduled_delivery_date?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_capsules_recipient_profile_id_fkey"
+            columns: ["recipient_profile_id"]
+            isOneToOne: false
+            referencedRelation: "gt_v_person"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_capsules_recipient_profile_id_fkey"
+            columns: ["recipient_profile_id"]
+            isOneToOne: false
+            referencedRelation: "persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_capsules_recipient_profile_id_fkey"
+            columns: ["recipient_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tribute_guestbook: {
         Row: {
           author_id: string
@@ -4184,6 +4403,10 @@ export type Database = {
         }[]
       }
       get_bridge_request_counts: { Args: { p_user_id: string }; Returns: Json }
+      get_chat_unread_count: {
+        Args: { p_chat_id: string; p_user_id: string }
+        Returns: number
+      }
       get_current_season: { Args: never; Returns: string }
       get_daily_memory_prompt: {
         Args: { p_context_profile_id?: string; p_user_id: string }
@@ -4260,6 +4483,25 @@ export type Database = {
           season: string
           story_id: string
         }[]
+      }
+      get_on_this_day_messages: {
+        Args: {
+          p_chat_id: string
+          p_min_years_ago?: number
+          p_target_date?: string
+        }
+        Returns: {
+          content: string
+          created_at: string
+          message_id: string
+          sender_id: string
+          sender_name: string
+          years_ago: number
+        }[]
+      }
+      get_or_create_family_chat: {
+        Args: { p_user_id: string }
+        Returns: string
       }
       get_or_create_message_thread: {
         Args: { user_a: string; user_b: string }
@@ -4467,10 +4709,20 @@ export type Database = {
         Args: { p_prompt_id: string; p_user_id: string }
         Returns: boolean
       }
+      sync_family_chat_members: { Args: { p_chat_id: string }; Returns: number }
       update_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
       certainty_level: "certain" | "approximate" | "unknown"
+      chat_message_type:
+        | "user"
+        | "system"
+        | "birthday"
+        | "anniversary"
+        | "memorial"
+        | "welcome"
+        | "milestone"
+        | "memory"
       date_precision: "day" | "month" | "year" | "unknown"
       education_status: "attended" | "graduated" | "current" | "dropped_out"
       education_type:
@@ -4480,6 +4732,7 @@ export type Database = {
         | "vocational"
         | "graduate"
       elder_question_status: "pending" | "answered" | "declined"
+      family_chat_role: "admin" | "member"
       media_status: "pending" | "approved" | "rejected" | "archived"
       media_type:
         | "avatar"
@@ -4631,6 +4884,16 @@ export const Constants = {
   public: {
     Enums: {
       certainty_level: ["certain", "approximate", "unknown"],
+      chat_message_type: [
+        "user",
+        "system",
+        "birthday",
+        "anniversary",
+        "memorial",
+        "welcome",
+        "milestone",
+        "memory",
+      ],
       date_precision: ["day", "month", "year", "unknown"],
       education_status: ["attended", "graduated", "current", "dropped_out"],
       education_type: [
@@ -4641,6 +4904,7 @@ export const Constants = {
         "graduate",
       ],
       elder_question_status: ["pending", "answered", "declined"],
+      family_chat_role: ["admin", "member"],
       media_status: ["pending", "approved", "rejected", "archived"],
       media_type: [
         "avatar",

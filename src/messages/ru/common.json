@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Дашборд",
     "people": "Люди",
+    "familyChat": "Семейный чат",
     "relations": "Связи",
     "familyProfile": "Семейный профиль",
     "achievements": "Достижения",
@@ -891,6 +892,75 @@
       "deathDate": "Дата смерти",
       "deathPlace": "Место смерти",
       "occupation": "Профессия"
+    }
+  },
+  "familyChat": {
+    "title": "Семейный чат",
+    "description": "Общайтесь со всей семьёй в реальном времени",
+    "pageTitle": "Семейный чат",
+    "emptyState": "Сообщений пока нет",
+    "emptyStateHint": "Будьте первым, кто поздоровается с семьёй!",
+    "typeMessage": "Введите сообщение...",
+    "enterToSend": "Enter — отправить, Shift+Enter — новая строка",
+    "members": "участников",
+    "connected": "Подключено",
+    "reconnecting": "Переподключение...",
+    "viewMembers": "Участники",
+    "settings": "Настройки",
+    "muteNotifications": "Отключить уведомления",
+    "enableNotifications": "Включить уведомления",
+    "youAreAdmin": "Вы администратор",
+    "youAreMember": "Вы участник",
+    "youAreMuted": "Вы заглушены и не можете отправлять сообщения",
+    "mutedUntil": "до {time}",
+    "loadOlder": "Загрузить старые сообщения",
+    "systemMessages": {
+      "birthday": "Сегодня день рождения у {name}! Поздравьте!",
+      "birthdayUpcoming": "Скоро день рождения у {name}!",
+      "anniversary": "Поздравляем {name1} и {name2} с годовщиной свадьбы!",
+      "memorial": "Сегодня мы вспоминаем {name}",
+      "welcome": "Добро пожаловать в семейный чат, {name}!",
+      "memory": "В этот день {years} год(а) назад {sender} написал(а):"
+    },
+    "admin": {
+      "title": "Администратор",
+      "mute": "Заглушить",
+      "unmute": "Снять заглушку",
+      "makeAdmin": "Сделать администратором",
+      "removeAdmin": "Убрать из администраторов",
+      "deleteMessage": "Удалить сообщение"
+    },
+    "notifications": {
+      "newMessage": "Новое сообщение от {name}",
+      "newMessages": "{count} новых сообщений в семейном чате"
+    }
+  },
+  "timeCapsules": {
+    "title": "Капсулы времени",
+    "subtitle": "Послания в будущее",
+    "createNew": "Создать капсулу",
+    "sealedUntil": "Откроется {date}",
+    "deliveredOn": "Доставлено {date}",
+    "from": "От {name}",
+    "to": "Кому: {name}",
+    "toFamily": "Всей семье",
+    "scheduleDelivery": "Запланировать доставку",
+    "writeMessage": "Напишите ваше послание...",
+    "addMedia": "Добавить аудио, видео или фото",
+    "sealCapsule": "Запечатать капсулу",
+    "editCapsule": "Редактировать",
+    "deleteCapsule": "Удалить",
+    "confirmDelete": "Вы уверены? Эта капсула будет удалена навсегда.",
+    "emptyState": "Капсул времени пока нет. Создайте первую, чтобы отправить послание в будущее.",
+    "emptyReceived": "Вам ещё не доставлено ни одной капсулы времени.",
+    "tabSent": "Отправленные",
+    "tabReceived": "Полученные",
+    "deliveryTrigger": {
+      "date": "В определённую дату",
+      "afterPassing": "После моего ухода"
+    },
+    "notifications": {
+      "delivered": "{name} отправил(а) вам капсулу времени: {title}"
     }
   }
 }

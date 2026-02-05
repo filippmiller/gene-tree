@@ -13,6 +13,7 @@ import type {
   BirthdayReminderPayload,
   AnniversaryReminderPayload,
   MemorialReminderPayload,
+  TimeCapsuleDeliveredPayload,
 } from '@/types/notifications';
 
 // Re-export types for convenience
@@ -31,6 +32,7 @@ export type {
   BirthdayReminderPayload,
   AnniversaryReminderPayload,
   MemorialReminderPayload,
+  TimeCapsuleDeliveredPayload,
   NotificationData,
   ActorInfo,
   NotificationWithActor,
@@ -217,6 +219,18 @@ export function getNotificationUrl(
     case 'CLAIM_DISPUTED':
       // Navigate to the people page to manage invitations
       return '/people';
+
+    case 'TIME_CAPSULE_DELIVERED': {
+      const capsulePayload = payload as TimeCapsuleDeliveredPayload | null;
+      if (capsulePayload?.capsule_id) {
+        return `/time-capsules?open=${capsulePayload.capsule_id}`;
+      }
+      return '/time-capsules';
+    }
+
+    case 'FAMILY_CHAT_MESSAGE':
+    case 'FAMILY_CHAT_MENTION':
+      return '/family-chat';
 
     default:
       // Fallback to dashboard

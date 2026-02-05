@@ -22,6 +22,7 @@ import {
   X,
   Trophy,
   Sparkles,
+  MessageCircle,
 } from "lucide-react";
 
 /**
@@ -60,6 +61,7 @@ export default function Nav() {
   const navItems = [
     { href: `/${locale}/app`, label: t("dashboard"), icon: Home },
     { href: `/${locale}/people`, label: t("people"), icon: Users },
+    { href: `/${locale}/family-chat`, label: t("familyChat"), icon: MessageCircle },
     { href: `/${locale}/relations`, label: t("relations"), icon: Heart },
     { href: `/${locale}/tree`, label: t("familyProfile"), icon: TreePine },
     { href: `/${locale}/achievements`, label: t("achievements"), icon: Trophy },
