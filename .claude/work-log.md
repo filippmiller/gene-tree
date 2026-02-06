@@ -4,6 +4,33 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
+## [2026-02-07] - Security Hardening, Error Boundaries, OG Tags & Media Pipeline
+
+**Status**: Completed
+**Commits**: 3883583
+
+### What was done
+- Implemented EXIF/GPS metadata stripping for photo uploads using sharp (critical privacy fix)
+- Added Content Security Policy headers to middleware (XSS prevention)
+- Added X-Request-ID correlation tracing for all API requests (observability)
+- Created 4 bilingual error boundary components for protected routes (stability)
+- Added rich OpenGraph/Twitter meta tags to root layout, invite pages, tribute pages (growth)
+- Added Cache-Control with stale-while-revalidate to tree-data and search endpoints (performance)
+
+### Decisions made
+- Used sharp (not exiftool CLI) for EXIF stripping — native Node.js, no system dependency
+- CSP includes unsafe-eval (Next.js dev) and unsafe-inline (Radix UI) — necessary tradeoffs
+- Cache is private (not public) — tree/search data is user-specific, must not be CDN-cached
+
+### Process
+- Generated 30 improvement ideas, critically evaluated each, rejected 19, implemented top 6
+- 5 additional ideas deferred with detailed plans for future sessions
+
+### Session notes
+`.claude/sessions/2026-02-07-security-hardening-improvements.md`
+
+---
+
 ## [2026-02-06] - Comprehensive E2E Test Suite
 
 **Status**: Completed
