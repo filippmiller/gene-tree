@@ -15,6 +15,7 @@ import {
   getTierForPath,
   getClientIdentifier,
 } from '@/lib/rate-limit';
+import { detectLocaleFromHeader } from '@/lib/locale-detection';
 
 /**
  * Lightweight structured log for API requests.
@@ -132,8 +133,16 @@ export async function middleware(request: NextRequest) {
     return addSecurityHeaders(response);
   }
 
-  // For non-API routes, just add security headers
+  // For non-API routes, auto-set locale cookie for first-time visitors
   const response = NextResponse.next();
+  if (!request.cookies.get('NEXT_LOCALE')) {
+    const detected = detectLocaleFromHeader(request.headers.get('accept-language'));
+    response.cookies.set('NEXT_LOCALE', detected, {
+      path: '/',
+      maxAge: 365 * 24 * 60 * 60,
+      sameSite: 'lax',
+    });
+  }
   return addSecurityHeaders(response);
 }
 

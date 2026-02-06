@@ -1,17 +1,22 @@
 import Link from 'next/link';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { TreePine, Users, BookOpen, Shield, Sparkles, ArrowRight, Heart, Globe } from 'lucide-react';
+import { detectLocaleFromHeader } from '@/lib/locale-detection';
+import LandingLanguageSwitcher from '@/components/LandingLanguageSwitcher';
 
 export default async function LandingPage() {
   const cookieStore = await cookies();
-  const locale = (cookieStore.get('NEXT_LOCALE')?.value || 'en') as 'en' | 'ru';
+  const headerStore = await headers();
+  const cookieLocale = cookieStore.get('NEXT_LOCALE')?.value;
+  const acceptLang = headerStore.get('accept-language');
+  const locale = (cookieLocale || detectLocaleFromHeader(acceptLang)) as 'en' | 'ru';
 
   const t = translations[locale];
 
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-white overflow-hidden">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0c]/80 backdrop-blur-xl border-b border-white/5">
+      <nav data-testid="landing-nav" className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0c]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
@@ -20,14 +25,17 @@ export default async function LandingPage() {
             <span className="text-xl font-semibold">Gene-Tree</span>
           </div>
           <div className="flex items-center gap-4">
+            <LandingLanguageSwitcher currentLocale={locale} />
             <Link
               href={`/${locale}/sign-in`}
+              data-testid="nav-sign-in"
               className="px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
             >
               {t.signIn}
             </Link>
             <Link
               href={`/${locale}/sign-up`}
+              data-testid="nav-get-started"
               className="px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-amber-500 to-orange-500 text-black rounded-lg hover:from-amber-400 hover:to-orange-400 transition-all shadow-lg shadow-amber-500/20"
             >
               {t.getStarted}
@@ -37,7 +45,7 @@ export default async function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 px-6">
+      <section data-testid="hero-section" className="relative pt-32 pb-24 px-6">
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 -right-40 w-[800px] h-[800px] bg-amber-500/10 rounded-full blur-[200px]" />
@@ -111,7 +119,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="relative py-24 px-6">
+      <section data-testid="features-section" className="relative py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-light mb-4">
@@ -154,7 +162,7 @@ export default async function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 px-6">
+      <section data-testid="cta-section" className="relative py-24 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <div className="p-12 bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 rounded-3xl relative overflow-hidden">
             {/* Glow */}

@@ -182,7 +182,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
       {/* ═══════════════════════════════════════════════════════════════════════
          NAVIGATION GROUPS
          ═══════════════════════════════════════════════════════════════════════ */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 scrollbar-hide">
+      <nav data-testid="sidebar-nav" className="flex-1 overflow-y-auto overflow-x-hidden py-4 scrollbar-hide">
         {navGroups.map((group, groupIndex) => (
           <div key={group.title} className={cn("mb-6", groupIndex > 0 && "pt-2")}>
             {/* Group Title */}
@@ -329,6 +329,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
           {!collapsed && (
             <button
               onClick={handleSignOut}
+              data-testid="sign-out-btn"
               className="flex items-center justify-center w-9 h-9 rounded-lg text-archive-silver hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-300"
               title={t("signOut")}
             >
@@ -342,6 +343,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
           <div className="flex justify-center pb-3">
             <button
               onClick={handleSignOut}
+              data-testid="sign-out-btn"
               className="flex items-center justify-center w-10 h-10 rounded-xl text-archive-silver hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-300"
               title={t("signOut")}
             >

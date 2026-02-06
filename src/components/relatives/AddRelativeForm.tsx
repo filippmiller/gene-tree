@@ -311,7 +311,7 @@ export default function AddRelativeForm() {
   const relationshipLabel = selectedOption?.label || '';
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl border-0 p-8 space-y-6">
+    <form onSubmit={handleSubmit} data-testid="add-relative-form" className="bg-white rounded-lg shadow-xl border-0 p-8 space-y-6">
       <div>
         <h2 className="text-xl font-semibold mb-4">{t('whoAreYouAdding')}</h2>
 
@@ -447,6 +447,7 @@ export default function AddRelativeForm() {
             {t('relationshipType')} *
           </label>
           <select
+            data-testid="relationship-select"
             value={formData.relationshipCode}
             onChange={(e) => setFormData({
               ...formData,
@@ -471,6 +472,7 @@ export default function AddRelativeForm() {
               {t('specificRelationship')} *
             </label>
             <select
+              data-testid="specific-relationship-select"
               value={formData.specificRelationship}
               onChange={(e) => setFormData({ ...formData, specificRelationship: e.target.value })}
               className="w-full px-3 py-2 border rounded-md"
@@ -500,6 +502,7 @@ export default function AddRelativeForm() {
           </label>
           <input
             type="text"
+            data-testid="firstName-input"
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             className="w-full px-3 py-2 border rounded-md"
@@ -514,6 +517,7 @@ export default function AddRelativeForm() {
           </label>
           <input
             type="text"
+            data-testid="lastName-input"
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             className="w-full px-3 py-2 border rounded-md"
@@ -529,6 +533,7 @@ export default function AddRelativeForm() {
         </label>
         <input
           type="email"
+          data-testid="email-input"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className={`w-full px-3 py-2 border rounded-md ${formData.email && !isEmailValid ? 'border-red-500 bg-red-50' : ''
@@ -554,6 +559,7 @@ export default function AddRelativeForm() {
         </label>
         <input
             type="tel"
+            data-testid="phone-input"
             value={formData.phone}
             onChange={(e) => {
               const nextPhone = e.target.value;
@@ -617,6 +623,7 @@ export default function AddRelativeForm() {
         <label className="flex items-center space-x-3 cursor-pointer">
           <input
             type="checkbox"
+            data-testid="deceased-checkbox"
             checked={formData.isDeceased}
             onChange={(e) => setFormData({ ...formData, isDeceased: e.target.checked })}
             className="w-4 h-4 text-blue-600"
@@ -692,7 +699,7 @@ export default function AddRelativeForm() {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
+        <div data-testid="form-error" className="p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
           {error}
         </div>
       )}
@@ -708,6 +715,7 @@ export default function AddRelativeForm() {
         </button>
         <button
           type="submit"
+          data-testid="submit-relative"
           disabled={!canSubmit || isSubmitting}
           className="flex-1 px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >

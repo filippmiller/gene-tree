@@ -168,7 +168,7 @@ export default function SignUpPage() {
         </CardHeader>
 
         <CardContent className="pt-4">
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} data-testid="sign-up-form" className="space-y-5">
             <FloatingInput
               id="name"
               label={t.nameLabel}

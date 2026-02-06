@@ -153,7 +153,7 @@ export default function SignIn() {
         </CardHeader>
 
         <CardContent className="pt-4">
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} data-testid="sign-in-form" className="space-y-5">
             <FloatingInput
               id="email"
               label={t.emailLabel}
@@ -188,7 +188,7 @@ export default function SignIn() {
             </div>
 
             {error && (
-              <Alert variant="error">
+              <Alert variant="error" data-testid="sign-in-error">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}

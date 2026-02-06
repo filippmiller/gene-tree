@@ -75,13 +75,6 @@ export type Database = {
             foreignKeyName: "activity_events_actor_id_fkey"
             columns: ["actor_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "activity_events_actor_id_fkey"
-            columns: ["actor_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -487,13 +480,6 @@ export type Database = {
             foreignKeyName: "connection_requests_shared_ancestor_id_fkey"
             columns: ["shared_ancestor_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "connection_requests_shared_ancestor_id_fkey"
-            columns: ["shared_ancestor_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -545,13 +531,6 @@ export type Database = {
             foreignKeyName: "daily_events_cache_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "daily_events_cache_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -560,13 +539,6 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "daily_events_cache_related_profile_id_fkey"
-            columns: ["related_profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -735,13 +707,6 @@ export type Database = {
             foreignKeyName: "education_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "education_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -793,13 +758,6 @@ export type Database = {
             foreignKeyName: "elder_questions_asker_id_fkey"
             columns: ["asker_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "elder_questions_asker_id_fkey"
-            columns: ["asker_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -808,13 +766,6 @@ export type Database = {
             columns: ["asker_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "elder_questions_elder_id_fkey"
-            columns: ["elder_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -877,13 +828,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "employment_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "employment_user_id_fkey"
             columns: ["user_id"]
@@ -1653,13 +1597,6 @@ export type Database = {
             foreignKeyName: "milestones_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "milestones_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -1668,13 +1605,6 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "milestones_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -1718,13 +1648,6 @@ export type Database = {
             columns: ["notification_id"]
             isOneToOne: false
             referencedRelation: "notifications"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notification_recipients_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -1776,13 +1699,6 @@ export type Database = {
             foreignKeyName: "notifications_actor_profile_id_fkey"
             columns: ["actor_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_actor_profile_id_fkey"
-            columns: ["actor_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -1797,13 +1713,6 @@ export type Database = {
             foreignKeyName: "notifications_primary_profile_id_fkey"
             columns: ["primary_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_primary_profile_id_fkey"
-            columns: ["primary_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -1812,13 +1721,6 @@ export type Database = {
             columns: ["primary_profile_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_related_profile_id_fkey"
-            columns: ["related_profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2023,13 +1925,6 @@ export type Database = {
             foreignKeyName: "person_education_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "person_education_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -2045,13 +1940,6 @@ export type Database = {
             columns: ["institution_ref_id"]
             isOneToOne: false
             referencedRelation: "institution_ref"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "person_education_person_id_fkey"
-            columns: ["person_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2157,13 +2045,6 @@ export type Database = {
             foreignKeyName: "person_residence_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "person_residence_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -2172,13 +2053,6 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "person_residence_person_id_fkey"
-            columns: ["person_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2226,13 +2100,6 @@ export type Database = {
             columns: ["photo_id"]
             isOneToOne: false
             referencedRelation: "photos"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photo_people_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2329,13 +2196,6 @@ export type Database = {
             foreignKeyName: "photo_tags_tagged_by_fkey"
             columns: ["tagged_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photo_tags_tagged_by_fkey"
-            columns: ["tagged_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -2344,13 +2204,6 @@ export type Database = {
             columns: ["tagged_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photo_tags_tagged_profile_id_fkey"
-            columns: ["tagged_profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2443,13 +2296,6 @@ export type Database = {
           width?: number | null
         }
         Relationships: [
-          {
-            foreignKeyName: "photos_target_profile_id_fkey"
-            columns: ["target_profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "photos_target_profile_id_fkey"
             columns: ["target_profile_id"]
@@ -2619,13 +2465,6 @@ export type Database = {
             foreignKeyName: "potential_duplicates_kept_profile_id_fkey"
             columns: ["kept_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "potential_duplicates_kept_profile_id_fkey"
-            columns: ["kept_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -2640,13 +2479,6 @@ export type Database = {
             foreignKeyName: "potential_duplicates_profile_a_id_fkey"
             columns: ["profile_a_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "potential_duplicates_profile_a_id_fkey"
-            columns: ["profile_a_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -2655,13 +2487,6 @@ export type Database = {
             columns: ["profile_a_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "potential_duplicates_profile_b_id_fkey"
-            columns: ["profile_b_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2729,13 +2554,6 @@ export type Database = {
             columns: ["honor_tag_id"]
             isOneToOne: false
             referencedRelation: "honor_tags"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profile_honor_tags_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -2847,13 +2665,6 @@ export type Database = {
             foreignKeyName: "quick_link_signups_created_profile_id_fkey"
             columns: ["created_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quick_link_signups_created_profile_id_fkey"
-            columns: ["created_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -2899,13 +2710,6 @@ export type Database = {
           target_type?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "reactions_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "reactions_profile_id_fkey"
             columns: ["profile_id"]
@@ -3192,13 +2996,6 @@ export type Database = {
             foreignKeyName: "story_comments_author_id_fkey"
             columns: ["author_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "story_comments_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3347,13 +3144,6 @@ export type Database = {
             foreignKeyName: "time_capsules_recipient_profile_id_fkey"
             columns: ["recipient_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "time_capsules_recipient_profile_id_fkey"
-            columns: ["recipient_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3399,13 +3189,6 @@ export type Database = {
             foreignKeyName: "tribute_guestbook_author_id_fkey"
             columns: ["author_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tribute_guestbook_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3414,13 +3197,6 @@ export type Database = {
             columns: ["author_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tribute_guestbook_tribute_profile_id_fkey"
-            columns: ["tribute_profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -3697,13 +3473,6 @@ export type Database = {
             foreignKeyName: "user_prompt_responses_context_profile_id_fkey"
             columns: ["context_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_prompt_responses_context_profile_id_fkey"
-            columns: ["context_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3768,73 +3537,6 @@ export type Database = {
         }
         Relationships: []
       }
-      voice_memories: {
-        Row: {
-          created_at: string
-          description: string | null
-          duration_seconds: number
-          file_size_bytes: number | null
-          id: string
-          privacy_level: string
-          profile_id: string | null
-          storage_path: string
-          title: string | null
-          transcription: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          duration_seconds: number
-          file_size_bytes?: number | null
-          id?: string
-          privacy_level?: string
-          profile_id?: string | null
-          storage_path: string
-          title?: string | null
-          transcription?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          duration_seconds?: number
-          file_size_bytes?: number | null
-          id?: string
-          privacy_level?: string
-          profile_id?: string | null
-          storage_path?: string
-          title?: string | null
-          transcription?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "voice_memories_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_memories_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "persons"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_memories_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       voice_stories: {
         Row: {
           approved_at: string | null
@@ -3842,6 +3544,7 @@ export type Database = {
           bucket: string
           created_at: string | null
           created_by: string
+          description: string | null
           duration_seconds: number | null
           id: string
           narrator_profile_id: string
@@ -3865,6 +3568,7 @@ export type Database = {
           bucket?: string
           created_at?: string | null
           created_by: string
+          description?: string | null
           duration_seconds?: number | null
           id?: string
           narrator_profile_id: string
@@ -3888,6 +3592,7 @@ export type Database = {
           bucket?: string
           created_at?: string | null
           created_by?: string
+          description?: string | null
           duration_seconds?: number | null
           id?: string
           narrator_profile_id?: string
@@ -3910,13 +3615,6 @@ export type Database = {
             foreignKeyName: "voice_stories_approved_by_fkey"
             columns: ["approved_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_stories_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3931,13 +3629,6 @@ export type Database = {
             foreignKeyName: "voice_stories_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_stories_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3952,13 +3643,6 @@ export type Database = {
             foreignKeyName: "voice_stories_narrator_profile_id_fkey"
             columns: ["narrator_profile_id"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_stories_narrator_profile_id_fkey"
-            columns: ["narrator_profile_id"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3973,13 +3657,6 @@ export type Database = {
             foreignKeyName: "voice_stories_rejected_by_fkey"
             columns: ["rejected_by"]
             isOneToOne: false
-            referencedRelation: "gt_v_person"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_stories_rejected_by_fkey"
-            columns: ["rejected_by"]
-            isOneToOne: false
             referencedRelation: "persons"
             referencedColumns: ["id"]
           },
@@ -3988,13 +3665,6 @@ export type Database = {
             columns: ["rejected_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "voice_stories_target_profile_id_fkey"
-            columns: ["target_profile_id"]
-            isOneToOne: false
-            referencedRelation: "gt_v_person"
             referencedColumns: ["id"]
           },
           {
@@ -4018,24 +3688,7 @@ export type Database = {
       gt_v_parent_child: {
         Row: {
           child_id: string | null
-          is_pending: boolean | null
-          is_temporary: boolean | null
-          is_verified: boolean | null
           parent_id: string | null
-        }
-        Insert: {
-          child_id?: string | null
-          is_pending?: boolean | null
-          is_temporary?: boolean | null
-          is_verified?: boolean | null
-          parent_id?: string | null
-        }
-        Update: {
-          child_id?: string | null
-          is_pending?: boolean | null
-          is_temporary?: boolean | null
-          is_verified?: boolean | null
-          parent_id?: string | null
         }
         Relationships: []
       }
@@ -4049,83 +3702,31 @@ export type Database = {
           name: string | null
           photo_url: string | null
         }
-        Insert: {
-          birth_date?: string | null
-          death_date?: string | null
-          gender?: string | null
-          id?: string | null
-          is_alive?: never
-          name?: never
-          photo_url?: string | null
-        }
-        Update: {
-          birth_date?: string | null
-          death_date?: string | null
-          gender?: string | null
-          id?: string | null
-          is_alive?: never
-          name?: never
-          photo_url?: string | null
-        }
         Relationships: []
       }
       gt_v_tree_stats: {
         Row: {
-          total_children: number | null
-          total_parents: number | null
-          total_pending: number | null
-          total_people: number | null
-          total_temporary: number | null
+          total_marriages: number | null
+          total_parent_child_links: number | null
+          total_persons: number | null
+          total_union_child_links: number | null
           total_unions: number | null
-          total_verified: number | null
         }
         Relationships: []
       }
       gt_v_union: {
         Row: {
           divorce_date: string | null
-          is_pending: boolean | null
-          is_temporary: boolean | null
-          is_verified: boolean | null
           marriage_date: string | null
-          person1_id: string | null
-          person2_id: string | null
-          role_p1: string | null
-          role_p2: string | null
+          p1: string | null
+          p2: string | null
           union_id: string | null
-        }
-        Insert: {
-          divorce_date?: string | null
-          is_pending?: boolean | null
-          is_temporary?: boolean | null
-          is_verified?: boolean | null
-          marriage_date?: string | null
-          person1_id?: string | null
-          person2_id?: string | null
-          role_p1?: string | null
-          role_p2?: string | null
-          union_id?: never
-        }
-        Update: {
-          divorce_date?: string | null
-          is_pending?: boolean | null
-          is_temporary?: boolean | null
-          is_verified?: boolean | null
-          marriage_date?: string | null
-          person1_id?: string | null
-          person2_id?: string | null
-          role_p1?: string | null
-          role_p2?: string | null
-          union_id?: never
         }
         Relationships: []
       }
       gt_v_union_child: {
         Row: {
           child_id: string | null
-          is_pending: boolean | null
-          is_temporary: boolean | null
-          is_verified: boolean | null
           union_id: string | null
         }
         Relationships: []
@@ -4393,6 +3994,13 @@ export type Database = {
           title_ru: string
         }[]
       }
+      get_ancestors: {
+        Args: { max_depth?: number; proband_id: string }
+        Returns: {
+          ancestor_id: string
+          depth: number
+        }[]
+      }
       get_ancestors_with_depth: {
         Args: { max_depth?: number; person_id: string }
         Returns: {
@@ -4423,6 +4031,13 @@ export type Database = {
           prompt_id: string
           prompt_ru: string
           season: string
+        }[]
+      }
+      get_descendants: {
+        Args: { max_depth?: number; proband_id: string }
+        Returns: {
+          depth: number
+          descendant_id: string
         }[]
       }
       get_descendants_with_depth: {
@@ -4491,6 +4106,14 @@ export type Database = {
           points: number
           rank: number
           user_id: string
+        }[]
+      }
+      get_hourglass: {
+        Args: { max_depth?: number; proband_id: string }
+        Returns: {
+          depth: number
+          direction: string
+          person_id: string
         }[]
       }
       get_memory_prompt_stats: {
@@ -4638,6 +4261,11 @@ export type Database = {
           years_ago: number
         }[]
       }
+      get_tree_data: { Args: { person_ids: string[] }; Returns: Json }
+      get_tree_for_proband: {
+        Args: { max_depth?: number; mode?: string; proband_id: string }
+        Returns: Json
+      }
       get_user_badge_stats: {
         Args: { p_user_id: string }
         Returns: {
@@ -4746,6 +4374,40 @@ export type Database = {
         }
         Returns: boolean
       }
+      search_profiles: {
+        Args: {
+          limit_count?: number
+          min_similarity?: number
+          search_query: string
+        }
+        Returns: {
+          avatar_url: string
+          birth_date: string
+          first_name: string
+          gender: string
+          id: string
+          last_name: string
+          maiden_name: string
+          middle_name: string
+          similarity_score: number
+        }[]
+      }
+      search_profiles_fullname: {
+        Args: { limit_count?: number; search_query: string }
+        Returns: {
+          avatar_url: string
+          birth_date: string
+          first_name: string
+          gender: string
+          id: string
+          last_name: string
+          maiden_name: string
+          middle_name: string
+          similarity_score: number
+        }[]
+      }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       skip_memory_prompt: {
         Args: { p_prompt_id: string; p_user_id: string }
         Returns: boolean

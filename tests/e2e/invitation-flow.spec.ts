@@ -138,106 +138,67 @@ test.describe('Invitation Flow - Complete Journey', () => {
   });
 
   test.skip('2. Add 30 relatives', async () => {
-    // TODO: This test needs data-testid attributes added to AddRelativeForm
-    // Current form uses Russian labels and lacks consistent test selectors
-    // See docs/sessions/TEAM_3_TESTS_DOCS.md for required changes
-
-    // Navigate to people page
-    await inviterPage.goto('/en/people');
-    await inviterPage.waitForLoadState('networkidle');
+    // NOTE: This test is still skipped because it creates real data and requires
+    // a fresh test user. The selectors below have been updated to use data-testid
+    // attributes added to AddRelativeForm.tsx.
+    //
+    // The form is a full page at /en/people/new (not a modal).
+    // It uses controlled React state, not HTML name attributes.
 
     for (let i = 0; i < RELATIVES.length; i++) {
       const relative = RELATIVES[i];
 
-      // Click add relative button
-      await inviterPage.click('[data-testid="add-relative-btn"], button:has-text("Add Relative")');
+      // Navigate to the Add Relative page for each relative
+      await inviterPage.goto('/en/people/new');
+      await inviterPage.waitForLoadState('networkidle');
 
-      // Wait for modal/form
-      await inviterPage.waitForSelector('[data-testid="add-relative-form"], form[name="addRelative"]', {
-        timeout: 5000
-      }).catch(() => {
-        // Alternative: might be a page, not modal
+      // Wait for the form
+      await inviterPage.waitForSelector('[data-testid="add-relative-form"]', {
+        timeout: 5000,
       });
 
-      // Fill basic info
-      await inviterPage.fill('[name="firstName"]', relative.firstName);
-      await inviterPage.fill('[name="lastName"]', relative.lastName);
+      // Fill basic info using data-testid selectors
+      await inviterPage.fill('[data-testid="firstName-input"]', relative.firstName);
+      await inviterPage.fill('[data-testid="lastName-input"]', relative.lastName);
 
       // Select relationship type
-      await inviterPage.selectOption('[name="relationshipType"], [name="relationship"]', relative.relationship);
+      await inviterPage.selectOption('[data-testid="relationship-select"]', relative.relationship);
 
-      // Handle subtype if present (e.g., mother vs parent)
-      if (relative.subtype) {
-        const subtypeSelector = '[name="subtype"], [name="gender"]';
-        const hasSubtype = await inviterPage.$(subtypeSelector);
-        if (hasSubtype) {
-          await inviterPage.selectOption(subtypeSelector, relative.subtype);
-        }
-      }
+      // Wait for specific relationship options to appear, then select
+      await inviterPage.waitForSelector('[data-testid="specific-relationship-select"]', {
+        timeout: 3000,
+      }).catch(() => {});
 
-      // Handle lineage (paternal/maternal)
-      if (relative.lineage) {
-        const lineageSelector = '[name="lineage"]';
-        const hasLineage = await inviterPage.$(lineageSelector);
-        if (hasLineage) {
-          await inviterPage.selectOption(lineageSelector, relative.lineage);
-        }
-      }
-
-      // Handle halfness (full/half/foster)
-      if (relative.halfness) {
-        const halfnessSelector = '[name="halfness"]';
-        const hasHalfness = await inviterPage.$(halfnessSelector);
-        if (hasHalfness) {
-          await inviterPage.selectOption(halfnessSelector, relative.halfness);
-        }
-      }
-
-      // Handle cousin degree
-      if (relative.cousinDegree) {
-        const cousinSelector = '[name="cousinDegree"]';
-        const hasCousin = await inviterPage.$(cousinSelector);
-        if (hasCousin) {
-          await inviterPage.fill(cousinSelector, String(relative.cousinDegree));
-        }
+      const specificSelect = await inviterPage.$('[data-testid="specific-relationship-select"]');
+      if (specificSelect && relative.subtype) {
+        await inviterPage.selectOption('[data-testid="specific-relationship-select"]', relative.subtype);
       }
 
       // Handle deceased checkbox
       if (relative.deceased) {
-        await inviterPage.check('[name="isDeceased"], [name="deceased"]');
-      }
-
-      // Handle birth date
-      if (relative.birthDate) {
-        await inviterPage.fill('[name="dateOfBirth"], [name="birthDate"]', relative.birthDate);
+        await inviterPage.check('[data-testid="deceased-checkbox"]');
       }
 
       // Add email if specified
       if (relative.email) {
         const emailValue = getTestEmail(`rel${i}`);
-        await inviterPage.fill('[name="email"]', emailValue);
+        await inviterPage.fill('[data-testid="email-input"]', emailValue);
       }
 
       // Add phone if specified
       if (relative.phone) {
-        await inviterPage.fill('[name="phone"]', relative.phone);
-
-        // Check SMS consent if required
-        const consentCheckbox = await inviterPage.$('[name="smsConsent"]');
-        if (consentCheckbox) {
-          await consentCheckbox.check();
-        }
+        await inviterPage.fill('[data-testid="phone-input"]', relative.phone);
       }
 
       // Submit the form
-      await inviterPage.click('button[type="submit"]:has-text("Add"), button[type="submit"]:has-text("Save")');
+      await inviterPage.click('[data-testid="submit-relative"]');
 
-      // Wait for success - either toast or form close
+      // Wait for redirect back to people page (success) or error
       await Promise.race([
-        inviterPage.waitForSelector('.toast-success, [data-testid="success-toast"]', { timeout: 5000 }),
-        inviterPage.waitForSelector('[data-testid="add-relative-form"]', { state: 'hidden', timeout: 5000 }),
+        inviterPage.waitForURL('**/people', { timeout: 10000 }),
+        inviterPage.waitForSelector('[data-testid="form-error"]', { timeout: 10000 }),
       ]).catch(() => {
-        // Continue even if specific success indicator not found
+        // Continue even if specific indicator not found
       });
 
       // Small delay between submissions to avoid rate limiting

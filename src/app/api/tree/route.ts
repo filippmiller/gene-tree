@@ -17,10 +17,11 @@
  * Используется в: компонент TreeCanvas на странице /tree/[id]
  *
  * PERFORMANCE: Uses PostgreSQL recursive CTEs for 10-50x faster tree loading
- * (Migration: 20260205200000_recursive_cte_tree_functions.sql)
+ * (Migration: 20260206120000_improve_recursive_cte_tree.sql)
  */
 
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import { logAudit, extractRequestMeta } from '@/lib/audit/logger';
 import type { TreeData, TreeMode } from '@/components/tree/types';
@@ -60,8 +61,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseAdmin();
-    const { data: { user } } = await supabase.auth.getUser();
+    // Use SSR client for authentication (has cookie context)
+    const supabaseSSR = await getSupabaseSSR();
+    const { data: { user } } = await supabaseSSR.auth.getUser();
 
     if (!user) {
       await logAudit({
@@ -74,6 +76,9 @@ export async function GET(req: NextRequest) {
       });
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Use admin client for data queries (bypasses RLS for tree traversal)
+    const supabase = getSupabaseAdmin();
 
     treeLogger.info({ proband_id, mode, depth }, 'Fetching tree data with recursive CTE');
 
