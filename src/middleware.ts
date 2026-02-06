@@ -3,7 +3,8 @@
  *
  * Handles:
  * - Rate limiting for API endpoints
- * - Security headers
+ * - Security headers (including CSP)
+ * - Request tracing via correlation IDs (X-Request-ID)
  * - Request logging
  */
 
@@ -26,12 +27,14 @@ function logApiRequest(
   request: NextRequest,
   statusCode: number,
   durationMs: number,
+  requestId: string,
   extra?: Record<string, unknown>,
 ) {
   const entry = {
     level: statusCode >= 500 ? 50 : statusCode >= 400 ? 40 : 30,
     time: Date.now(),
     msg: 'api_request',
+    requestId,
     method: request.method,
     path: request.nextUrl.pathname,
     status: statusCode,
@@ -55,12 +58,14 @@ const SKIP_RATE_LIMIT_PATHS = [
 ];
 
 // Security headers to add to all responses
-const SECURITY_HEADERS = {
+const SECURITY_HEADERS: Record<string, string> = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(self), geolocation=()',
+  'Content-Security-Policy':
+    "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: *.supabase.co; font-src 'self'; connect-src 'self' *.supabase.co wss://*.supabase.co; media-src 'self' blob: *.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
 };
 
 /**
@@ -71,23 +76,33 @@ function shouldSkipRateLimit(pathname: string): boolean {
 }
 
 /**
- * Add security headers to response
+ * Add security headers and request ID to response
  */
-function addSecurityHeaders(response: NextResponse): NextResponse {
+function addSecurityHeaders(response: NextResponse, requestId: string): NextResponse {
   Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
     response.headers.set(key, value);
   });
+  response.headers.set('X-Request-ID', requestId);
   return response;
+}
+
+/**
+ * Get or generate a correlation ID for request tracing.
+ * Reuses the client-provided X-Request-ID if present, otherwise generates a new UUID.
+ */
+function getRequestId(request: NextRequest): string {
+  return request.headers.get('x-request-id') || crypto.randomUUID();
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const startTime = Date.now();
+  const requestId = getRequestId(request);
 
   // Skip rate limiting for static assets and health checks
   if (shouldSkipRateLimit(pathname)) {
     const response = NextResponse.next();
-    return addSecurityHeaders(response);
+    return addSecurityHeaders(response, requestId);
   }
 
   // Only rate limit API routes
@@ -118,8 +133,8 @@ export async function middleware(request: NextRequest) {
         String(Math.ceil((rateLimitResult.reset - Date.now()) / 1000))
       );
 
-      logApiRequest(request, 429, Date.now() - startTime, { rateLimited: true });
-      return addSecurityHeaders(response);
+      logApiRequest(request, 429, Date.now() - startTime, requestId, { rateLimited: true });
+      return addSecurityHeaders(response, requestId);
     }
 
     // Continue with rate limit headers
@@ -129,8 +144,8 @@ export async function middleware(request: NextRequest) {
       response.headers.set(key, value);
     });
 
-    logApiRequest(request, 200, Date.now() - startTime);
-    return addSecurityHeaders(response);
+    logApiRequest(request, 200, Date.now() - startTime, requestId);
+    return addSecurityHeaders(response, requestId);
   }
 
   // For non-API routes, auto-set locale cookie for first-time visitors
@@ -143,7 +158,7 @@ export async function middleware(request: NextRequest) {
       sameSite: 'lax',
     });
   }
-  return addSecurityHeaders(response);
+  return addSecurityHeaders(response, requestId);
 }
 
 // Configure which paths the middleware runs on

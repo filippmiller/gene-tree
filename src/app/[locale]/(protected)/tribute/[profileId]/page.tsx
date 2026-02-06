@@ -1,7 +1,45 @@
+import { Metadata } from 'next';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { redirect, notFound } from 'next/navigation';
 import TributePageLayout from '@/components/tribute/TributePageLayout';
 import Link from 'next/link';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; profileId: string }>;
+}): Promise<Metadata> {
+  const { profileId } = await params;
+  const supabase = await getSupabaseSSR();
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('first_name, last_name, birth_date, death_date')
+    .eq('id', profileId)
+    .single() as { data: { first_name: string; last_name: string; birth_date: string | null; death_date: string | null } | null };
+
+  if (!profile) {
+    return { title: 'Tribute | Gene Tree' };
+  }
+
+  const name = [profile.first_name, profile.last_name].filter(Boolean).join(' ');
+  const years = [
+    profile.birth_date ? new Date(profile.birth_date).getFullYear() : null,
+    profile.death_date ? new Date(profile.death_date).getFullYear() : null,
+  ].filter(Boolean).join(' - ');
+
+  const title = `In Memory of ${name}${years ? ` (${years})` : ''}`;
+
+  return {
+    title,
+    description: `A tribute page honoring the memory of ${name}. Share stories, photos, and memories.`,
+    openGraph: {
+      title,
+      description: `Honor the memory of ${name}. Leave a message in the guestbook, share stories, and keep their legacy alive.`,
+      type: 'profile',
+      siteName: 'Gene Tree',
+    },
+  };
+}
 
 export default async function TributePage({
   params,

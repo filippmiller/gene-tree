@@ -5,6 +5,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import sharp from 'sharp';
+import { createHash } from 'crypto';
 
 
 export async function POST(request: NextRequest) {
@@ -89,18 +91,15 @@ export async function POST(request: NextRequest) {
             break;
           
           case 'thumbnail':
-            // TODO: implement thumbnail generation
-            console.log('[PROCESS_JOBS] Thumbnail generation not implemented yet');
+            await processThumbnail(getSupabaseAdmin(), jobAny);
             break;
           
           case 'strip_exif':
-            // TODO: implement EXIF stripping
-            console.log('[PROCESS_JOBS] EXIF stripping not implemented yet');
+            await processStripExif(getSupabaseAdmin(), jobAny);
             break;
           
           case 'hash':
-            // TODO: implement hash calculation
-            console.log('[PROCESS_JOBS] Hash calculation not implemented yet');
+            await processHash(getSupabaseAdmin(), jobAny);
             break;
           
           default:
@@ -249,4 +248,139 @@ async function processDelete(supabaseAdmin: any, job: any) {
   console.log(`[DELETE] Successfully deleted photo`);
 }
 
+/**
+ * Strip EXIF/GPS metadata from an uploaded image.
+ * Downloads from Supabase Storage, processes with sharp, re-uploads the cleaned version.
+ */
+async function processStripExif(_supabaseAdmin: any, job: any) {
+  const { photo_id, bucket, path } = job.payload;
 
+  console.log(`[STRIP_EXIF] Stripping metadata from ${path}`);
+
+  // Download the original image
+  const { data: fileData, error: downloadError } = await getSupabaseAdmin().storage
+    .from(bucket)
+    .download(path);
+
+  if (downloadError || !fileData) {
+    throw new Error(`Failed to download file: ${downloadError?.message}`);
+  }
+
+  // Convert Blob to Buffer and strip all metadata with sharp
+  const buffer = Buffer.from(await fileData.arrayBuffer());
+  const strippedBuffer = await sharp(buffer)
+    .rotate() // Auto-rotate based on EXIF orientation before stripping
+    .withMetadata({
+      // Keep only the orientation-corrected image, strip everything else:
+      // GPS, camera info, timestamps, IPTC, XMP — all removed
+    })
+    .toBuffer();
+
+  // Re-upload the stripped version (overwrite original)
+  const { error: uploadError } = await getSupabaseAdmin().storage
+    .from(bucket)
+    .upload(path, strippedBuffer, {
+      upsert: true,
+      contentType: 'image/jpeg',
+    });
+
+  if (uploadError) {
+    throw new Error(`Failed to upload stripped image: ${uploadError.message}`);
+  }
+
+  // Update the photo record to indicate EXIF was stripped
+  await getSupabaseAdmin()
+    .from('photos')
+    .update({ exif_stripped: true } as any)
+    .eq('id', photo_id);
+
+  console.log(`[STRIP_EXIF] Successfully stripped metadata from ${path}`);
+}
+
+/**
+ * Generate thumbnails at multiple sizes.
+ * Downloads original, resizes with sharp, uploads as WebP thumbnails.
+ */
+async function processThumbnail(_supabaseAdmin: any, job: any) {
+  const { photo_id, bucket, path, sizes } = job.payload;
+  const targetSizes: number[] = sizes || [1024, 512, 256];
+
+  console.log(`[THUMBNAIL] Generating thumbnails for ${path} at sizes: ${targetSizes.join(', ')}`);
+
+  // Download the original image
+  const { data: fileData, error: downloadError } = await getSupabaseAdmin().storage
+    .from(bucket)
+    .download(path);
+
+  if (downloadError || !fileData) {
+    throw new Error(`Failed to download file: ${downloadError?.message}`);
+  }
+
+  const buffer = Buffer.from(await fileData.arrayBuffer());
+  const thumbPaths: string[] = [];
+
+  // Generate each thumbnail size
+  for (const size of targetSizes) {
+    const thumbBuffer = await sharp(buffer)
+      .resize(size, size, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 80 })
+      .toBuffer();
+
+    // Thumbnail path: same dir, append _thumb_{size}.webp
+    const basePath = path.replace(/\.[^.]+$/, '');
+    const thumbPath = `${basePath}_thumb_${size}.webp`;
+
+    const { error: uploadError } = await getSupabaseAdmin().storage
+      .from(bucket)
+      .upload(thumbPath, thumbBuffer, {
+        upsert: true,
+        contentType: 'image/webp',
+      });
+
+    if (uploadError) {
+      console.warn(`[THUMBNAIL] Failed to upload ${size}px thumbnail:`, uploadError.message);
+      continue;
+    }
+
+    thumbPaths.push(thumbPath);
+  }
+
+  // Store thumbnail paths on the photo record
+  if (thumbPaths.length > 0) {
+    await getSupabaseAdmin()
+      .from('photos')
+      .update({ thumbnail_paths: thumbPaths } as any)
+      .eq('id', photo_id);
+  }
+
+  console.log(`[THUMBNAIL] Generated ${thumbPaths.length}/${targetSizes.length} thumbnails`);
+}
+
+/**
+ * Calculate SHA-256 hash of the image file for deduplication.
+ */
+async function processHash(_supabaseAdmin: any, job: any) {
+  const { photo_id, bucket, path } = job.payload;
+
+  console.log(`[HASH] Calculating SHA-256 for ${path}`);
+
+  // Download the file
+  const { data: fileData, error: downloadError } = await getSupabaseAdmin().storage
+    .from(bucket)
+    .download(path);
+
+  if (downloadError || !fileData) {
+    throw new Error(`Failed to download file: ${downloadError?.message}`);
+  }
+
+  const buffer = Buffer.from(await fileData.arrayBuffer());
+  const hash = createHash('sha256').update(buffer).digest('hex');
+
+  // Update photo record with the hash
+  await getSupabaseAdmin()
+    .from('photos')
+    .update({ sha256: hash })
+    .eq('id', photo_id);
+
+  console.log(`[HASH] SHA-256 for ${photo_id}: ${hash.substring(0, 16)}...`);
+}

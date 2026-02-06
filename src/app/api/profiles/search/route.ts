@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
       ...requestMeta,
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       results,
       meta: {
         query,
@@ -136,6 +136,9 @@ export async function GET(req: NextRequest) {
         durationMs,
       },
     });
+    // Search results are user-specific and change rarely — cache briefly.
+    response.headers.set('Cache-Control', 'private, max-age=10, stale-while-revalidate=30');
+    return response;
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     const errorStack = err instanceof Error ? err.stack : undefined;

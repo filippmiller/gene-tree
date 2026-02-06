@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { QuickLinkSignupForm } from '@/components/quick-invite/QuickLinkSignupForm';
 import { Card, CardContent } from '@/components/ui/card';
@@ -85,16 +84,43 @@ export async function generateMetadata({ params }: JoinPageProps): Promise<Metad
   const { code } = await params;
   const linkInfo = await getLinkInfo(code);
 
-  if (linkInfo.valid && linkInfo.link?.eventName) {
+  const creatorName = linkInfo.link?.creator
+    ? [linkInfo.link.creator.firstName, linkInfo.link.creator.lastName].filter(Boolean).join(' ')
+    : null;
+
+  if (linkInfo.valid && linkInfo.link) {
+    const eventTitle = linkInfo.link.eventName || 'a family tree';
+    const title = creatorName
+      ? `${creatorName} invited you to join ${eventTitle}`
+      : `You're invited to join ${eventTitle}`;
+    const description = `Join Gene Tree to connect with your family, share stories, and preserve memories together. ${linkInfo.link.remainingUses} spots remaining.`;
+
     return {
-      title: `Join ${linkInfo.link.eventName} | Gene-Tree`,
-      description: `You've been invited to join ${linkInfo.link.eventName} on Gene-Tree`,
+      title: `${title} | Gene Tree`,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: 'website',
+        siteName: 'Gene Tree',
+      },
+      twitter: {
+        card: 'summary',
+        title,
+        description,
+      },
     };
   }
 
   return {
-    title: 'Join Family Tree | Gene-Tree',
-    description: 'Join a family tree on Gene-Tree',
+    title: 'Join Family Tree | Gene Tree',
+    description: 'Join a family tree on Gene Tree — a privacy-first genealogy platform.',
+    openGraph: {
+      title: 'Join a Family Tree',
+      description: 'Connect with your family, share stories, and preserve memories together on Gene Tree.',
+      type: 'website',
+      siteName: 'Gene Tree',
+    },
   };
 }
 

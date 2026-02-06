@@ -98,7 +98,11 @@ export async function GET(request: NextRequest) {
       'Tree data fetched successfully via recursive CTE'
     );
 
-    return NextResponse.json(treeData);
+    const response = NextResponse.json(treeData);
+    // Cache tree data briefly — tree changes are infrequent but reads are frequent.
+    // private: only browser cache (not CDN), max-age: 30s fresh, swr: serve stale for 60s while revalidating.
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
+    return response;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     treeLogger.error({ error: errorMessage, rootId }, 'Tree data fetch failed');
