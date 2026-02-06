@@ -1,7 +1,7 @@
-
 import { NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { logAudit } from '@/lib/audit/logger';
+import { apiLogger } from '@/lib/logger';
 
 /**
  * POST /api/stories
@@ -17,14 +17,14 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { 
-      subject_id, 
-      media_type, 
-      media_url, 
-      content, 
-      title, 
+    const {
+      subject_id,
+      media_type,
+      media_url,
+      content,
+      title,
       taken_date,
-      visibility = 'family' 
+      visibility = 'family'
     } = body;
 
     if (!subject_id || !media_type) {
@@ -49,10 +49,10 @@ export async function POST(req: Request) {
       .single();
 
     if (createError) {
-      console.error('Error creating story:', createError);
+      apiLogger.error({ error: createError.message, userId: user.id, subject_id }, 'Error creating story');
       return NextResponse.json({ error: createError.message }, { status: 500 });
     }
-    
+
     const story = storyData as any;
 
     // 2. Create Notification (if not self-post)
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
         .single();
 
       if (notifyError) {
-        console.error('Error creating notification:', notifyError);
+        apiLogger.error({ error: notifyError.message, storyId: story.id }, 'Error creating notification');
       } else if (notificationData) {
         const notification = notificationData as any;
         // Add recipient
@@ -85,9 +85,9 @@ export async function POST(req: Request) {
             profile_id: subject_id,
             is_read: false
           } as any);
-          
+
         if (recipientError) {
-             console.error('Error adding notification recipient:', recipientError);
+          apiLogger.error({ error: recipientError.message, notificationId: notification.id }, 'Error adding notification recipient');
         }
       }
     }
@@ -102,7 +102,7 @@ export async function POST(req: Request) {
     return NextResponse.json(story);
 
   } catch (error: any) {
-    console.error('Error in POST /api/stories:', error);
+    apiLogger.error({ error: error?.message || 'unknown' }, 'POST /api/stories failed');
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

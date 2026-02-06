@@ -7,10 +7,11 @@
  * npx supabase gen types typescript --project-id <id> > src/lib/types/supabase.ts
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
+import { chatLogger } from '@/lib/logger';
 import type { FamilyChatMessageWithSender } from '@/types/family-chat';
 
 const PAGE_SIZE = 50;
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
     );
 
     if (error) {
-      console.error('[FamilyChat] Failed to fetch messages:', error);
+      chatLogger.error({ error: error?.message, userId: user.id, chatId }, 'Failed to fetch family chat messages');
       return NextResponse.json(
         { error: 'Failed to fetch messages' },
         { status: 500 }
@@ -101,7 +102,7 @@ export async function GET(request: NextRequest) {
       cursor: hasMore ? formattedMessages[0]?.created_at : undefined,
     });
   } catch (error) {
-    console.error('[FamilyChat] Messages GET error:', error);
+    chatLogger.error({ error: error instanceof Error ? error.message : 'unknown' }, 'Family chat messages GET error');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

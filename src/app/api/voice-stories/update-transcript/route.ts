@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { mediaLogger } from '@/lib/logger';
 
 interface UpdateTranscriptRequest {
   storyId: string;
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
     .eq('id', body.storyId);
 
   if (updateError) {
-    console.error('[UPDATE_TRANSCRIPT] Failed to update', updateError);
+    mediaLogger.error({ error: updateError.message, storyId: body.storyId }, 'Failed to update transcript');
     return NextResponse.json({ error: 'Failed to update transcript' }, { status: 500 });
   }
 

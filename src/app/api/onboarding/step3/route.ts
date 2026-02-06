@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { apiLogger } from '@/lib/logger';
 
 interface SiblingData {
   firstName: string;
@@ -19,6 +20,8 @@ interface SpouseData {
 interface SiblingsPayload {
   siblings: SiblingData[];
   spouse?: SpouseData;
+  /** IDs from a previous submission of this step, to be replaced */
+  previousIds?: string[];
 }
 
 /**
@@ -30,7 +33,6 @@ export async function POST(request: NextRequest) {
     const supabase = await getSupabaseSSR();
     const admin = getSupabaseAdmin();
 
-    // Check authentication
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -42,14 +44,29 @@ export async function POST(request: NextRequest) {
     const body: SiblingsPayload = await request.json();
     const createdIds: string[] = [];
 
+    // Delete previous records from this step to prevent duplicates on re-submission
+    if (body.previousIds && body.previousIds.length > 0) {
+      await admin
+        .from('pending_relatives')
+        .delete()
+        .in('id', body.previousIds)
+        .eq('invited_by', user.id);
+    }
+
+    // Validate birth year ranges
+    const currentYear = new Date().getFullYear();
+    const validateYear = (year?: string): string | null => {
+      if (!year) return null;
+      const num = parseInt(year, 10);
+      if (isNaN(num) || num < 1850 || num > currentYear) return null;
+      return `${num}-01-01`;
+    };
+
     // Create siblings
     for (const sibling of body.siblings) {
-      if (!sibling.firstName) continue;
+      if (!sibling.firstName?.trim()) continue;
 
-      let birthDate = null;
-      if (sibling.birthYear) {
-        birthDate = `${sibling.birthYear}-01-01`;
-      }
+      const birthDate = validateYear(sibling.birthYear);
 
       const { data, error } = await admin
         .from('pending_relatives')
@@ -66,7 +83,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        console.error('Error creating sibling:', error);
+        apiLogger.error({ error: error.message, userId: user.id, siblingName: sibling.firstName }, 'Error creating sibling in onboarding step 3');
         continue;
       }
 
@@ -76,16 +93,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Create spouse if provided
-    if (body.spouse && body.spouse.firstName) {
-      let birthDate = null;
-      if (body.spouse.birthYear) {
-        birthDate = `${body.spouse.birthYear}-01-01`;
-      }
-
-      let marriageDate = null;
-      if (body.spouse.marriageYear) {
-        marriageDate = `${body.spouse.marriageYear}-01-01`;
-      }
+    if (body.spouse && body.spouse.firstName?.trim()) {
+      const birthDate = validateYear(body.spouse.birthYear);
+      const marriageDate = validateYear(body.spouse.marriageYear);
 
       const { data, error } = await admin
         .from('pending_relatives')
@@ -102,7 +112,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        console.error('Error creating spouse:', error);
+        apiLogger.error({ error: error.message, userId: user.id }, 'Error creating spouse in onboarding step 3');
       } else if (data?.id) {
         createdIds.push(data.id);
       }
@@ -119,7 +129,7 @@ export async function POST(request: NextRequest) {
       createdIds,
     });
   } catch (error) {
-    console.error('Step 3 error:', error);
+    apiLogger.error({ error: error instanceof Error ? error.message : 'unknown' }, 'Onboarding step 3 error');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
+import { apiLogger } from '@/lib/logger';
 import type {
   CreateTimeCapsuleRequest,
   TimeCapsuleListResponse,
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error('[TIME_CAPSULES] List error:', error);
+    apiLogger.error({ error: error.message, userId: user.id, filter }, 'Time capsules list error');
     return NextResponse.json({ error: 'Failed to load time capsules' }, { status: 500 });
   }
 
@@ -175,7 +176,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (insertError || !capsule) {
-    console.error('[TIME_CAPSULES] Create error:', insertError);
+    apiLogger.error({ error: insertError?.message, userId: user.id }, 'Time capsule create error');
     return NextResponse.json({ error: 'Failed to create time capsule' }, { status: 500 });
   }
 

@@ -16,6 +16,34 @@ import {
   getClientIdentifier,
 } from '@/lib/rate-limit';
 
+/**
+ * Lightweight structured log for API requests.
+ * Uses console.log with JSON because Edge Runtime cannot use Pino (Node.js only).
+ * Numeric levels match Pino conventions so log aggregators parse uniformly.
+ */
+function logApiRequest(
+  request: NextRequest,
+  statusCode: number,
+  durationMs: number,
+  extra?: Record<string, unknown>,
+) {
+  const entry = {
+    level: statusCode >= 500 ? 50 : statusCode >= 400 ? 40 : 30,
+    time: Date.now(),
+    msg: 'api_request',
+    method: request.method,
+    path: request.nextUrl.pathname,
+    status: statusCode,
+    durationMs,
+    ip:
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      request.headers.get('x-real-ip') ||
+      'unknown',
+    ...extra,
+  };
+  console.log(JSON.stringify(entry));
+}
+
 // Paths that should skip rate limiting
 const SKIP_RATE_LIMIT_PATHS = [
   '/_next',
@@ -53,6 +81,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const startTime = Date.now();
 
   // Skip rate limiting for static assets and health checks
   if (shouldSkipRateLimit(pathname)) {
@@ -88,6 +117,7 @@ export async function middleware(request: NextRequest) {
         String(Math.ceil((rateLimitResult.reset - Date.now()) / 1000))
       );
 
+      logApiRequest(request, 429, Date.now() - startTime, { rateLimited: true });
       return addSecurityHeaders(response);
     }
 
@@ -98,6 +128,7 @@ export async function middleware(request: NextRequest) {
       response.headers.set(key, value);
     });
 
+    logApiRequest(request, 200, Date.now() - startTime);
     return addSecurityHeaders(response);
   }
 

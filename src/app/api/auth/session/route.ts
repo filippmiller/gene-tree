@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
+import { authLogger } from '@/lib/logger';
 
 /**
  * POST /api/auth/session
@@ -26,17 +27,17 @@ export async function POST(req: Request) {
     });
     
     if (error) {
-      console.error('[AUTH-SESSION] Failed to set session:', error);
+      authLogger.error({ error: error.message }, 'Failed to set session');
       return NextResponse.json(
         { error: error.message },
         { status: 400 }
       );
     }
     
-    console.log('[AUTH-SESSION] Session cookie set successfully');
+    authLogger.info('Session cookie set successfully');
     return new NextResponse(null, { status: 204 });
   } catch (error: any) {
-    console.error('[AUTH-SESSION] Error:', error);
+    authLogger.error({ error: error.message || 'unknown' }, 'Auth session POST error');
     return NextResponse.json(
       { error: error.message || 'Failed to set session' },
       { status: 500 }
@@ -52,10 +53,10 @@ export async function DELETE() {
   try {
     const supabase = await getSupabaseSSR();
     await supabase.auth.signOut();
-    console.log('[AUTH-SESSION] Session cleared');
+    authLogger.info('Session cleared');
     return new NextResponse(null, { status: 204 });
   } catch (error: any) {
-    console.error('[AUTH-SESSION] Error during sign-out:', error);
+    authLogger.error({ error: error.message || 'unknown' }, 'Auth session sign-out error');
     return NextResponse.json(
       { error: error.message || 'Failed to sign out' },
       { status: 500 }

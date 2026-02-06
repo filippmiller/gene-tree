@@ -1,4 +1,5 @@
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
+import { apiLogger } from '@/lib/logger';
 
 export interface AuditLogData {
   action: string;
@@ -47,10 +48,10 @@ export async function logAudit(data: AuditLogData): Promise<void> {
     
     if (error) {
       // Don't throw - logging should never break the app
-      console.error('[Audit] Failed to log action:', error);
+      apiLogger.error({ error: error.message, action: data.action }, 'Failed to write audit log');
     }
   } catch (err) {
-    console.error('[Audit] Exception while logging:', err);
+    apiLogger.error({ error: err instanceof Error ? err.message : 'unknown' }, 'Audit log exception');
   }
 }
 

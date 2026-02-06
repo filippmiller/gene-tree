@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { sendEmailInvite } from '@/lib/invitations/email';
+import { inviteLogger } from '@/lib/logger';
 
 interface InvitePayload {
   relativeId: string;
@@ -20,7 +21,6 @@ export async function POST(request: NextRequest) {
     const supabase = await getSupabaseSSR();
     const admin = getSupabaseAdmin();
 
-    // Check authentication
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
 
     const body: InvitePayload = await request.json();
 
-    // Validate required fields
     if (!body.relativeId || !body.email) {
       return NextResponse.json(
         { error: 'Relative ID and email are required' },
@@ -39,7 +38,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify the relative belongs to this user
     const { data: relative, error: relativeError } = await admin
       .from('pending_relatives')
       .select('*')
@@ -51,12 +49,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Relative not found' }, { status: 404 });
     }
 
-    // Generate invitation token
     const token = crypto.randomUUID();
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30); // 30 days expiry
+    expiresAt.setDate(expiresAt.getDate() + 30);
 
-    // Update pending_relative with email and token
     const { error: updateError } = await admin
       .from('pending_relatives')
       .update({
@@ -68,14 +64,13 @@ export async function POST(request: NextRequest) {
       .eq('id', body.relativeId);
 
     if (updateError) {
-      console.error('Error updating relative:', updateError);
+      inviteLogger.error({ error: updateError.message, userId: user.id, relativeId: body.relativeId }, 'Error updating relative for invitation');
       return NextResponse.json(
         { error: 'Failed to update invitation' },
         { status: 500 }
       );
     }
 
-    // Get inviter's profile for the email
     const { data: inviterProfile } = await admin
       .from('user_profiles')
       .select('first_name, last_name')
@@ -88,8 +83,6 @@ export async function POST(request: NextRequest) {
           .join(' ') || 'A family member'
       : 'A family member';
 
-    // Send invitation email
-    // Build invite URL
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://gene-tree.app';
     const inviteUrl = `${baseUrl}/invite/${token}`;
 
@@ -101,8 +94,10 @@ export async function POST(request: NextRequest) {
         inviteUrl,
       });
     } catch (emailError) {
-      console.error('Error sending invitation email:', emailError);
-      // Don't fail the request if email fails - the invitation is still valid
+      inviteLogger.error(
+        { error: emailError instanceof Error ? emailError.message : 'unknown', email: body.email },
+        'Error sending invitation email',
+      );
     }
 
     return NextResponse.json({
@@ -110,7 +105,7 @@ export async function POST(request: NextRequest) {
       message: 'Invitation sent',
     });
   } catch (error) {
-    console.error('Invite error:', error);
+    inviteLogger.error({ error: error instanceof Error ? error.message : 'unknown' }, 'Invite error');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

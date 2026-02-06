@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { mediaLogger } from '@/lib/logger';
 
 interface SignedVoiceUploadRequest {
   target_profile_id: string;
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
   });
 
   if (permError) {
-    console.error('[VOICE_SIGNED_UPLOAD] Permission check failed', permError);
+    mediaLogger.error({ error: permError.message, userId: user.id, target_profile_id }, 'Permission check failed for voice upload');
     return NextResponse.json({ error: 'Permission check failed' }, { status: 500 });
   }
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
     .createSignedUploadUrl(path, { upsert: false });
 
   if (signedError || !signedData) {
-    console.error('[VOICE_SIGNED_UPLOAD] Failed to create signed URL', signedError);
+    mediaLogger.error({ error: signedError?.message, userId: user.id, path }, 'Failed to create signed upload URL');
     return NextResponse.json({ error: 'Failed to create upload URL' }, { status: 500 });
   }
 
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (storyError || !story) {
-    console.error('[VOICE_SIGNED_UPLOAD] Failed to create voice_stories row', storyError);
+    mediaLogger.error({ error: storyError?.message, userId: user.id, path }, 'Failed to create voice_stories row');
     return NextResponse.json({ error: 'Failed to create story record' }, { status: 500 });
   }
 

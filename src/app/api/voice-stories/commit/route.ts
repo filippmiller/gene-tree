@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
 import { createNotification } from '@/lib/notifications';
+import { mediaLogger } from '@/lib/logger';
 
 interface CommitVoiceRequest {
   storyId: string;
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (storyError || !story) {
-    console.error('[VOICE_COMMIT] Story not found', storyError);
+    mediaLogger.error({ error: storyError?.message, storyId: body.storyId }, 'Voice story not found during commit');
     return NextResponse.json({ error: 'Story not found' }, { status: 404 });
   }
 
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     } as any);
 
   if (jobError) {
-    console.error('[VOICE_COMMIT] Failed to enqueue transcription job', jobError);
+    mediaLogger.error({ error: jobError.message, storyId: story.id }, 'Failed to enqueue transcription job');
   }
 
   // For now we consider story ready to be visible (still pending/needs moderation)

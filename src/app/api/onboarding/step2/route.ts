@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { apiLogger } from '@/lib/logger';
 
 interface ParentData {
   firstName: string;
@@ -13,6 +14,8 @@ interface ParentData {
 interface ParentsPayload {
   mother: ParentData;
   father: ParentData;
+  /** IDs from a previous submission of this step, to be replaced */
+  previousIds?: string[];
 }
 
 /**
@@ -36,20 +39,35 @@ export async function POST(request: NextRequest) {
     const body: ParentsPayload = await request.json();
     const createdIds: string[] = [];
 
+    // Delete previous records from this step to prevent duplicates on re-submission
+    if (body.previousIds && body.previousIds.length > 0) {
+      await admin
+        .from('pending_relatives')
+        .delete()
+        .in('id', body.previousIds)
+        .eq('invited_by', user.id);
+    }
+
+    // Validate birth year range
+    const currentYear = new Date().getFullYear();
+    const validateBirthYear = (year?: string): string | null => {
+      if (!year) return null;
+      const num = parseInt(year, 10);
+      if (isNaN(num) || num < 1850 || num > currentYear) return null;
+      return `${num}-01-01`;
+    };
+
     // Helper to create parent
     const createParent = async (
       parent: ParentData,
       gender: 'male' | 'female'
     ): Promise<string | null> => {
-      if (parent.skip || !parent.firstName) {
+      if (parent.skip || !parent.firstName?.trim()) {
         return null;
       }
 
-      // Calculate approximate birth date from year
-      let birthDate = null;
-      if (parent.birthYear) {
-        birthDate = `${parent.birthYear}-01-01`;
-      }
+      // Validate and calculate approximate birth date from year
+      const birthDate = validateBirthYear(parent.birthYear);
 
       // Create pending_relative record
       const { data, error } = await admin
@@ -68,7 +86,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        console.error('Error creating parent:', error);
+        apiLogger.error({ error: error.message, userId: user.id, gender }, 'Error creating parent in onboarding step 2');
         return null;
       }
 
@@ -98,7 +116,7 @@ export async function POST(request: NextRequest) {
       createdIds,
     });
   } catch (error) {
-    console.error('Step 2 error:', error);
+    apiLogger.error({ error: error instanceof Error ? error.message : 'unknown' }, 'Onboarding step 2 error');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

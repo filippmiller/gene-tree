@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { apiLogger } from '@/lib/logger';
 
 /**
  * POST /api/onboarding/step1
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
         });
 
       if (uploadError) {
-        console.error('Avatar upload error:', uploadError);
+        apiLogger.error({ error: uploadError.message, userId: user.id }, 'Avatar upload error in onboarding step 1');
         return NextResponse.json(
           { error: 'Failed to upload avatar' },
           { status: 500 }
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id);
 
     if (updateError) {
-      console.error('Profile update error:', updateError);
+      apiLogger.error({ error: updateError.message, userId: user.id }, 'Profile update error in onboarding step 1');
       return NextResponse.json(
         { error: 'Failed to update profile' },
         { status: 500 }
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Step 1 error:', error);
+    apiLogger.error({ error: error instanceof Error ? error.message : 'unknown' }, 'Onboarding step 1 error');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

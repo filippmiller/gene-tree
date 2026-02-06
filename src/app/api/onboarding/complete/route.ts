@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import { getSupabaseAdmin } from '@/lib/supabase/server-admin';
+import { apiLogger } from '@/lib/logger';
 
 /**
  * POST /api/onboarding/complete
  * Mark onboarding as complete for the current user
  */
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const supabase = await getSupabaseSSR();
     const admin = getSupabaseAdmin();
 
-    // Check authentication
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Mark onboarding as complete (columns from migration 20260202300000)
     const { error: updateError } = await admin
       .from('user_profiles')
       .update({
@@ -31,7 +30,7 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id);
 
     if (updateError) {
-      console.error('Error completing onboarding:', updateError);
+      apiLogger.error({ error: updateError.message, userId: user.id }, 'Error completing onboarding');
       return NextResponse.json(
         { error: 'Failed to complete onboarding' },
         { status: 500 }
@@ -43,7 +42,7 @@ export async function POST(request: NextRequest) {
       message: 'Onboarding completed',
     });
   } catch (error) {
-    console.error('Complete onboarding error:', error);
+    apiLogger.error({ error: error instanceof Error ? error.message : 'unknown' }, 'Complete onboarding error');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
