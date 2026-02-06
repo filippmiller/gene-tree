@@ -18,6 +18,10 @@
     "check": "npm run typecheck && npm run lint",
     "ci": "npm run check && npm run build",
     "test:e2e": "playwright test --reporter=html",
+    "test:e2e:flows": "playwright test --project=flows --reporter=html",
+    "test:e2e:flows:p0": "playwright test tests/e2e/flows/01 tests/e2e/flows/02 tests/e2e/flows/03 tests/e2e/flows/04 --reporter=html",
+    "test:e2e:flows:p1": "playwright test tests/e2e/flows/05 tests/e2e/flows/06 tests/e2e/flows/07 tests/e2e/flows/08 --reporter=html",
+    "test:e2e:cleanup": "playwright test tests/e2e/flows/ --grep cleanup --reporter=html",
     "test:e2e:invite-guard": "playwright test tests/e2e/smart-invite-guard.spec.ts",
     "library:bootstrap": "npx tsx scripts/library_bootstrap.ts",
     "prepare": "husky"

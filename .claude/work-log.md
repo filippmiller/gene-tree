@@ -4,6 +4,33 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
+## [2026-02-06] - Comprehensive E2E Test Suite
+
+**Status**: Completed
+
+### What was done
+- Built complete test infrastructure: test-user-factory, test-data-factory, auth-helpers, cleanup, selectors
+- Created 12 test flow files covering all major user flows (94 tests total)
+- Added global setup with pre-suite cleanup and env verification
+- Created test cleanup API route with production safety guard
+- Updated playwright.config.ts with projects (flows/e2e/legacy) and globalSetup
+- Added npm scripts: test:e2e:flows, test:e2e:flows:p0, test:e2e:flows:p1, test:e2e:cleanup
+- Created skill file for test suite documentation
+
+### Decisions made
+- Supabase Admin API for test user lifecycle (bypasses email verification)
+- Sequential execution to avoid race conditions
+- `e2e-test-` email prefix convention for easy cleanup
+
+### Files created
+- `tests/helpers/` (5 files), `tests/global-setup.ts`, `tests/e2e/flows/` (12 files)
+- `src/app/api/test/cleanup/route.ts`
+- `~/.claude/skills/e2e-test-suite/SKILL.md`
+
+**Session notes**: `.claude/sessions/2026-02-06-e2e-test-suite.md`
+
+---
+
 ## [2026-02-06] - Search Infrastructure (Master Plan #9)
 
 **Status**: Completed
