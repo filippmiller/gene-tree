@@ -207,6 +207,7 @@ export default function Step4Invite({ data, onChange, createdRelativeIds, locale
                   value={data.phone || ''}
                   onChange={(e) => onChange({ ...data, phone: e.target.value })}
                   placeholder={t.phonePlaceholder}
+                  aria-label={t.phone}
                   className="w-full h-12 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
               </div>

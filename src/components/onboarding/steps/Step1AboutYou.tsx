@@ -111,8 +111,17 @@ export default function Step1AboutYou({ data, onChange, locale }: Props) {
       {/* Photo Upload */}
       <div className="flex flex-col items-center gap-4">
         <div
+          role="button"
+          tabIndex={0}
+          aria-label={data.avatarPreview ? t.changePhoto : t.uploadPhoto}
           className="relative w-28 h-28 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 border-4 border-primary/20 cursor-pointer group"
           onClick={() => fileInputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
         >
           {data.avatarPreview ? (
             <img
@@ -135,6 +144,7 @@ export default function Step1AboutYou({ data, onChange, locale }: Props) {
           accept="image/*"
           className="hidden"
           onChange={handlePhotoChange}
+          aria-label={t.uploadPhoto}
         />
         <Button
           type="button"
@@ -182,6 +192,7 @@ export default function Step1AboutYou({ data, onChange, locale }: Props) {
             type="date"
             value={data.birthDate || ''}
             onChange={(e) => handleInputChange('birthDate', e.target.value)}
+            aria-label={t.birthDate}
             className="w-full h-12 px-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             data-testid="onboarding-birthDate"
           />

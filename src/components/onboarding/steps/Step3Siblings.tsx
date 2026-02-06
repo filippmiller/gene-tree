@@ -188,6 +188,7 @@ export default function Step3Siblings({ data, onChange, locale }: Props) {
                       variant="ghost"
                       size="icon-sm"
                       onClick={() => handleRemoveSibling(index)}
+                      aria-label={`${t.remove} ${sibling.firstName || t.siblings} ${index + 1}`}
                       className="ml-2 text-muted-foreground hover:text-destructive"
                     >
                       <X className="w-4 h-4" />
@@ -204,7 +205,7 @@ export default function Step3Siblings({ data, onChange, locale }: Props) {
                           handleSiblingChange(index, 'gender', value as Gender)
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger aria-label={`${t.gender} ${index + 1}`}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -226,6 +227,7 @@ export default function Step3Siblings({ data, onChange, locale }: Props) {
                         onChange={(e) =>
                           handleSiblingChange(index, 'birthYear', e.target.value)
                         }
+                        aria-label={`${t.birthYear} ${index + 1}`}
                         className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       />
                     </div>
@@ -287,6 +289,7 @@ export default function Step3Siblings({ data, onChange, locale }: Props) {
                   variant="ghost"
                   size="icon-sm"
                   onClick={handleRemoveSpouse}
+                  aria-label={`${t.remove} ${t.spouse}`}
                   className="ml-2 text-muted-foreground hover:text-destructive"
                 >
                   <X className="w-4 h-4" />
@@ -304,6 +307,7 @@ export default function Step3Siblings({ data, onChange, locale }: Props) {
                     placeholder="1985"
                     value={data.spouse.birthYear || ''}
                     onChange={(e) => handleSpouseChange('birthYear', e.target.value)}
+                    aria-label={`${t.spouse} ${t.birthYear}`}
                     className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   />
                 </div>
@@ -318,6 +322,7 @@ export default function Step3Siblings({ data, onChange, locale }: Props) {
                     placeholder="2010"
                     value={data.spouse.marriageYear || ''}
                     onChange={(e) => handleSpouseChange('marriageYear', e.target.value)}
+                    aria-label={t.marriageYear}
                     className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   />
                 </div>

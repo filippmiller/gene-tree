@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { User, Heart } from 'lucide-react';
+import { User } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { GlassCard } from '@/components/ui/glass-card';
@@ -79,6 +78,7 @@ function ParentCard({ title, icon, data, onChange, t }: ParentCardProps) {
           type="checkbox"
           checked={data.skip || false}
           onChange={(e) => handleChange('skip', e.target.checked)}
+          aria-label={`${t.skip} - ${title}`}
           className="w-4 h-4 rounded border-border text-primary focus:ring-primary/20"
         />
         <span>{t.skip}</span>
@@ -110,6 +110,7 @@ function ParentCard({ title, icon, data, onChange, t }: ParentCardProps) {
               placeholder="1960"
               value={data.birthYear || ''}
               onChange={(e) => handleChange('birthYear', e.target.value)}
+              aria-label={`${title} ${t.birthYear}`}
               className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             />
           </div>
@@ -118,6 +119,7 @@ function ParentCard({ title, icon, data, onChange, t }: ParentCardProps) {
               type="checkbox"
               checked={data.isDeceased}
               onChange={(e) => handleChange('isDeceased', e.target.checked)}
+              aria-label={`${t.deceased} - ${title}`}
               className="w-4 h-4 rounded border-border text-primary focus:ring-primary/20"
             />
             <span>{t.deceased}</span>

@@ -68,7 +68,12 @@ export interface WizardState {
   parents: ParentsData;
   siblings: SiblingsData;
   invite: InviteData;
-  createdRelativeIds: string[]; // Track created relatives for invite step
+  /** IDs created in step 2 (parents) - enables idempotent re-submission */
+  step2CreatedIds: string[];
+  /** IDs created in step 3 (siblings/spouse) - enables idempotent re-submission */
+  step3CreatedIds: string[];
+  /** @deprecated Use step2CreatedIds + step3CreatedIds instead */
+  createdRelativeIds: string[];
 }
 
 const STORAGE_KEY = 'gene-tree-onboarding-wizard';
@@ -95,11 +100,13 @@ const defaultState: WizardState = {
     siblings: [],
   },
   invite: {},
+  step2CreatedIds: [],
+  step3CreatedIds: [],
   createdRelativeIds: [],
 };
 
 /**
- * Load wizard state from localStorage
+ * Load wizard state from localStorage with deep merge to prevent corruption
  */
 export function loadWizardState(): WizardState {
   if (typeof window === 'undefined') {
@@ -114,10 +121,56 @@ export function loadWizardState(): WizardState {
       if (parsed.aboutYou) {
         delete parsed.aboutYou.avatarFile;
       }
-      return { ...defaultState, ...parsed };
+
+      // Deep merge to protect against corrupted nested data
+      const merged: WizardState = {
+        currentStep:
+          typeof parsed.currentStep === 'number' ? parsed.currentStep : defaultState.currentStep,
+        aboutYou: {
+          ...defaultState.aboutYou,
+          ...(parsed.aboutYou && typeof parsed.aboutYou === 'object' ? parsed.aboutYou : {}),
+        },
+        parents: {
+          mother: {
+            ...defaultState.parents.mother,
+            ...(parsed.parents?.mother && typeof parsed.parents.mother === 'object'
+              ? parsed.parents.mother
+              : {}),
+          },
+          father: {
+            ...defaultState.parents.father,
+            ...(parsed.parents?.father && typeof parsed.parents.father === 'object'
+              ? parsed.parents.father
+              : {}),
+          },
+        },
+        siblings: {
+          siblings: Array.isArray(parsed.siblings?.siblings) ? parsed.siblings.siblings : [],
+          spouse: parsed.siblings?.spouse || undefined,
+        },
+        invite: {
+          ...defaultState.invite,
+          ...(parsed.invite && typeof parsed.invite === 'object' ? parsed.invite : {}),
+        },
+        step2CreatedIds: Array.isArray(parsed.step2CreatedIds) ? parsed.step2CreatedIds : [],
+        step3CreatedIds: Array.isArray(parsed.step3CreatedIds) ? parsed.step3CreatedIds : [],
+        // Migrate legacy field
+        createdRelativeIds: Array.isArray(parsed.createdRelativeIds)
+          ? parsed.createdRelativeIds
+          : [],
+      };
+
+      // Validate currentStep is within bounds
+      if (merged.currentStep < 1 || merged.currentStep > 4) {
+        merged.currentStep = 1;
+      }
+
+      return merged;
     }
   } catch (e) {
     console.error('Failed to load wizard state:', e);
+    // Clear corrupted state
+    localStorage.removeItem(STORAGE_KEY);
   }
 
   return defaultState;

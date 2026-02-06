@@ -4,6 +4,38 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
+## [2026-02-06] - Polish Onboarding Wizard (Master Plan #3)
+
+**Status**: Completed
+**Beads**: gene-tree-ggb
+
+### What was done
+- Fixed critical duplicate relatives bug on back/forward wizard navigation
+- Fixed hardcoded English error message (now bilingual EN/RU)
+- Added deep merge for localStorage state recovery (prevents corruption crashes)
+- Added server-side birth year validation (1850-current year range)
+- Added trimmed name validation (whitespace-only names rejected)
+- Added comprehensive accessibility attributes (aria-labels, role, tabIndex, keyboard handlers)
+- Removed unused imports
+- Added role="alert" to error messages
+
+### Decisions made
+- Split createdRelativeIds into per-step tracking (step2CreatedIds, step3CreatedIds) for idempotent re-submission
+- API routes accept previousIds to delete before re-inserting (clean, backward-compatible)
+- Deep merge validates each nested field type individually rather than trusting localStorage JSON structure
+
+### Issues encountered
+- Build has pre-existing next-font-manifest.json error (infrastructure, not related to changes)
+- git stash/pop conflict due to linter auto-modifications -- resolved by reapplying changes from scratch
+
+### Next steps
+- Consider adding "reset wizard" button for stuck users
+- Monitor for any edge cases in production
+
+**Session notes**: `.claude/sessions/2026-02-06-onboarding-wizard-polish.md`
+
+---
+
 ## [2026-02-06] - Voice Story Recording Consolidation
 
 **Status**: Completed

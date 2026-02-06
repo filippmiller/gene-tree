@@ -51,8 +51,9 @@ const translations = {
     saving: 'Saving...',
     stepOf: 'Step {current} of {total}',
     welcomeTitle: 'Welcome to Gene-Tree',
-    welcomeSubtitle: 'Let\'s set up your family tree in just a few minutes',
+    welcomeSubtitle: "Let's set up your family tree in just a few minutes",
     errorSaving: 'There was an error saving your data. Please try again.',
+    nameRequired: 'Please fill in your first and last name.',
   },
   ru: {
     step1: 'О вас',
@@ -68,6 +69,7 @@ const translations = {
     welcomeTitle: 'Добро пожаловать в Gene-Tree',
     welcomeSubtitle: 'Настроим ваше семейное древо за несколько минут',
     errorSaving: 'Произошла ошибка при сохранении. Попробуйте снова.',
+    nameRequired: 'Пожалуйста, укажите ваше имя и фамилию.',
   },
 };
 
@@ -124,23 +126,26 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
     setState((prev) => (prev ? { ...prev, invite: data } : prev));
   }, []);
 
-  const goToStep = useCallback((step: number) => {
-    if (!state) return;
-    setDirection(step > state.currentStep ? 'forward' : 'backward');
-    setAnimating(true);
-    setTimeout(() => {
-      setState((prev) => (prev ? { ...prev, currentStep: step } : prev));
-      setAnimating(false);
-    }, 150);
-  }, [state]);
+  const goToStep = useCallback(
+    (step: number) => {
+      if (!state) return;
+      setDirection(step > state.currentStep ? 'forward' : 'backward');
+      setAnimating(true);
+      setTimeout(() => {
+        setState((prev) => (prev ? { ...prev, currentStep: step } : prev));
+        setAnimating(false);
+      }, 150);
+    },
+    [state]
+  );
 
   const handleNext = useCallback(async () => {
     if (!state) return;
 
     // Validate current step
     if (state.currentStep === 1) {
-      if (!state.aboutYou.firstName || !state.aboutYou.lastName) {
-        setError('Please fill in your name');
+      if (!state.aboutYou.firstName.trim() || !state.aboutYou.lastName.trim()) {
+        setError(t.nameRequired);
         return;
       }
     }
@@ -153,8 +158,8 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
       // Save About You data (Step 1)
       if (state.currentStep === 1) {
         const formData = new FormData();
-        formData.append('firstName', state.aboutYou.firstName);
-        formData.append('lastName', state.aboutYou.lastName);
+        formData.append('firstName', state.aboutYou.firstName.trim());
+        formData.append('lastName', state.aboutYou.lastName.trim());
         if (state.aboutYou.birthDate) {
           formData.append('birthDate', state.aboutYou.birthDate);
         }
@@ -180,7 +185,10 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
         const response = await fetch('/api/onboarding/step2', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(state.parents),
+          body: JSON.stringify({
+            ...state.parents,
+            previousIds: state.step2CreatedIds,
+          }),
         });
 
         if (!response.ok) {
@@ -193,7 +201,8 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
             prev
               ? {
                   ...prev,
-                  createdRelativeIds: [...prev.createdRelativeIds, ...data.createdIds],
+                  step2CreatedIds: data.createdIds,
+                  createdRelativeIds: [...data.createdIds, ...prev.step3CreatedIds],
                 }
               : prev
           );
@@ -205,7 +214,10 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
         const response = await fetch('/api/onboarding/step3', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(state.siblings),
+          body: JSON.stringify({
+            ...state.siblings,
+            previousIds: state.step3CreatedIds,
+          }),
         });
 
         if (!response.ok) {
@@ -218,7 +230,8 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
             prev
               ? {
                   ...prev,
-                  createdRelativeIds: [...prev.createdRelativeIds, ...data.createdIds],
+                  step3CreatedIds: data.createdIds,
+                  createdRelativeIds: [...prev.step2CreatedIds, ...data.createdIds],
                 }
               : prev
           );
@@ -233,7 +246,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
     } finally {
       setSaving(false);
     }
-  }, [state, goToStep, t.errorSaving]);
+  }, [state, goToStep, t.errorSaving, t.nameRequired]);
 
   const handleBack = useCallback(() => {
     if (!state || state.currentStep <= 1) return;
@@ -300,8 +313,14 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
       (state.siblings.spouse?.firstName ? 1 : 0);
 
     // Use MAX of in-form count vs. saved count to avoid double-counting during save transitions
-    // createdRelativeIds tracks relatives saved to DB from previous steps
-    return Math.max(inFormCount, state.createdRelativeIds.length);
+    const savedCount = state.step2CreatedIds.length + state.step3CreatedIds.length;
+    return Math.max(inFormCount, savedCount);
+  }, [state]);
+
+  // Combined created IDs for the invite step
+  const allCreatedRelativeIds = useMemo(() => {
+    if (!state) return [];
+    return [...state.step2CreatedIds, ...state.step3CreatedIds];
   }, [state]);
 
   if (!state) {
@@ -317,7 +336,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
 
   const canGoNext =
     state.currentStep === 1
-      ? state.aboutYou.firstName && state.aboutYou.lastName
+      ? state.aboutYou.firstName.trim() && state.aboutYou.lastName.trim()
       : true;
 
   return (
@@ -327,7 +346,9 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             <Sparkles className="w-4 h-4" />
-            {t.stepOf.replace('{current}', String(state.currentStep)).replace('{total}', String(TOTAL_STEPS))}
+            {t.stepOf
+              .replace('{current}', String(state.currentStep))
+              .replace('{total}', String(TOTAL_STEPS))}
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">{t.welcomeTitle}</h1>
           <p className="text-muted-foreground">{t.welcomeSubtitle}</p>
@@ -352,13 +373,21 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
                 key={index}
                 onClick={() => index + 1 <= state.currentStep && goToStep(index + 1)}
                 disabled={index + 1 > state.currentStep}
+                aria-label={
+                  t.stepOf
+                    .replace('{current}', String(index + 1))
+                    .replace('{total}', String(TOTAL_STEPS)) +
+                  ': ' +
+                  title
+                }
+                aria-current={index + 1 === state.currentStep ? 'step' : undefined}
                 className={cn(
                   'text-xs font-medium transition-colors',
                   index + 1 === state.currentStep
                     ? 'text-primary'
                     : index + 1 < state.currentStep
-                    ? 'text-muted-foreground hover:text-foreground cursor-pointer'
-                    : 'text-muted-foreground/50 cursor-not-allowed'
+                      ? 'text-muted-foreground hover:text-foreground cursor-pointer'
+                      : 'text-muted-foreground/50 cursor-not-allowed'
                 )}
               >
                 {title}
@@ -378,31 +407,19 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
             )}
           >
             {state.currentStep === 1 && (
-              <Step1AboutYou
-                data={state.aboutYou}
-                onChange={updateAboutYou}
-                locale={locale}
-              />
+              <Step1AboutYou data={state.aboutYou} onChange={updateAboutYou} locale={locale} />
             )}
             {state.currentStep === 2 && (
-              <Step2Parents
-                data={state.parents}
-                onChange={updateParents}
-                locale={locale}
-              />
+              <Step2Parents data={state.parents} onChange={updateParents} locale={locale} />
             )}
             {state.currentStep === 3 && (
-              <Step3Siblings
-                data={state.siblings}
-                onChange={updateSiblings}
-                locale={locale}
-              />
+              <Step3Siblings data={state.siblings} onChange={updateSiblings} locale={locale} />
             )}
             {state.currentStep === 4 && (
               <Step4Invite
                 data={state.invite}
                 onChange={updateInvite}
-                createdRelativeIds={state.createdRelativeIds}
+                createdRelativeIds={allCreatedRelativeIds}
                 locale={locale}
               />
             )}
@@ -411,7 +428,10 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm text-center">
+          <div
+            className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm text-center"
+            role="alert"
+          >
             {error}
           </div>
         )}
@@ -444,12 +464,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
                 {saving ? t.saving : t.next}
               </Button>
             ) : (
-              <Button
-                variant="gradient"
-                onClick={handleFinish}
-                disabled={saving}
-                loading={saving}
-              >
+              <Button variant="gradient" onClick={handleFinish} disabled={saving} loading={saving}>
                 {saving ? t.saving : t.finish}
               </Button>
             )}
