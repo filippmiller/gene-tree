@@ -18,10 +18,10 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import type { PersonNodeData } from './types';
-import { QuickAddMenu } from './QuickAddMenu';
+import { QuickAddMenu, type QuickAddType } from './QuickAddMenu';
 
 /**
  * PersonCard - React Flow узел для отображения человека
@@ -33,9 +33,13 @@ import { QuickAddMenu } from './QuickAddMenu';
  * - Handle компоненты создают точки подключения для рёбер
  * - QuickAddMenu появляется при hover для быстрого добавления родственников
  */
-export function PersonCard({ data }: { data: PersonNodeData }) {
-  const { person } = data;
+export function PersonCard({ data }: { data: PersonNodeData & { onQuickAdd?: (personId: string, personName: string, type: QuickAddType) => void } }) {
+  const { person, onQuickAdd } = data;
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleQuickAdd = useCallback((type: QuickAddType) => {
+    onQuickAdd?.(person.id, person.name, type);
+  }, [onQuickAdd, person.id, person.name]);
 
   /**
    * formatLifespan - форматирование дат жизни
@@ -168,6 +172,7 @@ export function PersonCard({ data }: { data: PersonNodeData }) {
       <QuickAddMenu
         personId={person.id}
         personName={person.name}
+        onAdd={onQuickAdd ? handleQuickAdd : undefined}
         visible={isHovered}
       />
     </div>

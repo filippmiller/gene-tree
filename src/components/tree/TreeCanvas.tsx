@@ -39,6 +39,7 @@ import { UnionNode } from './UnionNode';
 import { buildGraph } from './build-graph';
 import { applyLayout } from './layout';
 import type { TreeData } from './types';
+import type { QuickAddType } from './QuickAddMenu';
 
 /**
  * TreeCanvasProps - пропсы компонента
@@ -50,6 +51,7 @@ import type { TreeData } from './types';
 interface TreeCanvasProps {
   data: TreeData;
   onNodeClick?: (nodeId: string) => void;
+  onQuickAdd?: (personId: string, personName: string, type: QuickAddType) => void;
   className?: string;
 }
 
@@ -71,7 +73,7 @@ interface TreeCanvasProps {
  * - Вызывает buildGraph и applyLayout
  * - Используется на странице /tree/[id]
  */
-export function TreeCanvas({ data, onNodeClick, className }: TreeCanvasProps) {
+export function TreeCanvas({ data, onNodeClick, onQuickAdd, className }: TreeCanvasProps) {
   // State для узлов и рёбер (React Flow hooks)
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -142,9 +144,19 @@ export function TreeCanvas({ data, onNodeClick, className }: TreeCanvasProps) {
         // 2. Применяем раскладку с ELK
         const layoutedNodes = await applyLayout(graphNodes, graphEdges);
 
-        // 3. Обновляем state
-        // Преобразуем наш TreeNode в формат React Flow Node
-        setNodes(layoutedNodes as Node[]);
+        // 3. Inject onQuickAdd callback into person nodes
+        const nodesWithCallbacks = layoutedNodes.map((node) => {
+          if (node.type === 'person' && onQuickAdd) {
+            return {
+              ...node,
+              data: { ...node.data, onQuickAdd },
+            };
+          }
+          return node;
+        });
+
+        // 4. Обновляем state
+        setNodes(nodesWithCallbacks as Node[]);
         setEdges(graphEdges as Edge[]);
       } catch {
         // Layout failed - tree won't render
@@ -154,7 +166,7 @@ export function TreeCanvas({ data, onNodeClick, className }: TreeCanvasProps) {
     }
 
     layoutTree();
-  }, [data, setNodes, setEdges]);
+  }, [data, onQuickAdd, setNodes, setEdges]);
 
   /**
    * Render

@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { TreeCanvas } from './TreeCanvas';
 import { PersonProfileDialog } from './PersonProfileDialog';
+import { QuickAddDialog } from './QuickAddDialog';
 import type { TreeData } from './types';
+import type { QuickAddType } from './QuickAddMenu';
 import { logger } from '@/lib/logger';
 
 interface Props {
@@ -19,6 +21,14 @@ export default function TreeCanvasWrapper({ rootPersonId }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPersonId, setSelectedPersonId] = useState<string | null>(null);
+
+  // Quick-Add dialog state
+  const [quickAddState, setQuickAddState] = useState<{
+    isOpen: boolean;
+    personId: string;
+    personName: string;
+    type: QuickAddType;
+  }>({ isOpen: false, personId: '', personName: '', type: 'child' });
 
   useEffect(() => {
     fetchTreeData(activeRootId, true);
@@ -97,6 +107,19 @@ export default function TreeCanvasWrapper({ rootPersonId }: Props) {
     setSelectedPersonId(nodeId);
   };
 
+  const handleQuickAdd = useCallback((personId: string, personName: string, type: QuickAddType) => {
+    setQuickAddState({ isOpen: true, personId, personName, type });
+  }, []);
+
+  const handleQuickAddClose = useCallback(() => {
+    setQuickAddState((prev) => ({ ...prev, isOpen: false }));
+  }, []);
+
+  const handleQuickAddSuccess = useCallback(() => {
+    // Refetch tree data to show the new node
+    fetchTreeData(activeRootId, true);
+  }, [activeRootId]);
+
   if (loading) {
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -131,7 +154,7 @@ export default function TreeCanvasWrapper({ rootPersonId }: Props) {
 
   return (
     <>
-      <TreeCanvas data={mainTreeData} onNodeClick={handleNodeClick} />
+      <TreeCanvas data={mainTreeData} onNodeClick={handleNodeClick} onQuickAdd={handleQuickAdd} />
       {miniTreeData && backgroundRootId && (
         <div
           className="absolute right-4 top-4 w-80 h-96 bg-white/90 backdrop-blur rounded-lg shadow-lg cursor-pointer transform scale-75 opacity-80 hover:opacity-100 transition-all"
@@ -155,6 +178,14 @@ export default function TreeCanvasWrapper({ rootPersonId }: Props) {
         personId={selectedPersonId}
         isOpen={!!selectedPersonId}
         onClose={() => setSelectedPersonId(null)}
+      />
+      <QuickAddDialog
+        isOpen={quickAddState.isOpen}
+        onClose={handleQuickAddClose}
+        personId={quickAddState.personId}
+        personName={quickAddState.personName}
+        relationshipType={quickAddState.type}
+        onSuccess={handleQuickAddSuccess}
       />
     </>
   );
