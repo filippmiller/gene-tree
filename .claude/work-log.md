@@ -4,6 +4,40 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
+## [2026-02-06] - Search Infrastructure (Master Plan #9)
+
+**Status**: Completed
+**Commits**: `fadb35c`
+
+### What was done
+- Built GlobalSearch command palette (Ctrl+K / Cmd+K) with debounced fuzzy search
+- Created SearchResults component with avatar, similarity %, keyboard navigation (arrow keys + Enter)
+- Created SearchTrigger button integrated into sidebar header with Ctrl+K badge
+- Added DuplicateProfileSuggestions to AddRelativeForm (inline name-match warnings)
+- Created reusable `useDebounce` hook
+- Added EN/RU translations for search namespace (12 keys each)
+- Reused existing `/api/profiles/search` route (no new API needed)
+- Auto-selects `fullname` mode for multi-word queries
+
+### Decisions made
+- Reuse existing API route instead of creating new one — already has fuzzy matching, auth, audit, fallback
+- Component-level state, no global context — search is transient UI
+- localStorage for recent searches (max 5 entries)
+- Inline suggestions for duplicates (not blocking) — less friction for users
+
+### Issues encountered
+- Loading state race condition between raw query and debounced query — fixed with `isSearchPending` derived state
+- Missing ARIA IDs on result items — fixed during review
+
+### Next steps
+- Stories search (needs tsvector migration on stories table)
+- Test Ctrl+K in production after Railway deploy
+- Consider mobile overlay improvements (currently responsive but could be more touch-friendly)
+
+**Session notes**: `.claude/sessions/2026-02-06-search-infrastructure.md`
+
+---
+
 ## [2026-02-06] - Quick-Add from Tree View (Master Plan #6)
 
 **Status**: Completed

@@ -3,7 +3,7 @@
 > **Document Purpose:** This is the strategic north star for Gene-Tree development. Every session should begin by reviewing this document to ensure alignment with the project vision, priorities, and philosophy.
 
 **Last Updated:** 2026-02-06
-**Version:** 1.3
+**Version:** 1.4
 
 ---
 
@@ -190,6 +190,7 @@ Since deceased people cannot confirm their accounts:
 | Family Group Chat | ✅ Working | Real-time messaging with system reminders |
 | Time Capsules | ✅ Working | Scheduled delivery, family broadcast, after-passing trigger |
 | Quick Invite Links | ✅ Working | QR codes, multi-channel sharing |
+| Search Infrastructure | ✅ Working | Ctrl+K global search, pg_trgm fuzzy matching, duplicate prevention |
 
 ### What's Partially Built
 
@@ -245,7 +246,7 @@ Deploy:      Railway (primary)
 | 8 | **Freemium Pricing Model** | Business | HIGH | MEDIUM |
 |   | Free (50 profiles) → Premium ($7.99/mo) → Family ($14.99/mo) | | | |
 | 9 | **Search Infrastructure** | Technical | HIGH | MEDIUM |
-|   | Full-text search + trigram fuzzy matching | | | |
+|   | ~~Full-text search + trigram fuzzy matching~~ ✅ DONE (2026-02-06) | | | |
 
 ### Phase 3: GROWTH (Weeks 13-24)
 
@@ -573,6 +574,7 @@ Use this checklist to ensure alignment:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.4 | 2026-02-06 | Search Infrastructure complete (#9): GlobalSearch, Ctrl+K, sidebar integration, duplicate prevention |
 | 1.3 | 2026-02-06 | Voice Story Recording complete (#7), AI Transcription built, consolidated voice systems |
 | 1.2 | 2026-01-23 | Added engagement features status, UI overhaul design docs |
 | 1.1 | 2026-01-23 | Engagement features deployed (reactions, comments, activity feed, memorial tributes) |

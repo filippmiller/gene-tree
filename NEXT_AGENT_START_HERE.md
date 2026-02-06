@@ -423,6 +423,40 @@ See `docs/SESSION_NOTES_HONOR_TAGS_AND_CREDO.md` for complete implementation gui
 
 ---
 
+## SESSION NOTES: 2026-02-06 (Search Infrastructure — Master Plan #9)
+
+### Summary
+Built the complete search UI layer on top of existing pg_trgm database functions and `/api/profiles/search` API route. Implemented Ctrl+K global command palette, sidebar integration, and add-relative duplicate prevention.
+
+### Status: FULLY COMPLETE & PUSHED
+
+### What Changed
+
+| Change | Details |
+|--------|---------|
+| **GlobalSearch** | Command palette overlay with Ctrl+K, debounced search, recent searches in localStorage, keyboard navigation |
+| **SearchResults** | Result list with avatars, similarity %, ARIA-compliant keyboard nav |
+| **SearchTrigger** | Sidebar button with Ctrl+K badge, replaces old `/find-relatives` nav link |
+| **DuplicateProfileSuggestions** | Inline amber warning in AddRelativeForm when name matches existing profiles |
+| **useDebounce** | Generic reusable hook (300ms default) |
+| **i18n** | 12 search keys added to EN + RU common.json |
+
+### Key Files
+
+| Category | Files |
+|----------|-------|
+| Hook | `src/hooks/useDebounce.ts` |
+| Components | `src/components/search/GlobalSearch.tsx`, `SearchResults.tsx`, `SearchTrigger.tsx`, `DuplicateProfileSuggestions.tsx` |
+| Modified | `src/components/layout/Sidebar.tsx`, `src/components/relatives/AddRelativeForm.tsx` |
+
+### Architecture Notes
+- Reuses existing `/api/profiles/search` — no new API route needed
+- Auto-selects `fullname` mode when query has spaces
+- Component state only, no global context
+- Recent searches in `gene-tree-recent-searches` localStorage key (max 5)
+
+---
+
 ## SESSION NOTES: 2026-02-06 (5-Step Onboarding Wizard)
 
 ### Summary
