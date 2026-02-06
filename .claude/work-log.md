@@ -4,33 +4,62 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
-## [2026-02-06] - Polish Onboarding Wizard (Master Plan #3)
+## [2026-02-06] - Quick-Add from Tree View (Master Plan #6)
 
 **Status**: Completed
-**Beads**: gene-tree-ggb
+**Commits**: `302531c`
 
 ### What was done
-- Fixed critical duplicate relatives bug on back/forward wizard navigation
-- Fixed hardcoded English error message (now bilingual EN/RU)
-- Added deep merge for localStorage state recovery (prevents corruption crashes)
-- Added server-side birth year validation (1850-current year range)
-- Added trimmed name validation (whitespace-only names rejected)
-- Added comprehensive accessibility attributes (aria-labels, role, tabIndex, keyboard handlers)
-- Removed unused imports
-- Added role="alert" to error messages
+- Created `QuickAddDialog.tsx` — lightweight inline dialog with minimal form (name, birth year, deceased)
+- Refactored `QuickAddMenu.tsx` flow to open dialog instead of navigating to `/people/new`
+- Threaded `onQuickAdd` callback through TreeCanvas → PersonCard → QuickAddMenu
+- Added tree data refetch in `TreeCanvasWrapper.tsx` after successful add
+- Added 8 EN/RU translation keys for quickAdd dialog
 
 ### Decisions made
-- Split createdRelativeIds into per-step tracking (step2CreatedIds, step3CreatedIds) for idempotent re-submission
-- API routes accept previousIds to delete before re-inserting (clean, backward-compatible)
-- Deep merge validates each nested field type individually rather than trusting localStorage JSON structure
+- Simple refetch (not optimistic update) — tree needs ELK re-layout for new nodes anyway
+- Callback injection through React Flow node data — only clean way to pass dynamic handlers to custom nodes
+- Minimal form fields (name + birth year + deceased) — quick-add prioritizes speed, user can edit details later
+- `isDirect: false` for all quick-adds — always "add relative of clicked person"
 
 ### Issues encountered
-- Build has pre-existing next-font-manifest.json error (infrastructure, not related to changes)
-- git stash/pop conflict due to linter auto-modifications -- resolved by reapplying changes from scratch
+- Git stash/pop conflict due to concurrent sessions modifying shared files — resolved by re-applying changes manually
+- Pre-existing build errors (missing page modules) unrelated to this work
 
 ### Next steps
-- Consider adding "reset wizard" button for stuck users
-- Monitor for any edge cases in production
+- Add optional email field to dialog (API requires contact info for living relatives)
+- Add mobile touch support (hover-based QuickAddMenu doesn't work on touch devices)
+- Test end-to-end in production after Railway deploy
+
+**Session notes**: `.claude/sessions/2026-02-06-quick-add-tree-view.md`
+
+---
+
+## [2026-02-06] - Complete 5-Step Onboarding Wizard (Master Plan #3)
+
+**Status**: Completed
+**Commits**: `251a06a` (polish), `a462c62` (grandparents + i18n + redirect)
+
+### What was done
+- Expanded wizard from 4 steps to 5: About You > Parents > Grandparents > Siblings > Invite
+- Created Step3Grandparents component (maternal/paternal cards with skip support)
+- Created /api/onboarding/step3-grandparents API route with lineage tracking
+- Migrated all wizard text to next-intl useTranslations('onboarding') namespace
+- Added full EN + RU translations for onboarding namespace in common.json
+- Family progress counter now includes grandparents
+- Post-onboarding redirect changed from /app to /tree
+- Fixed onboarding_step progression: grandparents(3), siblings(4), complete(5)
+- Added idempotent re-submission with step3CreatedIds for grandparents
+- (Earlier) Fixed duplicate relatives bug, deep merge, accessibility, validation
+
+### Decisions made
+- Separate API route for grandparents (step3-grandparents) to avoid disrupting existing siblings API
+- Grandparents respect parent skip state (if mother skipped, maternal grandparents hidden)
+- Used per-step ID arrays (step2/3/4CreatedIds) for clean idempotent re-submission
+
+### Next steps
+- Test full 5-step flow end-to-end in production
+- Consider confetti animation on wizard completion (canvas-confetti is installed)
 
 **Session notes**: `.claude/sessions/2026-02-06-onboarding-wizard-polish.md`
 

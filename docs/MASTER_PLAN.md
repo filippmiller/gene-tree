@@ -239,7 +239,7 @@ Deploy:      Railway (primary)
 | 5 | **"This Day in Family History"** | Product | HIGH | MEDIUM |
 |   | Daily digest of anniversaries, birthdays, death dates | | | |
 | 6 | **Quick-Add from Tree View** | Product | HIGH | LOW |
-|   | Click person → "+" buttons for add parent/child/spouse/sibling | | | |
+|   | ~~Click person → "+" buttons for add parent/child/spouse/sibling~~ ✅ DONE (2026-02-06) | | | |
 | 7 | **Voice Story Recording** | Product | MEDIUM | LOW |
 |   | ~~Complete pending refactor, one-tap recording, AI transcription~~ ✅ DONE (2026-02-06) | | | |
 | 8 | **Freemium Pricing Model** | Business | HIGH | MEDIUM |
