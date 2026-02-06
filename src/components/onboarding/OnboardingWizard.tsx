@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Progress } from '@/components/ui/progress';
 import Step1AboutYou from './steps/Step1AboutYou';
 import Step2Parents from './steps/Step2Parents';
+import Step3Grandparents from './steps/Step3Grandparents';
 import Step3Siblings from './steps/Step3Siblings';
 import Step4Invite from './steps/Step4Invite';
 import { FamilyProgressTracker } from './FamilyProgressTracker';
@@ -18,16 +20,16 @@ import {
   type WizardState,
   type AboutYouData,
   type ParentsData,
+  type GrandparentsData,
   type SiblingsData,
   type InviteData,
 } from '@/lib/onboarding/wizard-state';
 import { cn } from '@/lib/utils';
 
 const FAMILY_GOAL = 5; // "First Five Minutes" goal
+const TOTAL_STEPS = 5;
 
 interface Props {
-  /** User ID for future use (profile operations) */
-  userId?: string;
   locale: string;
   existingProfile?: {
     first_name?: string;
@@ -38,46 +40,9 @@ interface Props {
   };
 }
 
-const translations = {
-  en: {
-    step1: 'About You',
-    step2: 'Parents',
-    step3: 'Siblings',
-    step4: 'Invite',
-    back: 'Back',
-    next: 'Next',
-    skip: 'Skip',
-    finish: 'Finish Setup',
-    saving: 'Saving...',
-    stepOf: 'Step {current} of {total}',
-    welcomeTitle: 'Welcome to Gene-Tree',
-    welcomeSubtitle: "Let's set up your family tree in just a few minutes",
-    errorSaving: 'There was an error saving your data. Please try again.',
-    nameRequired: 'Please fill in your first and last name.',
-  },
-  ru: {
-    step1: 'О вас',
-    step2: 'Родители',
-    step3: 'Братья/Сестры',
-    step4: 'Приглашение',
-    back: 'Назад',
-    next: 'Далее',
-    skip: 'Пропустить',
-    finish: 'Завершить',
-    saving: 'Сохранение...',
-    stepOf: 'Шаг {current} из {total}',
-    welcomeTitle: 'Добро пожаловать в Gene-Tree',
-    welcomeSubtitle: 'Настроим ваше семейное древо за несколько минут',
-    errorSaving: 'Произошла ошибка при сохранении. Попробуйте снова.',
-    nameRequired: 'Пожалуйста, укажите ваше имя и фамилию.',
-  },
-};
-
-const TOTAL_STEPS = 4;
-
 export default function OnboardingWizard({ locale, existingProfile }: Props) {
   const router = useRouter();
-  const t = translations[locale as keyof typeof translations] || translations.en;
+  const t = useTranslations('onboarding');
   const [state, setState] = useState<WizardState | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -118,6 +83,10 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
     setState((prev) => (prev ? { ...prev, parents: data } : prev));
   }, []);
 
+  const updateGrandparents = useCallback((data: GrandparentsData) => {
+    setState((prev) => (prev ? { ...prev, grandparents: data } : prev));
+  }, []);
+
   const updateSiblings = useCallback((data: SiblingsData) => {
     setState((prev) => (prev ? { ...prev, siblings: data } : prev));
   }, []);
@@ -145,15 +114,14 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
     // Validate current step
     if (state.currentStep === 1) {
       if (!state.aboutYou.firstName.trim() || !state.aboutYou.lastName.trim()) {
-        setError(t.nameRequired);
+        setError(t('nameRequired'));
         return;
       }
     }
 
     setError(null);
-
-    // Save step data to server
     setSaving(true);
+
     try {
       // Save About You data (Step 1)
       if (state.currentStep === 1) {
@@ -202,21 +170,48 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
               ? {
                   ...prev,
                   step2CreatedIds: data.createdIds,
-                  createdRelativeIds: [...data.createdIds, ...prev.step3CreatedIds],
                 }
               : prev
           );
         }
       }
 
-      // Save Siblings data (Step 3)
+      // Save Grandparents data (Step 3)
       if (state.currentStep === 3) {
+        const response = await fetch('/api/onboarding/step3-grandparents', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...state.grandparents,
+            previousIds: state.step3CreatedIds,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save grandparents');
+        }
+
+        const data = await response.json();
+        if (data.createdIds) {
+          setState((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  step3CreatedIds: data.createdIds,
+                }
+              : prev
+          );
+        }
+      }
+
+      // Save Siblings data (Step 4)
+      if (state.currentStep === 4) {
         const response = await fetch('/api/onboarding/step3', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...state.siblings,
-            previousIds: state.step3CreatedIds,
+            previousIds: state.step4CreatedIds,
           }),
         });
 
@@ -230,8 +225,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
             prev
               ? {
                   ...prev,
-                  step3CreatedIds: data.createdIds,
-                  createdRelativeIds: [...prev.step2CreatedIds, ...data.createdIds],
+                  step4CreatedIds: data.createdIds,
                 }
               : prev
           );
@@ -242,11 +236,11 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
       goToStep(state.currentStep + 1);
     } catch (err) {
       console.error('Error saving step:', err);
-      setError(t.errorSaving);
+      setError(t('errorSaving'));
     } finally {
       setSaving(false);
     }
-  }, [state, goToStep, t.errorSaving, t.nameRequired]);
+  }, [state, goToStep, t]);
 
   const handleBack = useCallback(() => {
     if (!state || state.currentStep <= 1) return;
@@ -281,16 +275,16 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
       // Clear wizard state
       clearWizardState();
 
-      // Redirect to dashboard
-      router.push(`/${locale}/app`);
+      // Redirect to tree view (not dashboard)
+      router.push(`/${locale}/tree`);
       router.refresh();
     } catch (err) {
       console.error('Error completing onboarding:', err);
-      setError(t.errorSaving);
+      setError(t('errorSaving'));
     } finally {
       setSaving(false);
     }
-  }, [state, locale, router, t.errorSaving]);
+  }, [state, locale, router, t]);
 
   const handleSkip = useCallback(() => {
     if (!state) return;
@@ -306,21 +300,31 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
     if (!state) return 0;
 
     // Count from in-form data (what user has entered but may not have saved yet)
-    const inFormCount =
+    const parentsCount =
       (state.parents.mother.firstName && !state.parents.mother.skip ? 1 : 0) +
-      (state.parents.father.firstName && !state.parents.father.skip ? 1 : 0) +
+      (state.parents.father.firstName && !state.parents.father.skip ? 1 : 0);
+
+    const grandparentsCount =
+      (state.grandparents.maternalGrandmother.firstName && !state.grandparents.maternalGrandmother.skip ? 1 : 0) +
+      (state.grandparents.maternalGrandfather.firstName && !state.grandparents.maternalGrandfather.skip ? 1 : 0) +
+      (state.grandparents.paternalGrandmother.firstName && !state.grandparents.paternalGrandmother.skip ? 1 : 0) +
+      (state.grandparents.paternalGrandfather.firstName && !state.grandparents.paternalGrandfather.skip ? 1 : 0);
+
+    const siblingsCount =
       state.siblings.siblings.filter((s) => s.firstName).length +
       (state.siblings.spouse?.firstName ? 1 : 0);
 
+    const inFormCount = parentsCount + grandparentsCount + siblingsCount;
+
     // Use MAX of in-form count vs. saved count to avoid double-counting during save transitions
-    const savedCount = state.step2CreatedIds.length + state.step3CreatedIds.length;
+    const savedCount = state.step2CreatedIds.length + state.step3CreatedIds.length + state.step4CreatedIds.length;
     return Math.max(inFormCount, savedCount);
   }, [state]);
 
   // Combined created IDs for the invite step
   const allCreatedRelativeIds = useMemo(() => {
     if (!state) return [];
-    return [...state.step2CreatedIds, ...state.step3CreatedIds];
+    return [...state.step2CreatedIds, ...state.step3CreatedIds, ...state.step4CreatedIds];
   }, [state]);
 
   if (!state) {
@@ -331,7 +335,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
     );
   }
 
-  const stepTitles = [t.step1, t.step2, t.step3, t.step4];
+  const stepTitles = [t('step1'), t('step2'), t('step3'), t('step4'), t('step5')];
   const progress = (state.currentStep / TOTAL_STEPS) * 100;
 
   const canGoNext =
@@ -346,12 +350,10 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             <Sparkles className="w-4 h-4" />
-            {t.stepOf
-              .replace('{current}', String(state.currentStep))
-              .replace('{total}', String(TOTAL_STEPS))}
+            {t('stepOf', { current: state.currentStep, total: TOTAL_STEPS })}
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">{t.welcomeTitle}</h1>
-          <p className="text-muted-foreground">{t.welcomeSubtitle}</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">{t('welcomeTitle')}</h1>
+          <p className="text-muted-foreground">{t('welcomeSubtitle')}</p>
         </div>
 
         {/* Family Progress Tracker - shows after step 1 */}
@@ -373,13 +375,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
                 key={index}
                 onClick={() => index + 1 <= state.currentStep && goToStep(index + 1)}
                 disabled={index + 1 > state.currentStep}
-                aria-label={
-                  t.stepOf
-                    .replace('{current}', String(index + 1))
-                    .replace('{total}', String(TOTAL_STEPS)) +
-                  ': ' +
-                  title
-                }
+                aria-label={t('stepOf', { current: index + 1, total: TOTAL_STEPS }) + ': ' + title}
                 aria-current={index + 1 === state.currentStep ? 'step' : undefined}
                 className={cn(
                   'text-xs font-medium transition-colors',
@@ -413,9 +409,38 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
               <Step2Parents data={state.parents} onChange={updateParents} locale={locale} />
             )}
             {state.currentStep === 3 && (
-              <Step3Siblings data={state.siblings} onChange={updateSiblings} locale={locale} />
+              <Step3Grandparents
+                data={state.grandparents}
+                onChange={updateGrandparents}
+                locale={locale}
+                motherSkipped={state.parents.mother.skip || false}
+                fatherSkipped={state.parents.father.skip || false}
+                t={{
+                  title: t('grandparents.title'),
+                  subtitle: t('grandparents.subtitle'),
+                  maternalTitle: t('grandparents.maternalTitle'),
+                  paternalTitle: t('grandparents.paternalTitle'),
+                  grandmother: t('grandparents.grandmother'),
+                  grandfather: t('grandparents.grandfather'),
+                  grandmotherMaternal: t('grandparents.grandmotherMaternal'),
+                  grandfatherMaternal: t('grandparents.grandfatherMaternal'),
+                  grandmotherPaternal: t('grandparents.grandmotherPaternal'),
+                  grandfatherPaternal: t('grandparents.grandfatherPaternal'),
+                  firstName: t('grandparents.firstName'),
+                  lastName: t('grandparents.lastName'),
+                  birthYear: t('grandparents.birthYear'),
+                  birthYearOptional: t('grandparents.birthYearOptional'),
+                  deceased: t('grandparents.deceased'),
+                  skip: t('grandparents.skip'),
+                  skipAll: t('grandparents.skipAll'),
+                  skipHint: t('grandparents.skipHint'),
+                }}
+              />
             )}
             {state.currentStep === 4 && (
+              <Step3Siblings data={state.siblings} onChange={updateSiblings} locale={locale} />
+            )}
+            {state.currentStep === 5 && (
               <Step4Invite
                 data={state.invite}
                 onChange={updateInvite}
@@ -444,13 +469,13 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
             disabled={state.currentStep === 1 || saving}
             leftIcon={<ChevronLeft className="w-4 h-4" />}
           >
-            {t.back}
+            {t('back')}
           </Button>
 
           <div className="flex items-center gap-3">
             {state.currentStep > 1 && state.currentStep < TOTAL_STEPS && (
               <Button variant="ghost" onClick={handleSkip} disabled={saving}>
-                {t.skip}
+                {t('skip')}
               </Button>
             )}
 
@@ -461,11 +486,11 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
                 loading={saving}
                 rightIcon={!saving && <ChevronRight className="w-4 h-4" />}
               >
-                {saving ? t.saving : t.next}
+                {saving ? t('saving') : t('next')}
               </Button>
             ) : (
               <Button variant="gradient" onClick={handleFinish} disabled={saving} loading={saving}>
-                {saving ? t.saving : t.finish}
+                {saving ? t('saving') : t('finish')}
               </Button>
             )}
           </div>

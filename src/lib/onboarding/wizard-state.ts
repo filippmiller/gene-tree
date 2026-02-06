@@ -31,7 +31,23 @@ export interface ParentsData {
   father: ParentData;
 }
 
-// Step 3: Siblings/Spouse
+// Step 3: Grandparents
+export interface GrandparentData {
+  firstName: string;
+  lastName: string;
+  birthYear?: string;
+  isDeceased: boolean;
+  skip?: boolean;
+}
+
+export interface GrandparentsData {
+  maternalGrandmother: GrandparentData;
+  maternalGrandfather: GrandparentData;
+  paternalGrandmother: GrandparentData;
+  paternalGrandfather: GrandparentData;
+}
+
+// Step 4: Siblings/Spouse
 export interface SiblingData {
   firstName: string;
   lastName: string;
@@ -51,7 +67,7 @@ export interface SiblingsData {
   spouse?: SpouseData;
 }
 
-// Step 4: Invite
+// Step 5: Invite
 export interface InviteData {
   relativeId?: string;
   relativeName?: string;
@@ -66,17 +82,26 @@ export interface WizardState {
   currentStep: number;
   aboutYou: AboutYouData;
   parents: ParentsData;
+  grandparents: GrandparentsData;
   siblings: SiblingsData;
   invite: InviteData;
   /** IDs created in step 2 (parents) - enables idempotent re-submission */
   step2CreatedIds: string[];
-  /** IDs created in step 3 (siblings/spouse) - enables idempotent re-submission */
+  /** IDs created in step 3 (grandparents) - enables idempotent re-submission */
   step3CreatedIds: string[];
-  /** @deprecated Use step2CreatedIds + step3CreatedIds instead */
+  /** IDs created in step 4 (siblings/spouse) - enables idempotent re-submission */
+  step4CreatedIds: string[];
+  /** @deprecated Use step2CreatedIds + step3CreatedIds + step4CreatedIds instead */
   createdRelativeIds: string[];
 }
 
 const STORAGE_KEY = 'gene-tree-onboarding-wizard';
+
+const defaultGrandparent: GrandparentData = {
+  firstName: '',
+  lastName: '',
+  isDeceased: false,
+};
 
 const defaultState: WizardState = {
   currentStep: 1,
@@ -96,12 +121,19 @@ const defaultState: WizardState = {
       isDeceased: false,
     },
   },
+  grandparents: {
+    maternalGrandmother: { ...defaultGrandparent },
+    maternalGrandfather: { ...defaultGrandparent },
+    paternalGrandmother: { ...defaultGrandparent },
+    paternalGrandfather: { ...defaultGrandparent },
+  },
   siblings: {
     siblings: [],
   },
   invite: {},
   step2CreatedIds: [],
   step3CreatedIds: [],
+  step4CreatedIds: [],
   createdRelativeIds: [],
 };
 
@@ -144,6 +176,36 @@ export function loadWizardState(): WizardState {
               : {}),
           },
         },
+        grandparents: {
+          maternalGrandmother: {
+            ...defaultGrandparent,
+            ...(parsed.grandparents?.maternalGrandmother &&
+            typeof parsed.grandparents.maternalGrandmother === 'object'
+              ? parsed.grandparents.maternalGrandmother
+              : {}),
+          },
+          maternalGrandfather: {
+            ...defaultGrandparent,
+            ...(parsed.grandparents?.maternalGrandfather &&
+            typeof parsed.grandparents.maternalGrandfather === 'object'
+              ? parsed.grandparents.maternalGrandfather
+              : {}),
+          },
+          paternalGrandmother: {
+            ...defaultGrandparent,
+            ...(parsed.grandparents?.paternalGrandmother &&
+            typeof parsed.grandparents.paternalGrandmother === 'object'
+              ? parsed.grandparents.paternalGrandmother
+              : {}),
+          },
+          paternalGrandfather: {
+            ...defaultGrandparent,
+            ...(parsed.grandparents?.paternalGrandfather &&
+            typeof parsed.grandparents.paternalGrandfather === 'object'
+              ? parsed.grandparents.paternalGrandfather
+              : {}),
+          },
+        },
         siblings: {
           siblings: Array.isArray(parsed.siblings?.siblings) ? parsed.siblings.siblings : [],
           spouse: parsed.siblings?.spouse || undefined,
@@ -154,14 +216,15 @@ export function loadWizardState(): WizardState {
         },
         step2CreatedIds: Array.isArray(parsed.step2CreatedIds) ? parsed.step2CreatedIds : [],
         step3CreatedIds: Array.isArray(parsed.step3CreatedIds) ? parsed.step3CreatedIds : [],
+        step4CreatedIds: Array.isArray(parsed.step4CreatedIds) ? parsed.step4CreatedIds : [],
         // Migrate legacy field
         createdRelativeIds: Array.isArray(parsed.createdRelativeIds)
           ? parsed.createdRelativeIds
           : [],
       };
 
-      // Validate currentStep is within bounds
-      if (merged.currentStep < 1 || merged.currentStep > 4) {
+      // Validate currentStep is within bounds (5 steps now)
+      if (merged.currentStep < 1 || merged.currentStep > 5) {
         merged.currentStep = 1;
       }
 
@@ -227,7 +290,7 @@ export function updateStepData<K extends keyof WizardState>(
 export function nextStep(state: WizardState): WizardState {
   const newState = {
     ...state,
-    currentStep: Math.min(state.currentStep + 1, 4),
+    currentStep: Math.min(state.currentStep + 1, 5),
   };
   saveWizardState(newState);
   return newState;

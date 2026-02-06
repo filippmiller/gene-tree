@@ -48,7 +48,6 @@ export default async function OnboardingWizardPage({ params }: Props) {
 
   return (
     <OnboardingWizard
-      userId={user.id}
       locale={locale}
       existingProfile={
         profile

@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     // Update onboarding step (column from migration 20260202300000)
     await admin
       .from('user_profiles')
-      .update({ onboarding_step: 3 } as any)
+      .update({ onboarding_step: 4 } as any)
       .eq('id', user.id);
 
     return NextResponse.json({

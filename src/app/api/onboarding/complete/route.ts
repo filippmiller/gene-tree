@@ -25,7 +25,7 @@ export async function POST() {
       .update({
         onboarding_completed: true,
         onboarding_completed_at: new Date().toISOString(),
-        onboarding_step: 4,
+        onboarding_step: 5,
       } as any)
       .eq('id', user.id);
 
