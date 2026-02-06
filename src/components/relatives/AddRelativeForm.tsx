@@ -7,6 +7,7 @@ import { getBloodRelationshipOptions, getGenderSpecificOptions } from '@/lib/rel
 import KinshipSearchField from './KinshipSearchField';
 import { mapRuLabelToRelationship } from '@/lib/relationships/kinshipMapping';
 import InviteGuardAlert, { type InviteCheckResult } from './InviteGuardAlert';
+import DuplicateProfileSuggestions from '@/components/search/DuplicateProfileSuggestions';
 
 interface ExistingRelative {
   id: string;
@@ -526,6 +527,12 @@ export default function AddRelativeForm() {
           />
         </div>
       </div>
+
+      {/* Duplicate profile detection */}
+      <DuplicateProfileSuggestions
+        firstName={formData.firstName}
+        lastName={formData.lastName}
+      />
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

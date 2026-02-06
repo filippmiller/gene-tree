@@ -15,7 +15,6 @@ import {
   LogOut,
   MessageCircle,
   Trophy,
-  Search,
   BookOpen,
   Timer,
   ScrollText,
@@ -26,6 +25,7 @@ import {
   UserPlus,
   Camera,
 } from "lucide-react";
+import SearchTrigger from "@/components/search/SearchTrigger";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -107,7 +107,6 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
       items: [
         { href: "/relationship-finder", label: t("connections"), icon: Link2 },
         { href: "/elder-questions", label: t("questions"), icon: ScrollText },
-        { href: "/find-relatives", label: t("search"), icon: Search },
         { href: "/achievements", label: t("achievements"), icon: Trophy },
       ],
     },
@@ -177,6 +176,13 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
             <ChevronLeft className="h-4 w-4" />
           )}
         </button>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+         SEARCH
+         ═══════════════════════════════════════════════════════════════════════ */}
+      <div className="relative px-2 py-2 border-b border-white/5">
+        <SearchTrigger collapsed={collapsed} />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════════

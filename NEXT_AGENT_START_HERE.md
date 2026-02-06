@@ -139,7 +139,9 @@ After completing any session:
 
 ## Current Blockers / Notes
 
-*Update this section with any blockers or important context for the next session.*
+- The `nul` file in repo root is a Windows artifact - should be gitignored
+- canvas-confetti is installed but unused - available for celebration effects
+- Step sub-components (Step1-Step4) still have inline translations; main wizard uses next-intl
 
 ---
 
@@ -418,6 +420,40 @@ npm run dev
 ### Full Details
 
 See `docs/SESSION_NOTES_HONOR_TAGS_AND_CREDO.md` for complete implementation guide
+
+---
+
+## SESSION NOTES: 2026-02-06 (5-Step Onboarding Wizard)
+
+### Summary
+Expanded the onboarding wizard from 4 steps to 5 by adding a Grandparents step. Migrated all wizard text to next-intl translations. Changed post-onboarding redirect to /tree.
+
+### Status: FULLY COMPLETE & PUSHED
+
+### What Changed
+
+| Change | Details |
+|--------|---------|
+| **5-step flow** | About You > Parents > Grandparents > Siblings > Invite |
+| **Step3Grandparents** | Maternal/paternal cards, skip support, deceased flag |
+| **step3-grandparents API** | Creates pending_relatives with lineage tracking |
+| **i18n migration** | useTranslations('onboarding') in common.json (EN + RU) |
+| **Progress tracker** | Family member counter now includes grandparents |
+| **Redirect** | Post-onboarding goes to /tree instead of /app |
+| **Step tracking** | onboarding_step: 3=grandparents, 4=siblings, 5=complete |
+
+### Key Files
+
+| Category | Files |
+|----------|-------|
+| Component | `src/components/onboarding/steps/Step3Grandparents.tsx` (new) |
+| API | `src/app/api/onboarding/step3-grandparents/route.ts` (new) |
+| Wizard | `src/components/onboarding/OnboardingWizard.tsx` (rewritten) |
+| State | `src/lib/onboarding/wizard-state.ts` (expanded) |
+| i18n | `src/messages/{en,ru}/common.json` (onboarding namespace) |
+
+### Commit
+- `a462c62` - feat(onboarding): add 5-step wizard with grandparents, i18n, and tree redirect
 
 ---
 
