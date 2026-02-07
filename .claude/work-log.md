@@ -4,6 +4,30 @@ This file tracks completed work across Claude Code sessions.
 
 ---
 
+## [2026-02-07] - Autonomous E2E Functional Testing & Critical Bug Fixes
+
+**Status**: Completed
+**Commits**: 77ed922, 4ef1301
+
+### What was done
+- Ran autonomous Playwright-based E2E testing of all 48+ routes, APIs, and forms
+- Executed 34 browser tests across health checks, auth, protected routes, error handling
+- Found and fixed 3 bugs: CSP blocking React hydration (critical), CSP blocking Google Fonts, pino worker crash
+- Created complete test report with root cause analysis at `.claude/testing/test-log.md`
+
+### Decisions made
+- Used `'unsafe-inline'` in script-src as immediate fix — nonce-based CSP deferred as future improvement
+- Externalized pino via `serverExternalPackages` rather than patching worker paths
+
+### Issues encountered
+- Dev server page compilation extremely slow (30-275s per page first visit) — recommend Turbopack or production builds for testing
+- CSP hydration bug was introduced in the same-day security hardening session — caught immediately by testing
+
+### Session notes
+`.claude/sessions/2026-02-07-e2e-functional-testing.md`
+
+---
+
 ## [2026-02-07] - Security Hardening, Error Boundaries, OG Tags & Media Pipeline
 
 **Status**: Completed

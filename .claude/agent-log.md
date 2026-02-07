@@ -100,3 +100,30 @@ Systematic codebase analysis: 30 improvement ideas generated, 19 rejected with r
 
 ---
 
+## [2026-02-07 18:00] — Autonomous E2E Functional Testing (3 critical bugs found & fixed)
+
+**Area:** Testing/E2E, Infrastructure/CSP, Infrastructure/Pino
+**Type:** test, bugfix
+
+### Files Changed
+- `src/middleware.ts` — Fixed CSP: added `'unsafe-inline'` to script-src, Google Fonts to style-src/font-src
+- `next.config.ts` — Added `serverExternalPackages: ['pino', 'pino-pretty']` to prevent worker crash
+- `.claude/testing/test-plan.md` — Created full test plan (48+ routes, 154+ APIs, forms)
+- `.claude/testing/test-log.md` — Created test report (34 tests, 3 bugs, root cause analysis)
+- `.claude/testing/test-users.md` — Created test user registry
+
+### Functions/Symbols Modified
+- `SECURITY_HEADERS['Content-Security-Policy']` — modified (added unsafe-inline, Google Fonts domains)
+- `nextConfig.serverExternalPackages` — new (externalize pino from webpack)
+
+### Database Tables
+- N/A (read-only testing, no schema or data changes)
+
+### Summary
+Ran autonomous browser-based E2E testing of the full application using Playwright. Executed 34 tests across health checks, auth pages, protected routes, and error handling. Discovered 3 bugs: (1) CSP missing `'unsafe-inline'` in script-src blocked ALL React hydration — every page was non-interactive, (2) CSP missing Google Fonts domains, (3) pino worker thread crash on every page compilation due to webpack bundling conflict. All 3 fixed. The CSP bug was introduced in the security hardening session earlier the same day.
+
+### Session Notes
+→ `.claude/sessions/2026-02-07-e2e-functional-testing.md`
+
+---
+
