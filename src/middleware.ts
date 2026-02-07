@@ -65,7 +65,7 @@ const SECURITY_HEADERS: Record<string, string> = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(self), geolocation=()',
   'Content-Security-Policy':
-    "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: *.supabase.co; font-src 'self'; connect-src 'self' *.supabase.co wss://*.supabase.co; media-src 'self' blob: *.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
+    "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: *.supabase.co; font-src 'self' https://fonts.gstatic.com; connect-src 'self' *.supabase.co wss://*.supabase.co; media-src 'self' blob: *.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
 };
 
 /**

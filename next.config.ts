@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
   env: {
     BUILD_VERSION: buildVersion,
   },
+  serverExternalPackages: ['pino', 'pino-pretty'],
 };
 
 export default withNextIntl(nextConfig);
