@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { cookies, headers } from 'next/headers';
+
+export const dynamic = 'force-dynamic';
 import { TreePine, Users, BookOpen, Shield, Sparkles, ArrowRight, Heart, Globe } from 'lucide-react';
 import { detectLocaleFromHeader } from '@/lib/locale-detection';
 import LandingLanguageSwitcher from '@/components/LandingLanguageSwitcher';
