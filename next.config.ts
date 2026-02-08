@@ -18,6 +18,7 @@ try {
 }
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   env: {
     BUILD_VERSION: buildVersion,
   },
