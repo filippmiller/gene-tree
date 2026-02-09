@@ -104,12 +104,12 @@ export default function MagicLinkPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#58A6FF]/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#3FB9A0]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#58A6FF]/5 rounded-full blur-3xl" />
       </div>
 
       {/* Top actions */}
@@ -118,10 +118,10 @@ export default function MagicLinkPage() {
         <LanguageSwitcher />
       </div>
 
-      <Card className="relative w-full max-w-md shadow-xl border border-white/50 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 animate-fade-in-up" elevation="floating">
+      <Card className="relative w-full max-w-md border border-white/[0.08] backdrop-blur-md bg-card/80 animate-fade-in-up" elevation="floating">
         <CardHeader className="space-y-1 text-center pb-2">
           {/* Logo */}
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-lg shadow-violet-500/25">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#58A6FF]">
             {sent ? (
               <svg
                 className="h-7 w-7 text-white"
@@ -152,7 +152,7 @@ export default function MagicLinkPage() {
               </svg>
             )}
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent dark:from-violet-400 dark:to-purple-400">
+          <CardTitle className="text-2xl font-bold text-foreground">
             {sent ? t.checkEmail : t.title}
           </CardTitle>
           <CardDescription className="text-base">
@@ -221,7 +221,7 @@ export default function MagicLinkPage() {
 
               <Button
                 type="submit"
-                variant="gradient"
+                variant="default"
                 className="w-full h-12 text-base"
                 loading={loading}
               >

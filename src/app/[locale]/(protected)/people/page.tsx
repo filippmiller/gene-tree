@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSupabaseSSR } from '@/lib/supabase/server-ssr';
 import Link from 'next/link';
-import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -12,7 +11,6 @@ import {
   Users,
   Calendar,
   Mail,
-  Phone,
 } from 'lucide-react';
 
 export default async function PeoplePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -97,14 +95,14 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
 
   const getRelationshipColor = (type: string) => {
     const colors: Record<string, string> = {
-      parent: 'from-violet-500 to-purple-600',
-      grandparent: 'from-amber-500 to-orange-600',
-      child: 'from-sky-500 to-blue-600',
-      grandchild: 'from-pink-500 to-rose-600',
-      sibling: 'from-emerald-500 to-teal-600',
-      spouse: 'from-rose-500 to-red-600',
+      parent: 'bg-[#58A6FF]/20 text-[#58A6FF]',
+      grandparent: 'bg-[#D29922]/20 text-[#D29922]',
+      child: 'bg-[#3FB9A0]/20 text-[#3FB9A0]',
+      grandchild: 'bg-[#F85149]/20 text-[#F85149]',
+      sibling: 'bg-[#3FB950]/20 text-[#3FB950]',
+      spouse: 'bg-[#F85149]/20 text-[#F85149]',
     };
-    return colors[type] || 'from-violet-500 to-purple-600';
+    return colors[type] || 'bg-[#58A6FF]/20 text-[#58A6FF]';
   };
 
   const getRelationshipLabel = (type: string) => {
@@ -112,54 +110,54 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-3 sm:px-4 py-4">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-2xl font-bold text-foreground mb-1">
               {t.title}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {t.subtitle}
             </p>
           </div>
 
-          <Button asChild variant="gradient" size="lg" className="shadow-lg shadow-violet-500/25">
+          <Button asChild size="default" className="bg-primary text-primary-foreground hover:bg-primary/90">
             <Link href={`/${locale}/people/new`}>
-              <UserPlus className="w-5 h-5 mr-2" />
+              <UserPlus className="w-4 h-4 mr-2" />
               {t.addRelative}
             </Link>
           </Button>
         </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-3">
           {/* Pending Invitations */}
-          <GlassCard glass="medium" padding="lg">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/25">
-                <Clock className="w-5 h-5" />
+          <div className="bg-card/80 backdrop-blur-md border border-white/[0.08] rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-[#D29922]/10 flex items-center justify-center text-[#D29922]">
+                <Clock className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-foreground">{t.pendingInvitations}</h2>
-                <p className="text-sm text-muted-foreground">
+                <h2 className="text-lg font-semibold text-foreground">{t.pendingInvitations}</h2>
+                <p className="text-xs text-muted-foreground">
                   {pendingRelatives?.length || 0} {t.familyMembersWaiting}
                 </p>
               </div>
             </div>
 
             {pendingRelatives && pendingRelatives.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {pendingRelatives.map((rel: any) => (
                   <Link
                     key={rel.id}
                     href={`/${locale}/profile/${rel.id}`}
                     className="block group"
                   >
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 border border-white/50 dark:border-white/10 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:border-violet-500/20 hover:-translate-y-0.5 hover:shadow-glass transition-all duration-300">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-[#161B22] border border-[#30363D] hover:border-primary/30 hover:bg-[#1C2128] transition-all duration-200">
                       {/* Avatar */}
-                      <Avatar className={`w-12 h-12 ring-2 ring-offset-2 ring-offset-background shadow-md`}>
-                        <AvatarFallback className={`bg-gradient-to-br ${getRelationshipColor(rel.relationship_type)} text-white font-semibold`}>
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback className={`${getRelationshipColor(rel.relationship_type)} font-semibold text-sm`}>
                           {getInitials(rel.first_name, rel.last_name)}
                         </AvatarFallback>
                       </Avatar>
@@ -167,26 +165,26 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-foreground group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                          <span className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
                             {rel.first_name} {rel.last_name}
                           </span>
                           {rel.is_deceased && (
-                            <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                            <span className="px-1.5 py-0.5 bg-[#8B949E]/10 text-[#8B949E] text-[10px] rounded">
                               {t.inMemory}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground capitalize">{getRelationshipLabel(rel.relationship_type)}</p>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground capitalize">{getRelationshipLabel(rel.relationship_type)}</p>
+                        <div className="flex items-center gap-3 mt-0.5 text-[10px] text-muted-foreground">
                           {rel.email && (
                             <span className="flex items-center gap-1">
-                              <Mail className="w-3 h-3" />
+                              <Mail className="w-2.5 h-2.5" />
                               {rel.email}
                             </span>
                           )}
                           {rel.date_of_birth && (
                             <span className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
+                              <Calendar className="w-2.5 h-2.5" />
                               {new Date(rel.date_of_birth).toLocaleDateString()}
                             </span>
                           )}
@@ -197,64 +195,64 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/${locale}/people/new?relatedTo=${rel.id}`}
-                          className="hidden sm:flex items-center gap-1 px-3 py-1.5 text-sm bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors"
+                          className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs bg-primary/10 text-primary rounded hover:bg-primary/20 transition-colors"
                         >
-                          <UserPlus className="w-3.5 h-3.5" />
+                          <UserPlus className="w-3 h-3" />
                           {t.addRelatives}
                         </Link>
-                        <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full">
+                        <span className="px-2 py-0.5 bg-[#D29922]/10 text-[#D29922] text-[10px] font-medium rounded">
                           {t.pending}
                         </span>
-                        <ChevronRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                     </div>
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/25 mx-auto mb-4">
-                  <Users className="w-8 h-8" />
+              <div className="text-center py-8">
+                <div className="w-12 h-12 rounded-xl bg-[#161B22] border border-[#30363D] flex items-center justify-center text-muted-foreground mx-auto mb-3">
+                  <Users className="w-6 h-6" />
                 </div>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-3">
                   {t.noPendingInvitations}
                 </p>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" size="sm" className="border-[#30363D]">
                   <Link href={`/${locale}/people/new`}>
-                    <UserPlus className="w-4 h-4 mr-2" />
+                    <UserPlus className="w-3.5 h-3.5 mr-2" />
                     {t.addFirstRelative}
                   </Link>
                 </Button>
               </div>
             )}
-          </GlassCard>
+          </div>
 
           {/* Confirmed Relatives */}
-          <GlassCard glass="medium" padding="lg">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25">
-                <CheckCircle className="w-5 h-5" />
+          <div className="bg-card/80 backdrop-blur-md border border-white/[0.08] rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-[#3FB950]/10 flex items-center justify-center text-[#3FB950]">
+                <CheckCircle className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-foreground">{t.confirmedRelatives}</h2>
-                <p className="text-sm text-muted-foreground">
+                <h2 className="text-lg font-semibold text-foreground">{t.confirmedRelatives}</h2>
+                <p className="text-xs text-muted-foreground">
                   {t.confirmedSubtitle}
                 </p>
               </div>
             </div>
 
             {confirmedRelatives && confirmedRelatives.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {confirmedRelatives.map((rel: any) => (
                   <Link
                     key={rel.id}
                     href={`/${locale}/profile/${rel.id}`}
                     className="block group"
                   >
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 border border-white/50 dark:border-white/10 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:border-emerald-500/20 hover:-translate-y-0.5 hover:shadow-glass transition-all duration-300">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-[#161B22] border border-[#30363D] hover:border-[#3FB950]/30 hover:bg-[#1C2128] transition-all duration-200">
                       {/* Avatar */}
-                      <Avatar className={`w-12 h-12 ring-2 ring-offset-2 ring-offset-background ring-emerald-500 shadow-md`}>
-                        <AvatarFallback className={`bg-gradient-to-br ${getRelationshipColor(rel.relationship_type)} text-white font-semibold`}>
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback className={`${getRelationshipColor(rel.relationship_type)} font-semibold text-sm`}>
                           {getInitials(rel.first_name, rel.last_name)}
                         </AvatarFallback>
                       </Avatar>
@@ -262,26 +260,26 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                          <span className="font-medium text-sm text-foreground group-hover:text-[#3FB950] transition-colors">
                             {rel.first_name} {rel.last_name}
                           </span>
                           {rel.is_deceased && (
-                            <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                            <span className="px-1.5 py-0.5 bg-[#8B949E]/10 text-[#8B949E] text-[10px] rounded">
                               {t.inMemory}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground capitalize">{getRelationshipLabel(rel.relationship_type)}</p>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground capitalize">{getRelationshipLabel(rel.relationship_type)}</p>
+                        <div className="flex items-center gap-3 mt-0.5 text-[10px] text-muted-foreground">
                           {rel.email && (
                             <span className="flex items-center gap-1">
-                              <Mail className="w-3 h-3" />
+                              <Mail className="w-2.5 h-2.5" />
                               {rel.email}
                             </span>
                           )}
                           {rel.date_of_birth && (
                             <span className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
+                              <Calendar className="w-2.5 h-2.5" />
                               {new Date(rel.date_of_birth).toLocaleDateString()}
                             </span>
                           )}
@@ -290,27 +288,27 @@ export default async function PeoplePage({ params }: { params: Promise<{ locale:
 
                       {/* Status badge */}
                       <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium rounded-full flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" />
+                        <span className="px-2 py-0.5 bg-[#3FB950]/10 text-[#3FB950] text-[10px] font-medium rounded flex items-center gap-1">
+                          <CheckCircle className="w-2.5 h-2.5" />
                           {locale === 'ru' ? 'Подтверждено' : 'Confirmed'}
                         </span>
-                        <ChevronRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                     </div>
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 mx-auto mb-4 opacity-50">
-                  <CheckCircle className="w-8 h-8" />
+              <div className="text-center py-8">
+                <div className="w-12 h-12 rounded-xl bg-[#161B22] border border-[#30363D] flex items-center justify-center text-muted-foreground mx-auto mb-3 opacity-50">
+                  <CheckCircle className="w-6 h-6" />
                 </div>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {t.noConfirmedRelatives}
                 </p>
               </div>
             )}
-          </GlassCard>
+          </div>
         </div>
       </div>
     </div>

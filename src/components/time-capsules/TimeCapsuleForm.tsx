@@ -417,13 +417,13 @@ export default function TimeCapsuleForm({
               />
             )}
             {mediaType === 'audio' && (
-              <div className="w-12 h-12 rounded bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-                <Mic className="w-6 h-6 text-violet-600" />
+              <div className="w-12 h-12 rounded bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10 flex items-center justify-center">
+                <Mic className="w-6 h-6 text-[#58A6FF]" />
               </div>
             )}
             {mediaType === 'video' && (
-              <div className="w-12 h-12 rounded bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-                <Video className="w-6 h-6 text-violet-600" />
+              <div className="w-12 h-12 rounded bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10 flex items-center justify-center">
+                <Video className="w-6 h-6 text-[#58A6FF]" />
               </div>
             )}
             <div className="flex-1 min-w-0">
@@ -461,7 +461,7 @@ export default function TimeCapsuleForm({
         </Button>
         <Button
           type="submit"
-          className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
+          className="flex-1 bg-[#D29922] hover:bg-[#D29922]/90 text-white"
           disabled={loading}
         >
           {loading ? (

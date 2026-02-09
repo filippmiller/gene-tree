@@ -55,21 +55,21 @@ export default function StoriesPage() {
   const dateLocale = locale === 'ru' ? ru : enUS;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container mx-auto px-3 sm:px-4 py-4 max-w-4xl">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-            <BookOpen className="h-8 w-8 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <BookOpen className="h-6 w-6 text-primary" />
             {locale === 'ru' ? 'Семейные истории' : 'Family Stories'}
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-sm text-muted-foreground mt-1">
             {locale === 'ru'
               ? 'Истории и воспоминания вашей семьи'
               : 'Stories and memories from your family'}
           </p>
         </div>
         <Link href="/stories/new">
-          <Button>
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
             <Plus className="h-4 w-4 mr-2" />
             {locale === 'ru' ? 'Добавить историю' : 'Add Story'}
           </Button>
@@ -77,53 +77,51 @@ export default function StoriesPage() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : stories.length === 0 ? (
-        <Card className="text-center py-16">
-          <CardContent>
-            <BookOpen className="h-16 w-16 mx-auto text-muted-foreground/30 mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">
-              {locale === 'ru' ? 'Пока нет историй' : 'No stories yet'}
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              {locale === 'ru'
-                ? 'Будьте первым, кто добавит семейную историю!'
-                : 'Be the first to add a family story!'}
-            </p>
-            <Link href="/stories/new">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                {locale === 'ru' ? 'Добавить историю' : 'Add Story'}
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <div className="bg-card/80 backdrop-blur-md border border-white/[0.08] rounded-xl text-center py-12 px-4">
+          <BookOpen className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
+          <h3 className="text-base font-medium text-foreground mb-1">
+            {locale === 'ru' ? 'Пока нет историй' : 'No stories yet'}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            {locale === 'ru'
+              ? 'Будьте первым, кто добавит семейную историю!'
+              : 'Be the first to add a family story!'}
+          </p>
+          <Link href="/stories/new">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Plus className="h-4 w-4 mr-2" />
+              {locale === 'ru' ? 'Добавить историю' : 'Add Story'}
+            </Button>
+          </Link>
+        </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-3">
           {stories.map((story) => (
-            <Card key={story.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
+            <Card key={story.id} className="overflow-hidden bg-card/80 backdrop-blur-md border border-white/[0.08] hover:border-primary/20 transition-colors">
+              <CardHeader className="pb-2 p-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {story.author.avatar_url ? (
                       <img
                         src={story.author.avatar_url}
                         alt=""
-                        className="h-10 w-10 rounded-full object-cover"
+                        className="h-8 w-8 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <User className="h-5 w-5 text-primary" />
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <User className="h-4 w-4 text-primary" />
                       </div>
                     )}
                     <div>
-                      <p className="font-medium text-foreground">
+                      <p className="text-sm font-medium text-foreground">
                         {story.author.first_name} {story.author.last_name}
                       </p>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Calendar className="h-2.5 w-2.5" />
                         {formatDistanceToNow(new Date(story.created_at), {
                           addSuffix: true,
                           locale: dateLocale,
@@ -133,22 +131,22 @@ export default function StoriesPage() {
                   </div>
                 </div>
                 {story.title && (
-                  <CardTitle className="text-xl mt-3">{story.title}</CardTitle>
+                  <CardTitle className="text-lg mt-2">{story.title}</CardTitle>
                 )}
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-4 pb-4">
                 {story.media_url && story.media_type === 'photo' && (
                   <img
                     src={story.media_url}
                     alt={story.title || 'Story image'}
-                    className="w-full h-64 object-cover rounded-lg mb-4"
+                    className="w-full h-56 object-cover rounded-lg mb-3"
                   />
                 )}
-                <p className="text-foreground whitespace-pre-wrap">
+                <p className="text-sm text-foreground whitespace-pre-wrap">
                   {story.content}
                 </p>
                 {story.subject && story.subject.id !== story.author.id && (
-                  <p className="text-sm text-muted-foreground mt-4">
+                  <p className="text-xs text-muted-foreground mt-3">
                     {locale === 'ru' ? 'О:' : 'About:'}{' '}
                     <Link
                       href={`/profile/${story.subject.id}`}

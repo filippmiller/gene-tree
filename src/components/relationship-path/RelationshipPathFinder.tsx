@@ -127,7 +127,7 @@ export default function RelationshipPathFinder({
       <GlassCard glass="medium" padding={compact ? 'md' : 'lg'}>
         {!compact && (
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/25">
+            <div className="w-10 h-10 rounded-xl bg-[#58A6FF] flex items-center justify-center text-white">
               <Link2 className="w-5 h-5" />
             </div>
             <div>
@@ -152,13 +152,13 @@ export default function RelationshipPathFinder({
                     setShowDropdown1(true);
                     setResult(null);
                   }}
-                  className="w-full flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-violet-500 transition-colors text-left"
+                  className="w-full flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[#58A6FF] transition-colors text-left"
                 >
                   <Avatar className="w-10 h-10">
                     {selectedMember1.avatar_url && (
                       <AvatarImage src={selectedMember1.avatar_url} alt={getName(selectedMember1)} />
                     )}
-                    <AvatarFallback className="bg-gradient-to-br from-violet-400 to-violet-600 text-white text-sm font-medium">
+                    <AvatarFallback className="bg-[#58A6FF] text-white text-sm font-medium">
                       {getInitials(selectedMember1)}
                     </AvatarFallback>
                   </Avatar>
@@ -178,7 +178,7 @@ export default function RelationshipPathFinder({
                     onFocus={() => setShowDropdown1(true)}
                     onBlur={() => setTimeout(() => setShowDropdown1(false), 200)}
                     placeholder={t('selectPerson')}
-                    className="w-full px-4 py-3 pr-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 pr-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#58A6FF] focus:border-transparent transition-all"
                   />
                   <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -203,7 +203,7 @@ export default function RelationshipPathFinder({
                           {member.avatar_url && (
                             <AvatarImage src={member.avatar_url} alt={getName(member)} />
                           )}
-                          <AvatarFallback className="bg-gradient-to-br from-gray-400 to-gray-600 text-white text-xs font-medium">
+                          <AvatarFallback className="bg-gray-500 text-white text-xs font-medium">
                             {getInitials(member)}
                           </AvatarFallback>
                         </Avatar>
@@ -236,13 +236,13 @@ export default function RelationshipPathFinder({
                     setShowDropdown2(true);
                     setResult(null);
                   }}
-                  className="w-full flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-violet-500 transition-colors text-left"
+                  className="w-full flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[#3FB9A0] transition-colors text-left"
                 >
                   <Avatar className="w-10 h-10">
                     {selectedMember2.avatar_url && (
                       <AvatarImage src={selectedMember2.avatar_url} alt={getName(selectedMember2)} />
                     )}
-                    <AvatarFallback className="bg-gradient-to-br from-emerald-400 to-emerald-600 text-white text-sm font-medium">
+                    <AvatarFallback className="bg-[#3FB9A0] text-white text-sm font-medium">
                       {getInitials(selectedMember2)}
                     </AvatarFallback>
                   </Avatar>
@@ -262,7 +262,7 @@ export default function RelationshipPathFinder({
                     onFocus={() => setShowDropdown2(true)}
                     onBlur={() => setTimeout(() => setShowDropdown2(false), 200)}
                     placeholder={t('selectPerson')}
-                    className="w-full px-4 py-3 pr-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 pr-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3FB9A0] focus:border-transparent transition-all"
                   />
                   <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -287,7 +287,7 @@ export default function RelationshipPathFinder({
                           {member.avatar_url && (
                             <AvatarImage src={member.avatar_url} alt={getName(member)} />
                           )}
-                          <AvatarFallback className="bg-gradient-to-br from-gray-400 to-gray-600 text-white text-xs font-medium">
+                          <AvatarFallback className="bg-gray-500 text-white text-xs font-medium">
                             {getInitials(member)}
                           </AvatarFallback>
                         </Avatar>
@@ -320,7 +320,7 @@ export default function RelationshipPathFinder({
           <Button
             onClick={handleSearch}
             disabled={loading || !person1 || !person2}
-            variant="gradient"
+            variant="default"
             size="lg"
             className="w-full"
             loading={loading}
@@ -340,7 +340,7 @@ export default function RelationshipPathFinder({
               <div className="text-center">
                 <div className="inline-flex items-center gap-3 text-lg font-semibold text-gray-900 dark:text-white">
                   <span>{getName(selectedMember1)}</span>
-                  <span className="text-violet-500">{t('and')}</span>
+                  <span className="text-[#58A6FF]">{t('and')}</span>
                   <span>{getName(selectedMember2)}</span>
                 </div>
               </div>
@@ -354,7 +354,7 @@ export default function RelationshipPathFinder({
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white shadow-lg mx-auto mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-gray-500 flex items-center justify-center text-white mx-auto mb-4">
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">

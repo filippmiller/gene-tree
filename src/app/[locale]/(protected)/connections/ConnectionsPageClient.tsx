@@ -118,7 +118,7 @@ export function ConnectionsPageClient({ userId }: ConnectionsPageClientProps) {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-full bg-[#D29922] flex items-center justify-center">
             <Users className="h-5 w-5 text-white" />
           </div>
           {t.pageTitle}
@@ -146,7 +146,7 @@ export function ConnectionsPageClient({ userId }: ConnectionsPageClientProps) {
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-amber-500" />
+                    <Sparkles className="h-5 w-5 text-[#D29922]" />
                     {t.discover.title}
                   </CardTitle>
                   <CardDescription>{t.discover.description}</CardDescription>
@@ -190,9 +190,9 @@ export function ConnectionsPageClient({ userId }: ConnectionsPageClientProps) {
                       key={candidate.candidate_id}
                       className="flex items-start gap-4 p-4 border rounded-lg hover:bg-muted/30 transition-colors"
                     >
-                      <Avatar className="h-14 w-14 border-2 border-amber-200">
+                      <Avatar className="h-14 w-14 border-2 border-[#D29922]/30">
                         <AvatarImage src={candidate.profile.avatar_url || undefined} />
-                        <AvatarFallback className="bg-amber-100 text-amber-800 text-lg">
+                        <AvatarFallback className="bg-[#D29922]/10 text-[#D29922] text-lg">
                           {getInitials(candidate.profile.first_name, candidate.profile.last_name)}
                         </AvatarFallback>
                       </Avatar>
@@ -205,7 +205,7 @@ export function ConnectionsPageClient({ userId }: ConnectionsPageClientProps) {
                           </h3>
                           <Badge
                             variant="secondary"
-                            className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
+                            className="bg-[#D29922]/10 text-[#D29922]"
                           >
                             {t.discover.matchScore.replace(
                               '{score}',

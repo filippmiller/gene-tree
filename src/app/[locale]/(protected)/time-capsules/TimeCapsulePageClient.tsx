@@ -58,6 +58,7 @@ interface TimeCapsulePageClientProps {
 export default function TimeCapsulePageClient({
   locale,
   currentUserId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentProfile,
   familyMembers,
   translations: t,
@@ -157,13 +158,13 @@ export default function TimeCapsulePageClient({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-white to-orange-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+    <div className="min-h-screen bg-background dark:bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/25">
-              <Timer className="w-7 h-7" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-[#D29922] flex items-center justify-center text-white">
+              <Timer className="w-6 h-6" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-1">
@@ -178,7 +179,7 @@ export default function TimeCapsulePageClient({
               <Button
                 variant="default"
                 size="lg"
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/25"
+                className="bg-[#D29922] hover:bg-[#E0A830] text-black"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 {t.createNew}
@@ -210,7 +211,7 @@ export default function TimeCapsulePageClient({
               <Send className="w-4 h-4" />
               {t.tabSent}
               {sentCapsules.length > 0 && (
-                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-[#D29922]/10 text-[#D29922]">
                   {sentCapsules.length}
                 </span>
               )}
@@ -219,7 +220,7 @@ export default function TimeCapsulePageClient({
               <Inbox className="w-4 h-4" />
               {t.tabReceived}
               {receivedCapsules.length > 0 && (
-                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400">
+                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-[#58A6FF]/10 text-[#58A6FF]">
                   {receivedCapsules.length}
                 </span>
               )}

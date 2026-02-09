@@ -3,13 +3,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Living Archive Card Component
+ * Midnight Glass Card Component
  *
- * Cinematic card design with warm metallics and atmospheric depth
+ * Cinematic card design with atmospheric depth
  *
  * Features:
  * - Elevation system: flat, raised (default), elevated, floating
- * - Interactive variant with hover lift and golden glow
+ * - Interactive variant with hover lift and glow
  * - Smooth entrance animations
  * - Compound components: Header, Title, Description, Content, Footer
  * - Special variants: StatCard, FeatureCard, StoryCard
@@ -138,7 +138,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-2 p-6 pb-4", className)}
+    className={cn("flex flex-col space-y-2 p-4 pb-3", className)}
     {...props}
   />
 ));
@@ -175,7 +175,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div ref={ref} className={cn("p-4 pt-0", className)} {...props} />
 ));
 CardContent.displayName = "CardContent";
 
@@ -186,7 +186,7 @@ const CardFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex items-center p-6 pt-4 border-t border-border/30",
+      "flex items-center p-4 pt-3 border-t border-border/30",
       className
     )}
     {...props}
@@ -210,7 +210,7 @@ const StatCard = React.forwardRef<
     elevation="raised"
     {...props}
   >
-    <CardContent className="p-6">
+    <CardContent className="p-4">
       <div className="flex items-start justify-between">
         <div className="space-y-3">
           <p className="text-sm font-medium text-muted-foreground tracking-wide uppercase">
@@ -265,7 +265,7 @@ const FeatureCard = React.forwardRef<
     glow
     {...props}
   >
-    <CardContent className="p-6">
+    <CardContent className="p-4">
       <div className={cn(
         "mb-5 inline-flex rounded-xl p-3.5",
         "bg-primary/10 text-primary",
@@ -296,18 +296,12 @@ const StoryCard = React.forwardRef<
     ref={ref}
     className={cn(
       "group overflow-hidden",
-      "bg-gradient-to-br from-card to-card/95",
       className
     )}
     elevation="elevated"
     interactive
     {...props}
   >
-    {/* Subtle radial gradient overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-30">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-    </div>
-
     {image && (
       <div className="relative h-48 overflow-hidden">
         <img

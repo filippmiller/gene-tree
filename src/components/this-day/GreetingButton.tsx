@@ -86,7 +86,7 @@ export default function GreetingButton({
         px-3 py-1.5 rounded-full text-sm font-medium transition-colors
         ${greetingType === 'birthday'
           ? 'bg-pink-100 text-pink-700 hover:bg-pink-200'
-          : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+          : 'bg-[#58A6FF]/10 text-[#58A6FF] hover:bg-[#58A6FF]/20'
         }
         disabled:opacity-50 disabled:cursor-not-allowed
       `}

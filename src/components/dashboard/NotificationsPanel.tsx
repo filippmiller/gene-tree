@@ -128,10 +128,10 @@ export default function NotificationsPanel() {
   return (
     <GlassCard glass="medium" padding="none" className="overflow-hidden">
       {/* Header with gradient accent */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/50 dark:border-white/10 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-[#58A6FF]/5">
         <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+            <div className="w-8 h-8 rounded-lg bg-[#58A6FF] flex items-center justify-center">
               <Bell className="w-4 h-4 text-white" />
             </div>
             {unreadCount > 0 && (
@@ -151,7 +151,7 @@ export default function NotificationsPanel() {
             size="sm"
             onClick={markAllAsRead}
             disabled={markingAll}
-            className="text-xs text-muted-foreground hover:text-violet-600 dark:hover:text-violet-400"
+            className="text-xs text-muted-foreground hover:text-[#58A6FF]"
           >
             {markingAll ? (
               <Loader2 className="w-3 h-3 animate-spin mr-1" />
@@ -167,7 +167,7 @@ export default function NotificationsPanel() {
       <div className="max-h-[400px] overflow-y-auto">
         {loading ? (
           <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
-            <Loader2 className="w-5 h-5 animate-spin mr-2 text-violet-500" />
+            <Loader2 className="w-5 h-5 animate-spin mr-2 text-[#58A6FF]" />
             {t.loading}
           </div>
         ) : error ? (
@@ -187,8 +187,8 @@ export default function NotificationsPanel() {
           </div>
         ) : data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-4">
-              <Inbox className="w-7 h-7 text-violet-500" />
+            <div className="w-14 h-14 rounded-2xl bg-[#58A6FF]/10 flex items-center justify-center mb-4">
+              <Inbox className="w-7 h-7 text-[#58A6FF]" />
             </div>
             <p className="text-sm font-medium text-foreground mb-1">
               {t.empty}
@@ -213,8 +213,8 @@ export default function NotificationsPanel() {
 
       {/* Footer - View All link */}
       {data.length > 0 && (
-        <div className="px-4 py-2.5 border-t border-white/50 dark:border-white/10 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
-          <button className="w-full text-center text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-semibold py-1 transition-colors">
+        <div className="px-4 py-2.5 border-t border-white/[0.08] bg-[#58A6FF]/5">
+          <button className="w-full text-center text-xs text-[#58A6FF] hover:text-[#58A6FF]/80 font-semibold py-1 transition-colors">
             {t.viewAll}
           </button>
         </div>

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { X, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BadgeCard, type BadgeData, rarityConfig, iconMap } from "./BadgeCard";
+import { type BadgeData, rarityConfig, iconMap } from "./BadgeCard";
 
 export interface BadgeUnlockCelebrationProps {
   badge: BadgeData;
@@ -70,7 +70,7 @@ export function BadgeUnlockCelebration({
             style={{
               left: `${Math.random() * 100}%`,
               top: `-10%`,
-              backgroundColor: ["#8B5CF6", "#EC4899", "#F59E0B", "#10B981"][
+              backgroundColor: ["#58A6FF", "#F778BA", "#D29922", "#3FB950"][
                 Math.floor(Math.random() * 4)
               ],
               animationDelay: `${Math.random() * 2}s`,
@@ -106,7 +106,7 @@ export function BadgeUnlockCelebration({
         <div
           className={cn(
             "absolute -inset-1 rounded-3xl opacity-50 blur-xl",
-            `bg-gradient-to-r ${rarity.gradient}`
+            rarity.bg
           )}
         />
 
@@ -115,7 +115,7 @@ export function BadgeUnlockCelebration({
           <div
             className={cn(
               "absolute inset-0 rounded-full blur-lg",
-              `bg-gradient-to-r ${rarity.gradient}`,
+              rarity.bg,
               badge.rarity === "legendary" ? "animate-pulse" : ""
             )}
           />
@@ -123,7 +123,7 @@ export function BadgeUnlockCelebration({
             className={cn(
               "relative flex items-center justify-center",
               "w-24 h-24 rounded-full",
-              `bg-gradient-to-br ${rarity.gradient}`,
+              rarity.bg,
               "shadow-lg",
               "animate-bounce-subtle"
             )}
@@ -141,8 +141,9 @@ export function BadgeUnlockCelebration({
         <h3
           className={cn(
             "relative text-xl font-semibold text-center mb-2",
-            "bg-gradient-to-r bg-clip-text text-transparent",
-            rarity.gradient
+            badge.rarity === "legendary" ? "text-[#D29922]" :
+            badge.rarity === "rare" ? "text-[#58A6FF]" :
+            "text-[#8B949E]"
           )}
         >
           {name}
@@ -161,8 +162,8 @@ export function BadgeUnlockCelebration({
             className={cn(
               "relative px-4 py-1 rounded-full text-sm font-medium mb-6",
               badge.rarity === "legendary"
-                ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-                : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400"
+                ? "bg-[#D29922]/10 text-[#D29922] dark:bg-[#D29922]/10 dark:text-[#D29922]"
+                : "bg-[#58A6FF]/10 text-[#58A6FF] dark:bg-[#58A6FF]/10 dark:text-[#58A6FF]"
             )}
           >
             {rarity.label[locale]}
@@ -178,7 +179,7 @@ export function BadgeUnlockCelebration({
             <Button
               className={cn(
                 "flex-1",
-                `bg-gradient-to-r ${rarity.gradient}`,
+                rarity.bg,
                 "text-white hover:opacity-90"
               )}
               onClick={onShare}

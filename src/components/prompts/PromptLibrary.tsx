@@ -3,16 +3,10 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromptCard, type StoryPrompt, categoryConfig } from "./PromptCard";
-import {
-  GlassCard,
-  GlassCardHeader,
-  GlassCardTitle,
-  GlassCardContent,
-} from "@/components/ui/glass-card";
 
 export interface PromptLibraryProps extends React.HTMLAttributes<HTMLDivElement> {
   prompts: StoryPrompt[];
@@ -111,7 +105,7 @@ export function PromptLibrary({
         <TabsList className="flex flex-wrap h-auto gap-2 bg-transparent">
           <TabsTrigger
             value="all"
-            className="data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-[#58A6FF] data-[state=active]:text-white"
           >
             {locale === "ru" ? "Все" : "All"} ({prompts.length})
           </TabsTrigger>
@@ -122,7 +116,7 @@ export function PromptLibrary({
               <TabsTrigger
                 key={cat}
                 value={cat}
-                className="data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+                className="data-[state=active]:bg-[#58A6FF] data-[state=active]:text-white"
               >
                 {config?.label[locale] || cat} ({count})
               </TabsTrigger>

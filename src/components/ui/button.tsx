@@ -4,12 +4,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Living Archive Button Component
+ * Midnight Glass Button Component
  *
- * Premium, cinematic button design with golden accents
+ * Premium, cinematic button design with blue accents
  *
  * Features:
- * - Multiple variants: default (gold), secondary, outline, ghost, destructive, gradient
+ * - Multiple variants: default (blue), secondary, outline, ghost, destructive, accent
  * - Size variants: sm, default, lg, icon variants
  * - Built-in loading state with elegant spinner
  * - Icon support (left, right, or icon-only)
@@ -82,19 +82,15 @@ const buttonVariants = cva(
           "active:text-primary/80",
         ].join(" "),
 
-        // Gradient - Premium, eye-catching CTAs (Gold gradient)
+        // Gradient - Flat blue styling (same as default)
         gradient: [
-          "text-primary-foreground font-semibold",
-          "bg-gradient-to-r from-archive-gold-500 via-primary to-archive-copper-500",
-          "shadow-glow",
-          "hover:-translate-y-0.5 hover:shadow-glow-lg",
-          "active:translate-y-0 active:scale-[0.98]",
-          // Shine effect
+          "bg-primary text-primary-foreground font-semibold",
+          "shadow-btn",
+          "hover:-translate-y-0.5 hover:shadow-glow-primary",
+          "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
           "before:absolute before:inset-0 before:rounded-[inherit]",
-          "before:bg-gradient-to-r before:from-white/0 before:via-white/20 before:to-white/0",
-          "before:translate-x-[-100%] hover:before:translate-x-[100%]",
-          "before:transition-transform before:duration-700 before:ease-out",
-          "overflow-hidden",
+          "before:bg-gradient-to-b before:from-white/10 before:to-transparent",
+          "before:opacity-100",
         ].join(" "),
 
         // Success - Positive confirmations
@@ -106,8 +102,8 @@ const buttonVariants = cva(
           "active:translate-y-0 active:shadow-btn-active active:scale-[0.98]",
         ].join(" "),
 
-        // Copper - Accent variant
-        copper: [
+        // Accent - Teal accent variant
+        accent: [
           "bg-accent text-accent-foreground font-semibold",
           "shadow-btn",
           "hover:-translate-y-0.5 hover:shadow-glow-accent",

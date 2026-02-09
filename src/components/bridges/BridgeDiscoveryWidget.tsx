@@ -94,9 +94,9 @@ export function BridgeDiscoveryWidget() {
 
   if (loading) {
     return (
-      <Card className="border-amber-200/30 bg-gradient-to-br from-amber-50/50 to-orange-50/30 dark:from-amber-950/20 dark:to-orange-950/10">
+      <Card className="border-white/[0.08] bg-card/80 backdrop-blur-md">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-amber-100">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Users className="h-5 w-5" />
             {t.title}
           </CardTitle>
@@ -125,11 +125,11 @@ export function BridgeDiscoveryWidget() {
 
   return (
     <>
-      <Card className="border-amber-200/30 bg-gradient-to-br from-amber-50/50 to-orange-50/30 dark:from-amber-950/20 dark:to-orange-950/10">
+      <Card className="border-white/[0.08] bg-card/80 backdrop-blur-md">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div>
-              <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-amber-100">
+              <CardTitle className="flex items-center gap-2 text-foreground">
                 <Sparkles className="h-5 w-5" />
                 {t.title}
               </CardTitle>
@@ -140,7 +140,7 @@ export function BridgeDiscoveryWidget() {
               </CardDescription>
             </div>
             {counts.pending_received > 0 && (
-              <Badge variant="secondary" className="bg-amber-100 text-amber-800">
+              <Badge variant="secondary" className="bg-[#D29922]/10 text-[#D29922]">
                 {(counts.pending_received === 1 ? t.pendingRequests : t.pendingRequestsPlural).replace(
                   '{count}',
                   counts.pending_received.toString()
@@ -152,7 +152,7 @@ export function BridgeDiscoveryWidget() {
         <CardContent>
           {candidates.length === 0 ? (
             <div className="text-center py-6 text-muted-foreground">
-              <Search className="h-12 w-12 mx-auto mb-3 text-amber-300" />
+              <Search className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
               <p className="font-medium">{t.noCandidates}</p>
               <p className="text-sm mt-1">{t.noCandidatesHint}</p>
             </div>
@@ -161,11 +161,11 @@ export function BridgeDiscoveryWidget() {
               {candidates.slice(0, 3).map((candidate) => (
                 <div
                   key={candidate.candidate_id}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-amber-100/50 dark:hover:bg-amber-900/20 transition-colors"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
                 >
-                  <Avatar className="h-10 w-10 border-2 border-amber-200">
+                  <Avatar className="h-10 w-10 border-2 border-white/[0.08]">
                     <AvatarImage src={candidate.profile.avatar_url || undefined} />
-                    <AvatarFallback className="bg-amber-100 text-amber-800">
+                    <AvatarFallback className="bg-[#D29922]/10 text-[#D29922]">
                       {getInitials(candidate.profile.first_name, candidate.profile.last_name)}
                     </AvatarFallback>
                   </Avatar>
@@ -197,7 +197,7 @@ export function BridgeDiscoveryWidget() {
               {candidates.length > 3 && (
                 <Button
                   variant="ghost"
-                  className="w-full text-amber-700 hover:text-amber-800 hover:bg-amber-100/50"
+                  className="w-full text-[#D29922] hover:text-[#D29922]/80 hover:bg-[#D29922]/5"
                   onClick={handleViewAll}
                 >
                   {t.viewAll}

@@ -35,7 +35,7 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
             className="w-12 h-12 rounded-xl object-cover ring-2 ring-white dark:ring-gray-700 shadow-md group-hover:scale-105 transition-transform duration-200"
           />
         ) : (
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-lg font-semibold shadow-md ring-2 ring-white dark:ring-gray-700 group-hover:scale-105 transition-transform duration-200">
+          <div className="w-12 h-12 rounded-xl bg-[#58A6FF] flex items-center justify-center text-white text-lg font-semibold shadow-md ring-2 ring-white dark:ring-gray-700 group-hover:scale-105 transition-transform duration-200">
             {event.profile_first_name?.[0] || '?'}
           </div>
         )}
@@ -43,7 +43,7 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <Link href={profileUrl} className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
+        <Link href={profileUrl} className="hover:text-[#58A6FF] dark:hover:text-[#58A6FF] transition-colors">
           <p className="font-semibold text-foreground truncate">
             {fullName}
           </p>
@@ -74,7 +74,7 @@ export default function EventCard({ event, onGreetingSent }: EventCardProps) {
       {/* Memorial icon for commemorations */}
       {event.event_type === 'death_commemoration' && (
         <div
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/25"
+          className="w-10 h-10 rounded-xl bg-[#D29922] flex items-center justify-center shadow-md shadow-[#D29922]/25"
           title="In loving memory"
         >
           <Flame className="w-5 h-5 text-white" />

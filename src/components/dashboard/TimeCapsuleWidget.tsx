@@ -75,10 +75,10 @@ export default function TimeCapsuleWidget() {
   return (
     <GlassCard glass="medium" padding="none" className="overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/50 dark:border-white/10 bg-gradient-to-r from-amber-500/5 to-orange-500/5 dark:from-amber-500/10 dark:to-orange-500/10">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-[#D29922]/5">
         <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25">
+            <div className="w-8 h-8 rounded-lg bg-[#D29922] flex items-center justify-center">
               <Timer className="w-4 h-4 text-white" />
             </div>
             {stats && stats.unreadDelivered > 0 && (
@@ -95,7 +95,7 @@ export default function TimeCapsuleWidget() {
       <div className="p-4">
         {loading ? (
           <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
-            <Loader2 className="w-5 h-5 animate-spin mr-2 text-amber-500" />
+            <Loader2 className="w-5 h-5 animate-spin mr-2 text-[#D29922]" />
             {t.loading}
           </div>
         ) : error ? (
@@ -104,14 +104,14 @@ export default function TimeCapsuleWidget() {
           </div>
         ) : !hasContent ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 flex items-center justify-center mb-4">
-              <Package className="w-7 h-7 text-amber-500" />
+            <div className="w-14 h-14 rounded-2xl bg-[#D29922]/10 flex items-center justify-center mb-4">
+              <Package className="w-7 h-7 text-[#D29922]" />
             </div>
             <p className="text-sm font-medium text-foreground mb-1">{t.empty}</p>
             <p className="text-xs text-muted-foreground mb-4">{t.emptyHint}</p>
             <Link
               href={`/${locale}/time-capsules/new`}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-[#D29922] hover:text-[#D29922]/80 transition-colors"
             >
               {t.create}
               <ArrowRight className="w-3.5 h-3.5" />
@@ -121,10 +121,10 @@ export default function TimeCapsuleWidget() {
           <div className="space-y-3">
             {/* Pending capsules */}
             {stats && stats.pendingSent > 0 && (
-              <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/30 dark:border-amber-500/20">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-[#D29922]/5 border border-[#D29922]/20">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                    <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                  <div className="w-10 h-10 rounded-lg bg-[#D29922]/10 flex items-center justify-center">
+                    <Clock className="w-5 h-5 text-[#D29922]" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">
@@ -135,7 +135,7 @@ export default function TimeCapsuleWidget() {
                     </p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">
+                <Badge variant="secondary" className="bg-[#D29922]/10 text-[#D29922]">
                   {stats.pendingSent}
                 </Badge>
               </div>
@@ -167,10 +167,10 @@ export default function TimeCapsuleWidget() {
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2.5 border-t border-white/50 dark:border-white/10 bg-gradient-to-r from-amber-500/5 to-orange-500/5 dark:from-amber-500/10 dark:to-orange-500/10">
+      <div className="px-4 py-2.5 border-t border-white/[0.08] bg-[#D29922]/5">
         <Link
           href={`/${locale}/time-capsules`}
-          className="w-full flex items-center justify-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-semibold py-1 transition-colors"
+          className="w-full flex items-center justify-center gap-1.5 text-xs text-[#D29922] hover:text-[#D29922]/80 font-semibold py-1 transition-colors"
         >
           {t.viewAll}
           <ArrowRight className="w-3.5 h-3.5" />

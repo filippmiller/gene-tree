@@ -74,7 +74,7 @@ export default function MilestoneCard({
         <div className="flex items-center gap-3">
           {/* Category/Type Icon */}
           <div
-            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${categoryConfig?.gradient || 'from-violet-500 to-purple-600'} flex items-center justify-center text-white shadow-lg`}
+            className={`w-12 h-12 rounded-xl ${categoryConfig?.gradient ? `bg-gradient-to-br ${categoryConfig.gradient}` : 'bg-[#58A6FF]'} flex items-center justify-center text-white`}
           >
             {Icon && <Icon className="w-6 h-6" />}
           </div>

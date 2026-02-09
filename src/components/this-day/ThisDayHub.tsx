@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Cake, Heart, Flame, Calendar, Loader2, Inbox } from 'lucide-react';
+import { Cake, Heart, Flame, Calendar, Inbox } from 'lucide-react';
 import type { GetThisDayResponse, ThisDayEventGroup } from '@/types/this-day';
 import { GlassCard } from '@/components/ui/glass-card';
 import EventCard from './EventCard';
@@ -15,24 +15,24 @@ interface ThisDayHubProps {
 const eventTypeConfig = {
   birthday: {
     icon: Cake,
-    gradient: 'from-rose-500 to-pink-600',
-    shadow: 'shadow-rose-500/25',
-    badgeBg: 'bg-rose-100 dark:bg-rose-900/30',
-    badgeText: 'text-rose-600 dark:text-rose-400',
+    bg: 'bg-[#F778BA]',
+    shadow: 'shadow-[#F778BA]/25',
+    badgeBg: 'bg-[#F778BA]/10 dark:bg-[#F778BA]/10',
+    badgeText: 'text-[#F778BA] dark:text-[#F778BA]',
   },
   anniversary: {
     icon: Heart,
-    gradient: 'from-violet-500 to-purple-600',
-    shadow: 'shadow-violet-500/25',
-    badgeBg: 'bg-violet-100 dark:bg-violet-900/30',
-    badgeText: 'text-violet-600 dark:text-violet-400',
+    bg: 'bg-[#58A6FF]',
+    shadow: 'shadow-[#58A6FF]/25',
+    badgeBg: 'bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10',
+    badgeText: 'text-[#58A6FF] dark:text-[#58A6FF]',
   },
   death_commemoration: {
     icon: Flame,
-    gradient: 'from-amber-500 to-orange-600',
-    shadow: 'shadow-amber-500/25',
-    badgeBg: 'bg-amber-100 dark:bg-amber-900/30',
-    badgeText: 'text-amber-600 dark:text-amber-400',
+    bg: 'bg-[#D29922]',
+    shadow: 'shadow-[#D29922]/25',
+    badgeBg: 'bg-[#D29922]/10 dark:bg-[#D29922]/10',
+    badgeText: 'text-[#D29922] dark:text-[#D29922]',
   },
 };
 
@@ -75,7 +75,7 @@ export default function ThisDayHub({ className = '' }: ThisDayHubProps) {
       <GlassCard glass="medium" padding="lg" className={className}>
         <div className="animate-pulse">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-violet-100 dark:bg-violet-900/30" />
+            <div className="w-10 h-10 rounded-xl bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10" />
             <div className="h-6 bg-muted rounded-lg w-1/3" />
           </div>
           <div className="space-y-3">
@@ -101,7 +101,7 @@ export default function ThisDayHub({ className = '' }: ThisDayHubProps) {
     return (
       <GlassCard glass="medium" padding="lg" className={className}>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+          <div className="w-10 h-10 rounded-xl bg-[#58A6FF] flex items-center justify-center shadow-lg shadow-[#58A6FF]/25">
             <Calendar className="w-5 h-5 text-white" />
           </div>
           <h2 className="text-lg font-bold text-foreground">
@@ -109,8 +109,8 @@ export default function ThisDayHub({ className = '' }: ThisDayHubProps) {
           </h2>
         </div>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-4">
-            <Inbox className="w-7 h-7 text-violet-500" />
+          <div className="w-14 h-14 rounded-2xl bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10 flex items-center justify-center mb-4">
+            <Inbox className="w-7 h-7 text-[#58A6FF]" />
           </div>
           <p className="text-sm text-muted-foreground">
             {t('noEvents')}
@@ -124,7 +124,7 @@ export default function ThisDayHub({ className = '' }: ThisDayHubProps) {
     <GlassCard glass="medium" padding="lg" className={className}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+          <div className="w-10 h-10 rounded-xl bg-[#58A6FF] flex items-center justify-center shadow-lg shadow-[#58A6FF]/25">
             <Calendar className="w-5 h-5 text-white" />
           </div>
           <h2 className="text-lg font-bold text-foreground">
@@ -144,7 +144,7 @@ export default function ThisDayHub({ className = '' }: ThisDayHubProps) {
           return (
             <div key={group.type}>
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${config.gradient} flex items-center justify-center shadow-md ${config.shadow}`}>
+                <div className={`w-7 h-7 rounded-lg ${config.bg} flex items-center justify-center shadow-md ${config.shadow}`}>
                   <Icon className="w-4 h-4 text-white" />
                 </div>
                 {group.label}

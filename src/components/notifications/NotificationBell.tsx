@@ -252,13 +252,13 @@ export default function NotificationBell() {
         sideOffset={8}
       >
         {/* Header with gradient accent */}
-        <div className="flex items-center justify-between border-b border-white/50 dark:border-white/10 px-4 py-3 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
+        <div className="flex items-center justify-between border-b border-white/50 dark:border-white/10 px-4 py-3 bg-[#58A6FF]/5 dark:bg-[#58A6FF]/5">
           <h3 className="font-semibold text-sm text-foreground">{t('title')}</h3>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-violet-600 dark:hover:text-violet-400"
+              className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-[#58A6FF] dark:hover:text-[#58A6FF]"
               onClick={markAllAsRead}
               disabled={markingRead}
             >
@@ -276,12 +276,12 @@ export default function NotificationBell() {
         <div className="max-h-[320px] overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-5 w-5 animate-spin text-violet-500" />
+              <Loader2 className="h-5 w-5 animate-spin text-[#58A6FF]" />
             </div>
           ) : recentNotifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-center px-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-3">
-                <Bell className="h-6 w-6 text-violet-500" />
+              <div className="w-12 h-12 rounded-2xl bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10 flex items-center justify-center mb-3">
+                <Bell className="h-6 w-6 text-[#58A6FF]" />
               </div>
               <p className="text-sm text-muted-foreground">{t('empty')}</p>
             </div>
@@ -293,7 +293,7 @@ export default function NotificationBell() {
                   className={cn(
                     'px-4 py-3 cursor-pointer transition-all duration-200',
                     'hover:bg-white/80 dark:hover:bg-gray-800/50',
-                    !row.is_read && 'bg-violet-50/70 dark:bg-violet-950/20'
+                    !row.is_read && 'bg-[#58A6FF]/5 dark:bg-[#58A6FF]/5'
                   )}
                   onClick={() => {
                     if (!row.is_read) {
@@ -305,7 +305,7 @@ export default function NotificationBell() {
                     {/* Unread indicator */}
                     <div className="mt-1.5 shrink-0">
                       {!row.is_read ? (
-                        <span className="flex h-2 w-2 rounded-full bg-violet-500 animate-pulse" />
+                        <span className="flex h-2 w-2 rounded-full bg-[#58A6FF] animate-pulse" />
                       ) : (
                         <span className="flex h-2 w-2 rounded-full bg-transparent" />
                       )}
@@ -334,10 +334,10 @@ export default function NotificationBell() {
 
         {/* Footer */}
         {notifications.length > 0 && (
-          <div className="border-t border-white/50 dark:border-white/10 px-4 py-2.5 bg-gradient-to-r from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10">
+          <div className="border-t border-white/50 dark:border-white/10 px-4 py-2.5 bg-[#58A6FF]/5 dark:bg-[#58A6FF]/5">
             <Link
               href={`/${locale}/app`}
-              className="text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-semibold transition-colors"
+              className="text-xs text-[#58A6FF] dark:text-[#58A6FF] hover:text-[#58A6FF]/80 dark:hover:text-[#58A6FF]/80 font-semibold transition-colors"
               onClick={() => setOpen(false)}
             >
               {t('viewAll')}

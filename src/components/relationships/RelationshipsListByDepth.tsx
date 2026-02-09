@@ -164,7 +164,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-full border-4 border-violet-500 border-t-transparent animate-spin mx-auto mb-4" />
+          <div className="w-12 h-12 rounded-full border-4 border-[#58A6FF] border-t-transparent animate-spin mx-auto mb-4" />
           <p className="text-muted-foreground">{t.loading}</p>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
   if (!data) {
     return (
       <GlassCard glass="medium" className="text-center py-12">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-lg mx-auto mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-[#58A6FF] flex items-center justify-center text-white mx-auto mb-4">
           <Users className="w-8 h-8" />
         </div>
         <h3 className="text-xl font-bold text-foreground mb-2">{t.noData}</h3>
@@ -219,7 +219,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
       <GlassCard
         glass="tinted"
         padding="lg"
-        className="bg-gradient-to-br from-violet-500/90 to-purple-600/90 text-white border-violet-400/30"
+        className="bg-[#58A6FF] text-white border-[#58A6FF]/30"
       >
         <h2 className="text-2xl font-bold mb-2">{t.yourFamily}</h2>
         <p className="text-white/80 mb-6">
@@ -440,7 +440,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
         padding="lg"
         className="text-center"
       >
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 mx-auto mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-[#3FB9A0] flex items-center justify-center text-white mx-auto mb-4">
           <TreePine className="w-8 h-8" />
         </div>
         <h3 className="text-2xl font-bold text-foreground mb-2">
@@ -449,7 +449,7 @@ export default function RelationshipsListByDepth({ currentUserId }: Props) {
         <p className="text-muted-foreground mb-6 max-w-md mx-auto">
           {t.visualizeDesc}
         </p>
-        <Button asChild variant="gradient" size="lg">
+        <Button asChild size="lg">
           <Link href={`/${locale}/tree/${currentUserId}`}>
             {t.openTree} →
           </Link>

@@ -50,6 +50,7 @@ export function WeeklyPrompt({
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [actionLoading, setActionLoading] = React.useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [answered, setAnswered] = React.useState(false);
 
   const fetchWeeklyPrompt = React.useCallback(async () => {
@@ -115,7 +116,7 @@ export function WeeklyPrompt({
     return (
       <GlassCard glass="medium" padding="lg" className={cn("", className)} {...props}>
         <GlassCardContent className="flex flex-col items-center justify-center py-8">
-          <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#58A6FF]" />
           <p className="mt-2 text-sm text-muted-foreground">
             {locale === "ru" ? "Загрузка..." : "Loading..."}
           </p>
@@ -167,18 +168,18 @@ export function WeeklyPrompt({
       {...props}
     >
       {/* Decorative gradient */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-violet-500/10 to-transparent rounded-full -mr-16 -mt-16" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#58A6FF]/10 rounded-full -mr-16 -mt-16" />
 
       <GlassCardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <GlassCardTitle className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-violet-500" />
+            <MessageCircle className="w-5 h-5 text-[#58A6FF]" />
             {locale === "ru" ? "Вопрос недели" : "Weekly Prompt"}
           </GlassCardTitle>
 
           <div className="flex items-center gap-2">
             {prompt.is_new && (
-              <Badge variant="outline" className="bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border-violet-200">
+              <Badge variant="outline" className="bg-[#58A6FF]/10 text-[#58A6FF] dark:bg-[#58A6FF]/10 dark:text-[#58A6FF] border-[#58A6FF]/20">
                 <Sparkles className="w-3 h-3 mr-1" />
                 {locale === "ru" ? "Новый" : "New"}
               </Badge>
@@ -242,7 +243,7 @@ export function WeeklyPrompt({
               size="sm"
               onClick={handleAnswer}
               disabled={actionLoading}
-              className="flex-1 bg-violet-500 hover:bg-violet-600 text-white"
+              className="flex-1 bg-[#58A6FF] hover:bg-[#58A6FF]/90 text-white"
             >
               <Send className="w-4 h-4 mr-2" />
               {locale === "ru" ? "Ответить" : "Answer"}

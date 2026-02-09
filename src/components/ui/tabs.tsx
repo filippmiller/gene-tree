@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /**
  * Living Archive Tabs Component
  *
- * Premium tab navigation with golden active states
+ * Premium tab navigation with active states
  *
  * Features:
  * - Smooth animated active indicator
@@ -72,10 +72,9 @@ const tabsTriggerVariants = cva(
           "px-4 py-2.5 rounded-xl",
           "text-muted-foreground",
           "hover:text-foreground hover:bg-muted/50",
-          // Active state - golden gradient
-          "data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:via-primary data-[state=active]:to-accent",
+          // Active state - flat primary
+          "data-[state=active]:bg-primary",
           "data-[state=active]:text-primary-foreground",
-          "data-[state=active]:shadow-glow-primary",
         ].join(" "),
         underline: [
           "px-4 py-3 -mb-px",

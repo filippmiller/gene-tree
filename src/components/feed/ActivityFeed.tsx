@@ -162,7 +162,7 @@ export default function ActivityFeed({
     return (
       <div className={className}>
         <div className="flex items-center justify-center py-8">
-          <RefreshCw className="w-5 h-5 animate-spin text-violet-500" />
+          <RefreshCw className="w-5 h-5 animate-spin text-[#58A6FF]" />
         </div>
       </div>
     );
@@ -195,9 +195,9 @@ export default function ActivityFeed({
               onClick={mergePendingEvents}
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 rounded-full",
-                "bg-gradient-to-r from-violet-500 to-purple-600",
+                "bg-[#58A6FF]",
                 "text-white text-sm font-medium",
-                "shadow-lg shadow-violet-500/25",
+                "",
                 "hover:shadow-xl hover:scale-105",
                 "transition-all duration-200",
                 "animate-pulse"
@@ -223,7 +223,7 @@ export default function ActivityFeed({
                   {realtimeError && (
                     <button
                       onClick={reconnect}
-                      className="ml-1 text-violet-500 hover:text-violet-600 underline"
+                      className="ml-1 text-[#58A6FF] hover:text-[#4A90E2] underline"
                     >
                       Reconnect
                     </button>
@@ -246,7 +246,7 @@ export default function ActivityFeed({
           <div ref={loadMoreRef} className="py-4">
             {isLoadingMore && (
               <div className="flex items-center justify-center">
-                <RefreshCw className="w-4 h-4 animate-spin text-violet-500" />
+                <RefreshCw className="w-4 h-4 animate-spin text-[#58A6FF]" />
               </div>
             )}
             {!hasMore && events.length > 0 && (
@@ -258,8 +258,8 @@ export default function ActivityFeed({
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 flex items-center justify-center mb-4">
-            <Inbox className="w-7 h-7 text-violet-500" />
+          <div className="w-14 h-14 rounded-2xl bg-[#58A6FF]/10 flex items-center justify-center mb-4">
+            <Inbox className="w-7 h-7 text-[#58A6FF]" />
           </div>
           <p className="text-sm font-medium text-foreground mb-1">No recent activity</p>
           <p className="text-xs text-muted-foreground max-w-[220px]">

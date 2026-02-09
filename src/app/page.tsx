@@ -21,7 +21,7 @@ export default async function LandingPage() {
       <nav data-testid="landing-nav" className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0c]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#D29922] rounded-xl flex items-center justify-center">
               <TreePine className="w-5 h-5 text-black" />
             </div>
             <span className="text-xl font-semibold">Gene-Tree</span>
@@ -38,7 +38,7 @@ export default async function LandingPage() {
             <Link
               href={`/${locale}/sign-up`}
               data-testid="nav-get-started"
-              className="px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-amber-500 to-orange-500 text-black rounded-lg hover:from-amber-400 hover:to-orange-400 transition-all shadow-lg shadow-amber-500/20"
+              className="px-5 py-2.5 text-sm font-medium bg-[#D29922] text-black rounded-lg hover:bg-[#E0A830] transition-all"
             >
               {t.getStarted}
             </Link>
@@ -75,7 +75,7 @@ export default async function LandingPage() {
           <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-6 leading-[1.1]">
             {t.heroTitle1}
             <br />
-            <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent font-medium">
+            <span className="text-[#D29922] font-medium">
               {t.heroTitle2}
             </span>
           </h1>
@@ -89,7 +89,7 @@ export default async function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href={`/${locale}/sign-up`}
-              className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-semibold rounded-xl hover:from-amber-400 hover:to-orange-400 transition-all shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105"
+              className="group flex items-center gap-2 px-8 py-4 bg-[#D29922] text-black font-semibold rounded-xl hover:bg-[#E0A830] transition-all hover:scale-105"
             >
               {t.startFree}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -135,7 +135,7 @@ export default async function LandingPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="group p-8 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] hover:border-amber-500/20 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-500/20 to-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-14 h-14 bg-[#D29922]/15 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <TreePine className="w-7 h-7 text-amber-400" />
               </div>
               <h3 className="text-xl font-medium mb-3">{t.feature1Title}</h3>
@@ -144,7 +144,7 @@ export default async function LandingPage() {
 
             {/* Feature 2 */}
             <div className="group p-8 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] hover:border-amber-500/20 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-500/20 to-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-14 h-14 bg-[#D29922]/15 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <BookOpen className="w-7 h-7 text-amber-400" />
               </div>
               <h3 className="text-xl font-medium mb-3">{t.feature2Title}</h3>
@@ -153,7 +153,7 @@ export default async function LandingPage() {
 
             {/* Feature 3 */}
             <div className="group p-8 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] hover:border-amber-500/20 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-500/20 to-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-14 h-14 bg-[#D29922]/15 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Users className="w-7 h-7 text-amber-400" />
               </div>
               <h3 className="text-xl font-medium mb-3">{t.feature3Title}</h3>
@@ -179,7 +179,7 @@ export default async function LandingPage() {
               </p>
               <Link
                 href={`/${locale}/sign-up`}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-semibold rounded-xl hover:from-amber-400 hover:to-orange-400 transition-all shadow-xl shadow-amber-500/25"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#D29922] text-black font-semibold rounded-xl hover:bg-[#E0A830] transition-all"
               >
                 {t.ctaButton}
                 <ArrowRight className="w-5 h-5" />
@@ -193,7 +193,7 @@ export default async function LandingPage() {
       <footer className="py-12 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#D29922] rounded-lg flex items-center justify-center">
               <TreePine className="w-4 h-4 text-black" />
             </div>
             <span className="text-sm text-zinc-500">© 2026 Gene-Tree. {t.footerRights}</span>

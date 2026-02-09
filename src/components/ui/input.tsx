@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 /**
  * Living Archive Input Component
  *
- * Premium input design with golden accents and refined interactions
+ * Premium input design with refined interactions
  *
  * Features:
  * - Floating label animation
  * - Validation states (success, error, warning)
  * - Left/right icon slots
  * - Helper text with animation
- * - Smooth focus transitions with golden glow
+ * - Smooth focus transitions
  */
 
 const inputVariants = cva(
@@ -49,12 +49,11 @@ const inputVariants = cva(
           "focus:bg-background focus:border-warning focus:ring-2 focus:ring-warning/20",
         ].join(" "),
 
-        // Archive variant - with golden accents
+        // Archive variant
         archive: [
           "border-primary/20 bg-muted/20",
           "hover:border-primary/30",
           "focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/30",
-          "focus:shadow-glow-primary",
         ].join(" "),
       },
       inputSize: {

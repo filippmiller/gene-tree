@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
-import { Send, User, Loader2, Search, MessageCircle } from "lucide-react";
+import { Send, Loader2, Search, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -78,6 +78,7 @@ export function AssignPromptModal({
     try {
       await onAssign(prompt.id, selectedMember, message || undefined);
       onClose();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError(
         locale === "ru"
@@ -103,7 +104,7 @@ export function AssignPromptModal({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-violet-500" />
+            <MessageCircle className="w-5 h-5 text-[#58A6FF]" />
             {locale === "ru" ? "Отправить вопрос" : "Send Prompt"}
           </DialogTitle>
           <DialogDescription>
@@ -115,7 +116,7 @@ export function AssignPromptModal({
 
         <div className="space-y-4 py-4">
           {/* Prompt preview */}
-          <div className="p-4 rounded-lg bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800">
+          <div className="p-4 rounded-lg bg-[#58A6FF]/5 dark:bg-[#58A6FF]/5 border border-[#58A6FF]/20 dark:border-[#58A6FF]/20">
             <span
               className={cn(
                 "inline-block text-xs px-2 py-0.5 rounded mb-2",
@@ -158,7 +159,7 @@ export function AssignPromptModal({
                   className={cn(
                     "w-full flex items-center gap-3 p-2 rounded-md transition-colors",
                     selectedMember === member.id
-                      ? "bg-violet-100 dark:bg-violet-900/30 border border-violet-300 dark:border-violet-700"
+                      ? "bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10 border border-[#58A6FF]/30 dark:border-[#58A6FF]/20"
                       : "hover:bg-gray-100 dark:hover:bg-gray-800"
                   )}
                 >
@@ -216,7 +217,7 @@ export function AssignPromptModal({
           <Button
             onClick={handleSubmit}
             disabled={!selectedMember || isSubmitting}
-            className="bg-violet-500 hover:bg-violet-600 text-white"
+            className="bg-[#58A6FF] hover:bg-[#58A6FF]/90 text-white"
           >
             {isSubmitting ? (
               <>

@@ -10,17 +10,17 @@ const config: Config = {
   theme: {
     extend: {
       /* ═══════════════════════════════════════════════════════════════════════
-         TYPOGRAPHY - Living Archive Design System
+         TYPOGRAPHY - Midnight Glass Design System
          ═══════════════════════════════════════════════════════════════════════ */
       fontFamily: {
-        // Elegant serif for display/headings
-        display: ['Cormorant Garamond', 'Georgia', 'Times New Roman', 'serif'],
+        // Modern sans-serif for display/headings
+        display: ['Plus Jakarta Sans', 'DM Sans', 'system-ui', 'sans-serif'],
         // Modern sans for body text
         sans: ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
         // Monospace for data/code
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
         // Legacy alias
-        heritage: ['Cormorant Garamond', 'Georgia', 'Times New Roman', 'serif'],
+        heritage: ['Plus Jakarta Sans', 'DM Sans', 'system-ui', 'sans-serif'],
       },
 
       /* ═══════════════════════════════════════════════════════════════════════
@@ -83,79 +83,43 @@ const config: Config = {
           "5": "hsl(var(--chart-5))",
         },
 
-        // Archive Design Palette
+        // Midnight Glass Palette
         archive: {
-          // Antique Gold spectrum
-          gold: {
-            50: "#fdfaf3",
-            100: "#faf4e4",
-            200: "#f4e5c3",
-            300: "#ecd098",
-            400: "#e2b56b",
-            500: "#d4a04a", // Primary gold
-            600: "#c18636",
-            700: "#a16a2e",
-            800: "#84552c",
-            900: "#6d4728",
+          // Blue accent spectrum
+          blue: {
+            50: "#eff6ff",
+            100: "#dbeafe",
+            200: "#bfdbfe",
+            300: "#93c5fd",
+            400: "#60a5fa",
+            500: "#58A6FF",
+            600: "#3b82f6",
+            700: "#2563eb",
+            800: "#1d4ed8",
+            900: "#1e40af",
           },
-          // Aged Copper spectrum
-          copper: {
-            50: "#fdf6f3",
-            100: "#faeae4",
-            200: "#f5d3c8",
-            300: "#edb5a2",
-            400: "#e18b6f",
-            500: "#cf6b4a", // Primary copper
-            600: "#bc5539",
-            700: "#9c4430",
-            800: "#81392c",
-            900: "#6b3229",
+          // Teal accent spectrum
+          teal: {
+            50: "#f0fdfa",
+            100: "#ccfbf1",
+            200: "#99f6e4",
+            300: "#5eead4",
+            400: "#3FB9A0",
+            500: "#14b8a6",
+            600: "#0d9488",
+            700: "#0f766e",
+            800: "#115e59",
+            900: "#134e4a",
           },
-          // Obsidian (dark backgrounds)
-          void: "#0a0a0c",
-          obsidian: "#141417",
-          charcoal: "#1a1a1e",
-          smoke: "#27272b",
-          // Platinum (light text)
-          platinum: "#b4b4b8",
-          silver: "#9a9a9e",
-          ivory: "#f8f8f5",
-        },
-
-        // Legacy heritage colors for backward compatibility
-        heritage: {
-          sage: {
-            50: "#f4f7f2",
-            100: "#e5ebe1",
-            200: "#cad8c3",
-            300: "#a8bf9d",
-            400: "#82a172",
-            500: "#638552",
-            600: "#4d6a40",
-            700: "#3f5535",
-            800: "#35452e",
-            900: "#2d3a27",
-          },
-          amber: {
-            50: "#fdf8f1",
-            100: "#f9eddd",
-            200: "#f2d9b9",
-            300: "#e9c08d",
-            400: "#dea05f",
-            500: "#d4874a",
-            600: "#c66f3a",
-            700: "#a55631",
-            800: "#85462d",
-            900: "#6d3b27",
-          },
-          cream: {
-            50: "#fefdfb",
-            100: "#fcf9f3",
-            200: "#f8f2e7",
-            300: "#f2e7d5",
-            400: "#e9d5b8",
-            500: "#dfc49c",
-          },
+          // Dark backgrounds (Midnight Glass)
+          void: "#0A0D12",
+          obsidian: "#0F1116",
+          charcoal: "#161B22",
+          smoke: "#272D36",
+          // Light text
+          platinum: "#E6EDF3",
+          silver: "#8B949E",
+          ivory: "#F0F6FC",
         },
 
         // Generation colors for tree visualization
@@ -167,15 +131,15 @@ const config: Config = {
           4: "hsl(var(--chart-5))",
         },
 
-        // Relationship type colors
+        // Relationship type colors (flat, no gradients)
         relation: {
-          parent: "hsl(var(--chart-1))",
-          child: "hsl(var(--chart-3))",
-          spouse: "hsl(var(--chart-5))",
-          sibling: "hsl(var(--chart-4))",
+          parent: "#58A6FF",
+          child: "#56D4DD",
+          spouse: "#F778BA",
+          sibling: "#3FB950",
         },
 
-        // Additional utility colors
+        // Utility colors
         violet: {
           50: "#f5f3ff",
           100: "#ede9fe",
@@ -243,10 +207,10 @@ const config: Config = {
       },
 
       /* ═══════════════════════════════════════════════════════════════════════
-         SHADOWS - Cinematic depth system
+         SHADOWS - Clean depth system
          ═══════════════════════════════════════════════════════════════════════ */
       boxShadow: {
-        // Elevation system - warm tinted
+        // Elevation system
         "elevation-1": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         "elevation-2": "0 2px 8px -2px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06)",
         "elevation-3": "0 4px 16px -4px rgb(0 0 0 / 0.12), 0 2px 4px rgb(0 0 0 / 0.06)",
@@ -265,9 +229,9 @@ const config: Config = {
         // Photo frame shadow
         "frame": "0 4px 20px -4px rgb(0 0 0 / 0.25), 0 2px 6px rgb(0 0 0 / 0.1)",
 
-        // Glow effects - golden
-        "glow": "0 0 20px -5px hsl(43 65% 58% / 0.3)",
-        "glow-lg": "0 0 40px -8px hsl(43 65% 58% / 0.4)",
+        // Glow effects - blue accent
+        "glow": "0 0 20px -5px hsl(212 92% 67% / 0.3)",
+        "glow-lg": "0 0 40px -8px hsl(212 92% 67% / 0.4)",
         "glow-primary": "0 0 24px -6px hsl(var(--primary) / 0.4)",
         "glow-accent": "0 0 24px -6px hsl(var(--accent) / 0.4)",
 
@@ -277,7 +241,7 @@ const config: Config = {
 
         // Inner shadows
         "inner": "inset 0 2px 4px rgb(0 0 0 / 0.06)",
-        "inner-glow": "inset 0 1px 0 hsl(var(--primary) / 0.1)",
+        "inner-glow": "inset 0 1px 0 hsl(var(--primary) / 0.05)",
 
         // Legacy aliases
         "heritage": "0 4px 24px -4px rgb(0 0 0 / 0.12)",
@@ -295,17 +259,14 @@ const config: Config = {
          GRADIENTS
          ═══════════════════════════════════════════════════════════════════════ */
       backgroundImage: {
-        // Gold gradient
-        "gradient-gold": "linear-gradient(135deg, hsl(43 65% 68%) 0%, hsl(43 65% 58%) 50%, hsl(25 55% 55%) 100%)",
-        // Copper gradient
-        "gradient-copper": "linear-gradient(135deg, hsl(25 55% 65%) 0%, hsl(25 55% 55%) 50%, hsl(15 45% 45%) 100%)",
-        // Platinum gradient
-        "gradient-platinum": "linear-gradient(135deg, hsl(40 5% 80%) 0%, hsl(40 5% 70%) 50%, hsl(40 5% 60%) 100%)",
+        // Glass gradient (subtle dark gradient for glass surfaces)
+        "gradient-glass": "linear-gradient(180deg, hsl(220 13% 9% / 0.8) 0%, hsl(220 13% 7% / 0.9) 100%)",
         // Cinematic gradient
-        "gradient-cinematic": "linear-gradient(180deg, hsl(240 5% 6%) 0%, hsl(240 4% 12%) 100%)",
+        "gradient-cinematic": "linear-gradient(180deg, #0F1116 0%, #161B22 100%)",
         // Radial spotlight
         "spotlight": "radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(--primary) / 0.06), transparent 40%)",
-        // Legacy
+        // Legacy aliases (now use CSS variable-based primary)
+        "gradient-gold": "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%)",
         "gradient-heritage": "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%)",
       },
 

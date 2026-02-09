@@ -29,14 +29,14 @@ const personCardVariants = cva(
           'border border-white/40 dark:border-white/10',
           'shadow-glass',
           'hover:-translate-y-1 hover:shadow-glass-hover',
-          'hover:border-violet-500/20',
+          'hover:border-[#58A6FF]/20',
         ].join(' '),
         solid: [
           'bg-card',
           'border border-border',
           'shadow-elevation-2',
           'hover:-translate-y-1 hover:shadow-elevation-3',
-          'hover:border-violet-500/20',
+          'hover:border-[#58A6FF]/20',
         ].join(' '),
         minimal: [
           'bg-white/30 dark:bg-gray-800/30',
@@ -45,9 +45,9 @@ const personCardVariants = cva(
           'hover:border-white/40 dark:hover:border-white/10',
         ].join(' '),
         highlighted: [
-          'bg-gradient-to-br from-violet-500/10 to-sky-500/5',
+          'bg-[#58A6FF]/10',
           'backdrop-blur-md',
-          'border border-violet-500/20',
+          'border border-[#58A6FF]/20',
           'shadow-glass',
           'hover:-translate-y-1 hover:shadow-glow',
         ].join(' '),
@@ -65,26 +65,26 @@ const personCardVariants = cva(
   }
 );
 
-// Avatar ring colors for relationship types
+// Avatar ring colors for relationship types (Midnight Glass palette)
 const avatarRingColors: Record<string, string> = {
-  parents: 'ring-violet-500',
-  grandparents: 'ring-amber-500',
-  children: 'ring-sky-500',
-  grandchildren: 'ring-pink-500',
-  siblings: 'ring-emerald-500',
-  spouses: 'ring-rose-500',
-  default: 'ring-violet-500',
+  parents: 'ring-[#58A6FF]',
+  grandparents: 'ring-[#3FB9A0]',
+  children: 'ring-[#56D4DD]',
+  grandchildren: 'ring-[#8B8FFF]',
+  siblings: 'ring-[#3FB950]',
+  spouses: 'ring-[#F778BA]',
+  default: 'ring-[#58A6FF]',
 };
 
-// Avatar gradient colors
-const avatarGradients: Record<string, string> = {
-  parents: 'from-violet-500 to-purple-600',
-  grandparents: 'from-amber-500 to-orange-600',
-  children: 'from-sky-500 to-blue-600',
-  grandchildren: 'from-pink-500 to-rose-600',
-  siblings: 'from-emerald-500 to-teal-600',
-  spouses: 'from-rose-500 to-red-600',
-  default: 'from-violet-500 to-purple-600',
+// Avatar flat fallback colors (Midnight Glass palette)
+const avatarFallbackColors: Record<string, string> = {
+  parents: 'bg-[#58A6FF]',
+  grandparents: 'bg-[#3FB9A0]',
+  children: 'bg-[#56D4DD]',
+  grandchildren: 'bg-[#8B8FFF]',
+  siblings: 'bg-[#3FB950]',
+  spouses: 'bg-[#F778BA]',
+  default: 'bg-[#58A6FF]',
 };
 
 export interface PersonCardWithPresenceProps
@@ -176,7 +176,7 @@ export const PersonCardWithPresence = React.forwardRef<
     };
 
     const ringColor = avatarRingColors[relationshipType] || avatarRingColors.default;
-    const gradientColor = avatarGradients[relationshipType] || avatarGradients.default;
+    const fallbackColor = avatarFallbackColors[relationshipType] || avatarFallbackColors.default;
     const lifespan = formatLifespan();
 
     // Only show presence for living people
@@ -209,7 +209,7 @@ export const PersonCardWithPresence = React.forwardRef<
             showPresence={shouldShowPresence}
             size={avatarSize}
             ringColor={ringColor}
-            gradientColor={gradientColor}
+            fallbackColor={fallbackColor}
             avatarClassName="transition-transform duration-300 group-hover:scale-105"
           />
 
@@ -228,7 +228,7 @@ export const PersonCardWithPresence = React.forwardRef<
         <div className="flex-1 min-w-0">
           <h3
             className={cn(
-              'font-semibold text-foreground truncate transition-colors group-hover:text-violet-600 dark:group-hover:text-violet-400',
+              'font-semibold text-foreground truncate transition-colors group-hover:text-[#58A6FF]',
               size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : 'text-base'
             )}
           >
@@ -260,7 +260,7 @@ export const PersonCardWithPresence = React.forwardRef<
       return (
         <Link
           href={href}
-          className="block focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 rounded-2xl"
+          className="block focus:outline-none focus:ring-2 focus:ring-[#58A6FF] focus:ring-offset-2 rounded-2xl"
         >
           {cardContent}
         </Link>

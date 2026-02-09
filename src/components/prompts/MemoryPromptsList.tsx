@@ -32,8 +32,6 @@ import {
 import {
   GlassCard,
   GlassCardContent,
-  GlassCardHeader,
-  GlassCardTitle,
 } from "@/components/ui/glass-card";
 import { MemoryPromptCard } from "./MemoryPromptCard";
 import type {
@@ -70,6 +68,7 @@ export function MemoryPromptsList({
 }: MemoryPromptsListProps) {
   const locale = useLocale() as "en" | "ru";
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const searchParams = useSearchParams();
 
   // State
@@ -247,8 +246,8 @@ export function MemoryPromptsList({
 
           <GlassCard glass="subtle" padding="md">
             <GlassCardContent className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-amber-600" />
+              <div className="w-10 h-10 rounded-xl bg-[#D29922]/10 dark:bg-[#D29922]/10 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-[#D29922]" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.pending_count}</p>

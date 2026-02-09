@@ -332,9 +332,9 @@ export default function WelcomeScreen({
                 onClick={handleAccept}
                 disabled={isAccepting}
                 loading={isAccepting}
-                variant="gradient"
+                variant="success"
                 size="lg"
-                className="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:via-teal-600 hover:to-emerald-700 shadow-emerald-500/25 hover:shadow-emerald-500/30"
+                className="w-full"
                 rightIcon={<ArrowRight className="w-5 h-5" />}
               >
                 {t.acceptInvitation}

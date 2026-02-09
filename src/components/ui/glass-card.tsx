@@ -5,9 +5,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Living Archive GlassCard
+ * Midnight Glass GlassCard
  *
- * Premium glassmorphism card with warm golden accents
+ * Premium glassmorphism card with blue accents
  * Provides atmospheric depth and cinematic feel
  */
 
@@ -43,13 +43,12 @@ const glassCardVariants = cva(
           "shadow-elevation-4",
         ].join(" "),
 
-        // Tinted - Glass with golden tint
+        // Tinted - Same as frosted
         tinted: [
-          "bg-gradient-to-br from-primary/5 via-card/80 to-accent/5",
-          "dark:from-primary/10 dark:via-card/90 dark:to-accent/10",
-          "backdrop-blur-md",
-          "border border-primary/10",
-          "shadow-elevation-2",
+          "bg-card/50 dark:bg-card/70",
+          "backdrop-blur-xl",
+          "border border-border/20",
+          "shadow-elevation-4",
         ].join(" "),
 
         // Solid - No glass, just elevated card
@@ -95,7 +94,7 @@ const glassCardVariants = cva(
     defaultVariants: {
       glass: "medium",
       hover: "none",
-      padding: "md",
+      padding: "sm",
     },
   }
 );

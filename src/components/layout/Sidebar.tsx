@@ -125,9 +125,6 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
         className
       )}
     >
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
-
       {/* ═══════════════════════════════════════════════════════════════════════
          HEADER - Logo & Collapse Toggle
          ═══════════════════════════════════════════════════════════════════════ */}
@@ -139,19 +136,18 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
           {/* Logo Icon */}
           <div className={cn(
             "relative h-10 w-10 rounded-xl overflow-hidden flex-shrink-0",
-            "bg-gradient-to-br from-primary via-primary to-accent",
-            "shadow-glow transition-all duration-300",
-            "group-hover:shadow-glow-lg group-hover:scale-105"
+            "bg-[#161B22] border border-[#30363D]",
+            "transition-all duration-300",
+            "group-hover:border-[#58A6FF]/50 group-hover:scale-105"
           )}>
-            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-primary-foreground" />
+              <Sparkles className="h-5 w-5 text-[#58A6FF]" />
             </div>
           </div>
 
           {/* Wordmark */}
           <span className={cn(
-            "font-display text-xl font-medium tracking-tight text-gradient-gold whitespace-nowrap",
+            "font-display text-xl font-medium tracking-tight text-[#E6EDF3] whitespace-nowrap",
             "transition-all duration-500 ease-cinematic",
             collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
           )}>
@@ -215,15 +211,15 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
                     className={cn(
                       "group relative flex items-center gap-3 rounded-xl overflow-hidden",
                       "transition-all duration-300 ease-cinematic",
-                      collapsed ? "px-3 py-3 justify-center" : "px-3 py-2.5",
+                      collapsed ? "px-3 py-3 justify-center" : "px-3 py-2",
                       active
-                        ? "bg-gradient-to-r from-primary/20 to-primary/10 text-white"
+                        ? "bg-[#58A6FF]/10 text-white"
                         : "text-archive-platinum hover:text-white hover:bg-white/5"
                     )}
                   >
                     {/* Active indicator bar */}
                     {active && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-primary to-accent shadow-glow" />
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-[#58A6FF]" />
                     )}
 
                     {/* Icon */}
@@ -231,7 +227,7 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
                       "flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0",
                       "transition-all duration-300",
                       active
-                        ? "bg-primary/20 text-primary shadow-glow"
+                        ? "bg-primary/20 text-primary"
                         : "text-archive-silver group-hover:text-white group-hover:bg-white/5"
                     )}>
                       <Icon className="h-[18px] w-[18px]" />
@@ -299,15 +295,15 @@ export default function Sidebar({ collapsed, onToggle, className }: SidebarProps
                 className={cn(
                   "rounded-xl object-cover ring-2 ring-white/10",
                   "transition-all duration-300",
-                  "group-hover:ring-primary/50 group-hover:shadow-glow",
+                  "group-hover:ring-primary/50",
                   collapsed ? "w-10 h-10" : "w-11 h-11"
                 )}
               />
             ) : (
               <div className={cn(
-                "rounded-xl bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center",
+                "rounded-xl bg-[#272D36] flex items-center justify-center",
                 "ring-2 ring-white/10 transition-all duration-300",
-                "group-hover:ring-primary/50 group-hover:shadow-glow",
+                "group-hover:ring-primary/50",
                 collapsed ? "w-10 h-10" : "w-11 h-11"
               )}>
                 <span className="text-white font-display font-medium">

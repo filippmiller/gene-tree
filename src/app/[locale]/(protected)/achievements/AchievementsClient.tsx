@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
 import {
   Trophy,
   Flame,
@@ -152,71 +151,63 @@ export function AchievementsClient({
   const daysUntilLost = isActiveToday ? 2 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-amber-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        {/* Header */}
-        <GlassCard glass="frosted" padding="none" className="overflow-hidden">
-          <div className="relative">
-            {/* Gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-purple-500 to-amber-500" />
-            {/* Decorative elements */}
-            <div className="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute left-0 bottom-0 w-48 h-48 bg-white/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
-
-            <div className="relative p-6 sm:p-8 text-white">
-              <div className="flex items-center gap-3 mb-2">
-                <Trophy className="w-8 h-8" />
-                <h1 className="text-3xl font-bold">{t.title}</h1>
-              </div>
-              <p className="text-white/80 max-w-lg">{t.subtitle}</p>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 space-y-3">
+        {/* Header - Compact glass card */}
+        <div className="bg-card/80 backdrop-blur-md border border-white/[0.08] rounded-xl p-4">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-primary" />
             </div>
+            <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
           </div>
-        </GlassCard>
+          <p className="text-sm text-muted-foreground ml-12">{t.subtitle}</p>
+        </div>
 
         {/* Stats Overview */}
         <GamificationStatsCard stats={stats} totalBadges={badges.length} />
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="flex flex-wrap h-auto gap-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-2 rounded-xl">
+        <Tabs defaultValue="overview" className="space-y-3">
+          <TabsList className="flex flex-wrap h-auto gap-1 bg-[#161B22] border border-[#30363D] backdrop-blur-sm p-1 rounded-lg">
             <TabsTrigger
               value="overview"
-              className="flex items-center gap-2 data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+              className="flex items-center gap-1.5 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-3.5 h-3.5" />
               {t.tabOverview}
             </TabsTrigger>
             <TabsTrigger
               value="badges"
-              className="flex items-center gap-2 data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+              className="flex items-center gap-1.5 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <Award className="w-4 h-4" />
+              <Award className="w-3.5 h-3.5" />
               {t.tabBadges}
             </TabsTrigger>
             <TabsTrigger
               value="challenges"
-              className="flex items-center gap-2 data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+              className="flex items-center gap-1.5 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <Target className="w-4 h-4" />
+              <Target className="w-3.5 h-3.5" />
               {t.tabChallenges}
             </TabsTrigger>
             <TabsTrigger
               value="leaderboard"
-              className="flex items-center gap-2 data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+              className="flex items-center gap-1.5 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <Crown className="w-4 h-4" />
+              <Crown className="w-3.5 h-3.5" />
               {t.tabLeaderboard}
             </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <TabsContent value="overview" className="space-y-3">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
               {/* Streak */}
               <GlassCard glass="subtle" padding="md">
-                <GlassCardHeader className="pb-4">
-                  <GlassCardTitle className="flex items-center gap-2">
-                    <Flame className="w-5 h-5 text-orange-500" />
+                <GlassCardHeader className="pb-3">
+                  <GlassCardTitle className="flex items-center gap-2 text-base">
+                    <Flame className="w-4 h-4 text-[#D29922]" />
                     {t.streakTitle}
                   </GlassCardTitle>
                 </GlassCardHeader>
@@ -244,14 +235,14 @@ export function AchievementsClient({
             {/* Active Challenges Preview */}
             {challenges.length > 0 && (
               <GlassCard glass="subtle" padding="md">
-                <GlassCardHeader className="pb-4">
-                  <GlassCardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5 text-blue-500" />
+                <GlassCardHeader className="pb-3">
+                  <GlassCardTitle className="flex items-center gap-2 text-base">
+                    <Target className="w-4 h-4 text-primary" />
                     {t.challengesTitle}
                   </GlassCardTitle>
                 </GlassCardHeader>
                 <GlassCardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                     {challenges.slice(0, 3).map((challenge) => (
                       <ChallengeCard
                         key={challenge.id}
@@ -290,16 +281,16 @@ export function AchievementsClient({
           </TabsContent>
 
           {/* Challenges Tab */}
-          <TabsContent value="challenges" className="space-y-6">
+          <TabsContent value="challenges" className="space-y-3">
             {challenges.length === 0 ? (
               <GlassCard glass="subtle" padding="lg">
-                <div className="text-center py-12 text-muted-foreground">
-                  <Target className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>{t.noChallenges}</p>
+                <div className="text-center py-8 text-muted-foreground">
+                  <Target className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">{t.noChallenges}</p>
                 </div>
               </GlassCard>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {challenges.map((challenge) => (
                   <ChallengeCard
                     key={challenge.id}

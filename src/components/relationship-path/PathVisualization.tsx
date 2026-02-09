@@ -110,7 +110,7 @@ export default function PathVisualization({
       {/* Header with relationship summary */}
       <div className="text-center">
         <div
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${categoryColor} text-white text-sm font-medium shadow-lg`}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${categoryColor} text-white text-sm font-medium`}
         >
           <span>{result.relationshipLabel}</span>
           <span className="opacity-75">|</span>
@@ -121,12 +121,12 @@ export default function PathVisualization({
       {/* Path visualization */}
       <div
         ref={containerRef}
-        className="relative bg-gradient-to-br from-slate-50 via-white to-slate-50 rounded-2xl p-6 shadow-inner"
+        className="relative bg-card/80 backdrop-blur-md border border-white/[0.08] rounded-2xl p-6"
       >
         {/* Decorative background */}
         <div className="absolute inset-0 overflow-hidden rounded-2xl">
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-violet-100/50 to-purple-100/50 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-br from-emerald-100/50 to-teal-100/50 rounded-full blur-3xl" />
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#58A6FF]/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#3FB9A0]/10 rounded-full blur-3xl" />
         </div>
 
         {/* Path nodes */}
@@ -154,7 +154,7 @@ export default function PathVisualization({
                   className={`
                     relative p-1 rounded-full transition-all duration-300
                     ${activeNodeIndex === index && isAnimating
-                      ? 'ring-4 ring-violet-400/50 ring-offset-2 scale-110'
+                      ? 'ring-4 ring-[#58A6FF]/50 ring-offset-2 scale-110'
                       : ''
                     }
                   `}
@@ -168,10 +168,10 @@ export default function PathVisualization({
                     )}
                     <AvatarFallback
                       className={`
-                        bg-gradient-to-br text-white text-lg font-semibold
-                        ${node.gender === 'male' ? 'from-blue-400 to-blue-600' :
-                          node.gender === 'female' ? 'from-pink-400 to-pink-600' :
-                          'from-gray-400 to-gray-600'}
+                        text-white text-lg font-semibold
+                        ${node.gender === 'male' ? 'bg-blue-500' :
+                          node.gender === 'female' ? 'bg-pink-500' :
+                          'bg-gray-500'}
                       `}
                     >
                       {node.firstName?.[0] || '?'}
@@ -180,7 +180,7 @@ export default function PathVisualization({
 
                   {/* Pulse animation for active node */}
                   {activeNodeIndex === index && isAnimating && (
-                    <div className="absolute inset-0 rounded-full bg-violet-400/30 animate-ping" />
+                    <div className="absolute inset-0 rounded-full bg-[#58A6FF]/30 animate-ping" />
                   )}
                 </div>
 
@@ -214,8 +214,8 @@ export default function PathVisualization({
                     <div
                       className={`
                         flex items-center justify-center w-8 h-8 rounded-full
-                        bg-gradient-to-r ${getDirectionColor(node.direction)}
-                        text-white text-lg shadow-md
+                        ${getDirectionColor(node.direction)}
+                        text-white text-lg
                       `}
                     >
                       {getRelationshipArrow(node.relationshipType)}
@@ -281,12 +281,12 @@ export default function PathVisualization({
 function getDirectionColor(direction: 'up' | 'down' | 'lateral' | null): string {
   switch (direction) {
     case 'up':
-      return 'from-blue-400 to-blue-600';
+      return 'bg-[#58A6FF]';
     case 'down':
-      return 'from-emerald-400 to-emerald-600';
+      return 'bg-[#3FB9A0]';
     case 'lateral':
-      return 'from-violet-400 to-violet-600';
+      return 'bg-[#58A6FF]';
     default:
-      return 'from-gray-400 to-gray-600';
+      return 'bg-gray-500';
   }
 }

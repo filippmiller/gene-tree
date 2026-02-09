@@ -50,24 +50,24 @@ export default async function MemoryBookPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
-              <BookOpen className="w-7 h-7 text-white" />
+      <div className="bg-card/80 backdrop-blur-md border-b border-white/[0.08]">
+        <div className="max-w-6xl mx-auto px-6 py-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-[#D29922] flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Memory Book</h1>
-              <p className="text-gray-600">
+              <h1 className="text-2xl font-bold text-foreground">Memory Book</h1>
+              <p className="text-muted-foreground">
                 Create a beautiful printable book from your family memories
               </p>
             </div>
           </div>
 
           {/* Feature highlights */}
-          <div className="flex flex-wrap gap-4 mt-6">
+          <div className="flex flex-wrap gap-3 mt-4">
             {[
               'Professional PDF layout',
               'Multiple themes',
@@ -76,7 +76,7 @@ export default async function MemoryBookPage() {
             ].map((feature) => (
               <div
                 key={feature}
-                className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-full text-sm text-amber-800"
+                className="flex items-center gap-2 px-3 py-1.5 bg-[#D29922]/10 rounded-full text-sm text-[#D29922]"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 {feature}

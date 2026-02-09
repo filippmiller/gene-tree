@@ -99,9 +99,9 @@ export default function Nav() {
             {/* Icon mark */}
             <div className={cn(
               "relative h-10 w-10 rounded-xl overflow-hidden",
-              "bg-gradient-to-br from-primary via-primary to-accent",
-              "shadow-glow transition-all duration-300",
-              "group-hover:shadow-glow-lg group-hover:scale-105"
+              "bg-[#161B22] border border-[#30363D]",
+              "transition-all duration-300",
+              "group-hover:scale-105"
             )}>
               {/* Inner glow */}
               <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20" />
@@ -113,7 +113,7 @@ export default function Nav() {
 
             {/* Wordmark */}
             <div className="hidden sm:block">
-              <span className="font-display text-xl font-medium tracking-tight text-gradient-gold">
+              <span className="font-display text-xl font-medium tracking-tight text-foreground">
                 GeneTree
               </span>
             </div>
@@ -144,8 +144,8 @@ export default function Nav() {
                       {active && (
                         <div className={cn(
                           "absolute inset-0 rounded-xl",
-                          "bg-gradient-to-r from-primary via-primary to-accent",
-                          "shadow-glow-primary"
+                          "bg-[#58A6FF]",
+                          ""
                         )} />
                       )}
                       {/* Content */}
@@ -245,7 +245,7 @@ export default function Nav() {
                         "flex items-center gap-3 px-4 py-3 rounded-xl",
                         "transition-all duration-300",
                         active
-                          ? "bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground shadow-glow-primary"
+                          ? "bg-[#58A6FF] text-primary-foreground"
                           : "text-foreground hover:bg-muted"
                       )}
                     >
@@ -257,7 +257,7 @@ export default function Nav() {
               })}
             </div>
 
-            <div className="divider-gold my-3" />
+            <div className="border-t border-white/[0.08] my-3" />
 
             <div className="flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2">

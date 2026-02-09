@@ -1,23 +1,15 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { format, getYear } from 'date-fns';
+import { getYear } from 'date-fns';
 import { ru, enUS } from 'date-fns/locale';
 import { Loader2, Filter, ChevronDown, AlertCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import MilestoneCard from './MilestoneCard';
 import {
   type MilestoneWithProfile,
-  type MilestoneCategory,
   MILESTONE_CATEGORIES,
 } from '@/lib/milestones/types';
 
@@ -45,6 +37,7 @@ export default function MilestoneTimeline({
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [deleting, setDeleting] = useState<string | null>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dateLocale = locale === 'ru' ? ru : enUS;
 
   // Translations
@@ -190,7 +183,7 @@ export default function MilestoneTimeline({
               <button
                 className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                   categoryFilter === 'all'
-                    ? 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300'
+                    ? 'bg-[#58A6FF]/10 text-[#58A6FF]'
                     : 'hover:bg-muted'
                 }`}
                 onClick={() => setCategoryFilter('all')}
@@ -202,7 +195,7 @@ export default function MilestoneTimeline({
                   key={cat.id}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                     categoryFilter === cat.id
-                      ? 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300'
+                      ? 'bg-[#58A6FF]/10 text-[#58A6FF]'
                       : 'hover:bg-muted'
                   }`}
                   onClick={() => setCategoryFilter(cat.id)}
@@ -224,7 +217,7 @@ export default function MilestoneTimeline({
       {/* Empty state */}
       {milestones.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/25 mx-auto mb-4 opacity-50">
+          <div className="w-16 h-16 rounded-2xl bg-[#58A6FF] flex items-center justify-center text-white mx-auto mb-4 opacity-50">
             <svg
               className="w-8 h-8"
               fill="none"
@@ -249,21 +242,21 @@ export default function MilestoneTimeline({
         <div key={group.year} className="space-y-4">
           {/* Year header */}
           <div className="flex items-center gap-4">
-            <div className="flex-shrink-0 w-16 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-violet-500/25">
+            <div className="flex-shrink-0 w-16 h-10 rounded-xl bg-[#58A6FF] flex items-center justify-center text-white font-bold">
               {group.year}
             </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-violet-500/50 to-transparent" />
+            <div className="flex-1 h-px bg-gradient-to-r from-[#58A6FF]/50 to-transparent" />
           </div>
 
           {/* Milestones for this year */}
-          <div className="space-y-4 pl-4 border-l-2 border-violet-500/20 ml-8">
+          <div className="space-y-4 pl-4 border-l-2 border-[#58A6FF]/20 ml-8">
             {group.milestones.map(milestone => (
               <div
                 key={milestone.id}
                 className={`relative ${deleting === milestone.id ? 'opacity-50 pointer-events-none' : ''}`}
               >
                 {/* Timeline dot */}
-                <div className="absolute -left-[21px] top-6 w-4 h-4 rounded-full bg-violet-500 border-4 border-background" />
+                <div className="absolute -left-[21px] top-6 w-4 h-4 rounded-full bg-[#58A6FF] border-4 border-background" />
 
                 <MilestoneCard
                   milestone={milestone}

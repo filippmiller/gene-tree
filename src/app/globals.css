@@ -1,144 +1,137 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   LIVING ARCHIVE DESIGN SYSTEM
-   A cinematic, emotionally resonant design for preserving family legacy
+   MIDNIGHT GLASS DESIGN SYSTEM
+   Dark-first, glassmorphic, compact — inspired by modern social platforms
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
   :root {
     /* ─────────────────────────────────────────────────────────────────────────
-       LIGHT MODE (Secondary - for accessibility)
-       Warm, museum-like atmosphere
+       LIGHT MODE
+       Cool, clean atmosphere
        ───────────────────────────────────────────────────────────────────────── */
 
     /* Core Backgrounds */
-    --background: 40 20% 97%;
-    --foreground: 30 10% 10%;
-    --card: 40 25% 99%;
-    --card-foreground: 30 10% 10%;
-    --popover: 40 25% 99%;
-    --popover-foreground: 30 10% 10%;
+    --background: 220 14% 96%;
+    --foreground: 220 13% 10%;
+    --card: 220 14% 98%;
+    --card-foreground: 220 13% 10%;
+    --popover: 220 14% 98%;
+    --popover-foreground: 220 13% 10%;
 
-    /* Primary: Antique Gold */
-    --primary: 43 55% 55%;
-    --primary-foreground: 30 10% 8%;
+    /* Primary: Blue */
+    --primary: 212 92% 58%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Warm Stone */
-    --secondary: 35 15% 92%;
-    --secondary-foreground: 30 10% 25%;
+    /* Secondary: Cool Gray */
+    --secondary: 220 10% 92%;
+    --secondary-foreground: 220 13% 25%;
 
-    /* Muted: Soft Taupe */
-    --muted: 30 10% 90%;
-    --muted-foreground: 30 8% 45%;
+    /* Muted: Light Gray */
+    --muted: 220 10% 90%;
+    --muted-foreground: 220 8% 45%;
 
-    /* Accent: Aged Copper */
-    --accent: 25 50% 50%;
+    /* Accent: Teal */
+    --accent: 173 58% 42%;
     --accent-foreground: 0 0% 100%;
 
     /* Semantic Colors */
-    --destructive: 0 45% 45%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --success: 145 35% 40%;
+    --success: 140 60% 44%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 80% 55%;
-    --warning-foreground: 30 15% 10%;
-    --info: 210 35% 50%;
+    --warning: 40 85% 52%;
+    --warning-foreground: 220 13% 10%;
+    --info: 212 92% 58%;
     --info-foreground: 0 0% 100%;
 
     /* Borders & Inputs */
-    --border: 35 15% 85%;
-    --input: 35 15% 88%;
-    --ring: 43 55% 55%;
+    --border: 220 10% 85%;
+    --input: 220 10% 88%;
+    --ring: 212 92% 58%;
     --radius: 0.75rem;
 
     /* Charts */
-    --chart-1: 43 55% 55%;
-    --chart-2: 25 50% 50%;
-    --chart-3: 145 35% 40%;
-    --chart-4: 210 35% 50%;
-    --chart-5: 340 40% 50%;
+    --chart-1: 212 92% 58%;
+    --chart-2: 173 58% 42%;
+    --chart-3: 140 60% 44%;
+    --chart-4: 0 72% 51%;
+    --chart-5: 330 65% 55%;
 
     /* Glass Effects */
-    --glass-bg: 40 25% 99% / 0.85;
-    --glass-border: 35 15% 85% / 0.5;
-    --glass-shadow: 30 20% 20% / 0.1;
+    --glass-bg: 220 14% 98% / 0.85;
+    --glass-border: 220 10% 85% / 0.5;
+    --glass-shadow: 220 13% 20% / 0.1;
 
-    /* Archive Palette - Light */
-    --archive-gold: 43 55% 55%;
-    --archive-copper: 25 50% 50%;
-    --archive-ivory: 42 40% 96%;
-    --archive-parchment: 38 35% 92%;
-    --archive-ink: 30 10% 10%;
+    /* Accent Palette */
+    --accent-blue: 212 92% 58%;
+    --accent-teal: 173 58% 42%;
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     DARK MODE (Primary - The Signature Look)
-     Cinematic, vault-like atmosphere
+     DARK MODE (Primary — The Signature Look)
+     Midnight glass atmosphere
      ───────────────────────────────────────────────────────────────────────── */
   .dark {
-    /* Core Backgrounds - Deep, warm charcoal */
-    --background: 240 5% 6%;
-    --foreground: 40 10% 92%;
-    --card: 240 4% 9%;
-    --card-foreground: 40 10% 92%;
-    --popover: 240 4% 9%;
-    --popover-foreground: 40 10% 92%;
+    /* Core Backgrounds */
+    --background: 220 13% 7%;
+    --foreground: 220 13% 91%;
+    --card: 220 13% 9%;
+    --card-foreground: 220 13% 91%;
+    --popover: 220 13% 9%;
+    --popover-foreground: 220 13% 91%;
 
-    /* Primary: Luminous Antique Gold */
-    --primary: 43 65% 58%;
-    --primary-foreground: 240 5% 6%;
+    /* Primary: Blue */
+    --primary: 212 92% 67%;
+    --primary-foreground: 220 13% 7%;
 
-    /* Secondary: Warm Graphite */
-    --secondary: 240 3% 14%;
-    --secondary-foreground: 40 10% 85%;
+    /* Secondary: Dark Gray */
+    --secondary: 220 10% 14%;
+    --secondary-foreground: 220 13% 85%;
 
     /* Muted: Smoke */
-    --muted: 240 3% 16%;
-    --muted-foreground: 40 5% 55%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 220 5% 55%;
 
-    /* Accent: Aged Copper/Rose Gold */
-    --accent: 25 55% 55%;
-    --accent-foreground: 240 5% 6%;
+    /* Accent: Teal */
+    --accent: 173 58% 52%;
+    --accent-foreground: 220 13% 7%;
 
-    /* Semantic Colors - Muted, sophisticated */
-    --destructive: 0 55% 50%;
+    /* Semantic Colors */
+    --destructive: 0 72% 61%;
     --destructive-foreground: 0 0% 100%;
-    --success: 150 45% 45%;
-    --success-foreground: 240 5% 6%;
-    --warning: 38 85% 55%;
-    --warning-foreground: 240 5% 6%;
-    --info: 210 50% 55%;
-    --info-foreground: 240 5% 6%;
+    --success: 140 60% 48%;
+    --success-foreground: 220 13% 7%;
+    --warning: 40 85% 56%;
+    --warning-foreground: 220 13% 7%;
+    --info: 212 92% 67%;
+    --info-foreground: 220 13% 7%;
 
-    /* Borders & Inputs - Subtle, refined */
-    --border: 240 3% 18%;
-    --input: 240 3% 16%;
-    --ring: 43 65% 58%;
+    /* Borders & Inputs */
+    --border: 220 10% 18%;
+    --input: 220 10% 16%;
+    --ring: 212 92% 67%;
 
     /* Charts */
-    --chart-1: 43 65% 58%;
-    --chart-2: 25 55% 55%;
-    --chart-3: 150 45% 45%;
-    --chart-4: 210 50% 55%;
-    --chart-5: 340 50% 55%;
+    --chart-1: 212 92% 67%;
+    --chart-2: 173 58% 52%;
+    --chart-3: 140 60% 48%;
+    --chart-4: 0 72% 61%;
+    --chart-5: 330 65% 60%;
 
-    /* Glass Effects - Warm, atmospheric */
-    --glass-bg: 240 4% 9% / 0.9;
-    --glass-border: 43 65% 58% / 0.1;
+    /* Glass Effects */
+    --glass-bg: 220 13% 9% / 0.8;
+    --glass-border: 220 10% 100% / 0.08;
     --glass-shadow: 0 0% 0% / 0.5;
 
-    /* Archive Palette - Dark */
-    --archive-gold: 43 65% 58%;
-    --archive-copper: 25 55% 55%;
-    --archive-void: 240 5% 4%;
-    --archive-obsidian: 240 4% 9%;
-    --archive-smoke: 240 3% 16%;
-    --archive-platinum: 40 5% 70%;
+    /* Accent Palette */
+    --accent-blue: 212 92% 67%;
+    --accent-teal: 173 58% 52%;
   }
 }
 
@@ -164,27 +157,27 @@
     letter-spacing: -0.01em;
   }
 
-  /* Elegant Serif Headings */
+  /* Modern Display Headings */
   h1, h2, h3, .font-display {
-    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-    font-weight: 500;
+    font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif;
+    font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
 
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
-    font-weight: 400;
+    font-weight: 700;
   }
 
   h2 {
     @apply text-3xl md:text-4xl;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   h3 {
     @apply text-2xl md:text-3xl;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   /* Monospace for data */
@@ -195,7 +188,7 @@
 
   /* Smooth transitions */
   a, button, input, select, textarea, [role="button"] {
-    @apply transition-all duration-300 ease-out;
+    @apply transition-all duration-200 ease-out;
   }
 
   /* Focus states */
@@ -220,44 +213,46 @@
      ARCHIVE CARD - The signature card style
      ───────────────────────────────────────────────────────────────────────── */
   .archive-card {
-    @apply relative overflow-hidden rounded-2xl;
+    @apply relative overflow-hidden rounded-xl;
     @apply bg-card border border-border/50;
-    @apply shadow-xl shadow-black/10;
-    @apply transition-all duration-500 ease-out;
+    @apply shadow-lg shadow-black/10;
+    @apply transition-all duration-300 ease-out;
 
-    /* Subtle inner border glow */
     box-shadow:
       0 0 0 1px hsl(var(--border) / 0.5),
-      0 4px 24px -4px hsl(0 0% 0% / 0.15),
-      inset 0 1px 0 hsl(var(--primary) / 0.05);
+      0 4px 24px -4px hsl(0 0% 0% / 0.15);
   }
 
   .archive-card:hover {
     @apply border-primary/20;
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow:
       0 0 0 1px hsl(var(--primary) / 0.15),
       0 8px 40px -8px hsl(0 0% 0% / 0.25),
-      0 0 60px -20px hsl(var(--primary) / 0.15),
-      inset 0 1px 0 hsl(var(--primary) / 0.1);
+      0 0 40px -16px hsl(var(--primary) / 0.1);
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
      GLASS PANEL - Frosted glass effect
      ───────────────────────────────────────────────────────────────────────── */
   .glass-panel {
-    @apply relative overflow-hidden rounded-2xl;
+    @apply relative overflow-hidden rounded-xl;
     background: hsl(var(--glass-bg));
     backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid hsl(var(--glass-border));
-    box-shadow:
-      0 8px 32px hsl(var(--glass-shadow)),
-      inset 0 1px 0 hsl(var(--primary) / 0.05);
+    box-shadow: 0 8px 32px hsl(var(--glass-shadow));
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     GOLDEN ACCENT - Primary action emphasis
+     ACCENT GLOW - Primary action emphasis
      ───────────────────────────────────────────────────────────────────────── */
+  .accent-glow {
+    box-shadow:
+      0 0 20px -5px hsl(var(--primary) / 0.4),
+      0 0 40px -10px hsl(var(--primary) / 0.2);
+  }
+
+  /* Legacy alias */
   .golden-glow {
     box-shadow:
       0 0 20px -5px hsl(var(--primary) / 0.4),
@@ -266,17 +261,16 @@
 
   .golden-border {
     @apply border border-primary/30;
-    box-shadow: inset 0 1px 0 hsl(var(--primary) / 0.1);
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     PHOTO FRAMES - Cinematic image treatment
+     PHOTO FRAMES
      ───────────────────────────────────────────────────────────────────────── */
   .photo-frame {
     @apply relative overflow-hidden rounded-xl;
     box-shadow:
       0 4px 20px -4px hsl(0 0% 0% / 0.3),
-      inset 0 0 0 1px hsl(var(--primary) / 0.1);
+      inset 0 0 0 1px hsl(var(--border) / 0.2);
   }
 
   .photo-frame::after {
@@ -300,35 +294,24 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     CINEMATIC TEXT - Dramatic typography
+     TEXT STYLES
      ───────────────────────────────────────────────────────────────────────── */
   .text-cinematic {
     @apply font-display;
     text-shadow: 0 2px 20px hsl(0 0% 0% / 0.3);
   }
 
+  /* Legacy gradient text aliases - now flat color */
   .text-gradient-gold {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      135deg,
-      hsl(43 65% 68%) 0%,
-      hsl(43 65% 58%) 50%,
-      hsl(25 55% 55%) 100%
-    );
+    color: hsl(var(--foreground));
   }
 
   .text-gradient-platinum {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      135deg,
-      hsl(40 5% 80%) 0%,
-      hsl(40 5% 70%) 50%,
-      hsl(40 5% 60%) 100%
-    );
+    color: hsl(var(--muted-foreground));
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     TIMELINE - Vertical history visualization
+     TIMELINE
      ───────────────────────────────────────────────────────────────────────── */
   .timeline-line {
     @apply absolute left-4 top-0 bottom-0 w-px;
@@ -350,16 +333,15 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     STORY CARD - Memory preservation
+     STORY CARD
      ───────────────────────────────────────────────────────────────────────── */
   .story-card {
     @apply archive-card;
-    @apply bg-gradient-to-br from-card to-card/95;
   }
 
   .story-card::before {
     content: '';
-    @apply absolute inset-0 pointer-events-none opacity-30;
+    @apply absolute inset-0 pointer-events-none opacity-20;
     background: radial-gradient(
       ellipse at top right,
       hsl(var(--primary) / 0.1),
@@ -368,16 +350,21 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     BADGE STYLES - Refined indicators
+     BADGE STYLES
      ───────────────────────────────────────────────────────────────────────── */
-  .badge-gold {
+  .badge-accent {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
     @apply bg-primary/15 text-primary border border-primary/25;
     @apply transition-all duration-300;
   }
 
-  .badge-gold:hover {
+  .badge-accent:hover {
     @apply bg-primary/25 border-primary/40;
+  }
+
+  /* Legacy alias */
+  .badge-gold {
+    @apply badge-accent;
   }
 
   .badge-subtle {
@@ -386,7 +373,7 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     TREE VISUALIZATION - Family connections
+     TREE VISUALIZATION
      ───────────────────────────────────────────────────────────────────────── */
   .tree-connector {
     stroke: hsl(var(--primary) / 0.4);
@@ -404,11 +391,11 @@
     @apply border-primary/30;
     box-shadow:
       0 8px 32px -8px hsl(0 0% 0% / 0.2),
-      0 0 24px -8px hsl(var(--primary) / 0.2);
+      0 0 24px -8px hsl(var(--primary) / 0.15);
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     NAVIGATION - Refined nav elements
+     NAVIGATION
      ───────────────────────────────────────────────────────────────────────── */
   .nav-link {
     @apply relative px-4 py-2 text-sm font-medium;
@@ -433,7 +420,7 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     INPUT STYLES - Refined form elements
+     INPUT STYLES
      ───────────────────────────────────────────────────────────────────────── */
   .input-archive {
     @apply w-full px-4 py-3 rounded-xl;
@@ -444,15 +431,15 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     DIVIDERS - Elegant separators
+     DIVIDERS
      ───────────────────────────────────────────────────────────────────────── */
   .divider-gold {
     @apply relative h-px w-full;
     background: linear-gradient(
       90deg,
       transparent,
-      hsl(var(--primary) / 0.3) 20%,
-      hsl(var(--primary) / 0.3) 80%,
+      hsl(var(--border)) 20%,
+      hsl(var(--border)) 80%,
       transparent
     );
   }
@@ -477,13 +464,13 @@
   /* ─────────────────────────────────────────────────────────────────────────
      SIDEBAR UTILITIES - Deep dark backgrounds for navigation
      ───────────────────────────────────────────────────────────────────────── */
-  .bg-archive-void { background-color: #0a0a0c; }
-  .bg-archive-obsidian { background-color: #141417; }
-  .bg-archive-charcoal { background-color: #1a1a1e; }
-  .bg-archive-smoke { background-color: #27272b; }
-  .text-archive-platinum { color: #b4b4b8; }
-  .text-archive-silver { color: #9a9a9e; }
-  .text-archive-ivory { color: #f8f8f5; }
+  .bg-archive-void { background-color: #0A0D12; }
+  .bg-archive-obsidian { background-color: #0F1116; }
+  .bg-archive-charcoal { background-color: #161B22; }
+  .bg-archive-smoke { background-color: #272D36; }
+  .text-archive-platinum { color: #E6EDF3; }
+  .text-archive-silver { color: #8B949E; }
+  .text-archive-ivory { color: #F0F6FC; }
 
   /* Safe area padding */
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -493,23 +480,8 @@
 
   /* Film grain overlay */
   .grain-overlay {
-    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.015];
+    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.008];
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  }
-
-  /* Vignette effect */
-  .vignette {
-    @apply relative;
-  }
-
-  .vignette::before {
-    content: '';
-    @apply absolute inset-0 pointer-events-none;
-    background: radial-gradient(
-      ellipse at center,
-      transparent 40%,
-      hsl(0 0% 0% / 0.4) 100%
-    );
   }
 
   /* Fade edges for scroll containers */
@@ -530,21 +502,6 @@
       black 8%,
       black 92%,
       transparent
-    );
-  }
-
-  /* Spotlight effect */
-  .spotlight {
-    @apply relative;
-  }
-
-  .spotlight::before {
-    content: '';
-    @apply absolute inset-0 pointer-events-none;
-    background: radial-gradient(
-      800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      hsl(var(--primary) / 0.06),
-      transparent 40%
     );
   }
 
@@ -606,18 +563,18 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: hsl(var(--muted) / 0.3);
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--muted-foreground) / 0.2);
-  border-radius: 5px;
+  border-radius: 4px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
@@ -719,8 +676,7 @@
     color: black !important;
   }
 
-  .grain-overlay,
-  .vignette::before {
+  .grain-overlay {
     display: none !important;
   }
 }

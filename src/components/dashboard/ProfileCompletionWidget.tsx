@@ -162,7 +162,7 @@ export default function ProfileCompletionWidget({
                     )}
                   >
                     {/* Icon */}
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-emerald-700 flex items-center justify-center text-white shadow-lg shadow-primary/25 transition-transform duration-300 group-hover:scale-110">
+                    <div className="w-10 h-10 rounded-lg bg-[#58A6FF] flex items-center justify-center text-white shadow-lg shadow-[#58A6FF]/25 transition-transform duration-300 group-hover:scale-110">
                       {IconComponent && <IconComponent className="w-5 h-5" />}
                     </div>
 

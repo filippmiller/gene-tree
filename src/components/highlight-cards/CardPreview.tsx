@@ -14,7 +14,6 @@
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { Loader2, Palette, Maximize2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -26,7 +25,6 @@ import { ShareButton } from './ShareButton';
 import type {
   HighlightCardData,
   CardTheme,
-  CARD_DIMENSIONS,
 } from '@/types/highlight-cards';
 
 interface CardPreviewProps {
@@ -51,11 +49,11 @@ const SIZE_OPTIONS = [
 
 // Theme options
 const THEME_OPTIONS: Array<{ value: CardTheme; label: string; preview: string }> = [
-  { value: 'warm-sunset', label: 'Warm Sunset', preview: 'bg-gradient-to-br from-red-400 to-yellow-300' },
-  { value: 'ocean-breeze', label: 'Ocean Breeze', preview: 'bg-gradient-to-br from-indigo-500 to-purple-600' },
-  { value: 'forest-dawn', label: 'Forest Dawn', preview: 'bg-gradient-to-br from-teal-500 to-green-400' },
-  { value: 'royal-violet', label: 'Royal Violet', preview: 'bg-gradient-to-br from-violet-500 via-purple-500 to-pink-500' },
-  { value: 'classic-elegant', label: 'Classic Elegant', preview: 'bg-gradient-to-br from-slate-900 to-slate-800' },
+  { value: 'warm-sunset', label: 'Warm Sunset', preview: 'bg-[#D29922]' },
+  { value: 'ocean-breeze', label: 'Ocean Breeze', preview: 'bg-[#58A6FF]' },
+  { value: 'forest-dawn', label: 'Forest Dawn', preview: 'bg-[#3FB9A0]' },
+  { value: 'royal-violet', label: 'Royal Violet', preview: 'bg-[#58A6FF]' },
+  { value: 'classic-elegant', label: 'Classic Elegant', preview: 'bg-slate-800' },
 ];
 
 export function CardPreview({

@@ -67,8 +67,8 @@ export default function DuplicateProfileSuggestions({
   };
 
   return (
-    <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/30 p-3 space-y-2">
-      <p className="text-xs font-medium text-amber-800 dark:text-amber-200">
+    <div className="rounded-lg border border-[#D29922]/20 bg-[#D29922]/5 dark:border-[#D29922]/20 dark:bg-[#D29922]/5 p-3 space-y-2">
+      <p className="text-xs font-medium text-[#D29922] dark:text-[#D29922]">
         {t("duplicateWarning")}
       </p>
       <div className="space-y-1">
@@ -80,7 +80,7 @@ export default function DuplicateProfileSuggestions({
             rel="noopener noreferrer"
             className={cn(
               "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm",
-              "hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+              "hover:bg-[#D29922]/10 dark:hover:bg-[#D29922]/10 transition-colors"
             )}
           >
             {result.avatar_url ? (
@@ -90,14 +90,14 @@ export default function DuplicateProfileSuggestions({
                 className="w-7 h-7 rounded-lg object-cover flex-shrink-0"
               />
             ) : (
-              <div className="w-7 h-7 rounded-lg bg-amber-200/50 dark:bg-amber-800/30 flex items-center justify-center flex-shrink-0">
-                <User className="h-3.5 w-3.5 text-amber-700 dark:text-amber-300" />
+              <div className="w-7 h-7 rounded-lg bg-[#D29922]/10 dark:bg-[#D29922]/10 flex items-center justify-center flex-shrink-0">
+                <User className="h-3.5 w-3.5 text-[#D29922] dark:text-[#D29922]" />
               </div>
             )}
-            <span className="font-medium text-amber-900 dark:text-amber-100 truncate">
+            <span className="font-medium text-[#D29922] dark:text-[#D29922] truncate">
               {formatName(result)}
             </span>
-            <ArrowRight className="h-3.5 w-3.5 ml-auto text-amber-600 dark:text-amber-400 flex-shrink-0" />
+            <ArrowRight className="h-3.5 w-3.5 ml-auto text-[#D29922] dark:text-[#D29922] flex-shrink-0" />
           </a>
         ))}
       </div>

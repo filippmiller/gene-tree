@@ -50,7 +50,7 @@ export default function VoiceRecorderWrapper({ targetProfileId, locale }: Props)
         </div>
         <button
           onClick={() => setShowRecorder(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#58A6FF] text-white rounded-lg hover:bg-[#4A90E2] transition-colors"
         >
           <Mic className="w-4 h-4" />
           {t.recordStory}

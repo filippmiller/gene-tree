@@ -11,7 +11,6 @@ import {
   Users2,
   Heart,
   Network,
-  User,
   type LucideIcon,
 } from "lucide-react";
 
@@ -27,7 +26,7 @@ const iconBadgeVariants = cva(
   [
     "flex items-center justify-center",
     "rounded-xl",
-    "shadow-lg",
+    "shadow-none",
     "transition-all duration-300",
   ].join(" "),
   {
@@ -39,30 +38,30 @@ const iconBadgeVariants = cva(
         xl: "w-14 h-14 [&_svg]:w-7 [&_svg]:h-7",
       },
       variant: {
-        // Parents - Violet
-        parents: "bg-gradient-to-br from-violet-500 to-purple-600 shadow-violet-500/25 text-white",
-        // Grandparents - Amber/Gold (wisdom, heritage)
-        grandparents: "bg-gradient-to-br from-amber-500 to-orange-600 shadow-amber-500/25 text-white",
-        // Children - Sky blue (youth, future)
-        children: "bg-gradient-to-br from-sky-500 to-blue-600 shadow-sky-500/25 text-white",
-        // Grandchildren - Pink/Rose (joy, new life)
-        grandchildren: "bg-gradient-to-br from-pink-500 to-rose-600 shadow-pink-500/25 text-white",
-        // Siblings - Emerald/Teal (connection, equality)
-        siblings: "bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-500/25 text-white",
-        // Spouses - Red/Rose (love)
-        spouses: "bg-gradient-to-br from-red-500 to-rose-600 shadow-red-500/25 text-white",
-        // Extended family - Indigo
-        extended: "bg-gradient-to-br from-indigo-500 to-violet-600 shadow-indigo-500/25 text-white",
-        // Default - Primary violet
-        default: "bg-gradient-to-br from-violet-500 to-purple-600 shadow-violet-500/25 text-white",
-        // Neutral - Gray
-        neutral: "bg-gradient-to-br from-gray-400 to-gray-500 shadow-gray-500/25 text-white",
+        // Parents - Primary Blue
+        parents: "bg-[#58A6FF] text-white shadow-none",
+        // Grandparents - Accent Teal
+        grandparents: "bg-[#3FB9A0] text-white shadow-none",
+        // Children - Cyan
+        children: "bg-[#56D4DD] text-white shadow-none",
+        // Grandchildren - Indigo
+        grandchildren: "bg-[#8B8FFF] text-white shadow-none",
+        // Siblings - Green
+        siblings: "bg-[#3FB950] text-white shadow-none",
+        // Spouses - Pink
+        spouses: "bg-[#F778BA] text-white shadow-none",
+        // Extended family - Muted
+        extended: "bg-[#8B949E] text-white shadow-none",
+        // Default - Primary Blue
+        default: "bg-[#58A6FF] text-white shadow-none",
+        // Neutral - Dark Gray
+        neutral: "bg-[#484F58] text-white shadow-none",
         // Success - Green
-        success: "bg-gradient-to-br from-emerald-500 to-green-600 shadow-emerald-500/25 text-white",
-        // Warning - Amber
-        warning: "bg-gradient-to-br from-amber-500 to-yellow-600 shadow-amber-500/25 text-white",
+        success: "bg-[#3FB950] text-white shadow-none",
+        // Warning - Gold
+        warning: "bg-[#D29922] text-white shadow-none",
         // Outline - No fill, just border
-        outline: "bg-white/80 border-2 border-violet-200 text-violet-600 shadow-none",
+        outline: "bg-white/5 border-2 border-[#30363D] text-[#8B949E] shadow-none",
       },
     },
     defaultVariants: {

@@ -32,14 +32,14 @@ interface ActivityItemProps {
 
 // Icon configuration for activity types
 const activityIconConfig: Record<string, { icon: LucideIcon; gradient: string; shadow: string }> = {
-  relative_added: { icon: UserPlus, gradient: 'from-violet-500 to-purple-600', shadow: 'shadow-violet-500/25' },
+  relative_added: { icon: UserPlus, gradient: 'from-[#58A6FF] to-[#58A6FF]', shadow: '' },
   media_added: { icon: ImagePlus, gradient: 'from-sky-500 to-blue-600', shadow: 'shadow-sky-500/25' },
   comment_added: { icon: MessageSquare, gradient: 'from-emerald-500 to-green-600', shadow: 'shadow-emerald-500/25' },
   reaction_added: { icon: Heart, gradient: 'from-rose-500 to-pink-600', shadow: 'shadow-rose-500/25' },
-  story_created: { icon: BookOpen, gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/25' },
+  story_created: { icon: BookOpen, gradient: 'from-[#D29922] to-[#D29922]', shadow: '' },
   photo_added: { icon: ImagePlus, gradient: 'from-sky-500 to-blue-600', shadow: 'shadow-sky-500/25' },
   profile_updated: { icon: Pencil, gradient: 'from-slate-500 to-gray-600', shadow: 'shadow-slate-500/25' },
-  STORY_SUBMITTED: { icon: BookOpen, gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/25' },
+  STORY_SUBMITTED: { icon: BookOpen, gradient: 'from-[#D29922] to-[#D29922]', shadow: '' },
   STORY_APPROVED: { icon: CheckCircle, gradient: 'from-emerald-500 to-green-600', shadow: 'shadow-emerald-500/25' },
   STORY_REJECTED: { icon: XCircle, gradient: 'from-rose-500 to-pink-600', shadow: 'shadow-rose-500/25' },
 };
@@ -157,7 +157,7 @@ export default function ActivityItem({
         <div className="relative flex-shrink-0">
           <Avatar className="w-10 h-10 ring-2 ring-white dark:ring-gray-700 shadow-md">
             <AvatarImage src={event.actor.avatar_url || undefined} />
-            <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white text-sm font-medium">
+            <AvatarFallback className="bg-[#58A6FF] text-white text-sm font-medium">
               {actorInitials || '?'}
             </AvatarFallback>
           </Avatar>
@@ -204,7 +204,7 @@ export default function ActivityItem({
 
         {/* Hover arrow */}
         <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 self-center">
-          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-violet-500 transition-colors" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-[#58A6FF] transition-colors" />
         </div>
       </Link>
 
@@ -230,7 +230,7 @@ export default function ActivityItem({
                 "hover:bg-gray-100 dark:hover:bg-gray-700",
                 "hover:scale-125 transition-all duration-150",
                 "disabled:opacity-50 disabled:cursor-not-allowed",
-                userReaction === type && "bg-violet-100 dark:bg-violet-900/30"
+                userReaction === type && "bg-[#58A6FF]/10"
               )}
               title={type}
             >

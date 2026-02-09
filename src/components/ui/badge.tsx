@@ -3,17 +3,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Living Archive Badge Component
+ * Midnight Glass Badge Component
  *
- * Premium badge design with golden accents
+ * Premium badge design with blue accents
  *
  * Features:
- * - Multiple variants: default (gold), secondary, outline, destructive, success, warning
+ * - Multiple variants: default (blue), secondary, outline, destructive, success, warning
  * - Size variants: sm, md, lg
  * - Optional dot indicator for status
  * - Removable badges with close button
  * - Smooth hover animations
- * - Golden glow effect on primary badges
  */
 
 const badgeVariants = cva(
@@ -25,10 +24,9 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        // Default - Golden/Primary
+        // Default - Primary blue
         default: [
-          "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground border-primary/30",
-          "shadow-glow hover:shadow-glow-lg",
+          "bg-primary text-primary-foreground border-primary/30",
         ].join(" "),
 
         secondary: [

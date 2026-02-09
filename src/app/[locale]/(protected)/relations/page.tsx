@@ -10,11 +10,11 @@ export default async function RelationsPage({ params }: { params: Promise<{ loca
   if (!user) redirect(`/${locale}/sign-in`);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      <main className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Family Relationships</h1>
-          <p className="text-muted-foreground">View and manage your family connections</p>
+    <div className="min-h-screen bg-background">
+      <main className="w-full px-3 sm:px-4 py-4">
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold text-foreground mb-1">Family Relationships</h1>
+          <p className="text-sm text-muted-foreground">View and manage your family connections</p>
         </div>
 
         {/* Relationships by category with modern design */}

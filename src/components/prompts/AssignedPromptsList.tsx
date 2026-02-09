@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
-import { MessageCircle, Clock, Check, X, Send, User } from "lucide-react";
+import { MessageCircle, Clock, Check, X, Send } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ru, enUS } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   GlassCard,
-  GlassCardHeader,
-  GlassCardTitle,
   GlassCardContent,
 } from "@/components/ui/glass-card";
 
@@ -70,7 +68,7 @@ export function AssignedPromptsList({
   const statusConfig = {
     pending: {
       label: { en: "Pending", ru: "Ожидает" },
-      color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+      color: "bg-[#D29922]/10 text-[#D29922] dark:bg-[#D29922]/10 dark:text-[#D29922]",
       icon: Clock,
     },
     answered: {
@@ -197,7 +195,7 @@ export function AssignedPromptsList({
                     <Button
                       size="sm"
                       onClick={() => onAnswer(assignment)}
-                      className="flex-1 bg-violet-500 hover:bg-violet-600 text-white"
+                      className="flex-1 bg-[#58A6FF] hover:bg-[#58A6FF]/90 text-white"
                     >
                       <Send className="w-4 h-4 mr-2" />
                       {locale === "ru" ? "Ответить" : "Answer"}

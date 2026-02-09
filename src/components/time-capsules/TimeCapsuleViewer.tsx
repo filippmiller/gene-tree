@@ -4,11 +4,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ru, enUS } from 'date-fns/locale';
 import {
-  X,
   Calendar,
-  User,
-  Play,
-  Pause,
   Download,
   Mic,
   Video,
@@ -39,6 +35,7 @@ export default function TimeCapsuleViewer({
   onClose,
 }: TimeCapsuleViewerProps) {
   const dateLocale = locale === 'ru' ? ru : enUS;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isPlaying, setIsPlaying] = useState(false);
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
 
@@ -86,6 +83,7 @@ export default function TimeCapsuleViewer({
     return format(date, 'PPP', { locale: dateLocale });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getMediaIcon = () => {
     switch (capsule.media_type) {
       case 'audio':
@@ -104,7 +102,7 @@ export default function TimeCapsuleViewer({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-[#58A6FF] flex items-center justify-center text-white">
               <Heart className="w-5 h-5" />
             </div>
             <span>{capsule.title}</span>
@@ -139,7 +137,7 @@ export default function TimeCapsuleViewer({
 
           {/* Message */}
           {capsule.message && (
-            <div className="p-6 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 border border-violet-100 dark:border-violet-800/30">
+            <div className="p-6 rounded-xl bg-[#58A6FF]/10 dark:bg-[#58A6FF]/10 border border-[#58A6FF]/20 dark:border-[#58A6FF]/20">
               <p className="text-foreground whitespace-pre-wrap leading-relaxed">
                 {capsule.message}
               </p>
@@ -161,7 +159,7 @@ export default function TimeCapsuleViewer({
 
               {capsule.media_type === 'audio' && (
                 <div className="p-4 rounded-xl bg-muted/50 flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white">
+                  <div className="w-16 h-16 rounded-xl bg-[#58A6FF] flex items-center justify-center text-white">
                     <Mic className="w-8 h-8" />
                   </div>
                   <audio

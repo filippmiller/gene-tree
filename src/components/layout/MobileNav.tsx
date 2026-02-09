@@ -45,16 +45,15 @@ export default function MobileNav({ onMenuClick }: MobileNavProps) {
         >
           <div className={cn(
             "relative h-8 w-8 rounded-lg overflow-hidden",
-            "bg-gradient-to-br from-primary via-primary to-accent",
-            "shadow-glow transition-all duration-300",
-            "group-hover:shadow-glow-lg"
+            "bg-[#161B22] border border-[#30363D]",
+            "transition-all duration-300",
+            "group-hover:border-[#58A6FF]/50"
           )}>
-            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-primary-foreground" />
+              <Sparkles className="h-4 w-4 text-[#58A6FF]" />
             </div>
           </div>
-          <span className="font-display text-lg font-medium tracking-tight text-gradient-gold">
+          <span className="font-display text-lg font-medium tracking-tight text-[#E6EDF3]">
             GeneTree
           </span>
         </Link>

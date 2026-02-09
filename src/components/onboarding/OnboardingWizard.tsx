@@ -344,7 +344,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
       : true;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-8 px-4">
+    <div className="min-h-screen bg-background py-6 px-4">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -489,7 +489,7 @@ export default function OnboardingWizard({ locale, existingProfile }: Props) {
                 {saving ? t('saving') : t('next')}
               </Button>
             ) : (
-              <Button variant="gradient" onClick={handleFinish} disabled={saving} loading={saving}>
+              <Button onClick={handleFinish} disabled={saving} loading={saving}>
                 {saving ? t('saving') : t('finish')}
               </Button>
             )}

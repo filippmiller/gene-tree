@@ -10,7 +10,6 @@ import {
   Trash2,
   Edit,
   Calendar,
-  User,
   Clock,
   Play,
   Image as ImageIcon,
@@ -111,11 +110,11 @@ export default function TimeCapsuleCard({
     return (
       <GlassCard glass="tinted" padding="md" className="overflow-hidden">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/25">
+          <div className="w-16 h-16 rounded-xl bg-[#D29922] flex items-center justify-center text-white shadow-lg shadow-[#D29922]/25">
             <Lock className="w-8 h-8" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
+            <p className="text-sm font-medium text-[#D29922] dark:text-[#D29922]">
               {t.sealedUntil} {formatDateStr(capsule.scheduled_delivery_date)}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
@@ -128,20 +127,20 @@ export default function TimeCapsuleCard({
   }
 
   // Creator's view of sealed capsule OR delivered capsule
-  const cardGradient = sealed
-    ? 'from-amber-500 to-orange-600'
-    : 'from-violet-500 to-purple-600';
+  const cardBg = sealed
+    ? 'bg-[#D29922]'
+    : 'bg-[#58A6FF]';
 
   const shadowColor = sealed
-    ? 'shadow-amber-500/25'
-    : 'shadow-violet-500/25';
+    ? 'shadow-[#D29922]/25'
+    : 'shadow-[#58A6FF]/25';
 
   return (
     <GlassCard
       glass={delivered ? 'medium' : 'tinted'}
       hover={delivered ? 'lift' : 'none'}
       padding="md"
-      className={`overflow-hidden cursor-pointer transition-all ${delivered ? 'hover:ring-2 hover:ring-violet-500/20' : ''}`}
+      className={`overflow-hidden cursor-pointer transition-all ${delivered ? 'hover:ring-2 hover:ring-[#58A6FF]/20' : ''}`}
       onClick={() => delivered && onOpen?.(capsule)}
     >
       {/* Header */}
@@ -149,7 +148,7 @@ export default function TimeCapsuleCard({
         <div className="flex items-center gap-3">
           {/* Status Icon */}
           <div
-            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${cardGradient} flex items-center justify-center text-white shadow-lg ${shadowColor}`}
+            className={`w-12 h-12 rounded-xl ${cardBg} flex items-center justify-center text-white shadow-lg ${shadowColor}`}
           >
             {sealed ? <Lock className="w-6 h-6" /> : <Mail className="w-6 h-6" />}
           </div>
@@ -271,7 +270,7 @@ export default function TimeCapsuleCard({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 text-violet-600 hover:text-violet-700 hover:bg-violet-50"
+            className="h-7 text-[#58A6FF] hover:text-[#58A6FF]/80 hover:bg-[#58A6FF]/10"
             onClick={(e) => {
               e.stopPropagation();
               onOpen?.(capsule);

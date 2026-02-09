@@ -37,11 +37,13 @@ interface MilestonesPageClientProps {
 export default function MilestonesPageClient({
   locale,
   currentUserId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentProfile,
   familyMembers,
   translations: t,
 }: MilestonesPageClientProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [editingMilestone, setEditingMilestone] = useState<MilestoneWithProfile | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -58,12 +60,12 @@ export default function MilestonesPageClient({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/25">
+            <div className="w-14 h-14 rounded-2xl bg-[#58A6FF] flex items-center justify-center text-white">
               <PartyPopper className="w-7 h-7" />
             </div>
             <div>
@@ -81,7 +83,7 @@ export default function MilestonesPageClient({
               <Button
                 variant="default"
                 size="lg"
-                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg shadow-violet-500/25"
+                className="bg-[#58A6FF] hover:bg-[#4A90E2]"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 {t.addMilestone}

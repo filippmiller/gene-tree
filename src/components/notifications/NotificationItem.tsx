@@ -69,20 +69,20 @@ function TypeIcon({ eventType }: { eventType: string }) {
 /**
  * Get the icon gradient and shadow based on event type
  */
-function getIconStyles(eventType: string): { gradient: string; shadow: string } {
+function getIconStyles(eventType: string): { bg: string; shadow: string } {
   switch (eventType) {
     case 'relative_added':
-      return { gradient: 'bg-gradient-to-br from-violet-500 to-purple-600', shadow: 'shadow-violet-500/25' };
+      return { bg: 'bg-[#58A6FF]', shadow: 'shadow-[#58A6FF]/25' };
     case 'media_added':
-      return { gradient: 'bg-gradient-to-br from-sky-500 to-blue-600', shadow: 'shadow-sky-500/25' };
+      return { bg: 'bg-[#58A6FF]', shadow: 'shadow-[#58A6FF]/25' };
     case 'STORY_SUBMITTED':
-      return { gradient: 'bg-gradient-to-br from-amber-500 to-orange-600', shadow: 'shadow-amber-500/25' };
+      return { bg: 'bg-[#D29922]', shadow: 'shadow-[#D29922]/25' };
     case 'STORY_APPROVED':
-      return { gradient: 'bg-gradient-to-br from-emerald-500 to-green-600', shadow: 'shadow-emerald-500/25' };
+      return { bg: 'bg-[#3FB950]', shadow: 'shadow-[#3FB950]/25' };
     case 'STORY_REJECTED':
-      return { gradient: 'bg-gradient-to-br from-rose-500 to-pink-600', shadow: 'shadow-rose-500/25' };
+      return { bg: 'bg-[#F778BA]', shadow: 'shadow-[#F778BA]/25' };
     default:
-      return { gradient: 'bg-gradient-to-br from-gray-500 to-gray-600', shadow: 'shadow-gray-500/25' };
+      return { bg: 'bg-[#8B949E]', shadow: 'shadow-[#8B949E]/25' };
   }
 }
 
@@ -221,7 +221,7 @@ export default function NotificationItem({
         'group',
         is_read
           ? 'bg-white/30 dark:bg-gray-900/30'
-          : 'bg-violet-50/70 dark:bg-violet-950/20'
+          : 'bg-[#58A6FF]/5 dark:bg-[#58A6FF]/5'
       )}
       role="button"
       tabIndex={0}
@@ -235,7 +235,7 @@ export default function NotificationItem({
       {/* Unread indicator */}
       <div className="flex-shrink-0 w-2 pt-3">
         {!is_read && (
-          <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-[#58A6FF] animate-pulse" />
         )}
       </div>
 
@@ -248,7 +248,7 @@ export default function NotificationItem({
               alt={`${payload.first_name || ''} ${payload.last_name || ''}`}
             />
           ) : null}
-          <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600 text-white text-sm font-medium">
+          <AvatarFallback className="bg-[#58A6FF] text-white text-sm font-medium">
             {getInitials(payload)}
           </AvatarFallback>
         </Avatar>
@@ -258,7 +258,7 @@ export default function NotificationItem({
           className={cn(
             'absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-md flex items-center justify-center',
             'ring-2 ring-white dark:ring-gray-800 shadow-md',
-            iconStyles.gradient,
+            iconStyles.bg,
             iconStyles.shadow
           )}
         >
@@ -286,7 +286,7 @@ export default function NotificationItem({
       {/* Hover arrow indicator */}
       <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2">
         <svg
-          className="w-4 h-4 text-muted-foreground group-hover:text-violet-500 transition-colors"
+          className="w-4 h-4 text-muted-foreground group-hover:text-[#58A6FF] transition-colors"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

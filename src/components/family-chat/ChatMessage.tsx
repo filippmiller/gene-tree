@@ -44,9 +44,9 @@ const SYSTEM_MESSAGE_COLORS: Record<ChatMessageType, string> = {
   system: 'bg-muted text-muted-foreground',
   birthday: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-200',
   anniversary: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200',
-  memorial: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
+  memorial: 'bg-[#8B949E]/10 text-[#8B949E] dark:bg-[#8B949E]/10 dark:text-[#8B949E]',
   welcome: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200',
-  milestone: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200',
+  milestone: 'bg-[#D29922]/10 text-[#D29922] dark:bg-[#D29922]/10 dark:text-[#D29922]',
   memory: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
   user: '',
 };

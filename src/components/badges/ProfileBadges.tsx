@@ -31,6 +31,7 @@ export interface ProfileBadgesProps extends React.HTMLAttributes<HTMLDivElement>
  * Shows featured badges prominently, with link to full badge page
  */
 export function ProfileBadges({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
   badges,
   featured = [],
@@ -62,7 +63,7 @@ export function ProfileBadges({
       <GlassCardHeader>
         <div className="flex items-center justify-between">
           <GlassCardTitle className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-violet-500" />
+            <Award className="w-5 h-5 text-[#58A6FF]" />
             {locale === "ru" ? "Достижения" : "Achievements"}
           </GlassCardTitle>
           <div className="flex items-center gap-3">

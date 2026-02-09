@@ -40,13 +40,12 @@ const progressIndicatorVariants = cva(
   {
     variants: {
       variant: {
-        // Default - Golden gradient
-        default: "bg-gradient-to-r from-primary to-primary/80",
-        success: "bg-gradient-to-r from-success to-success/80",
-        warning: "bg-gradient-to-r from-warning to-warning/80",
-        error: "bg-gradient-to-r from-destructive to-destructive/80",
-        // Premium gradient
-        gradient: "bg-gradient-to-r from-primary via-accent to-primary",
+        default: "bg-primary",
+        success: "bg-success",
+        warning: "bg-warning",
+        error: "bg-destructive",
+        // Legacy alias - same as default
+        gradient: "bg-primary",
       },
     },
     defaultVariants: {

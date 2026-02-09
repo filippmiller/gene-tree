@@ -208,7 +208,7 @@ export function FamilyChat({ className }: FamilyChatProps) {
                   Connected
                 </span>
               ) : (
-                <span className="flex items-center gap-1 text-amber-600">
+                <span className="flex items-center gap-1 text-[#D29922]">
                   <WifiOff className="h-3 w-3" />
                   Reconnecting...
                 </span>
@@ -343,7 +343,7 @@ export function FamilyChat({ className }: FamilyChatProps) {
 
       {/* Muted warning */}
       {isMuted && (
-        <div className="border-t bg-amber-50 px-4 py-2 text-center text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+        <div className="border-t bg-[#D29922]/10 px-4 py-2 text-center text-sm text-[#D29922] dark:bg-[#D29922]/10 dark:text-[#D29922]">
           You are muted and cannot send messages
           {currentMember.muted_until && (
             <span> until {new Date(currentMember.muted_until).toLocaleString()}</span>

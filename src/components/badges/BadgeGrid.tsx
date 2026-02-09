@@ -103,7 +103,7 @@ export function BadgeGrid({
             {locale === "ru" ? "получено" : "earned"}
           </p>
         </div>
-        <div className="text-4xl font-bold text-violet-500">
+        <div className="text-4xl font-bold text-[#58A6FF]">
           {Math.round((earnedCount / totalCount) * 100)}%
         </div>
       </div>
@@ -113,7 +113,7 @@ export function BadgeGrid({
         <TabsList className="flex flex-wrap h-auto gap-2 bg-transparent">
           <TabsTrigger
             value="all"
-            className="data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-[#58A6FF] data-[state=active]:text-white"
           >
             {locale === "ru" ? "Все" : "All"}
           </TabsTrigger>
@@ -121,7 +121,7 @@ export function BadgeGrid({
             <TabsTrigger
               key={key}
               value={key}
-              className="data-[state=active]:bg-violet-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-[#58A6FF] data-[state=active]:text-white"
             >
               <span className="mr-1">{config.icon}</span>
               {config.label[locale]}

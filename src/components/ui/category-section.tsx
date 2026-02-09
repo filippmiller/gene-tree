@@ -52,18 +52,18 @@ const CategorySection = React.forwardRef<HTMLElement, CategorySectionProps>(
     const categoryConfig = category ? relationshipCategoryConfig[category] : null;
     const variant = iconVariant || categoryConfig?.variant || "default";
 
-    // Count badge colors based on variant
+    // Count badge colors based on variant (Midnight Glass palette)
     const countBadgeColors: Record<string, string> = {
-      parents: "bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300",
-      grandparents: "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300",
-      children: "bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300",
-      grandchildren: "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300",
-      siblings: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300",
-      spouses: "bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300",
-      extended: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300",
-      default: "bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300",
-      success: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300",
-      warning: "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300",
+      parents: "bg-[#58A6FF]/10 text-[#58A6FF]",
+      grandparents: "bg-[#3FB9A0]/10 text-[#3FB9A0]",
+      children: "bg-[#56D4DD]/10 text-[#56D4DD]",
+      grandchildren: "bg-[#8B8FFF]/10 text-[#8B8FFF]",
+      siblings: "bg-[#3FB950]/10 text-[#3FB950]",
+      spouses: "bg-[#F778BA]/10 text-[#F778BA]",
+      extended: "bg-[#8B949E]/10 text-[#8B949E]",
+      default: "bg-[#58A6FF]/10 text-[#58A6FF]",
+      success: "bg-[#3FB950]/10 text-[#3FB950]",
+      warning: "bg-[#D29922]/10 text-[#D29922]",
     };
 
     return (
@@ -80,7 +80,7 @@ const CategorySection = React.forwardRef<HTMLElement, CategorySectionProps>(
         >
           {/* Icon Badge */}
           {customIcon ? (
-            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25 text-white">
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[#58A6FF] shadow-lg shadow-[#58A6FF]/25 text-white">
               {customIcon}
             </div>
           ) : categoryConfig ? (
@@ -127,7 +127,7 @@ const CategorySection = React.forwardRef<HTMLElement, CategorySectionProps>(
         {!isCollapsed && (
           <>
             {count === 0 && emptyMessage ? (
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-8 text-center">
+              <div className="bg-[#272D36]/50 rounded-2xl p-8 text-center">
                 <p className="text-muted-foreground">{emptyMessage}</p>
               </div>
             ) : (

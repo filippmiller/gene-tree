@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { Crown, Medal, Award, Flame, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GlassCard, GlassCardHeader, GlassCardTitle, GlassCardContent } from "@/components/ui/glass-card";
 
 interface LeaderboardEntry {
@@ -29,9 +29,9 @@ interface LeaderboardProps {
 
 const rankIcons = [Crown, Medal, Award];
 const rankColors = [
-  "text-amber-400",
+  "text-[#D29922]",
   "text-gray-400",
-  "text-amber-700",
+  "text-[#D29922]/70",
 ];
 
 /**
@@ -78,9 +78,9 @@ export function Leaderboard({
         className={cn(
           "flex items-center gap-3 p-3 rounded-xl transition-colors",
           isCurrentUser
-            ? "bg-violet-500/10 ring-1 ring-violet-500/30"
+            ? "bg-[#58A6FF]/10 ring-1 ring-[#58A6FF]/30"
             : "hover:bg-white/5",
-          index === 0 && "bg-gradient-to-r from-amber-500/10 to-transparent"
+          index === 0 && "bg-[#D29922]/10"
         )}
       >
         {/* Rank */}
@@ -105,11 +105,11 @@ export function Leaderboard({
         {/* Name and stats */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className={cn("font-medium truncate", isCurrentUser && "text-violet-500")}>
+            <span className={cn("font-medium truncate", isCurrentUser && "text-[#58A6FF]")}>
               {entry.display_name}
             </span>
             {isCurrentUser && (
-              <span className="text-xs text-violet-400">{t.you}</span>
+              <span className="text-xs text-[#58A6FF]">{t.you}</span>
             )}
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -118,7 +118,7 @@ export function Leaderboard({
               {entry.current_streak} {t.streak}
             </span>
             <span className="flex items-center gap-1">
-              <Award className="w-3 h-3 text-violet-500" />
+              <Award className="w-3 h-3 text-[#58A6FF]" />
               {entry.badge_count} {t.badges}
             </span>
           </div>
@@ -126,8 +126,8 @@ export function Leaderboard({
 
         {/* Points */}
         <div className="text-right">
-          <div className="flex items-center gap-1 font-bold text-violet-500">
-            <Star className="w-4 h-4 fill-violet-500" />
+          <div className="flex items-center gap-1 font-bold text-[#58A6FF]">
+            <Star className="w-4 h-4 fill-[#58A6FF]" />
             {entry.points.toLocaleString()}
           </div>
           <span className="text-xs text-muted-foreground">{t.points}</span>
@@ -140,7 +140,7 @@ export function Leaderboard({
     <GlassCard glass="frosted" padding="none" className={className}>
       <GlassCardHeader className="p-4 pb-0">
         <GlassCardTitle className="flex items-center gap-2">
-          <Crown className="w-5 h-5 text-amber-400" />
+          <Crown className="w-5 h-5 text-[#D29922]" />
           {t.title}
         </GlassCardTitle>
       </GlassCardHeader>

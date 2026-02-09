@@ -77,7 +77,12 @@ export interface AvatarWithPresenceProps {
   ringColor?: string;
 
   /**
-   * Gradient for fallback background
+   * Flat color for fallback background
+   */
+  fallbackColor?: string;
+
+  /**
+   * @deprecated Use fallbackColor instead
    */
   gradientColor?: string;
 }
@@ -185,8 +190,15 @@ export function AvatarWithPresence({
   className,
   avatarClassName,
   ringColor,
-  gradientColor = 'from-violet-500 to-purple-600',
+  fallbackColor,
+  gradientColor,
 }: AvatarWithPresenceProps) {
+  // Resolve the fallback bg: prefer fallbackColor, then legacy gradientColor, then default flat
+  const resolvedFallbackBg = fallbackColor
+    ? fallbackColor
+    : gradientColor
+      ? `bg-gradient-to-br ${gradientColor}`
+      : 'bg-[#272D36]';
   const config = sizeConfig[size];
 
   // Don't show presence if user has hidden it or if disabled
@@ -208,8 +220,8 @@ export function AvatarWithPresence({
         {src && <AvatarImage src={src} alt={alt || fallback} />}
         <AvatarFallback
           className={cn(
-            'bg-gradient-to-br text-white font-semibold',
-            gradientColor,
+            'text-white font-semibold',
+            resolvedFallbackBg,
             config.fallbackText
           )}
         >

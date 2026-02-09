@@ -80,9 +80,6 @@ export default function AppShell({ children }: AppShellProps) {
       }}
     >
       <div className="min-h-screen bg-background">
-        {/* Subtle background texture */}
-        <div className="grain-overlay" />
-
         {/* ═══════════════════════════════════════════════════════════════════════
            DESKTOP SIDEBAR
            ═══════════════════════════════════════════════════════════════════════ */}

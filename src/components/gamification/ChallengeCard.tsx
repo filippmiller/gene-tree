@@ -54,10 +54,10 @@ const challengeIcons: Record<ChallengeType, React.ElementType> = {
 
 const challengeColors: Record<ChallengeType, string> = {
   photo_upload: "from-pink-500 to-rose-500",
-  story_write: "from-violet-500 to-purple-500",
+  story_write: "from-[#58A6FF] to-[#58A6FF]",
   invite_family: "from-blue-500 to-cyan-500",
   profile_complete: "from-green-500 to-emerald-500",
-  custom: "from-amber-500 to-orange-500",
+  custom: "from-[#D29922] to-[#D29922]",
 };
 
 /**

@@ -349,8 +349,8 @@ export default function VoiceRecorder({
 
       {/* Story Prompt */}
       {promptText && (
-        <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
-          <p className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">{t.promptLabel}</p>
+        <div className="bg-[#58A6FF]/5 border border-[#58A6FF]/20 rounded-lg p-4">
+          <p className="text-xs font-medium text-[#58A6FF] mb-1">{t.promptLabel}</p>
           <p className="text-gray-800 dark:text-gray-200">{promptText}</p>
         </div>
       )}
@@ -402,7 +402,7 @@ export default function VoiceRecorder({
               'w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg',
               isRecording
                 ? 'bg-red-600 hover:bg-red-700 animate-pulse'
-                : 'bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800',
+                : 'bg-[#58A6FF] hover:bg-[#58A6FF]/90',
               hasPermission === false && 'opacity-50 cursor-not-allowed'
             )}
           >
@@ -432,7 +432,7 @@ export default function VoiceRecorder({
             <div className="flex items-center gap-4">
               <button
                 onClick={playPreview}
-                className="w-12 h-12 rounded-full bg-purple-600 hover:bg-purple-700 flex items-center justify-center text-white transition-colors"
+                className="w-12 h-12 rounded-full bg-[#58A6FF] hover:bg-[#58A6FF]/90 flex items-center justify-center text-white transition-colors"
               >
                 {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
               </button>
@@ -460,7 +460,7 @@ export default function VoiceRecorder({
                   className={cn(
                     'flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5',
                     visibility === level
-                      ? 'bg-purple-600 text-white'
+                      ? 'bg-[#58A6FF] text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   )}
                 >
@@ -483,7 +483,7 @@ export default function VoiceRecorder({
             </button>
             <button
               onClick={uploadAndTranscribe}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#58A6FF] text-white rounded-lg hover:bg-[#58A6FF]/90 transition-colors"
             >
               <Check className="w-4 h-4" />
               {t.saveStory}
@@ -495,7 +495,7 @@ export default function VoiceRecorder({
       {/* Uploading/Transcribing State */}
       {isBusy && (
         <div className="flex flex-col items-center py-8 space-y-4">
-          <Loader2 className="w-12 h-12 text-purple-600 animate-spin" />
+          <Loader2 className="w-12 h-12 text-[#58A6FF] animate-spin" />
           <p className="text-gray-600 dark:text-gray-400">
             {state === 'uploading' ? t.uploading : t.transcribing}
           </p>
@@ -519,7 +519,7 @@ export default function VoiceRecorder({
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{t.transcriptLabel}</p>
                 <button
                   onClick={() => setState('editing')}
-                  className="text-purple-600 hover:text-purple-700 dark:text-purple-400"
+                  className="text-[#58A6FF] hover:text-[#58A6FF]/80"
                 >
                   <Edit3 className="w-4 h-4" />
                 </button>
@@ -538,7 +538,7 @@ export default function VoiceRecorder({
             <textarea
               value={editedTranscript}
               onChange={(e) => setEditedTranscript(e.target.value)}
-              className="w-full h-32 p-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full h-32 p-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-[#58A6FF] focus:border-transparent"
             />
           </div>
 
@@ -555,7 +555,7 @@ export default function VoiceRecorder({
             </button>
             <button
               onClick={saveEditedTranscript}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#58A6FF] text-white rounded-lg hover:bg-[#58A6FF]/90 transition-colors"
             >
               <Check className="w-4 h-4" />
               {t.saveTranscript}

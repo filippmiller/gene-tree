@@ -63,24 +63,24 @@ const iconMap: Record<string, LucideIcon> = {
  */
 const rarityConfig = {
   common: {
-    gradient: "from-slate-400 to-gray-500",
-    shadow: "shadow-slate-400/20",
-    glow: "shadow-slate-400/40",
-    border: "border-slate-300",
+    bg: "bg-[#8B949E]",
+    shadow: "shadow-[#8B949E]/20",
+    glow: "shadow-[#8B949E]/40",
+    border: "border-[#8B949E]",
     label: { en: "Common", ru: "Обычный" },
   },
   rare: {
-    gradient: "from-violet-500 to-purple-600",
-    shadow: "shadow-violet-500/20",
-    glow: "shadow-violet-500/40",
-    border: "border-violet-400",
+    bg: "bg-[#58A6FF]",
+    shadow: "shadow-[#58A6FF]/20",
+    glow: "shadow-[#58A6FF]/40",
+    border: "border-[#58A6FF]",
     label: { en: "Rare", ru: "Редкий" },
   },
   legendary: {
-    gradient: "from-amber-400 to-orange-500",
-    shadow: "shadow-amber-400/20",
-    glow: "shadow-amber-400/40 animate-pulse",
-    border: "border-amber-400",
+    bg: "bg-[#D29922]",
+    shadow: "shadow-[#D29922]/20",
+    glow: "shadow-[#D29922]/40 animate-pulse",
+    border: "border-[#D29922]",
     label: { en: "Legendary", ru: "Легендарный" },
   },
 };
@@ -146,6 +146,7 @@ const BadgeCard = React.forwardRef<HTMLDivElement, BadgeCardProps>(
       earned = false,
       size = "md",
       showProgress = true,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onFeatureToggle,
       ...props
     },
@@ -184,7 +185,7 @@ const BadgeCard = React.forwardRef<HTMLDivElement, BadgeCardProps>(
             >
               {/* Featured star */}
               {badge.is_featured && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-amber-400 rounded-full flex items-center justify-center shadow-lg">
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#D29922] rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-xs">⭐</span>
                 </div>
               )}
@@ -195,7 +196,7 @@ const BadgeCard = React.forwardRef<HTMLDivElement, BadgeCardProps>(
                   "flex items-center justify-center rounded-xl",
                   iconSize,
                   isEarned
-                    ? cn("bg-gradient-to-br text-white", rarity.gradient, rarity.shadow)
+                    ? cn("text-white", rarity.bg, rarity.shadow)
                     : "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400"
                 )}
               >
@@ -225,8 +226,8 @@ const BadgeCard = React.forwardRef<HTMLDivElement, BadgeCardProps>(
                   className={cn(
                     "text-xs px-2 py-0.5 rounded-full font-medium",
                     badge.rarity === "legendary"
-                      ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-                      : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400"
+                      ? "bg-[#D29922]/10 text-[#D29922] dark:bg-[#D29922]/10 dark:text-[#D29922]"
+                      : "bg-[#58A6FF]/10 text-[#58A6FF] dark:bg-[#58A6FF]/10 dark:text-[#58A6FF]"
                   )}
                 >
                   {rarity.label[locale]}

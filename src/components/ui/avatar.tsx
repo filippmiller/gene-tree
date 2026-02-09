@@ -4,14 +4,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Living Archive Avatar Component
+ * Midnight Glass Avatar Component
  *
- * Premium avatar design with golden ring effects
+ * Premium avatar design with ring effects
  *
  * Features:
  * - Multiple sizes
  * - Status indicator support
- * - Golden ring variant for premium users
+ * - Primary ring variant
  * - Smooth image loading transitions
  * - Elegant fallback styling
  */
@@ -39,11 +39,7 @@ const avatarVariants = cva(
         none: "",
         default: "ring-2 ring-border/50 ring-offset-2 ring-offset-background",
         primary: "ring-2 ring-primary/50 ring-offset-2 ring-offset-background",
-        gold: [
-          "ring-2 ring-offset-2 ring-offset-background",
-          "ring-gradient-to-r ring-from-primary ring-via-accent ring-to-primary",
-          "shadow-glow",
-        ].join(" "),
+        gold: "ring-2 ring-primary/50 ring-offset-2 ring-offset-background",
       },
     },
     defaultVariants: {
@@ -95,8 +91,8 @@ const AvatarFallback = React.forwardRef<
     ref={ref}
     className={cn(
       "flex h-full w-full items-center justify-center",
-      "bg-gradient-to-br from-muted via-muted to-muted/80",
-      "text-muted-foreground font-medium uppercase",
+      "bg-[#272D36] text-[#8B949E]",
+      "font-medium uppercase",
       // Subtle inner shadow for depth
       "shadow-inner",
       className

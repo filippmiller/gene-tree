@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import {
-  MessageCircle,
   PenLine,
   SkipForward,
   Clock,
@@ -39,7 +38,6 @@ import type {
   PromptCategory,
   PlaceholderType,
   Season,
-  LocalizedPrompt,
 } from "@/types/prompts";
 import {
   getLocalizedPromptText,
@@ -67,14 +65,14 @@ const categoryConfig: Record<PromptCategory, {
     gradient: "from-emerald-500/10 to-transparent",
   },
   traditions: {
-    color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    color: "bg-[#3FB9A0]/10 text-[#3FB9A0] dark:bg-[#3FB9A0]/10 dark:text-[#3FB9A0]",
     icon: Gift,
-    gradient: "from-amber-500/10 to-transparent",
+    gradient: "from-[#3FB9A0]/10 to-transparent",
   },
   seasonal: {
-    color: "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
+    color: "bg-[#58A6FF]/10 text-[#58A6FF] dark:bg-[#58A6FF]/10 dark:text-[#58A6FF]",
     icon: Sparkles,
-    gradient: "from-violet-500/10 to-transparent",
+    gradient: "from-[#58A6FF]/10 to-transparent",
   },
   relationship: {
     color: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
@@ -158,8 +156,6 @@ export function MemoryPromptCard({
   ...props
 }: MemoryPromptCardProps) {
   const locale = useLocale() as "en" | "ru";
-  const t = useTranslations("prompts");
-
   const [actionLoading, setActionLoading] = React.useState<"skip" | "remind" | null>(null);
   const [skipConfirmOpen, setSkipConfirmOpen] = React.useState(false);
 

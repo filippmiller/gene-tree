@@ -107,18 +107,15 @@ export default async function MyProfilePage({ params }: Props) {
   return (
     <ProfileLayout>
       <TooltipProvider>
-        <div className="min-h-screen bg-gradient-to-br from-violet-50/50 via-white to-sky-50/50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+        <div className="min-h-screen bg-background dark:bg-background">
           <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
             {/* Header */}
             <GlassCard glass="frosted" padding="none" className="overflow-hidden">
               <div className="relative">
-                {/* Gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600" />
-                {/* Decorative circles */}
-                <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10 blur-2xl" />
-                <div className="absolute -left-10 -bottom-10 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
+                {/* Flat background */}
+                <div className="absolute inset-0 bg-[#58A6FF]" />
 
-                <div className="relative p-6 sm:p-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div className="relative p-4 sm:p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-start gap-6">
                     {/* Profile Completeness Ring */}
                     {profile && (

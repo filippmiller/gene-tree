@@ -130,7 +130,8 @@ export function getDegreesOfSeparation(pathLength: number | null, locale: 'en' |
   return `${pathLength}th degree`;
 }
 
-export function formatPathForDisplay(path: PathStep[], _locale: 'en' | 'ru' = 'en'): string {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function formatPathForDisplay(path: PathStep[], locale: 'en' | 'ru' = 'en'): string {
   if (path.length === 0) return '';
 
   return path
@@ -148,11 +149,11 @@ export function formatPathForDisplay(path: PathStep[], _locale: 'en' | 'ru' = 'e
  */
 export function getCategoryColor(category: RelationshipPathResult['category']): string {
   const colors: Record<typeof category, string> = {
-    direct: 'from-emerald-500 to-green-600',
-    extended: 'from-blue-500 to-indigo-600',
-    cousin: 'from-purple-500 to-violet-600',
-    'in-law': 'from-amber-500 to-orange-600',
-    other: 'from-gray-500 to-slate-600',
+    direct: 'bg-[#3FB9A0]',
+    extended: 'bg-[#58A6FF]',
+    cousin: 'bg-[#58A6FF]',
+    'in-law': 'bg-[#D29922]',
+    other: 'bg-gray-500',
   };
   return colors[category] || colors.other;
 }

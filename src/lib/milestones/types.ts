@@ -80,14 +80,14 @@ export const MILESTONE_CATEGORIES: CategoryConfig[] = [
     labelKey: 'milestones.category.life',
     icon: Star,
     color: 'amber',
-    gradient: 'from-amber-500 to-orange-600',
+    gradient: 'from-[#D29922] to-[#D29922]',
   },
   {
     id: 'custom',
     labelKey: 'milestones.category.custom',
     icon: PartyPopper,
     color: 'violet',
-    gradient: 'from-violet-500 to-purple-600',
+    gradient: 'from-[#58A6FF] to-[#58A6FF]',
   },
 ];
 

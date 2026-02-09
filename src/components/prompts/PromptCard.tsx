@@ -42,11 +42,11 @@ const categoryConfig: Record<string, { label: { en: string; ru: string }; color:
   },
   traditions: {
     label: { en: "Traditions", ru: "Традиции" },
-    color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    color: "bg-[#3FB9A0]/10 text-[#3FB9A0] dark:bg-[#3FB9A0]/10 dark:text-[#3FB9A0]",
   },
   life_lessons: {
     label: { en: "Life Lessons", ru: "Уроки Жизни" },
-    color: "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
+    color: "bg-[#58A6FF]/10 text-[#58A6FF] dark:bg-[#58A6FF]/10 dark:text-[#58A6FF]",
   },
   historical: {
     label: { en: "Historical", ru: "Исторические" },
@@ -62,7 +62,7 @@ const categoryConfig: Record<string, { label: { en: string; ru: string }; color:
   },
   personal: {
     label: { en: "Personal", ru: "Личное" },
-    color: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400",
+    color: "bg-[#8B949E]/10 text-[#8B949E] dark:bg-[#8B949E]/10 dark:text-[#8B949E]",
   },
   favorites: {
     label: { en: "Favorites", ru: "Избранное" },
@@ -103,7 +103,7 @@ export function PromptCard({
         onClick={() => onAssign?.(prompt)}
         {...props}
       >
-        <MessageCircle className="w-5 h-5 text-violet-500 flex-shrink-0 mt-0.5" />
+        <MessageCircle className="w-5 h-5 text-[#58A6FF] flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
           <p className="text-sm line-clamp-2">{text}</p>
           <span className={cn("inline-block text-xs px-2 py-0.5 rounded mt-1", category.color)}>
@@ -160,7 +160,7 @@ export function PromptCard({
               <Button
                 size="sm"
                 onClick={() => onAnswer(prompt)}
-                className="flex-1 bg-violet-500 hover:bg-violet-600 text-white"
+                className="flex-1 bg-[#58A6FF] hover:bg-[#58A6FF]/90 text-white"
               >
                 <Send className="w-4 h-4 mr-2" />
                 {locale === "ru" ? "Ответить" : "Answer"}

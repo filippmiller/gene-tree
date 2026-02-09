@@ -126,7 +126,7 @@ export default function SignUpPage() {
     <div className="relative flex min-h-screen items-center justify-center p-4 bg-background overflow-hidden">
       {/* Cinematic background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Primary golden glow */}
+        {/* Primary glow */}
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
         <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]" />
         {/* Center subtle glow */}
@@ -153,13 +153,11 @@ export default function SignUpPage() {
         <CardHeader className="space-y-1 text-center pb-2">
           {/* Logo */}
           <div className="mx-auto mb-4 relative">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-accent shadow-glow-lg">
-              {/* Inner glow */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-transparent via-white/10 to-white/20" />
-              <UserPlus className="h-8 w-8 text-primary-foreground relative z-10" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#58A6FF]">
+              <UserPlus className="h-8 w-8 text-white relative z-10" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-display font-medium text-gradient-gold">
+          <CardTitle className="text-2xl font-display font-medium text-foreground">
             {t.createAccount}
           </CardTitle>
           <CardDescription className="text-base text-muted-foreground">
@@ -262,7 +260,7 @@ export default function SignUpPage() {
 
             <Button
               type="submit"
-              variant="gradient"
+              variant="default"
               className="w-full h-12 text-base"
               loading={loading}
               disabled={success !== ''}

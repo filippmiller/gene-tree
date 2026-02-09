@@ -5,7 +5,7 @@ import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, MoreHorizontal, TreePine, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 /**
  * PersonCard - Modern glassmorphism person card
@@ -35,7 +35,7 @@ const personCardVariants = cva(
           "border border-white/40 dark:border-white/10",
           "shadow-glass",
           "hover:-translate-y-1 hover:shadow-glass-hover",
-          "hover:border-violet-500/20",
+          "hover:border-[#58A6FF]/20",
         ].join(" "),
 
         // Solid - Opaque background
@@ -44,7 +44,7 @@ const personCardVariants = cva(
           "border border-border",
           "shadow-elevation-2",
           "hover:-translate-y-1 hover:shadow-elevation-3",
-          "hover:border-violet-500/20",
+          "hover:border-[#58A6FF]/20",
         ].join(" "),
 
         // Minimal - Very subtle
@@ -57,9 +57,9 @@ const personCardVariants = cva(
 
         // Highlighted - Featured person
         highlighted: [
-          "bg-gradient-to-br from-violet-500/10 to-sky-500/5",
+          "bg-[#58A6FF]/10",
           "backdrop-blur-md",
-          "border border-violet-500/20",
+          "border border-[#58A6FF]/20",
           "shadow-glass",
           "hover:-translate-y-1 hover:shadow-glow",
         ].join(" "),
@@ -77,26 +77,26 @@ const personCardVariants = cva(
   }
 );
 
-// Avatar ring colors for different relationship types
+// Avatar ring colors for different relationship types (Midnight Glass palette)
 const avatarRingColors = {
-  parents: "ring-violet-500",
-  grandparents: "ring-amber-500",
-  children: "ring-sky-500",
-  grandchildren: "ring-pink-500",
-  siblings: "ring-emerald-500",
-  spouses: "ring-rose-500",
-  default: "ring-violet-500",
+  parents: "ring-[#58A6FF]",
+  grandparents: "ring-[#3FB9A0]",
+  children: "ring-[#56D4DD]",
+  grandchildren: "ring-[#8B8FFF]",
+  siblings: "ring-[#3FB950]",
+  spouses: "ring-[#F778BA]",
+  default: "ring-[#58A6FF]",
 };
 
-// Avatar gradient fallback colors
-const avatarGradients = {
-  parents: "from-violet-500 to-purple-600",
-  grandparents: "from-amber-500 to-orange-600",
-  children: "from-sky-500 to-blue-600",
-  grandchildren: "from-pink-500 to-rose-600",
-  siblings: "from-emerald-500 to-teal-600",
-  spouses: "from-rose-500 to-red-600",
-  default: "from-violet-500 to-purple-600",
+// Avatar flat fallback colors (Midnight Glass palette)
+const avatarFallbackColors = {
+  parents: "bg-[#58A6FF]",
+  grandparents: "bg-[#3FB9A0]",
+  children: "bg-[#56D4DD]",
+  grandchildren: "bg-[#8B8FFF]",
+  siblings: "bg-[#3FB950]",
+  spouses: "bg-[#F778BA]",
+  default: "bg-[#58A6FF]",
 };
 
 export interface PersonCardProps
@@ -169,7 +169,7 @@ const PersonCard = React.forwardRef<HTMLDivElement, PersonCardProps>(
     };
 
     const ringColor = avatarRingColors[relationshipType];
-    const gradientColor = avatarGradients[relationshipType];
+    const fallbackColor = avatarFallbackColors[relationshipType];
     const lifespan = formatLifespan();
 
     const cardContent = (
@@ -192,8 +192,8 @@ const PersonCard = React.forwardRef<HTMLDivElement, PersonCardProps>(
             ) : null}
             <AvatarFallback
               className={cn(
-                "bg-gradient-to-br text-white font-semibold",
-                gradientColor,
+                "text-white font-semibold",
+                fallbackColor,
                 size === "sm" ? "text-xs" : size === "lg" ? "text-lg" : "text-sm"
               )}
             >
@@ -216,7 +216,7 @@ const PersonCard = React.forwardRef<HTMLDivElement, PersonCardProps>(
         <div className="flex-1 min-w-0">
           <h3
             className={cn(
-              "font-semibold text-foreground truncate transition-colors group-hover:text-violet-600 dark:group-hover:text-violet-400",
+              "font-semibold text-foreground truncate transition-colors group-hover:text-[#58A6FF]",
               size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base"
             )}
           >
@@ -246,7 +246,7 @@ const PersonCard = React.forwardRef<HTMLDivElement, PersonCardProps>(
     // Wrap in Link if href provided
     if (href) {
       return (
-        <Link href={href} className="block focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 rounded-2xl">
+        <Link href={href} className="block focus:outline-none focus:ring-2 focus:ring-[#58A6FF] focus:ring-offset-2 rounded-2xl">
           {cardContent}
         </Link>
       );

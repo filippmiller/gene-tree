@@ -104,7 +104,7 @@ export default function RelationshipPathModal({
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded-lg bg-[#58A6FF] flex items-center justify-center text-white">
               <Link2 className="w-4 h-4" />
             </div>
             {t.title}
@@ -117,7 +117,7 @@ export default function RelationshipPathModal({
         <div className="mt-4">
           {loading && (
             <div className="flex flex-col items-center justify-center py-12">
-              <div className="w-12 h-12 rounded-full border-4 border-violet-200 border-t-violet-600 animate-spin" />
+              <div className="w-12 h-12 rounded-full border-4 border-[#58A6FF]/20 border-t-[#58A6FF] animate-spin" />
               <p className="mt-4 text-gray-500">{t.finding}</p>
             </div>
           )}
@@ -141,7 +141,7 @@ export default function RelationshipPathModal({
               />
             ) : (
               <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white text-2xl shadow-lg mx-auto mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gray-500 flex items-center justify-center text-white text-2xl mx-auto mb-4">
                   ?
                 </div>
                 <h3 className="text-lg font-semibold text-gray-700">{t.noConnection}</h3>
@@ -178,7 +178,7 @@ interface HowAreWeRelatedButtonProps {
   /** Optional className */
   className?: string;
   /** Button variant */
-  variant?: 'default' | 'outline' | 'ghost' | 'gradient';
+  variant?: 'default' | 'outline' | 'ghost';
   /** Button size */
   size?: 'sm' | 'default' | 'lg';
 }

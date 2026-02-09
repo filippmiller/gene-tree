@@ -34,7 +34,7 @@ export default function MobileBottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
       {/* Glassmorphism background */}
-      <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-white/50 dark:border-white/10 shadow-lg shadow-violet-500/5">
+      <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-white/[0.08] shadow-lg">
         {/* Safe area padding for notched devices */}
         <div className="flex items-center justify-around px-2 py-2 pb-safe">
           {navItems.map((item) => {
@@ -57,7 +57,7 @@ export default function MobileBottomNav() {
                   className={cn(
                     "flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
                     active
-                      ? "bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30 scale-110"
+                      ? "bg-[#58A6FF] scale-110"
                       : "hover:bg-gray-100 dark:hover:bg-gray-800"
                   )}
                 >
@@ -72,7 +72,7 @@ export default function MobileBottomNav() {
                   className={cn(
                     "text-[10px] font-medium mt-1 transition-colors",
                     active
-                      ? "text-violet-600 dark:text-violet-400"
+                      ? "text-[#58A6FF]"
                       : "text-muted-foreground"
                   )}
                 >
